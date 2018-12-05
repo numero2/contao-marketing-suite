@@ -64,7 +64,6 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
         ]
     ,   'cms_tag_customTpl' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_customTpl']
-        ,   'exclude'          => true
         ,   'inputType'        => 'select'
         ,   'options_callback' => ['tl_cms_tag_Settings', 'getModuleTemplates']
         ,   'eval'             => ['includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50']
@@ -72,7 +71,6 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
         ]
     ,   'cms_tag_cssID' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_cssID']
-        ,   'exclude'          => true
         ,   'inputType'        => 'text'
         ,   'eval'             => ['multiple'=>true, 'size'=>2, 'tl_class'=>'w50']
         ,   'mapping'          => 'cssID'

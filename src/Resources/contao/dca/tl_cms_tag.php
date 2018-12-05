@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
     ,   'isAvailable'               => \numero2\MarketingSuite\Backend\License::hasFeature('tags')
     ,   'onload_callback'           => [
             ['tl_cms_tag', 'setRootType']
+        ,   ['tl_cms_tag', 'addDefault']
     ]
     ,   'sql' => [
             'keys' => [
@@ -476,6 +477,60 @@ class tl_cms_tag extends Backend {
         ,   'current_and_direct_children' => $GLOBALS['TL_LANG']['tl_cms_tag']['page_scopes']['current_and_direct_children']
         ,   'current_and_all_children' => $GLOBALS['TL_LANG']['tl_cms_tag']['page_scopes']['current_and_all_children']
         ];
+
+        return $types;
+    }
+
+
+    /**
+     * Add our default data to this table, if this is fresh
+     *
+     * @return array
+     */
+    public function addDefault() {
+
+        $oDB = \Database::getInstance();
+
+        if( $oDB->getNextId('tl_cms_tag')!=1 || \numero2\MarketingSuite\TagModel::countAll() ) {
+            return;
+        }
+
+        \System::loadLanguageFile('cms_default');
+
+        $oTag = new \numero2\MarketingSuite\TagModel();
+        $oTag->tstamp = time();
+        $oTag->sorting = 32;
+        $oTag->anonymize_ip = '1';
+        $oTag->enable_on_cookie_accept = '1';
+        $oTag->pid = '0';
+        $oTag->type = 'group';
+
+        $defaultData = $GLOBALS['TL_LANG']['cms_tag_default'];
+
+        if( is_array($defaultData) && count($defaultData) ) {
+            foreach( $defaultData as $dataKey => $data ) {
+
+                $current =  clone $oTag;
+                foreach( $data as $key => $value ) {
+                    $current->{$key}  = $value;
+                }
+
+                $current->save();
+
+                if( $dataKey == 0 ) {
+                    $sessionCookie =  clone $oTag;
+
+                    $sessionCookie->name = 'Session-Cookie';
+                    $sessionCookie->enable_on_cookie_accept = '';
+                    $sessionCookie->pid = $current->id;
+                    $sessionCookie->type = 'session';
+
+                    $sessionCookie->save();
+                }
+
+                $oTag->sorting *= 2;
+            }
+        }
 
         return $types;
     }

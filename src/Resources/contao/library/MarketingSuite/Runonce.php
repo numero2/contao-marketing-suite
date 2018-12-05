@@ -35,61 +35,14 @@ class Runonce extends \Controller {
      */
     public function run() {
 
-        $this->generateExampleGroupsInTags();
         $this->generateEmptyCMSConfigFile();
     }
 
 
 
     /**
-     * Generate example groups in tag
+     * Generate an empty cmsconfig file if none exists
      */
-    protected function generateExampleGroupsInTags() {
-
-        $oDB = \Database::getInstance();
-
-        if( !$oDB->tableExists('tl_cms_tag') || TagModel::countAll() ) {
-            return;
-        }
-
-        \System::loadLanguageFile('cms_default');
-
-        $oTag = new TagModel();
-        $oTag->tstamp = time();
-        $oTag->sorting = 32;
-        $oTag->anonymize_ip = '1';
-        $oTag->enable_on_cookie_accept = '1';
-        $oTag->pid = '0';
-        $oTag->type = 'group';
-
-        $defaultData = $GLOBALS['TL_LANG']['cms_tag_default'];
-
-        if( is_array($defaultData) && count($defaultData) ) {
-            foreach( $defaultData as $dataKey => $data ) {
-
-                $current =  clone $oTag;
-                foreach( $data as $key => $value ) {
-                    $current->{$key}  = $value;
-                }
-
-                $current->save();
-
-                if( $dataKey == 0 ) {
-                    $sessionCookie =  clone $oTag;
-
-                    $sessionCookie->name = 'Session-Cookie';
-                    $sessionCookie->enable_on_cookie_accept = '';
-                    $sessionCookie->pid = $current->id;
-                    $sessionCookie->type = 'session';
-
-                    $sessionCookie->save();
-                }
-
-                $oTag->sorting *= 2;
-            }
-        }
-    }
-
     protected function generateEmptyCMSConfigFile() {
 
         if( !file_exists(TL_ROOT . '/system/config/cmsconfig.php') ) {

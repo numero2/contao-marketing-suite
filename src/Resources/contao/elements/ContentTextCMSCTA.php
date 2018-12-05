@@ -54,10 +54,6 @@ class ContentTextCMSCTA extends \ContentText {
 
         global $objPage;
 
-        if( !$oContent || !\numero2\MarketingSuite\Backend\License::hasFeature('ce_'.$this->type, $objPage->trail[0]) ) {
-            return '';
-        }
-
         if( TL_MODE == "FE" ) {
             $tracking = new Tracking\ClickAndViews();
             $tracking->increaseViewOnContentElement($this->objModel);
