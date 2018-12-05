@@ -1,0 +1,5 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+    <a href="<?= $this->href; ?>" rel="nofollow" title="<?= $this->linkTitle; ?>" data-unique="<?= $this->unique; ?>"<?= $this->target ?>><?= $this->link; ?></a>
+<?php $this->endblock(); ?>

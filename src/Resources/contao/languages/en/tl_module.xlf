@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_module.php" source-language="en" >
+<body>
+    <!-- FIELDS -->
+    <trans-unit id="tl_module.cms_mi_id.0">
+        <source>Marketing-Element</source>
+    </trans-unit>
+    <trans-unit id="tl_module.cms_mi_id.1">
+        <source>Welches Marketing-Element soll angezeigt werden?</source>
+    </trans-unit>
+    <trans-unit id="tl_module.cms_ci_id.0">
+        <source>Conversion-Element</source>
+    </trans-unit>
+    <trans-unit id="tl_module.cms_ci_id.1">
+        <source>Welches Conversion-Element soll angezeigt werden?</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

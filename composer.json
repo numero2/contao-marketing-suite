@@ -1,0 +1,44 @@
+{
+    "name": "numero2/contao-marketing-suite",
+    "type": "contao-bundle",
+    "description": "Contao Marketing Suite",
+    "license": "Commercial",
+    "authors": [{
+            "name": "numero2 - Agentur für digitales Marketing",
+            "homepage": "https://www.numero2.de"
+        }
+    ],
+    "require": {
+        "contao/core-bundle": "^4.4.0",
+        "Org_Heigl/Hyphenator": "^2.3",
+        "facebook/graph-sdk": "^5.6"
+    },
+    "suggest": {
+        "numero2/contao-opengraph3": "For OpenGraph integration",
+        "numero2/contao-avalex": "For use of avalex privacy policy"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "extra": {
+        "contao-manager-plugin": "numero2\\MarketingSuite\\ContaoManager\\Plugin"
+    },
+    "autoload": {
+        "psr-4": {
+            "numero2\\MarketingSuite\\": "src/"
+        },
+        "classmap": [
+            "src/Resources/contao/"
+        ],
+        "exclude-from-classmap": [
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/languages/",
+            "src/Resources/contao/templates/"
+        ]
+    }
+}

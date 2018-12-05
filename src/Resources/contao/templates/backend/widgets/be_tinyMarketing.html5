@@ -1,0 +1,59 @@
+<?php
+
+namespace Contao;
+
+if( $GLOBALS['TL_CONFIG']['useRTE'] ):
+?>
+<script>window.tinymce || document.write('<script src="<?= TL_ASSETS_URL ?>assets/tinymce4/js/tinymce.min.js">\x3C/script>')</script>
+<script><?php // jsmust look like this or this won'T work when tinyMarketing is used inside subplettes ?>
+    setTimeout(function() {
+        window.tinymce && tinymce.init({
+            skin: 'contao',
+            selector: '#<?= $this->selector ?>',
+            language: '<?= Backend::getTinyMceLanguage() ?>',
+            element_format: 'html',
+            document_base_url: '<?= Environment::get('base') ?>',
+            entities: '160,nbsp,60,lt,62,gt,173,shy',
+            branding: false,
+            setup: function(editor) {
+                editor.getElement().removeAttribute('required');
+            },
+            init_instance_callback: function(editor) {
+                if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
+                    editor.editorManager.get(editor.id).focus();
+                }
+                editor.on('focus', function() { Backend.getScrollOffset(); });
+
+                // trigger custom event for text analysis
+                var tinyEvent = document.createEvent('Event');
+                tinyEvent.initEvent('tinyMCEInitialized', true, true);
+                document.dispatchEvent(tinyEvent);
+            },
+            file_browser_callback: function(field_name, url, type, win) {
+                Backend.openModalBrowser(field_name, url, type, win);
+            },
+            file_browser_callback_types: <?= json_encode($this->fileBrowserTypes) ?>,
+
+        <?php if( $this->selector == 'ctrl_cms_tag_text' ): ?>
+            plugins: 'autosave charmap code fullscreen link paste searchreplace stripnbsp tabfocus',
+        <?php else: ?>
+            plugins: 'autosave charmap code fullscreen image link lists paste searchreplace stripnbsp tabfocus visualblocks',
+        <?php endif; ?>
+            browser_spellcheck: true,
+            tabfocus_elements: ':prev,:next',
+            importcss_append: true,
+            extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
+            menubar: 'file edit insert view format',
+        <?php if( $this->selector == 'ctrl_cms_tag_text' ): ?>
+            toolbar: 'link unlink | bold italic | undo redo | code',
+        <?php else: ?>
+            toolbar: 'link unlink | image | bold italic | bullist numlist | undo redo | code',
+        <?php endif; ?>
+            paste_as_text: true
+        });
+    }, 0);
+</script>
+<style type="text/css">
+    .mce-menu-align.mce-menu-sub > div > .mce-menu-item:nth-last-child(1) { display: none; }
+</style>
+<?php endif; ?>

@@ -1,0 +1,93 @@
+// main: backend.scss
+@import "colors";
+
+.tl_dashboard {
+
+    fieldset > div {
+
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        flex-wrap: wrap;
+
+        padding: 15px;
+        padding-top: 0;
+
+        > .item {
+
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+
+            width: calc(50% - 7.5px);
+            background: lighten($col-gray,5%);
+            margin-top: 15px;
+
+            .name {
+                padding: 10px;
+                padding-bottom: 0;
+
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+            }
+
+            .inner {
+
+                height: 100%;
+                background: $col-white;
+                padding: 10px;
+                margin: 10px;
+                overflow: hidden;
+
+                display: flex;
+                flex-direction: column;
+
+                .chart {
+                    margin-bottom: 15px;
+                }
+
+                table {
+
+                    width: 100%;
+                    table-layout: fixed;
+
+                    th, td {
+                        padding: 2px 4px;
+                        border: 1px solid $col-gray;
+                        text-align: center;
+                    }
+
+                    thead tr th { background: $col-gray; }
+                }
+
+                .no-data {
+
+                    margin: auto;
+
+                    p {
+                        display: block;
+                        text-align: center;
+                        margin: auto;
+                        padding: 15px;
+                        opacity: 0.3;
+                    }
+
+                    p:before {
+                        content: "\2639";
+                        display: block;
+                        margin: 15px auto;
+                        font-size: 3em;
+                    }
+                }
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+
+            > .item {
+                width: 100%;
+            }
+        }
+    }
+}

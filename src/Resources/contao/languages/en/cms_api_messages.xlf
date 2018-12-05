@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/cms_api_messages.php" source-language="en">
+<body>
+    <trans-unit id="cms_api_messages.license_valid">
+        <source>Die angegebene Marketing Suite Lizenz ist gültig (zuletzt geprüft %s).</source>
+    </trans-unit>
+    <!-- ERROR CODES -->
+    <trans-unit id="cms_api_messages.errors.connection_error">
+        <source>Beim Verbinden mit dem Marketing Suite Lizenzserver ist ein Problem aufgetreten. Versuchen Sie es später noch einmal.</source>
+    </trans-unit>
+    <trans-unit id="cms_api_messages.errors.410">
+        <source>Ungültiger Lizenzschlüssel.</source>
+    </trans-unit>
+    <trans-unit id="cms_api_messages.errors.411">
+        <source>Lizenzschlüssel abgelaufen.</source>
+    </trans-unit>
+    <trans-unit id="cms_api_messages.errors.412">
+        <source>Lizenzschlüssel passt nicht zur konfigurierten oder aktuellen Domain.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

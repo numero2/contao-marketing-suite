@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/cms_be_help.php" source-language="en">
+<body>
+    <trans-unit id="cms_be_help.cms_dashboard.headline">
+        <source>Dashboard Hilfe</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_dashboard.description">
+        <source><![CDATA[<strong>Informationen auf einen Blick.</strong><br /><br />Grafische Darstellung der Ergebnisse angelegter A/B Tests sowie aller angelegten trackbaren Elemente, den Conversion Elementen.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwpB_5vOFTOulEn5wAg50Nj2" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_marketing.headline">
+        <source>Content Marketing Hilfe</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_marketing.description">
+        <source><![CDATA[<strong>Content Marketing Elemente anlegen oder verwalten.</strong><br /><br />Der Elementtyp zeigt, welches Marketing-Element angelegt wurde. Ein "Mouse over" bei Verwendung zeigt, wo das Marketing-Element verwendet wird.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwo5aQBtfYbOq-v1dynRSCWf" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_conversion.headline">
+        <source>Conversion Hilfe</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_conversion.description">
+        <source><![CDATA[<strong>Trackbare Conversion Elemente anlegen oder verwalten.</strong><br /><br />Der Elementtyp zeigt, welches Conversion Element angelegt wurde. Anzahl Klicks zeigt numerisch, wie oft das Element angeklickt wurde. Ein "Mouse over" bei Verwendung zeigt, wo das Conversion Element verwendet wird.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwoPeEWnFOf0LpUkqRlJMeMq" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_health_check.headline">
+        <source>Health Check Hilfe</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_health_check.description">
+        <source><![CDATA[<strong>Ist die Seite fit für SEO und soziale Netze?</strong><br /><br />Schnell einen Überblick über die "Gesundheit" der Webpräsenz erhalten. SEO relevante Informationen sowie Informationen welche in den sozialen Netzwerken sinvoll sind, werden zur Bearbeitung angezeigt.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/watch?v=GERkPgWc1gs&index=3&list=PLG0rvNxXnqwpXLzo43HgeOx8Un5PbGRzi" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_settings_settings.headline">
+        <source>Hilfe</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_settings_settings.description">
+        <source><![CDATA[<strong>Einstellungen Contao Marketing Suite</strong><br /><br />Grundlegende Einstellungen zur Konfiguration der Contao Marketing Suite.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwrE-IgSQP5rbrHKEcwZR1Qr" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_settings_tags.headline">
+        <source>Hilfe zur Cookie Bar Konfiguration</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_settings_tags.description">
+        <source><![CDATA[<strong>Cookie Bar / Tracking - </strong> Auswahl ob Standard Cookie-Bar angezeigt werden soll oder die Opt-In Variante gem. EU-Privacy. Tags oder Skripte, welche z.B. Cookies nutzen, können hier zentral erfasst und verwaltet werden.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwrE-IgSQP5rbrHKEcwZR1Qr" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_settings_facebook.headline">
+        <source>Hilfe Facebook Seite verbinden</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_settings_facebook.description">
+        <source><![CDATA[<strong>Ihre benötigte OAuth Redirect URL zur Verbindung mit Facebook:</strong><br /><br />]]>
+            <![CDATA[<code>##oauth_redirect_uri##<br /><br /></code>]]>
+            <![CDATA[Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwrE-IgSQP5rbrHKEcwZR1Qr" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]>
+        </source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_marketing_a_b_test.headline">
+        <source>A/B Test Hilfe</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_marketing_a_b_test.description">
+        <source><![CDATA[<strong>A/B-Test fertig stellen</strong><br /><br />Die Inhalte der erstellten Vorlage sind jetzt in die A-Version und B-Version eingefügt worden. Beide Versionen beinhalten das trackbare Element. Durch Anpassung der Inhalte in der A-Version und B-Version kann die Wirkung auf das Conversion Element gemessen werden.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwo5aQBtfYbOq-v1dynRSCWf" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_settings_tags_tl_cms_tag_settings.headline">
+        <source>Anzeige-Einstellungen Hilfe</source>
+    </trans-unit>
+    <trans-unit id="cms_be_help.cms_settings_tags_tl_cms_tag_settings.description">
+        <source><![CDATA[<strong>Cookie-Bar Typ auswählen,</strong> entweder Standard-Cookie-Bar oder Opt-In Cookie Bar (EU-Privacy). Beschriftung, Texte und Aussehen der Cookie-Bar anpassen.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwrE-IgSQP5rbrHKEcwZR1Qr" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

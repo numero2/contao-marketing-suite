@@ -1,0 +1,92 @@
+<div class="widget text-analysis">
+
+    <h3><?= $this->heading; ?></h3>
+
+    <?php if( $this->syllables ): ?>
+        <div class="group syllables">
+            <h4><?= $this->labels['syllables']; ?></h4>
+            <ul>
+                <?php foreach( array_keys($this->syllables) as $group ): ?>
+                <li>
+                    <span><?= $this->labels['syllables_'.$group][0]; ?></span>
+                    <span><?= $this->syllables[$group]['count']; ?></span>
+                    <a href="#" data-type="syllables" data-group="<?=$group;?>"></a>
+                    <mark style="width: <?= $this->syllables[$group]['percentage']; ?>%;"></mark>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if( $this->sentences ): ?>
+        <div class="group sentences">
+            <h4><?= $this->labels['sentences']; ?></h4>
+            <ul>
+                <?php foreach( array_keys($this->sentences) as $group ): ?>
+                <li>
+                    <span>
+                        <?= $this->labels['sentences_'.$group][0]; ?>
+                        <?php if( !empty($this->labels['sentences_'.$group][1]) ): ?> <em><?= $this->labels['sentences_'.$group][1]; ?></em><?php endif; ?>
+                    </span>
+                    <span><?= $this->sentences[$group]['count']; ?></span>
+                    <a href="#" data-type="sentences" data-group="<?=$group;?>"></a>
+                    <mark style="width: <?= $this->sentences[$group]['percentage']; ?>%;"></mark>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if( $this->stats ): ?>
+        <div class="group stats">
+            <h4><?= $this->labels['stats']; ?></h4>
+            <ul>
+                <?php foreach( ['sentences','words','chars'] as $value): ?>
+                    <li>
+                        <span><?= $this->labels['text_'.$value][0]; ?><?php if( !empty($this->labels['text_'.$value][1]) ): ?><br><em><?= $this->labels['text_'.$value][1]; ?></em><?php endif; ?></span>
+                        <span><?= $this->stats[$value]; ?></span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if( $this->misc ): ?>
+        <div class="group misc">
+            <h4><?= $this->labels['misc']; ?></h4>
+            <ul>
+                <?php if( $this->misc['flesch'] ): ?>
+                    <li>
+                        <span>
+                            <?= $this->labels['misc_flesch'][0]; ?>
+                            <em><?= $this->labels['misc_flesch']['1_0']; ?><br /><?= $this->labels['misc_flesch']['1_1']; ?></em>
+                        </span>
+                        <span><?= round($this->misc['flesch']); ?></span>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <script>
+
+        var analysisContents = {
+            'syllables' : {},
+            'sentences' : {},
+        }
+
+        <?php if( $this->syllables ): ?>
+            <?php foreach( array_keys($this->syllables) as $group ): ?>
+                analysisContents.syllables[<?=$group;?>] = <?= json_encode($this->syllables[$group]['words']); ?>;
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?php if( $this->sentences ): ?>
+            <?php foreach( array_keys($this->sentences) as $group ): ?>
+                analysisContents.sentences[<?=$group;?>] = <?= json_encode($this->sentences[$group]['words']); ?>;
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+    </script>
+
+</div>

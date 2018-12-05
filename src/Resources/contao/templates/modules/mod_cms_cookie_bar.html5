@@ -1,0 +1,27 @@
+<?php if( !$this->cookie_accepted && !$this->cookie_rejected ): ?>
+<!-- indexer::stop -->
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+    <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
+        <div class="formbody">
+
+            <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>" />
+
+            <div class="info">
+                <?= $this->content; ?>
+            </div>
+
+            <div class="widget widget-submit">
+                <button type="submit" name="submit" value="accept" class="submit"><?= $this->acceptLabel ?></button>
+                <?php if( $this->rejectLabel ): ?>
+                    <button type="submit" name="submit" value="reject" class="submit"><?= $this->rejectLabel ?></button>
+                <?php endif; ?>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+<!-- indexer::continue -->
+<?php endif; ?>

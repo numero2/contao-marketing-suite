@@ -1,0 +1,3 @@
+
+parameters:
+    cms_api_endpoint: "https://api.contao-marketingsuite.com"

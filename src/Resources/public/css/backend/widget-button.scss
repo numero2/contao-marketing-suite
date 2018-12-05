@@ -1,0 +1,75 @@
+// main: backend.scss
+@import "colors";
+
+#button_preview {
+    display: block;
+    width: calc(100% - 15px);
+    border: 2px solid $col-gray;
+    padding: 8px;
+}
+
+.widget.tabbed-nav {
+
+    border-bottom: 2px solid $col-gray;
+    padding-top: 14px;
+
+    ul {
+        display: flex;
+        justify-content: flex-start;
+
+        li {
+
+            label {
+                display: block;
+                padding: 7px 12px;
+                margin: 0;
+                border: 1px solid $col-gray;
+                border-bottom: 0;
+                border-right-width: 0;
+                cursor: pointer;
+
+                &:hover {
+                    background: $col-gray-1;
+                    border-color: $col-gray-1;
+                }
+            }
+
+            &:last-child label {
+                border-right-width: 1px;
+            }
+        }
+    }
+}
+
+.widget_tabbed-nav_active {
+    background: $col-orange;
+    border-color: $col-orange;
+    color: $col-white;
+}
+
+input[type="radio"][name="button_category"] {
+
+    display: none;
+
+    $categories: start sizes background-border text-font hover profi;
+
+    @each $category in $categories {
+        &[id="cat_#{$category}"]:checked ~ .widget {
+
+            display: none;
+
+            &.#{$category} {
+                display: block;
+            }
+
+            &.button-categories {
+                display: block;
+
+                label[for="cat_#{$category}"] {
+                    @extend .widget_tabbed-nav_active;
+                }
+            }
+        }
+    }
+
+}

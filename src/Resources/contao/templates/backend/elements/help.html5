@@ -1,0 +1,15 @@
+<div class="cms_be_help">
+
+    <fieldset id="pal_cms_be_help_legend" class="tl_tbox<?= $this->collapsed?' collapsed':''; ?>">
+
+        <legend onclick="AjaxRequest.toggleFieldset(this,'cms_be_help_legend','<?= $this->table; ?>')">
+            <?= $this->headline; ?>
+        </legend>
+
+        <div class="description">
+            <p><?= $this->description; ?></p>
+        </div>
+    </fieldset>
+
+</div>
+<div class="cms_seperator"></div>

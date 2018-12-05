@@ -1,0 +1,70 @@
+// main: backend.scss
+@import "colors";
+
+.cms_modules {
+
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: stretch;
+    padding: 15px;
+
+    .text {
+        width: 100%;
+    }
+
+    .module {
+
+        width: calc(50% - 30px);
+        padding: 15px;
+        overflow: hidden;
+
+        a {
+            display: flex;
+            height: calc(100% - 30px);
+
+            justify-content: flex-start;
+            align-items: center;
+
+            padding: 15px;
+            background: #ecf0f1;
+            position: relative;
+
+            &:hover {
+
+                background: $col-orange;
+                color: $col-white;
+
+                img {
+                    opacity: 1;
+                    filter: invert(100%);
+                }
+            }
+        }
+
+        img {
+            display: block;
+            opacity: 0.5;
+            margin-right: 15px;
+        }
+
+        span.label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        span.desc {
+            opacity: 0.75;
+            line-height: 1.4;
+        }
+
+        @media screen and (min-width: 650px) {
+            //a { min-height: 46px; }
+        }
+
+        @media screen and (max-width: 650px) {
+            width: 100%;
+        }
+    }
+}

@@ -1,0 +1,15 @@
+<div class="cms_modules">
+<?php foreach( $this->modules as $module ): ?>
+
+    <div class="module">
+        <a href="<?php echo $module['href']; ?>" <?php if ($module['class']): ?> class="<?=$module['class'];?>"<?php endif; ?>>
+            <img src="<?= $module['icon']; ?>" />
+            <span>
+                <span class="label"><?= $module['label']; ?></span>
+                <span class="desc"><?= $module['description']; ?></span>
+            </span>
+        </a>
+    </div>
+
+<?php endforeach; ?>
+</div>

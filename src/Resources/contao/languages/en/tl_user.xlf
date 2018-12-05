@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en">
+<body>
+    <!-- LEGENDS -->
+    <trans-unit id="tl_user.cms_legend">
+        <source>Marketing Suite</source>
+    </trans-unit>
+    <!-- FIELDS -->
+    <trans-unit id="tl_user.cms_pro_mode_enabled.0">
+        <source>Profimodus aktivieren</source>
+    </trans-unit>
+    <trans-unit id="tl_user.cms_pro_mode_enabled.1">
+        <source>Wenn aktiviert werden Ihnen keine Hilfetexte mehr angezeigt.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

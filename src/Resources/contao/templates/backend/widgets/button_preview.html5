@@ -1,0 +1,108 @@
+<div class="widget button-preview">
+    <h3><?= $GLOBALS['TL_LANG']['tl_content']['button_preview']['headline']; ?></h3>
+
+    <?php if( !$this->button ): ?>
+        <div class="widget">
+            <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_content']['button_preview']['empty']; ?></p>
+        </div>
+
+    <?php else: ?>
+
+        <iframe id="button_preview" src="about:blank" width="100" height="100"></iframe>
+
+        <p class="tl_help"><?= $GLOBALS['TL_LANG']['tl_content']['button_preview']['explanation']; ?></p>
+
+        <script>
+
+            const doc = document.getElementById('button_preview').contentWindow.document;
+            doc.open();
+
+            const html = `
+            <html>
+                <head>
+                    <style>
+                        html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
+                        article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+                        body { line-height: 1; font-family: Arial, Helvetica, Sans-serif; }
+                        ol, ul { list-style: none; }
+                        blockquote, q { quotes: none; }
+                        blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+                        table { border-collapse: collapse; border-spacing: 0; }
+                        strong,b { font-weight: 700; }
+                        i,em { font-style: italic; }
+                        input, select, textarea {box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-appearance: none; -webkit-border-radius:0; border-radius:0; }
+                        .invisible { display:none; }
+                        button, input.submit { cursor: pointer; -webkit-appearance: none; -webkit-border-radius:0; border-radius:0; }
+                        sub, sup { font-size: 70%; line-height: 0; position: relative; }
+                        sup { top: -0.4em; }
+                        sub { bottom: -0.25em; }
+                        * { box-sizing: border-box; }
+                        body > div { min-height: 30px; overflow: auto;}
+                        a { text-decoration: none; }
+                    </style>
+                    <?= $this->style; ?>
+                <head>
+                <body>
+                    <?= $this->button; ?>
+                    <script><?= $this->framescript; ?><\/script>
+                </body>
+            </html>`;
+
+            doc.write(html);
+            doc.close();
+
+            const channel = new MessageChannel();
+
+            const iframe = document.querySelector('iframe#button_preview');
+            iframe.contentWindow.postMessage('', '*');
+
+            window.addEventListener("message", onMessage, false);
+
+            // Handle messages received on port1
+            function onMessage(e) {
+                if( e.data.height ) {
+                    iframe.height = e.data.height;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+
+                const updatePreview = function() {
+
+                    formdata = {};
+
+                    const form = document.querySelector('form#tl_content');
+                    const formData = new FormData(form);
+
+                    formData.append('action', 'getButtonStyling');
+                    formData.append('id', <?= $this->id; ?>);
+                    formData.append('REQUEST_TOKEN', Contao.request_token);
+
+                    const oReq = new XMLHttpRequest();
+                    oReq.open("POST", form.action);
+                    oReq.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
+
+                    oReq.addEventListener("load", function(e) {
+                        iframe.contentWindow.postMessage(this.responseText, '*');
+                    });
+
+                    oReq.send(formData);
+                };
+
+                const inputs = document.querySelectorAll('#pal_style_legend input, #pal_style_legend select');
+
+                for( let i=0; i < inputs.length; i++ ) {
+                    inputs[i].addEventListener('change', updatePreview);
+                }
+
+                const buttons = document.querySelectorAll('.moor-okButton');
+
+                for( let i=0; i < buttons.length; i++ ) {
+                    buttons[i].addEventListener('click', updatePreview);
+                }
+            });
+
+        </script>
+    <?php endif; ?>
+
+</div>

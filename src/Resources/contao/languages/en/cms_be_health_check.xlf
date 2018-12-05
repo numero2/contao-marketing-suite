@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/cms_be_health_check.php" source-language="en">
+<body>
+    <trans-unit id="cms_be_health_check.missing_h1.0">
+        <source>H1 fehlt</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.missing_h1.1">
+        <source>Bei den nachfolgenden Seiten fehlt eine H1 Überschrift.</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.missing_meta.0">
+        <source>Meta-Daten fehlen</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.missing_meta.1">
+        <source>Bei den nachfolgenden Seiten fehlen ein Seitentitel und / oder eine Beschreibung der Seite.</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.short_meta.0">
+        <source>Meta-Daten zu kurz</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.short_meta.1">
+        <source>Bei den nachfolgenden Seiten sind Seitentitel und / oder die Beschreibung der Seite zu kurz.</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.long_meta.0">
+        <source>Zu lange Meta-Daten</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.long_meta.1">
+        <source>Bei den nachfolgenden Seiten sind Seitentitel und / oder die Beschreibung der Seite zu lang.</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.missing_opengraph.0">
+        <source>Open Graph Daten fehlen</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.missing_opengraph.1">
+        <source>Bei den nachfolgenden Elementen fehlen Daten zur Anzeige in Facebook und anderen sozialen Netzwerken.</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.nothing_to_do.0">
+        <source>Nichts zu tun.</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.nothing_to_do.1">
+        <source>Aktuell sind alle Seiten bestens bestückt.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

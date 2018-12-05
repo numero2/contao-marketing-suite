@@ -1,0 +1,10 @@
+<span class="element <?= $this->class; ?><?php if( $this->facebook ): ?> facebook<?php endif; ?>">
+    <a href="contao?do=news&table=tl_content&id=<?= $this->id; ?>" title="<?= $this->title; ?>">
+        <?= $this->headline; ?>
+    </a>
+    <?php if( $this->facebook ): ?>
+        <a href="javascript:void(0);" class="facebook-publish" title="<?= $this->facebookTitle; ?>">
+            <?= Image::getHtml('bundles/marketingsuite/icon_facebook_small.svg', ''); ?>
+        </a>
+    <?php endif; ?>
+</span>

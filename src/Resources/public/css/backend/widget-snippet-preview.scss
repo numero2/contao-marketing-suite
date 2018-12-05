@@ -1,0 +1,79 @@
+// main: backend.scss
+@import "colors";
+
+.widget.snippet-preview {
+
+    > div {
+        font-family: Arial, Helvetica, Sans-serif;
+        padding: 15px;
+        border: 1px solid $col-gray;
+
+        > div {
+            max-width: 600px;
+        }
+    }
+
+    .title {
+        font-size: 18px;
+        line-height: 22px;
+        font-weight: 400;
+        color: #1a0dab;
+    }
+
+    .uri {
+        font-size: 14px;
+        line-height: 16px;
+        font-weight: 400;
+        color: #006621;
+
+        word-break: break-all;
+    }
+
+    .description {
+        font-size: 13px;
+        line-height: 18px;
+        font-weight: 400;
+        color: #545454;
+    }
+}
+
+.widget.snippet {
+
+    > input, > textarea {
+        display: none;
+    }
+
+    > div[contenteditable] {
+        width: 100%;
+        line-height: normal;
+        font-size: .875rem;
+
+        mark {
+            background: $col-red;
+            color: $col-white;
+        }
+    }
+
+    > input + div[contenteditable] {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    > textarea + div[contenteditable] {
+        height: auto !important;
+    }
+
+    h3 label {
+
+        display: flex;
+        justify-content: space-between;
+
+        .snippet-count {
+            font-weight: 400;
+            font-size: 0.8em;
+        }
+
+        + img { display: none; }
+    }
+
+}

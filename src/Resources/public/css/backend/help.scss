@@ -1,0 +1,107 @@
+// main: backend.scss
+@import "colors";
+
+#pal_cms_helper_top_legend, #pal_cms_helper_bottom_legend {
+
+
+    legend { display: none; }
+
+    p {
+        margin: 0;
+        margin-top: 0.3rem;
+    }
+
+    a {
+        color: $col-blue;
+    }
+
+    background: $col-yellow-light;
+    border: none;
+    padding: 8px 16px;
+}
+
+.cms_helper_top_legend {
+    padding: 0;
+    background: $col-yellow-light;
+    border: none;
+    padding: 16px 6px 1px;
+    margin-bottom: 6px;
+
+    h2 + p { margin-top: 5px; }
+}
+
+#pal_cms_helper_bottom_legend, .cms_helper_bottom_legend {
+
+    background: $col-yellow-light;
+    padding: 16px;
+
+    h2, h3 {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .tl_panel {
+        background: none;
+        border: none;
+    }
+}
+
+.cms_helper_bottom_legend {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .tl_panel {
+        padding-left: 10px;
+        a {
+            white-space: nowrap;
+        }
+    }
+}
+
+.cms_be_help {
+
+    border-bottom: 1px solid $col-gray-1;
+    position: relative;
+    background: $col-white;
+    text-align: left;
+
+    fieldset {
+
+        padding-bottom: 0;
+
+        legend {
+
+            position: relative;
+
+            &:after {
+                content: "";
+                display: block;
+                top: 13px;
+                right: 15px;
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                background: url(../../../../system/themes/flexible/icons/help.svg) no-repeat scroll 50% 50%;
+            }
+        }
+    }
+
+    .description {
+        padding: 15px;
+        padding-bottom: 0;
+    }
+
+    a {
+        color: $col-blue;
+    }
+}
+
+.tl_panel {
+
+    .cms_be_help {
+        margin-top: -8px;
+        margin-right: -10px;
+    }
+}

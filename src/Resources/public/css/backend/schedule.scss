@@ -1,0 +1,364 @@
+// main: backend.scss
+@import "colors";
+
+.cms_schedule {
+
+    margin: 15px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .header, .body {
+        flex-basis: 100%;
+        flex-shrink: 0;
+    }
+
+    .legend {
+
+        padding: 12px 15px;
+        padding-left: 0;
+
+        ul {
+
+            li {
+                display: inline-block;
+                position: relative;
+                padding-left: 15px;
+
+                + li {
+                    margin-left: 15px;
+                }
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    top: 2px;
+                    left: 0;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                }
+
+                &.unpublished:before { background-color: $col-gray; }
+                &.published:before { background-color: $col-green; }
+                &.pending:before { background-color: rgba($col-blue,0.5); }
+
+                @media screen and (max-width: 450px) {
+                    display: block;
+
+                    + li {
+                        margin-left: 0;
+                        margin-top: 10px;
+                    }
+                }
+            }
+        }
+    }
+
+    #tl_buttons { padding-left: 0; }
+
+    .header {
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: nowrap;
+        background: $col-gray-1;
+
+        a {
+            display: block;
+            font-size: 20px;
+            padding: 15px 21px;
+
+            &:hover {
+                background: $col-orange;
+                color: $col-white;
+            }
+        }
+
+        .title {
+
+            #toggleQuickNav,
+            #toggleQuickNavYear {
+                display:none;
+            }
+
+            label {
+
+                width: 100%;
+                display: block;
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                &[for="toggleQuickNavYear"] {
+                    background: $col-gray-2;
+                    border: 1px solid $col-gray-1;
+                    padding: 7px 12px;
+                    margin: 10px;
+                    display: inline-block;
+                    width: auto;
+                }
+
+                &.current {
+                    height: 100%;
+                    padding: 17px 0;
+                }
+            }
+
+            #toggleQuickNav ~ .toggleQuickNav { display:none; }
+            #toggleQuickNav:checked ~ .toggleQuickNav { display:block; }
+
+            #toggleQuickNavYear ~ form .toggleQuickNavYear { display:none; }
+            #toggleQuickNavYear:checked ~ form .toggleQuickNavYear { display:flex; }
+            #toggleQuickNavYear:checked ~ form label[for="toggleQuickNavYear"] { display:none; }
+
+            width: 100%;
+            text-align: center;
+            position: relative;
+
+            .heading {
+                background: $col-gray-1;
+                padding: 4px;
+                text-align: center;
+            }
+
+            .toggleQuickNav {
+
+                position: absolute;
+                background: $col-white;
+                border: 1px solid $col-gray-1;
+                text-align: left;
+                z-index: 10;
+                width: 100%;
+                margin-left: -1px;
+                margin-right: -1px;
+            }
+
+            .grid {
+
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                width: calc(100% - 10px);
+                margin: 5px;
+
+                .box {
+                    width: calc(25% - 10px);
+                    text-align: center;
+
+                    input[type="radio"] {
+                        display: none;
+
+                        &:checked + label {
+                            border: 2px solid $col-gray;
+                        }
+                    }
+
+                    label {
+                        padding: 15px 5px;
+                        box-sizing: border-box;
+
+                        &:hover {
+                            background: $col-orange;
+                            color: $col-white;
+                        }
+                    }
+                }
+            }
+        }
+
+        .previous a { border-right: 1px solid darken($col-gray-1,5%); }
+        .next a { border-left: 1px solid darken($col-gray-1,5%); }
+    }
+
+    .body {
+
+        table {
+
+            width: 100%;
+            table-layout: fixed;
+
+            thead {
+
+                th {
+                    text-transform: uppercase;
+                    background: $col-gray;
+                    border: 2px solid $col-gray;
+                    padding: 10px 5px;
+
+                    border-right-color: $col-gray-1;
+                    border-bottom-color: $col-gray-1;
+                }
+            }
+
+            tbody {
+
+                td {
+
+                    position: relative;
+                    border: 2px solid $col-gray;
+                    padding-bottom: calc(#{(100%/7)} - 10px);
+
+                    .inner {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        padding: 5px;
+                        overflow-y: auto;
+
+                        span { display: block; }
+
+                        &::-webkit-scrollbar {
+                            width: 5px;
+                            background: rgba($col-gray,.6);
+                        }
+                        &::-webkit-scrollbar-thumb {
+                            border-radius: 0px;
+                            background: rgba($col-black,.2);
+                        }
+                    }
+
+                    .day {
+                        font-size: 1em;
+                        margin-bottom: 10px;
+
+                        span { display: none; }
+                    }
+
+                    .element {
+
+                        margin-top: 5px;
+                        padding: 2px 4px;
+                        border-radius: 2px;
+                        background: $col-gray;
+                        font-size: 0.85em;
+                        text-overflow: ellipsis;
+                        line-height: 1.2;
+
+                        &.published {
+                            background-color: $col-green;
+                            color: $col-white;
+                        }
+
+                        &.pending {
+                            background-color: rgba($col-blue,0.5);
+                            color: $col-white;
+                        }
+
+                        a {
+                            color: inherit;
+                            &:hover { text-decoration: underline; }
+                        }
+
+                        .facebook-publish {
+                            display: inline-block;
+                            margin-left: 2px;
+                            cursor: help;
+                        }
+                    }
+
+                    .week {
+                        font-size: 0.75em;
+                        position: absolute;
+                        bottom: 5px;
+                        left: 5px;
+                        color: $col-gray-1;
+                    }
+
+                    &.otherMonth {
+                        color: $col-gray-1 !important;
+                    }
+
+                    &.today {
+                        border-bottom-color: $col-orange;
+
+                        .day {
+                            color: $col-orange;
+                            font-weight: 700;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (min-width: 800px) {
+
+        #tl_buttons { padding-right: 0; }
+    }
+
+    @media screen and (max-width: 800px) {
+
+        .legend, #tl_buttons {
+            flex-basis: 100%;
+            flex-shrink: 0;
+        }
+
+        #tl_buttons { order: -1; }
+    }
+
+    @media screen and (max-width: 600px) {
+
+        .body {
+
+            table {
+
+                table-layout: auto;
+
+                thead {
+                    display: none;
+                }
+
+                tbody {
+
+                    td {
+                        display: block;
+                        border: 0;
+                        padding-bottom: 0;
+                        border-top: 1px solid $col-gray;
+
+                        .inner {
+                            position: relative;
+                            display: flex !important;
+                            justify-content: space-between;
+                        }
+
+                        .element {
+                            display: flex !important;
+                            justify-content: space-between;
+
+                            &:nth-child(1) { margin-top: 0; }
+                        }
+
+                        .day {
+
+                            display: block;
+                            width: 30px;
+
+                            span {
+                                display: block;
+                                font-size: 0.8em;
+                            }
+                        }
+
+                        .week {
+                            font-size: 0.65em;
+                        }
+
+                        .elements {
+                            width: 100%;
+                            margin-left: 10px;
+                        }
+                    }
+
+                    tr:nth-child(1) > td:nth-child(1) { border-top: 0; }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_cms_tag.php" source-language="en">
+<body>
+    <!-- ACTIONS -->
+    <trans-unit id="tl_cms_tag.new.0">
+        <source>Neuer Tag</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.new.1">
+        <source>Einen neuen Tag hinzufügen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.edit.0">
+        <source>Tag bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.edit.1">
+        <source>Tag ID %s bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pasteafter.0">
+        <source>Einfügen nach</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pasteafter.1">
+        <source>Nach der Tag ID %s einfügen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pasteinto.0">
+        <source>Einfügen in</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pasteinto.1">
+        <source>In die Tag ID %s einfügen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.delete.0">
+        <source>Tag löschen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.delete.1">
+        <source>Tag ID %s löschen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.toggle.0">
+        <source>Aktivieren / deaktivieren</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.toggle.1">
+        <source>Tag ID %s aktivieren / deaktivieren</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.frontend.0">
+        <source>Anzeige-Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.frontend.1">
+        <source>Einstellungen zur Anzeige konfigurieren</source>
+    </trans-unit>
+    <!-- LEGENDS -->
+    <trans-unit id="tl_cms_tag.common_legend">
+        <source>Allgemein</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.description_legend">
+        <source>Gruppen Beschreibung</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.tag_legend">
+        <source>Tag Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.config_legend">
+        <source>Tag-Konfiguration</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.expert_legend">
+        <source>Experten-Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.publish_legend">
+        <source>Veröffentlichung</source>
+    </trans-unit>
+    <!-- FIELDS -->
+    <trans-unit id="tl_cms_tag.name.0">
+        <source>Name</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.name.1">
+        <source>Bitte geben sie diesem Tag einen Namen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.type.0">
+        <source>Tag-Typ</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.type.1">
+        <source>Bitte wählen Sie den Type des Tags.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.description.0">
+        <source>Beschreibung</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.description.1">
+        <source>Diese Beschreibung wird dem Nutzer als Erklärung angezeigt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.tag.0">
+        <source>Tag</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.tag.1">
+        <source>Tracking-ID, welche zu diesem Tag gehört.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.alias.0">
+        <source>Alias</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.alias.1">
+        <source>Der Tag Alias ist eine eindeutige Referenz für diesen tag. Falls nichts angegebenw wird, wird dies automatisch erzeugt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.html.0">
+        <source>HTML Code</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.anonymize_ip.0">
+        <source>IP anonymisieren</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.customTpl.0">
+        <source>Individuelles Template</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.customTpl.1">
+        <source>Hier können Sie das Standard-Template überschreiben.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pages_scope.0">
+        <source>Seiten-Anwendungsbereich</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pages_scope.1">
+        <source>Anwendungsbereich der ausgewählten Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pages.0">
+        <source>Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pages.1">
+        <source>Bitte wähle auf welchen Seiten der Seiten-Anwendungsbereich angewendet werden soll.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.active.0">
+        <source>Aktiv?</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.active.1">
+        <source>Diesen Tag aktivieren?</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.enable_on_cookie_accept.0">
+        <source>E-Privacy konform</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.enable_on_cookie_accept.1">
+        <source>Wenn aktiviert, wird dieser Tag nur ausgespielt wenn Cookies akzeptiert wurden, ansonsten immer.</source>
+    </trans-unit>
+    <!-- OPTIONS -->
+    <trans-unit id="tl_cms_tag.types.default">
+        <source>-</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.types.group">
+        <source>Gruppe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.types.session">
+        <source>Session-Cookie</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.types.html">
+        <source>HTML</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.types.google_analytics">
+        <source>Google Analytics</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.types.facebook_pixel">
+        <source>facebook Pixel</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.page_scopes.current_page">
+        <source>Nur ausgewählte Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.page_scopes.current_and_direct_children">
+        <source>Ausgewählte Seiten und direkte Unterseiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.page_scopes.current_and_all_children">
+        <source>Ausgewählte Seiten und alle Unterseiten</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

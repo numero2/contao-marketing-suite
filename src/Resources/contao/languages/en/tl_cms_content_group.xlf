@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_cms_content_group.php" source-language="en">
+<body>
+    <!-- ACTIONS -->
+    <trans-unit id="tl_cms_content_group.edit.0">
+        <source>Inhaltsgruppe bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.edit.1">
+        <source>Inhaltsgruppe ID %s bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_content.editheader.0">
+        <source>Inhaltsgruppe bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_content.editheader.1">
+        <source>Die Inhaltsgruppe-Einstellungen bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.delete.0">
+        <source>Inhaltsgruppe löschen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.delete.1">
+        <source>Inhaltsgruppe ID %s löschen</source>
+    </trans-unit>
+    <!-- LEGENDS -->
+    <trans-unit id="tl_cms_content_group.common_legend">
+        <source>Allgemein</source>
+    </trans-unit>
+    <!-- FIELDS -->
+    <trans-unit id="tl_cms_content_group.name.0">
+        <source>Name</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.name.1">
+        <source>Bitte geben Sie dieser Inhaltsgruppe einen Namen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.name.case_a">
+        <source>Name für A-Version</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.name.case_b">
+        <source>Name für B-Version</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.type.0">
+        <source>Inhaltsgruppe Typ</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.type.1">
+        <source>Bitte wählen Sie den Typ der Inhaltsgruppe.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

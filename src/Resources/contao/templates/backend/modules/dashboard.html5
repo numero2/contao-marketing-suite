@@ -1,0 +1,29 @@
+<?php if( $this->be_help ): ?>
+    <?= $this->be_help; ?>
+<?php endif; ?>
+
+<div class="tl_dashboard">
+
+    <?php if( $this->items ): ?>
+
+        <?php foreach( $this->items as $type => $items ): ?>
+
+            <fieldset id="pal_<?= $type; ?>_legend" class="tl_tbox<?= (array_key_exists($type.'_legend', $this->fsStates) && empty($this->fsStates[$type.'_legend']))?' collapsed':''; ?>">
+
+                <legend onclick="AjaxRequest.toggleFieldset(this,'<?= $type; ?>_legend','cms_dashboard')">
+                    <?= $this->legends[$type]; ?>
+                </legend>
+
+                <div>
+                    <?php foreach( $items as $item ): ?>
+                        <?= $item; ?>
+                    <?php endforeach; ?>
+                </div>
+
+            </fieldset>
+
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+
+</div>

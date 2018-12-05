@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/cms_be_dashboard.php" source-language="en">
+<body>
+    <trans-unit id="cms_be_dashboard.total">
+        <source>Gesamt</source>
+    </trans-unit>
+    <trans-unit id="cms_be_dashboard.views">
+        <source>Aufrufe</source>
+    </trans-unit>
+    <trans-unit id="cms_be_dashboard.clicks">
+        <source>Klicks</source>
+    </trans-unit>
+    <trans-unit id="cms_be_dashboard.no_data">
+        <source>Noch keine Daten vorhanden</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

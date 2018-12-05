@@ -1,0 +1,12 @@
+<input type="radio" id="cat_first" name="button_category" checked>
+<?php foreach( $this->labels as $key => $value ): ?>
+    <input type="radio" id="cat_<?= $key; ?>" name="button_category" <?php if(array_search($key, array_keys($this->labels))===0): ?>checked<?php endif; ?>>
+<?php endforeach; ?>
+
+<div class="widget button-categories tabbed-nav">
+    <ul>
+        <?php foreach( $this->labels as $key => $value ): ?>
+            <li><label for="cat_<?= $key; ?>"><?= $value; ?></label></li>
+        <?php endforeach; ?>
+    </ul>
+</div>

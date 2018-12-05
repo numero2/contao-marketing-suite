@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_cms_marketing_item.php" source-language="en">
+<body>
+    <!-- ACTIONS -->
+    <trans-unit id="tl_cms_marketing_item.new.0">
+        <source>Neues Marketing-Element</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.new.1">
+        <source>Ein neues Marketing-Element hinzufügen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.edit.0">
+        <source>Marketing-Element bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.edit.1">
+        <source>Marketing-Element ID %s bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.editheader.0">
+        <source>Marketing-Element bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.editheader.1">
+        <source>Die Marketing-Element-Einstellungen bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.delete.0">
+        <source>Marketing-Element löschen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.delete.1">
+        <source>Marketing-Element ID %s löschen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.toggle.0">
+        <source>Aktivieren / deaktivieren</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.toggle.1">
+        <source>Marketing-Element ID %s aktivieren / deaktivieren</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.init.0">
+        <source>Einrichten fortsetzen</source>
+    </trans-unit>
+    <!-- LEGENDS -->
+    <trans-unit id="tl_cms_marketing_item.common_legend">
+        <source>Allgemein</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.config_legend">
+        <source>Marketing-Element Konfiguration</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.a_b_test_legend">
+        <source>A/B Test Konfiguration</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.current_page_legend">
+        <source>Inhaltselement festlegen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.expert_legend">
+        <source>Experten-Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.publish_legend">
+        <source>Element aktivieren</source>
+    </trans-unit>
+    <!-- FIELDS -->
+    <trans-unit id="tl_cms_marketing_item.name.0">
+        <source>Name</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.name.1">
+        <source>Bitte geben Sie diesem Marketing-Element einen Namen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.type.0">
+        <source>Elementtyp</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.type.1">
+        <source>Bitte wählen Sie den Typ des Marketing-Elements.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.content_type.0">
+        <source>Inhaltselement Typ</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.content_type.1">
+        <source>Bitte wählen Sie welchen Typ die Inhaltselemente haben sollen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.pages.0">
+        <source>Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.pages.1">
+        <source>Bitte wählen Sie auf welchen Seiten Sie Inhalte ausspielen wollen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.ranking.0">
+        <source>Ranking</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.ranking.1">
+        <source>Hiermit wird die Ausspielung des Inhaltes auf einen Zeitraum festgelegt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.keyword.0">
+        <source>Keyword</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.keyword.1">
+        <source>Für welches Keyword soll dieser Test ausgeführt werden.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.start_ranking.0">
+        <source>Ausspielung und Messung beginnen ab</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.start_ranking.1">
+        <source>Ab wann soll die Ausspielung und Messung beginnen?</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.intervall.0">
+        <source>Wie lange soll Inhalt A bzw. B ausgespielt werden.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.intervall.1">
+        <source>Für eine sinnvolle Auswertung muss der Zeitraum mindestens 4 Wochen betragen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.active.0">
+        <source>Aktiv?</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.active.1">
+        <source>Nur aktivierte Elemente können auf Seite angezeigt werden. (Kann später geändert werden)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.used.0">
+        <source>Verwendung</source>
+    </trans-unit>
+    <!-- OPTIONS -->
+    <trans-unit id="tl_cms_marketing_item.types.default">
+        <source>-</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.types.a_b_test">
+        <source>A/B Test</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.types.visited_pages">
+        <source>Seiten dynamisch</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.types.current_page">
+        <source>Seiten festgelegt</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.intervall_units.day">
+        <source>Tag(e)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.intervall_units.week">
+        <source>Woche(n)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.intervall_units.month">
+        <source>Monat(e)</source>
+    </trans-unit>
+    <!-- LABELS -->
+    <trans-unit id="tl_cms_marketing_item.child_header_label.visited_pages_info.0">
+        <source>Info</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.child_header_label.visited_pages_info.1">
+        <source>Das erste Element, von oben nach unten, bei dem das Kriterium erfüllt ist wird ausgespielt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.child_header_label.a_b_test_info.0">
+        <source>Info</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.child_header_label.a_b_test_info.1">
+        <source>Elemente werden zufällig ausgespielt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.child_header_label.a_b_test_info.default">
+        <source>Weitere Inhaltselemente für den A/B-Test hinzufügen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.child_header_label.a_b_test_info.ranking">
+        <source>Elemente werden entsprechend dem Startdatum und Intervall ausgespielt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.child_header_label.current_page_info.0">
+        <source>Info</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.child_header_label.current_page_info.1">
+        <source>Elemente werden nur auf der angegebenen Seite ausgespielt.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

@@ -1,0 +1,141 @@
+<?php if( $this->be_help ): ?>
+    <?= $this->be_help; ?>
+<?php endif; ?>
+
+<div class="tl_health_check">
+
+    <?php if( $this->categories ): ?>
+
+        <?php foreach( $this->categories as $category ): ?>
+
+            <fieldset id="pal_<?= $category->type; ?>_legend" class="tl_tbox<?= $category->collapsed?' collapsed':''; ?>">
+
+                <legend onclick="AjaxRequest.toggleFieldset(this,'<?= $category->type; ?>_legend','cms_health_check');">
+                    <?= $category->legend; ?>
+                    <span class="count"><?= count($category->items); ?></span>
+                </legend>
+
+                <div>
+                    <div class="helper top">
+                        <p class="tl_help tl_tip">
+                            <?= $category->description; ?>
+                        </p>
+                    </div>
+
+                    <div class="tl_listing_container list_view">
+                        <table class="tl_listing showColumns">
+                            <tbody>
+                                <?php foreach( $category->items as $i => $item ): ?>
+                                <tr class="<?=($i%2)?'even':'odd';?> click2edit toggle_select hover-row"
+                                    <?php if( !empty($item->attributes) ) {
+                                        foreach( $item->attributes as $name => $value ) {
+                                            echo ' data-'.$name.'="'.$value.'"';
+                                        }
+                                    } ?>
+                                    >
+                                    <td class="tl_file_list col_name ordered_by">
+                                        <span class="icon">
+                                            <img src="<?= $item->icon; ?>" width="18" height="18" alt="">
+                                        </span>
+                                        <?= $item->name; ?>
+                                    </td>
+                                    <td class="tl_file_list tl_right_nowrap">
+                                        <a href="<?= $item->href; ?>" title="<?= $item->title; ?>" class="edit">
+                                            <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_page']['edit'][0] ;?>">
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </fieldset>
+
+        <?php endforeach; ?>
+
+        <script>
+
+            var checkMissingH1InRenderedPage = function( row, cb ) {
+
+                if( row ) {
+
+                    var finish = function() {
+
+                        row.removeAttribute('data-url');
+
+                        // update count
+                        if( true ) {
+
+                            var fieldset = document.querySelector('#pal_missing_h1_legend');
+                            var rows = fieldset.querySelectorAll('table tr');
+                            var count = fieldset.querySelector('legend > .count');
+
+                            count.innerHTML = rows.length;
+                        }
+
+                        if( typeof(cb) === "function" ) {
+                            cb();
+                        }
+                    };
+
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.addEventListener("load", function(){
+
+                        if( xhr.status == 200 && xhr.responseText ) {
+
+                            if( xhr.responseText.test(/<h1>.*<\/h1>/g) ) {
+                                row.parentNode.removeChild(row);
+                            }
+                        }
+
+                        finish();
+                    });
+
+                    xhr.addEventListener("error", finish);
+                    xhr.addEventListener("abort", finish);
+
+                    xhr.open("GET", row.getAttribute('data-url'));
+                    xhr.send();
+
+                }
+            };
+
+            document.addEventListener('DOMContentLoaded', function(){
+
+                var rows = document.querySelectorAll('#pal_missing_h1_legend tr[data-url]');
+                var pages = [];
+
+                for( var i=0; i<rows.length; i++ ) {
+                    pages.push(rows[i]);
+                }
+
+                pages.reverse();
+
+                var processPages = function() {
+
+                    var p = pages.pop();
+
+                    if( p ) {
+                        checkMissingH1InRenderedPage(p, processPages);
+                    }
+                };
+
+                processPages();
+
+            });
+
+        </script>
+
+    <?php else: ?>
+
+        <div class="nothing">
+            <h1><?= $this->nothingTodo[0]; ?></h1>
+            <p><?= $this->nothingTodo[1]; ?></p>
+        </div>
+
+    <?php endif; ?>
+
+</div>

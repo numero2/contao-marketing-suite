@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_news_archive.php" source-language="en" >
+<body>
+    <!-- LEGENDS -->
+    <trans-unit id="tl_news_archive.cms_social_media_legend">
+        <source>Social Media Einstellungen</source>
+    </trans-unit>
+    <!-- BUTTONS -->
+    <trans-unit id="tl_news_archive.cms_schedule.0">
+        <source>Kalenderansicht</source>
+    </trans-unit>
+    <trans-unit id="tl_news_archive.cms_schedule.1">
+        <source>Kalenderansicht</source>
+    </trans-unit>
+    <!-- FIELDS -->
+    <trans-unit id="tl_news_archive.cms_facebook_pages.0">
+        <source>Facebook-Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_news_archive.cms_facebook_pages.1">
+        <source>Wählen Sie die Seiten auf denen News veröffentlicht werden dürfen.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

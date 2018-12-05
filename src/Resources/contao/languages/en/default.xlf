@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en">
+<body>
+    <trans-unit id="CTE.marketing_suite">
+        <source>Marketing Suite (aus Bibliothek einfügen)</source>
+    </trans-unit>
+    <trans-unit id="CTE.conversion_elements">
+        <source>Marketing Suite (jetzt erstellen)</source>
+    </trans-unit>
+    <trans-unit id="CTE.conversion_elements_dash">
+        <source>Conversion-Elemente</source>
+    </trans-unit>
+    <trans-unit id="CTE.text_cms.0">
+        <source>Text (Marketing Suite)</source>
+    </trans-unit>
+    <trans-unit id="CTE.text_cms.1">
+        <source>Erzeugt ein Rich-Text-Element.</source>
+    </trans-unit>
+    <trans-unit id="CTE.text_cms_cta.0">
+        <source>Text mit CTA</source>
+    </trans-unit>
+    <trans-unit id="CTE.text_cms_cta.1">
+        <source>Erzeugt ein Rich-Text-Element.</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_marketing_item.0">
+        <source>Marketing-Element</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_marketing_item.1">
+        <source>Erzeugt ein Marketing-Element.</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_conversion_item.0">
+        <source>Conversion-Element</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_conversion_item.1">
+        <source>Erzeugt ein Conversion-Element.</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_button.0">
+        <source>Button</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_button.1">
+        <source>Erzeugt ein Button-Element.</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_hyperlink.0">
+        <source>Hyperlink</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_hyperlink.1">
+        <source>Erzeugt ein Hyperlink-Element.</source>
+    </trans-unit>
+    <trans-unit id="MSC.snippet_count">
+        <source>{1} von {2} Zeichen</source>
+    </trans-unit>
+    <trans-unit id="MSC.finish">
+        <source>fertigstellen</source>
+    </trans-unit>
+    <trans-unit id="ERR.natural_min_4_weeks">
+        <source>Die Zeitspanne muss mindestes 4 Wochen betragen.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

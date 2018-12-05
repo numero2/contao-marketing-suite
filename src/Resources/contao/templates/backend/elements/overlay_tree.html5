@@ -1,0 +1,15 @@
+<?php $this->extend('backend/elements/overlay'); ?>
+
+<?php $this->block('content'); ?>
+    <ul>
+        <?php foreach( $this->content as $label => $types ): ?>
+            <li><span><?= $label; ?></span>
+                <ul>
+                    <?php foreach( $types as $key => $value ): ?>
+                        <li><span class="tree"><?=\numero2\MarketingSuite\Backend::generateReferencePath($value, 3); ?></span></li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php $this->endblock(); ?>

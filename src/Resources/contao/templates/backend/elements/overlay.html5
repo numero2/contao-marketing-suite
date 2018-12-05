@@ -1,0 +1,10 @@
+<a class="hover-label">
+    <?php $this->block('label'); ?>
+        <?= $this->label; ?>
+    <?php $this->endblock(); ?>
+    <span class="hover-overlay">
+        <?php $this->block('content'); ?>
+        <?= $this->content; ?>
+        <?php $this->endblock(); ?>
+    </span>
+</a>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/cms_default.php" source-language="en">
+<body>
+    <trans-unit id="cms_tag_default.0.name">
+        <source>Standard</source>
+    </trans-unit>
+    <trans-unit id="cms_tag_default.0.description">
+        <source><![CDATA[<p>]]>Tools, die wesentliche Services und Funktionen ermöglichen, einschließlich Identitätsprüfung, Servicekontinuität und Standortsicherheit. Diese Option kann nicht abgelehnt werden.<![CDATA[</p>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_tag_default.1.name">
+        <source>Analytik</source>
+    </trans-unit>
+    <trans-unit id="cms_tag_default.1.description">
+        <source><![CDATA[<p>]]>Tools, die anonyme Daten über Website-Nutzung und -Funktionalität sammeln. Wir nutzen die Erkenntnisse, um unsere Produkte, Dienstleistungen und das Benutzererlebnis zu verbessern.<![CDATA[</p>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_tag_default.2.name">
+        <source>Werbung</source>
+    </trans-unit>
+    <trans-unit id="cms_tag_default.2.description">
+        <source><![CDATA[<p>]]>Anonyme Informationen, die wir sammeln, um Ihnen nützliche Produkte und Dienstleistungen empfehlen zu können.<![CDATA[</p>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_tag_default.3.name">
+        <source>Support</source>
+    </trans-unit>
+    <trans-unit id="cms_tag_default.3.description">
+        <source><![CDATA[<p>]]>Tools, die interaktive Services wie Chat-Support und Kunden-Feedback-Tools unterstützen.<![CDATA[</p>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_tag_settings_default.accept_label">
+        <source>Bestätigen</source>
+    </trans-unit>
+    <trans-unit id="cms_tag_settings_default.text">
+        <source><![CDATA[<p>]]>Dazu speichern wir Informationen über Ihren Besuch in sogenannten Cookies. Durch die Nutzung dieser Webseite erklären Sie sich mit der Verwendung von Cookies einverstanden. Detaillierte Informationen über den Einsatz von Cookies auf dieser Webseite erhalten Sie in der Datenschutzerklärung.<![CDATA[</p>]]></source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

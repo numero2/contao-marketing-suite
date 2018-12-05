@@ -1,0 +1,147 @@
+.mod_cms_accept_tags,
+.mod_cms_cookie_bar {
+
+    font-family: Arial, Helvetica, Sans-serif;
+    font-size: 14px;
+    line-height: 1.33;
+
+    button {
+
+        color: #ffffff;
+        border: 0;
+        padding: 10px;
+
+        &[value="accept"] { background-color: #27ae60; }
+        &[value="reject"] { background-color: #7f8c8d; }
+    }
+}
+
+.mod_cms_cookie_bar {
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100vw;
+
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+    background: #ffffff;
+
+    form {
+
+        display: block;
+        max-width: 800px;
+        margin: 0 auto;
+
+        .formbody {
+
+            margin: 30px;
+
+            .info {
+                font-size: 12px;
+            }
+
+            .widget-submit { text-align: right; }
+        }
+    }
+}
+
+.mod_cms_accept_tags {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100vw;
+    height: 100vh;
+    overflow: scroll;
+
+    background: rgba(#ffffff,0.5);
+    color: #222;
+
+    .formbody {
+        .widget-submit { text-align: right; }
+    }
+
+    form {
+
+        display: block;
+        max-width: 800px;
+        margin: 30px;
+
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+        background: #ffffff;
+
+        > .formbody, > .tags > div {
+            padding: 15px;
+        }
+
+        > .tags {
+
+            display: flex;
+            flex-wrap: wrap;
+
+            > div {
+
+                flex-basis: 0;
+                flex-grow: 1;
+
+                .head {
+
+                    display: flex;
+                    justify-content: space-between;
+                    font-weight: 700;
+                    margin-top: 0;
+                    margin-bottom: 15px;
+
+                    input { display: none; }
+
+                    $color: #95a5a6;
+
+                    label {
+
+                        display: inline-block;
+                        position: relative;
+                        background: $color;
+                        width: 40px;
+                        height: 16px;
+                        border-radius: 13px;
+                        cursor: pointer;
+
+                        &:after {
+                            content: "";
+                            display: block;
+                            position: absolute;
+                            top: -2px;
+                            left: 0;
+                            width: 20px;
+                            height: 20px;
+                            background: darken($color,10%);
+                            border-radius: 50%;
+                            transition: all .3s;
+                        }
+                    }
+
+                    input:checked + label {
+
+                        background: lighten(#2ecc71,20%);
+
+                        &:after {
+                            left: 100%;
+                            transform: translateX(-100%);
+                        }
+                    }
+                }
+
+                p {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}

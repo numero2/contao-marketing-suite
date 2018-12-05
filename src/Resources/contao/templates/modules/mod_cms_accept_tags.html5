@@ -1,0 +1,38 @@
+<?php if( !$this->cookiesSaved ): ?>
+<!-- indexer::stop -->
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+    <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="post">
+        <div class="formbody">
+
+            <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>" />
+
+            <div class="info">
+                <?= $this->content; ?>
+            </div>
+
+            <div class="widget widget-submit">
+                <button type="submit" name="submit" value="accept" class="submit"><?= $this->acceptLabel ?></button>
+            </div>
+        </div>
+
+        <div class="tags">
+            <?php foreach ($this->tags as $key => $tag): ?>
+                <div>
+                    <div class="head">
+                        <span><?= $tag['name']; ?></span>
+                        <?php if( !$tag['required'] ): ?>
+                            <input id="cookie_<?= $tag['id']; ?>" type="checkbox" name="cookie_<?= $tag['id']; ?>" value="<?= $tag['id']; ?>" <?php if( $tag['accepted'] ): ?>checked<?php endif; ?> />
+                            <label for="cookie_<?= $tag['id']; ?>"></label>
+                        <?php endif; ?>
+                    </div>
+                    <?= $tag['description']; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </form>
+
+</div>
+<!-- indexer::continue -->
+<?php endif; ?>

@@ -1,0 +1,8 @@
+<div class="clr widget snippet-preview">
+    <h3><?= $this->headline; ?></h3>
+    <div>
+        <div class="title"><?= $this->title; ?></div>
+        <div class="uri"><?= $this->uri; ?></div>
+        <div class="description"><?= $this->description; ?></div>
+    </div>
+</div>

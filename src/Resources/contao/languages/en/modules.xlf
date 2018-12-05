@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en">
+<body>
+    <!-- BACKEND -->
+    <trans-unit id="MOD.marketing_suite.0">
+        <source>Marketing Suite</source>
+    </trans-unit>
+    <trans-unit id="MOD.marketing_suite.1">
+        <source>Marketing Suite</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_dashboard.0">
+        <source>Dashboard</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_dashboard.1">
+        <source>Dashboard - Informationen auf einen Blick</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_marketing.0">
+        <source>Content Marketing</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_marketing.1">
+        <source>Content Marketing - Dynamische Inhalte verwenden</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_conversion.0">
+        <source>Conversion</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_conversion.1">
+        <source>Conversion - Trackbare Elemente verwenden</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_health_check.0">
+        <source>Health Check</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_health_check.1">
+        <source>Health-Check - SEO Informationen</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_settings.0">
+        <source>Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_settings.1">
+        <source>Einstellungen - Marketing Suite</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_feedback.0">
+        <source>Feedback</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_feedback.1">
+        <source>Feedback - Ihre Meinung ist uns wichtig</source>
+    </trans-unit>
+    <!-- BACKEND -->
+    <trans-unit id="CMS.tags.0">
+        <source>Cookie / ePrivacy Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="CMS.tags.1">
+        <source>Ermöglicht den Einbau von JavaScript-Tags z.B. für das Tracking via Google Analytics.</source>
+    </trans-unit>
+    <trans-unit id="CMS.settings.0">
+        <source>Grundeinstellungen</source>
+    </trans-unit>
+    <trans-unit id="CMS.settings.1">
+        <source>Hier werden die Einstellungen der Marketing Suite vorgenommen.</source>
+    </trans-unit>
+    <trans-unit id="CMS.avalex.0">
+        <source>avalex</source>
+    </trans-unit>
+    <trans-unit id="CMS.avalex.1">
+        <source>Dynamische Datenschutzerklärung mit Abmahnkostenschutz.</source>
+    </trans-unit>
+    <trans-unit id="CMS.cookies.0">
+        <source>Cookies</source>
+    </trans-unit>
+    <trans-unit id="CMS.cookies.1">
+        <source>Einstellungen für die Nutzung von Cookies (DSGVO / ePrivacy) festlegen.</source>
+    </trans-unit>
+    <trans-unit id="CMS.facebook.0">
+        <source>Facebook</source>
+    </trans-unit>
+    <trans-unit id="CMS.facebook.1">
+        <source>Verknüpfung zu einem Facebook-Konto für News-Publishing konfigurieren.</source>
+    </trans-unit>
+    <!-- FRONTEND -->
+    <trans-unit id="FMD.marketing_suite.0">
+        <source>Marketing Suite</source>
+    </trans-unit>
+    <trans-unit id="FMD.marketing_suite.1">
+        <source>Marketing Suite</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_marketing_item.0">
+        <source>Marketing-Element</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_marketing_item.1">
+        <source>Erzeugt ein Marketing-Element.</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_conversion_item.0">
+        <source>Conversion-Element</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_conversion_item.1">
+        <source>Erzeugt ein Conversion-Element.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

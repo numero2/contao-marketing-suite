@@ -1,0 +1,78 @@
+// main: backend.scss
+@import "colors";
+
+.tl_avalex {
+
+    $col-avalex-yellow: #efb225;
+    $col-avalex-blue: #052c52;
+
+    .header {
+        position: relative;
+        text-align: center;
+        background: url(../../img/backend/avalex/background.jpg) no-repeat scroll 50% 50%;
+        background-size: cover;
+        padding: 100px 40px;
+
+        a.logo {
+            display: block;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: url(../../img/backend/avalex/logo.svg) no-repeat scroll 50% 50%;
+            background-size: contain;
+            width: 100px;
+            height: 40px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-weight: 600;
+            color: $col-white;
+            line-height: 1.4;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-weight: 600;
+            color: $col-avalex-yellow;
+            line-height: 1.4;
+            font-size: 30px;
+        }
+
+        @media screen and (max-width: 600px) {
+            padding: 80px 20px;
+            h1 { font-size: 26px; }
+            h2 { font-size: 22px; }
+        }
+    }
+
+    .description {
+
+        padding: 15px;
+        max-width: 650px;
+        line-height: 1.4;
+
+        a.button {
+            display: inline-block;
+            background: $col-avalex-yellow;
+            color: $col-avalex-blue;
+            font-weight: 600;
+            font-size: 24px;
+            padding: 15px 30px;
+            line-height: 1;
+            text-align: center;
+        }
+
+        p:last-child { margin-bottom: 0; }
+
+        @media screen and (max-width: 600px) {
+
+            a.button {
+                display: block;
+                margin: 0 auto;
+                max-width: 200px;
+            }
+        }
+    }
+}

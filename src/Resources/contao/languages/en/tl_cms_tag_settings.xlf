@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_cms_tag_settings.php" source-language="en">
+<body>
+    <!-- LEGENDS -->
+    <trans-unit id="tl_cms_tag_settings.title_legend">
+        <source>Titel und Typ</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.config_legend">
+        <source>Modul-Konfiguration</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.style_legend">
+        <source>Styling Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.template_legend">
+        <source>Template-Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.expert_legend">
+        <source>Experten-Einstellungen</source>
+    </trans-unit>
+    <!-- FIELDS -->
+    <trans-unit id="tl_cms_tag_settings.headline.0">
+        <source>Überschrift</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.headline.1">
+        <source>Hier können Sie dem Modul eine Überschrift hinzufügen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.type.0">
+        <source>Anzeige-Typ</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.type.1">
+        <source>In welcher Form wird im Frontend nach der Erlaubnis gefragt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_override_label.0">
+        <source>Beschriftung ändern</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_override_label.1">
+        <source>Wollen Sie die Cookie-Bar Texte selbst festlegen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_label.0">
+        <source>Beschriftung "Bestätigen"</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_label.1">
+        <source>Dieser Text wird auf dem Button "Bestätigen" angezeigt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_label.0">
+        <source>Beschriftung "Ablehnen"</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_label.1">
+        <source>Dieser Text wird auf dem Button zum Ablehnen angezeigt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_text.0">
+        <source>Inhalt</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_text.1">
+        <source>Dieser Inhalt wird innerhalb der Cookie Bar angezeigt.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_font_color.0">
+        <source>Schriftfarbe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_font_color.1">
+        <source>Hier können Sie eine hexadezimale Schriftfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_background_color.0">
+        <source>Hintergrundfarbe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_background_color.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_font.0">
+        <source>"Bestätigen" Button Schriftfarbe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_font.1">
+        <source>Hier können Sie eine hexadezimale Schriftfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_background.0">
+        <source>"Bestätigen" Button Hintergrundfarbe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_background.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_font.0">
+        <source>"Ablehnen" Button Schriftfarbe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_font.1">
+        <source>Hier können Sie eine hexadezimale Schriftfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_background.0">
+        <source>"Ablehnen" Button Hintergrundfarbe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_background.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_customTpl.0">
+        <source>Individuelles Template</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_customTpl.1">
+        <source>Hier können Sie das Standard-Template überschreiben.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_cssID.0">
+        <source>CSS-ID/Klasse</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_cssID.1">
+        <source>Hier können Sie eine ID und beliebig viele Klassen eingeben.</source>
+    </trans-unit>
+    <!-- OPTIONS -->
+    <trans-unit id="tl_cms_tag_settings.types.default.0">
+        <source>keine Anzeige</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.types.default.1">
+        <source>Erzegut keine Ausgabe für die Tags.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.types.cms_cookie_bar.0">
+        <source>Cookie Bar</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.types.cms_cookie_bar.1">
+        <source>Erzeugt eine Cookie Bar mit dem hinterlegten Inhalt</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.types.cms_accept_tags.0">
+        <source>Tracking Opt-In (ePrivacy)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.types.cms_accept_tags.1">
+        <source>Erzeugt eine Element in dem verschieden Kategorien des Trackings zugestimmt werden kann.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

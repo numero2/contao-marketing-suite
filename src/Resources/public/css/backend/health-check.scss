@@ -1,0 +1,76 @@
+// main: backend.scss
+@import "colors";
+
+.tl_health_check {
+
+    > fieldset {
+
+        > div {
+            padding: 0 15px;
+
+            > .tl_listing_container {
+                margin: 0;
+                margin-top: 15px;
+            }
+        }
+
+        &#pal_missing_h1_legend {
+
+            tr[data-url] {
+
+                td:nth-child(1) {
+
+                    color: $col-gray-1;
+
+                    .icon {
+
+                        position: relative;
+                        display: inline-block;
+
+                        img { opacity: 0.55; }
+
+                        &:before {
+                            content: "";
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+                            background: url(../../../../system/themes/flexible/icons/loading.svg) 0 0 no-repeat;
+                            background-size: contain;
+                            position: absolute;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    > .nothing {
+
+        background: url(../../img/backend/icons/icon_ok.svg) no-repeat scroll 10px 22px;
+        background-size: 40px auto;
+        padding: 25px;
+        padding-left: 65px;
+
+        p { margin-bottom: 0; margin-top: 5px; }
+    }
+
+    fieldset > legend {
+
+        position: relative;
+
+        > .count {
+            display: inline-block;
+            background: $col-orange;
+            color: $col-white;
+            font-size: 0.75rem;
+
+            position: absolute;
+            right: 15px;
+
+            padding: 0px 4.5px;
+            border-radius: 8px;
+            height: 16px;
+            line-height: 16px;
+        }
+    }
+}

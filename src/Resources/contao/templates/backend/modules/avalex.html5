@@ -1,0 +1,19 @@
+<div id="tl_buttons">
+    <a href="<?= \Backend::addToUrl('', true, ['mod']); ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']); ?>" accesskey="b" onclick="Backend.getScrollOffset()">
+        <?=$GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+    </a>
+</div>
+<div class="tl_avalex">
+    <div class="header">
+        <a class="logo" href="https://www.avalex.de/192.html" target="_blank"></a>
+        <h1>Automatisch rechtssichere Datenschutzerklärung</h1>
+        <h2>Einmal per Plugin installiert, immer aktuell - mit Abmahnkostenschutz.</h2>
+    </div>
+    <div class="description">
+        <p>Spätestens mit Wirksamwerden der DSGVO am 25. Mai 2018 muss sich jedes Unternehmen mit Internetseite um die eigene Datenschutzerklärung kümmern. avalex ist da um Ihnen diese Aufgabe einfach und komfortabel abzunehmen. Sie konfigurieren sich binnen weniger Minuten Ihre eigene, rechtssichere Datenschutzerklärung und wir halten diese dauerhaft rechtssicher.</p>
+        <p>Als Nutzer der Contao Marketing Suite erhalten Sie <b>dauerhaft 10% Rabatt</b> auf die Nutzung von avalex.</p>
+        <p>
+            <a class="button" href="https://www.avalex.de/192.html" target="_blank">Jetzt anmelden</a>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+<div class="cms_schedule">
+
+    <?php if( $this->legends ): ?>
+    <div class="legend">
+        <ul>
+            <?php foreach( $this->legends as $class => $label ): ?>
+                <li class="<?= $class; ?>"><?= $label; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <div id="tl_buttons">
+        <?php if( $this->newButton ): ?>
+            <?= $this->newButton; ?>
+        <?php endif; ?>
+        <?= $this->backButton; ?>
+    </div>
+
+    <div class="header">
+        <div class="previous"><a href="<?= $this->previous;?>">«</a></div>
+        <div class="title">
+            <div role="heading">
+                <input type="checkbox" name="toggleQuickNav" id="toggleQuickNav">
+                <label for="toggleQuickNav" class="current"><?= \Date::parse('F Y', $this->firstDay); ?></label>
+                <div class="toggleQuickNav">
+                    <input type="checkbox" name="toggleQuickNavYear" id="toggleQuickNavYear">
+                    <form method="get">
+                        <input type="hidden" name="do" value="<?= \Input::get('do'); ?>">
+                        <input type="hidden" name="key" value="<?= \Input::get('key'); ?>">
+                        <input type="hidden" name="rt" value="<?= REQUEST_TOKEN; ?>">
+                        <input type="hidden" name="ref" value="<?= \Input::get('ref'); ?>">
+                        <?php if( \Input::get('id') ): ?>
+                            <input type="hidden" name="id" value="<?= \Input::get('id'); ?>">
+                        <?php endif; ?>
+
+                        <div class="year">
+                            <div class="grid toggleQuickNavYear">
+                                <?php for( $i=$this->year-5; $i <= $this->year+6; $i++ ): ?>
+                                    <div class="box">
+                                        <input type="radio" name="year" id="year_<?= $i; ?>" value="<?= $i; ?>" <?php if( $i==$this->year ): ?>checked<?php endif; ?>>
+                                        <label for="year_<?= $i; ?>"><?= $i; ?></label>
+                                    </div>
+                                <?php endfor; ?>
+                            </div>
+                            <label for="toggleQuickNavYear">Jahr wählen</label>
+                        </div>
+                        <div class="month">
+                            <div class="heading">Monat</div>
+                            <div class="grid">
+                                <?php foreach( $GLOBALS['TL_LANG']['MONTHS'] as $key => $value): ?>
+                                    <div class="box">
+                                        <input type="radio" name="month" id="month_<?= $key+1; ?>" value="<?= $key+1; ?>" <?php if( $key+1==$this->month ): ?>checked<?php endif; ?>>
+                                        <label for="month_<?= $key+1; ?>"><?= $value; ?></label>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="next"><a href="<?= $this->next;?>">»</a></div>
+    </div>
+    <div class="body">
+        <table role="grid" class="days">
+            <thead>
+                <tr class="titles" role="row">
+                    <?php foreach( $this->headings as $key => $value ): ?>
+                    <th class="title day day<?= $key; ?>"><?= $value; ?></th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach( $this->rows as $week => $row ): ?>
+                    <tr class="week" role="row">
+
+                        <?php foreach( $row as $weekday => $day ): ?>
+                        <td role="gridcell" class="day <?= $day['class']; ?>">
+
+                            <div class="inner">
+                                <span class="day">
+                                    <?= $day['day']; ?>
+                                    <span><?= \Date::parse('D', $day['date']); ?></span>
+                                </span>
+
+                                <?php if( $day['elements'] ): ?>
+                                <div class="elements">
+                                    <?= implode(' ', $day['elements']); ?>
+                                </div>
+                                <?php endif; ?>
+
+                                <?php if( $weekday == 1 ): ?>
+                                    <span class="week">KW <?= $week; ?></span>
+                                <?php endif; ?>
+                            </div>
+
+                        </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>

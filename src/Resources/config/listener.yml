@@ -1,0 +1,17 @@
+
+services:
+
+    # marketing_suite.listener.header_replay.conversion_item:
+    #     class: numero2\MarketingSuite\EventListener\HeaderReplay\MarketingItemListener
+    #     arguments:
+    #         - "@contao.routing.scope_matcher"
+    #         - "@contao.framework"
+    #     tags:
+    #         - { name: kernel.event_listener, event: terminal42.header_replay, method: onReplay }
+
+    marketing_suite.listener.kernel_response.add_test_header:
+        class: numero2\MarketingSuite\EventListener\KernelResponse\TestHeaderListener
+        arguments:
+            - "@contao.framework"
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 248 }

@@ -1,0 +1,140 @@
+.mod_cms_accept_tags,
+.mod_cms_cookie_bar {
+    font-family: Arial, Helvetica, Sans-serif;
+    font-size: 14px;
+    line-height: 1.33;
+}
+
+.mod_cms_accept_tags button,
+.mod_cms_cookie_bar button {
+    color: #ffffff;
+    border: 0;
+    padding: 10px;
+}
+
+.mod_cms_accept_tags button[value="accept"],
+.mod_cms_cookie_bar button[value="accept"] {
+    background-color: #27ae60;
+}
+
+.mod_cms_accept_tags button[value="reject"],
+.mod_cms_cookie_bar button[value="reject"] {
+    background-color: #7f8c8d;
+}
+
+.mod_cms_cookie_bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100vw;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    background: #ffffff;
+}
+
+.mod_cms_cookie_bar form {
+    display: block;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.mod_cms_cookie_bar form .formbody {
+    margin: 30px;
+}
+
+.mod_cms_cookie_bar form .formbody .info {
+    font-size: 12px;
+}
+
+.mod_cms_cookie_bar form .formbody .widget-submit {
+    text-align: right;
+}
+
+.mod_cms_accept_tags {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: scroll;
+    background: rgba(255, 255, 255, 0.5);
+    color: #222;
+}
+
+.mod_cms_accept_tags .formbody .widget-submit {
+    text-align: right;
+}
+
+.mod_cms_accept_tags form {
+    display: block;
+    max-width: 800px;
+    margin: 30px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    background: #ffffff;
+}
+
+.mod_cms_accept_tags form > .formbody, .mod_cms_accept_tags form > .tags > div {
+    padding: 15px;
+}
+
+.mod_cms_accept_tags form > .tags {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mod_cms_accept_tags form > .tags > div {
+    flex-basis: 0;
+    flex-grow: 1;
+}
+
+.mod_cms_accept_tags form > .tags > div .head {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.mod_cms_accept_tags form > .tags > div .head input {
+    display: none;
+}
+
+.mod_cms_accept_tags form > .tags > div .head label {
+    display: inline-block;
+    position: relative;
+    background: #95a5a6;
+    width: 40px;
+    height: 16px;
+    border-radius: 13px;
+    cursor: pointer;
+}
+
+.mod_cms_accept_tags form > .tags > div .head label:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    background: #798d8f;
+    border-radius: 50%;
+    transition: all .3s;
+}
+
+.mod_cms_accept_tags form > .tags > div .head input:checked + label {
+    background: #7ee2a8;
+}
+
+.mod_cms_accept_tags form > .tags > div .head input:checked + label:after {
+    left: 100%;
+    transform: translateX(-100%);
+}
+
+.mod_cms_accept_tags form > .tags > div p {
+    font-size: 12px;
+}

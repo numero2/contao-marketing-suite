@@ -1,0 +1,8 @@
+<?php $this->extend('ce_text'); ?>
+
+<?php $this->block('content'); ?>
+    <?php $this->parent(); ?>
+
+    <a class="button" data-cms-cta-id="<?= $this->id; ?>" href="<?= $this->ctaLink; ?>" rel="nofollow" title="<?= $this->ctaTitle; ?>"><?= $this->ctaTitle; ?></a>
+
+<?php $this->endblock(); ?>

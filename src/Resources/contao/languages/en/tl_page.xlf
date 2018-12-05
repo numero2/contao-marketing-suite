@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en" >
+<body>
+    <!-- LEGENDS -->
+    <trans-unit id="tl_page.cms_legend">
+        <source>Marketing Suite</source>
+    </trans-unit>
+    <!-- FIELDS -->
+    <trans-unit id="tl_page.snippet_preview.0">
+        <source>Snippet-Vorschau in Suchergebnissen</source>
+    </trans-unit>
+    <trans-unit id="tl_page.cms_root_license.0">
+        <source>Domain-Schlüssel</source>
+    </trans-unit>
+    <trans-unit id="tl_page.cms_root_license.1">
+        <source>Bitte den Domain-Schlüssel für diese Domain aus der Marketing Suite Verwaltung eingeben.</source>
+    </trans-unit>
+    <trans-unit id="tl_page.cms_refresh_license.0">
+        <source>Lizenz-Daten</source>
+    </trans-unit>
+    <trans-unit id="tl_page.cms_refresh_license.1">
+        <source>Bitte speichern Sie, da alle nicht gespeicherten Änderungen verworfen werden.</source>
+    </trans-unit>
+    <trans-unit id="tl_page.cms_refresh_license.button">
+        <source>aktualisieren</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>
