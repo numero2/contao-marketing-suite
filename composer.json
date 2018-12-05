@@ -2,7 +2,7 @@
     "name": "numero2/contao-marketing-suite",
     "type": "contao-bundle",
     "description": "Contao Marketing Suite",
-    "license": "LGPL-3.0+",
+    "license": "proprietary",
     "authors": [{
             "name": "numero2 - Agentur für digitales Marketing",
             "homepage": "https://www.numero2.de"
