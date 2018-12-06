@@ -86,7 +86,7 @@
 
                         if( xhr.status == 200 && xhr.responseText ) {
 
-                            if( xhr.responseText.test(/<h1>.*<\/h1>/g) ) {
+                            if( xhr.responseText.test(/<h1[^>]*>([^<]+)<\/h1>/gm) ) {
                                 row.parentNode.removeChild(row);
                             }
                         }

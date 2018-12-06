@@ -19,6 +19,7 @@
 namespace numero2\MarketingSuite\Api;
 
 use numero2\MarketingSuite\Backend\License;
+use numero2\MarketingSuite\Encryption;
 
 
 class MarketingSuite {

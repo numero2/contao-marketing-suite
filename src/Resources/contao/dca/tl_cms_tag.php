@@ -453,7 +453,7 @@ class tl_cms_tag extends Backend {
                 || ( $pid != '0' && !in_array($k, $aRootTypes) )
             ) {
 
-                if( !\numero2\MarketingSuite\Backend\License::hasFeature('tags_'.$k) && $k != 'default' ) {
+                if( !\numero2\MarketingSuite\Backend\License::hasFeature('tags_'.$k) && !in_array($k, ['default', 'group']) ) {
                     continue;
                 }
 
