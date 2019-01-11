@@ -15,11 +15,13 @@
 .mod_cms_accept_tags button[value="accept"],
 .mod_cms_cookie_bar button[value="accept"] {
     background-color: #27ae60;
+    background-image: none;
 }
 
 .mod_cms_accept_tags button[value="reject"],
 .mod_cms_cookie_bar button[value="reject"] {
     background-color: #7f8c8d;
+    background-image: none;
 }
 
 .mod_cms_cookie_bar {

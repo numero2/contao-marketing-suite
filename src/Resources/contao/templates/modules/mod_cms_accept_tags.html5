@@ -1,6 +1,6 @@
 <?php if( !$this->cookiesSaved ): ?>
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> data-cms-id="<?= $this->cmsID; ?>">
 
     <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="post">
         <div class="formbody">
@@ -32,6 +32,8 @@
             <?php endforeach; ?>
         </div>
     </form>
+
+    <script>if( !navigator.cookieEnabled ) { document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"]').remove(); }</script>
 
 </div>
 <!-- indexer::continue -->

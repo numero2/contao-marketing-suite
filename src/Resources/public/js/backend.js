@@ -1114,6 +1114,14 @@ document.addEventListener('tinyMCEInitialized', function (e) {
 
                     var skip = false;
 
+                    // one word sentences no need to search
+                    if( group == 0 && word.length === analysisContents[type][group][i][2] ) {
+                        start = lastFound;
+                        start = textLength-lastFound-word.length-1;
+                        ranges.push({start: start, length: end-start});
+                        continue;
+                    }
+
                     // try to find first word from reverse
                     while( (end-start) < analysisContents[type][group][i][2] ) {
 

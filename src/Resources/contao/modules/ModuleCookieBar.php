@@ -110,6 +110,10 @@ class ModuleCookieBar extends \Module {
         }
         $this->Template->rejectLabel = $this->cms_tag_reject_label;
 
+        $this->Template->acceptLabel = $this->replaceInsertTags($this->Template->acceptLabel);
+        $this->Template->content = $this->replaceInsertTags($this->Template->content);
+        $this->Template->rejectLabel = $this->replaceInsertTags($this->Template->rejectLabel);
+
         $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/cookie-bar.css">';
 
         $strStyle = $this->generateStyling();
@@ -119,6 +123,7 @@ class ModuleCookieBar extends \Module {
         }
 
         $this->Template->tags = $aTags;
+        $this->Template->cmsID = uniqid('cms');
     }
 
 
@@ -148,6 +153,7 @@ class ModuleCookieBar extends \Module {
         ,   'fontcolor' => (string)$this->acceptfont
         ,   'background' => '1'
         ,   'bgcolor' => (string)$this->acceptcolor
+        ,   'bgimage' => strlen((string)$this->acceptcolor)?'none':''
         ,   'border' => '1'
         ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
         ];
@@ -158,6 +164,7 @@ class ModuleCookieBar extends \Module {
         ,   'fontcolor' => (string)$this->rejectfont
         ,   'background' => '1'
         ,   'bgcolor' => (string)$this->rejectcolor
+        ,   'bgimage' => strlen((string)$this->rejectcolor)?'none':''
         ,   'border' => '1'
         ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
         ];

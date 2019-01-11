@@ -147,6 +147,9 @@ class ModuleAcceptTags extends \Module {
             $this->Template->content = $this->cms_tag_text;
         }
 
+        $this->Template->acceptLabel = $this->replaceInsertTags($this->Template->acceptLabel);
+        $this->Template->content = $this->replaceInsertTags($this->Template->content);
+
         $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/cookie-bar.css">';
 
         $strStyle = $this->generateStyling();
@@ -154,6 +157,8 @@ class ModuleAcceptTags extends \Module {
         if( strlen($strStyle) ) {
             $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
         }
+
+        $this->Template->cmsID = uniqid('cms');
     }
 
 
@@ -179,12 +184,13 @@ class ModuleAcceptTags extends \Module {
         $main = $oStyleSheet->compileDefinition($mainStyle, false, [], [], true);
 
         $acceptStyle = [
-            'font'=>'1',
-            'fontcolor'=>(string)$this->acceptfont,
-            'background'=>'1',
-            'bgcolor'=>(string)$this->acceptcolor,
-            'border'=>'1',
-            'borderwidth'=> ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
+            'font'=>'1'
+        ,   'fontcolor'=>(string)$this->acceptfont
+        ,   'background'=>'1'
+        ,   'bgcolor'=>(string)$this->acceptcolor
+        ,   'bgimage' => strlen((string)$this->acceptcolor)?'none':''
+        ,   'border'=>'1'
+        ,   'borderwidth'=> ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
         ];
         $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
 
