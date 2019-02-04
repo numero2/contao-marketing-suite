@@ -20,8 +20,9 @@ namespace numero2\MarketingSuite\MarketingItem;
 
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use numero2\MarketingSuite\Tracking\Session;
 use numero2\MarketingSuite\ContentGroupModel;
+use numero2\MarketingSuite\Tracking\ClickAndViews;
+use numero2\MarketingSuite\Tracking\Session;
 
 
 class ABTest extends MarketingItem {
@@ -257,32 +258,47 @@ class ABTest extends MarketingItem {
      */
     public function selectContentId($objContents, $objMI, $objContentParent, $objContent) {
 
+        if( $objContentParent ) {
 
-        if( $objContentParent ){
+            $id = null;
 
-            $tracking = new Session();
+            // check if alway_use_this was selected
+            $aAlways = $objContentParent->fetchEach('always_use_this');
+            foreach( $aAlways as $key => $value ) {
 
-            $aContentGroupsIds = $objContentParent->fetchEach('id');
+                if( $value == 1 ){
+                    $id = $key;
+                    break;
+                }
+            }
 
-            // if already selected in session tracking
-            $id = $tracking->getABTestSelected($objMI->id);
-            if( !in_array($id, $aContentGroupsIds) ) {
+            $views = new ClickAndViews();
 
-                // choose random
-                $rng = rand(0,count($aContentGroupsIds)-1);
+            if( !$id ) {
 
-                // get random and save
-                $id = $aContentGroupsIds[$rng];
-                $tracking->storeABTestSelected($objMI->id, $id);
+                $tracking = new Session();
 
+                $aContentGroupsIds = $objContentParent->fetchEach('id');
+
+                // if already selected in session tracking
+                $id = $tracking->getABTestSelected($objMI->id);
+                if( !in_array($id, $aContentGroupsIds) ) {
+
+                    // choose random
+                    $rng = rand(0,count($aContentGroupsIds)-1);
+
+                    // get random and save
+                    $id = $aContentGroupsIds[$rng];
+                    $tracking->storeABTestSelected($objMI->id, $id);
+
+                }
             }
 
             // increase view counter
             foreach( $objContentParent as $key => $value) {
 
                 if( $value->id === $id ) {
-                    $value->views += 1;
-                    $value->save();
+                    $views->increaseViewOnMarketingElement($value);
                     break;
                 }
             }

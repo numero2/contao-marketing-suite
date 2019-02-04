@@ -323,11 +323,17 @@ select[readonly] ~ .tl_help {
     background: #e9e9e9;
 }
 
-.tl_dashboard fieldset > div > .item .inner .no-data {
+@media screen and (max-width: 600px) {
+    .tl_dashboard fieldset > div > .item {
+        width: 100%;
+    }
+}
+
+.tl_dashboard .no-data {
     margin: auto;
 }
 
-.tl_dashboard fieldset > div > .item .inner .no-data p {
+.tl_dashboard .no-data p {
     display: block;
     text-align: center;
     margin: auto;
@@ -335,17 +341,11 @@ select[readonly] ~ .tl_help {
     opacity: 0.3;
 }
 
-.tl_dashboard fieldset > div > .item .inner .no-data p:before {
+.tl_dashboard .no-data p:before {
     content: "\2639";
     display: block;
     margin: 15px auto;
     font-size: 3em;
-}
-
-@media screen and (max-width: 600px) {
-    .tl_dashboard fieldset > div > .item {
-        width: 100%;
-    }
 }
 
 .tl_health_check > fieldset > div {
@@ -1140,6 +1140,7 @@ select[readonly] ~ .tl_help {
     width: 100%;
     line-height: normal;
     font-size: .875rem;
+    min-height: 30px;
 }
 
 .widget.snippet > div[contenteditable] mark {
@@ -1154,6 +1155,7 @@ select[readonly] ~ .tl_help {
 
 .widget.snippet > textarea + div[contenteditable] {
     height: auto !important;
+    min-height: 30px;
 }
 
 .widget.snippet h3 label {

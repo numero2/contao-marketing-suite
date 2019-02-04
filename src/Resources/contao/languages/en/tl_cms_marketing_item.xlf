@@ -160,6 +160,9 @@
     <trans-unit id="tl_cms_marketing_item.child_header_label.current_page_info.1">
         <source>Elemente werden nur auf der angegebenen Seite ausgespielt.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.list_label.always_use_this_name">
+        <source>Fall: %s</source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

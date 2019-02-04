@@ -25,6 +25,12 @@
     <trans-unit id="tl_page.cms_refresh_license.button">
         <source>aktualisieren</source>
     </trans-unit>
+    <trans-unit id="tl_page.cms_exclude_health_check.0">
+        <source>Von Health Check ausschließen</source>
+    </trans-unit>
+    <trans-unit id="tl_page.cms_exclude_health_check.1">
+        <source>Diese Seite im Health Check nicht berücksichtigen.</source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

@@ -24,6 +24,12 @@
 
         <?php endforeach; ?>
 
+    <?php else: ?>
+
+        <div class="no-data">
+            <p><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['no_data']; ?></p>
+        </div>
+
     <?php endif; ?>
 
 </div>

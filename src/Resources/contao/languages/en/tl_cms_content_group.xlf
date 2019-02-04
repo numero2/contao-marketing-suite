@@ -21,6 +21,12 @@
     <trans-unit id="tl_cms_content_group.delete.1">
         <source>Inhaltsgruppe ID %s löschen</source>
     </trans-unit>
+    <trans-unit id="tl_cms_content_group.toggle_always_use_this.0">
+        <source>Immer Fall "%s" ausspielen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_content_group.toggle_always_use_this.1">
+        <source>Fall "%s" wird immer ausgespielt. Erneut klicken um künftig wieder beide Fälle auszuspielen.</source>
+    </trans-unit>
     <!-- LEGENDS -->
     <trans-unit id="tl_cms_content_group.common_legend">
         <source>Allgemein</source>

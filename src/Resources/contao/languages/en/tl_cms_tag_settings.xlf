@@ -122,6 +122,12 @@
     <trans-unit id="tl_cms_tag_settings.types.cms_accept_tags.1">
         <source>Erzeugt eine Element in dem verschieden Kategorien des Trackings zugestimmt werden kann.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_exclude_pages.0">
+        <source>Seiten ausschließen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_exclude_pages.1">
+        <source>Wählen Sie auf welchen Seiten das Modul nicht angezeigt werden soll (sinnvoll z.B. auf der Seite "Datenschutzerklärung").</source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

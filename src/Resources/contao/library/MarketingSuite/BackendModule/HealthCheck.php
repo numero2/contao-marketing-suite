@@ -18,6 +18,10 @@
  */
 namespace numero2\MarketingSuite\BackendModule;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use numero2\MarketingSuite\Backend\License;
+use numero2\MarketingSuite\Backend\Help;
+
 
 class HealthCheck extends \BackendModule {
 
@@ -43,9 +47,8 @@ class HealthCheck extends \BackendModule {
     */
     public function generate() {
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('health_check') ) {
-
-            throw new \Contao\CoreBundle\Exception\AccessDeniedException('This feature is not included in your Marketing Suite package.');
+        if( !License::hasFeature('health_check') ) {
+            throw new AccessDeniedException('This feature is not included in your Marketing Suite package.');
         }
 
         return parent::generate();
@@ -59,7 +62,7 @@ class HealthCheck extends \BackendModule {
 
         $this->loadLanguageFile('tl_page');
         $this->loadLanguageFile('cms_be_health_check');
-        \numero2\MarketingSuite\Backend\License::buk();
+        License::buk();
 
         // get fieldset states
         $objSessionBag = NULL;
@@ -74,18 +77,18 @@ class HealthCheck extends \BackendModule {
 
         // check the different health categories
         $aCategories = [
-            \numero2\MarketingSuite\Backend\License::hasFeature('health_check_h1_missing')?$this->checkH1Missing():null
-        ,   \numero2\MarketingSuite\Backend\License::hasFeature('health_check_meta_missing')?$this->checkMetaMissing():null
-        ,   \numero2\MarketingSuite\Backend\License::hasFeature('health_check_meta_too_short')?$this->checkMetaTooShort():null
-        ,   \numero2\MarketingSuite\Backend\License::hasFeature('health_check_meta_too_long')?$this->checkMetaTooLong():null
-        ,   \numero2\MarketingSuite\Backend\License::hasFeature('health_check_open_graph_missing')?$this->checkOpenGraphMissing():null
+            License::hasFeature('health_check_h1_missing') ? $this->checkH1Missing() : null
+        ,   License::hasFeature('health_check_meta_missing') ? $this->checkMetaMissing() : null
+        ,   License::hasFeature('health_check_meta_too_short') ? $this->checkMetaTooShort() : null
+        ,   License::hasFeature('health_check_meta_too_long') ? $this->checkMetaTooLong() : null
+        ,   License::hasFeature('health_check_open_graph_missing') ? $this->checkOpenGraphMissing() : null
         ];
 
         $aCategories = array_filter($aCategories);
 
         // initialize help
         $objBEHelp = NULL;
-        $objBEHelp = new \numero2\MarketingSuite\Backend\Help();
+        $objBEHelp = new Help();
 
         $this->Template->be_help = $objBEHelp->generate();
         $this->Template->categories = $aCategories;
@@ -113,7 +116,7 @@ class HealthCheck extends \BackendModule {
      */
     private function checkH1Missing() {
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('health_check_h1_missing') ) {
+        if( !License::hasFeature('health_check_h1_missing') ) {
             return null;
         }
 
@@ -161,6 +164,7 @@ class HealthCheck extends \BackendModule {
             'column' => [
                 "type=?"
             ,   empty($aExcludePageIDs)?:"id NOT IN(".implode(',',$aExcludePageIDs).")"
+            ,   "cms_exclude_health_check=0"
             ]
         ,   'value' => ['regular']
         ]);
@@ -284,7 +288,7 @@ class HealthCheck extends \BackendModule {
      */
     private function checkMetaMissing() {
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('health_check_meta_missing') ) {
+        if( !License::hasFeature('health_check_meta_missing') ) {
             return null;
         }
 
@@ -330,7 +334,7 @@ class HealthCheck extends \BackendModule {
      */
     private function checkMetaTooShort() {
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('health_check_meta_too_short') ) {
+        if( !License::hasFeature('health_check_meta_too_short') ) {
             return null;
         }
 
@@ -376,7 +380,7 @@ class HealthCheck extends \BackendModule {
      */
     private function checkMetaTooLong() {
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('health_check_meta_too_long') ) {
+        if( !License::hasFeature('health_check_meta_too_long') ) {
             return null;
         }
 
@@ -422,12 +426,8 @@ class HealthCheck extends \BackendModule {
      */
     private function checkOpenGraphMissing() {
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('health_check_open_graph_missing') ) {
+        if( !License::hasFeature('health_check_open_graph_missing') || !class_exists('numero2\OpenGraph3\OpenGraph3') ) {
             return null;
-        }
-
-        if( !class_exists('numero2\OpenGraph3\OpenGraph3') ) {
-            return;
         }
 
         $oCategory = (object) [

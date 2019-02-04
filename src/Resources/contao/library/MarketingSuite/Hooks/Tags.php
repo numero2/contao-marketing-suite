@@ -161,9 +161,6 @@ class Tags extends Hooks {
      */
     public function generateCookieBar( \PageModel $objPage, \LayoutModel $objLayout, \PageRegular $objPageRegular ) {
 
-        if( $objModel->type === 'default' ) {
-            return;
-        }
         if( !\numero2\MarketingSuite\Backend\License::hasFeature('tags', $objPage->trail[0]) || !\numero2\MarketingSuite\Backend\License::hasFeature('tag_settings', $objPage->trail[0]) ) {
             return;
         }
@@ -182,6 +179,17 @@ class Tags extends Hooks {
                     $objModel->{$value['mapping']} = \CMSConfig::get($key);
                 } else {
                     $objModel->{$key} = \CMSConfig::get($key);
+                }
+            }
+        }
+
+        if( $objModel->cms_exclude_pages ) {
+
+            $excludePages = deserialize($objModel->cms_exclude_pages);
+
+            if( is_array($excludePages) && count($excludePages) ) {
+                if( in_array($objPage->id, $excludePages) ) {
+                    return;
                 }
             }
         }

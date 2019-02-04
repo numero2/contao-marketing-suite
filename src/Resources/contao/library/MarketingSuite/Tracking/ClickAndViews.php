@@ -52,6 +52,30 @@ class ClickAndViews {
 
 
     /**
+     * increase the view counter for the given content element. Do not use the model as this is already modified.
+     *
+     * @param  \Model $objContentModel
+     */
+    public function increaseViewOnMarketingElement($objContentCount) {
+
+        if( $this->isViewable() ) {
+
+            if( \numero2\MarketingSuite\Backend\License::hasFeature('marketing_element') ) {
+
+                $db = \Database::getInstance();
+                if( $db->fieldExists('views', $objContentCount->getTable()) ) {
+                    \Database::getInstance()->prepare( "UPDATE ".$objContentCount->getTable()." SET views=views+1 WHERE id=?" )->execute($objContentCount->id);
+                } else if( $db->fieldExists('cms_mi_views', $objContentCount->getTable()) ) {
+                    \Database::getInstance()->prepare( "UPDATE ".$objContentCount->getTable()." SET cms_mi_views=cms_mi_views+1 WHERE id=?" )->execute($objContentCount->id);
+                }
+            }
+        }
+    }
+
+
+
+
+    /**
      * increase the click counter for forms in a_b_test and in conversion element
      *
      * @param  array $arrSubmitted
@@ -134,6 +158,11 @@ class ClickAndViews {
         if( (\Input::get('FORM_SUBMIT') && strpos(\Input::get('FORM_SUBMIT'), 'auto_form_') === 0 )
             || (\Input::post('FORM_SUBMIT') && strpos(\Input::post('FORM_SUBMIT'), 'auto_form_') === 0 ) ) {
 
+            return false;
+        }
+
+        $masterRequest = \System::getContainer()->get('request_stack')->getMasterRequest();
+        if( \Environment::get('isAjaxRequest') || $masterRequest->headers->get('X-Requested-With') === 'XMLHttpRequest' ) {
             return false;
         }
 

@@ -21,6 +21,11 @@ $GLOBALS['TL_DCA']['tl_page']['palettes']['regular'] = str_replace(
 ,   ',description,snippet_preview;'
 ,   $GLOBALS['TL_DCA']['tl_page']['palettes']['regular']
 );
+$GLOBALS['TL_DCA']['tl_page']['palettes']['regular'] = str_replace(
+    ',guests'
+,   ',guests,cms_exclude_health_check'
+,   $GLOBALS['TL_DCA']['tl_page']['palettes']['regular']
+);
 $GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace(
     ';{protected_legend'
 ,   ';{cms_legend:hide},cms_root_license,cms_refresh_license;{protected_legend'
@@ -58,6 +63,13 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
     ,   'cms_root_sign' => [
             'eval'                  => ['doNotShow'=>true, 'doNotCopy'=>true]
         ,   'sql'                   => "blob NULL"
+        ]
+    ,   'cms_exclude_health_check' => [
+            'label'                 => &$GLOBALS['TL_LANG']['tl_page']['cms_exclude_health_check']
+        ,   'inputType'             => 'checkbox'
+        ,   'default'               => '0'
+        ,   'eval'                  => ['tl_class'=>'w50']
+        ,   'sql'                   => "char(1) NOT NULL default '0'"
         ]
     ]
 );

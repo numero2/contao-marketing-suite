@@ -82,8 +82,12 @@ class SnippetPreview {
         $fieldName = $dc->field;
         $value = $dc->activeRecord->{$fieldName};
 
-        $class = $GLOBALS['TL_DCA']['tl_page']['fields'][$fieldName]['inputType'];
+        $type = $GLOBALS['TL_DCA']['tl_page']['fields'][$fieldName]['inputType'];
 
-        return '<div class="tl_'.$class.'" contenteditable="true">'.$value.'</div>';
+        if( $type === "textarea" ) {
+            $type = "text";
+        }
+
+        return '<div class="tl_'.$type.'" contenteditable="true">'.$value.'</div>';
     }
 }

@@ -232,7 +232,7 @@ class Hooks extends \Backend {
 
                 // Set the new value
                 $varValue = \Input::post('value', true);
-                $strKey = ($this->strAction == 'reloadPagetree') ? 'pageTree' : 'fileTree';
+                $strKey = ($strAction == 'reloadPagetree') ? 'pageTree' : 'fileTree';
 
                 // Convert the selected values
                 if( $varValue != '' ) {

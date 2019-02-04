@@ -1341,6 +1341,9 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 var CMSBackend = {
+
+    themePath: 'bundles/marketingsuite/img/backend/icons/',
+
     override: function(selector, html) {
         var element = document.querySelector(selector);
         if( element ) {
@@ -1358,5 +1361,71 @@ var CMSBackend = {
         if( element ) {
             element.innerHTML = html + element.innerHTML;
         }
+    },
+
+    toggleField: function(el, id, table) {
+
+        el.blur();
+
+        var image = $(el).getFirst('img'),
+            active = (image.get('data-state') == 1),
+            div = el.getParent('div'),
+            next, icon, icond;
+        // Backwards compatibility
+        if( image.get('data-state') === null ) {
+            console.warn('Using a field toggle without a "data-state" attribute is deprecated.');
+        }
+        if( image.get('data-icon') === null || image.get('data-icon-disabled') === null ) {
+            console.warn('Using a field toggle without a "data-icon" or a "data-icon-disabled" attribute is deprecated.');
+        }
+
+        // Find the icon depending on the view (tree view, list view, parent view)
+        next = div.getNext('div');
+        if( next.hasClass('cte_type') ) {
+        }
+
+        icon = image.get('data-icon');
+        icond = image.get('data-icon-disabled');
+
+        var request = new Request.Contao({'url':window.location.href, 'followRedirects':false}).get({'tid':id, 'state':!active ? 1 : 0, 'rt':Contao.request_token});
+
+        request.xhr.addEventListener('load', function(e) {
+
+            if( request.status == 302 ) {
+                var path = (!active ? icon : icond);
+
+                if( path.indexOf('/') < 0 ) {
+                    path = CMSBackend.themePath + path;
+                }
+
+                image.src = path;
+                image.set('data-state', !active ? 1 : 0);
+            }
+        });
+
+        return false;
+    },
+
+    toggleFieldReload: function(el, id, table) {
+
+        el.blur();
+
+        var image = $(el).getFirst('img'),
+            active = (image.get('data-state') == 1);
+        // Backwards compatibility
+        if( image.get('data-state') === null ) {
+            console.warn('Using a field toggle without a "data-state" attribute is deprecated.');
+        }
+
+        var request = new Request.Contao({'url':window.location.href, 'followRedirects':false}).get({'tid':id, 'state':!active ? 1 : 0, 'rt':Contao.request_token});
+
+        request.xhr.addEventListener('load', function(e) {
+
+            if( request.status == 302 ) {
+                location.reload(true);
+            }
+        });
+
+        return false;
     },
 };

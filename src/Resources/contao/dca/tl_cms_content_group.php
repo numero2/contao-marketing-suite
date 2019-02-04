@@ -59,6 +59,12 @@ $GLOBALS['TL_DCA']['tl_cms_content_group'] = [
             ,   'href'              => 'act=edit'
             ,   'icon'              => 'header.svg'
             ]
+        ,   'toggle_always_use_this' => [
+                'label'             => &$GLOBALS['TL_LANG']['tl_cms_content_group']['toggle_always_use_this']
+            ,   'icon'              => 'bundles/marketingsuite/img/backend/icons/icon_always_use_this.svg'
+            ,   'attributes'        => 'onclick="Backend.getScrollOffset();return CMSBackend.toggleFieldReload(this,%s)"'
+            ,   'button_callback'   => ['tl_cms_content_group', 'toggleAlwaysUseThis']
+            ]
         ]
     ]
 ,   'palettes' => [
@@ -97,11 +103,17 @@ $GLOBALS['TL_DCA']['tl_cms_content_group'] = [
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
+    ,   'always_use_this' => [
+            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_content_group']['always_use_this']
+        ,   'inputType'             => 'checkbox'
+        ,   'eval'                  => [ 'tl_class'=>'w50' ]
+        ,   'sql'                   => "char(1) NOT NULL default ''"
+        ]
     ,   'helper_top' => [
-            'input_field_callback'     => [ '\numero2\MarketingSuite\Backend\Wizard', 'generateTopForInputField' ]
+            'input_field_callback'  => [ '\numero2\MarketingSuite\Backend\Wizard', 'generateTopForInputField' ]
         ]
     ,   'helper_bottom' => [
-            'input_field_callback'     => [ '\numero2\MarketingSuite\Backend\Wizard', 'generateBottomForInputField' ]
+            'input_field_callback'  => [ '\numero2\MarketingSuite\Backend\Wizard', 'generateBottomForInputField' ]
         ]
     ]
 ];
@@ -145,7 +157,16 @@ class tl_cms_content_group extends Backend {
      */
     public function addCteType($arrRow) {
 
-        $key = $arrRow['invisible'] ? 'unpublished' : 'published';
+        $key = 'published';
+
+        $objOtherRow = $this->Database->prepare("SELECT * FROM tl_cms_content_group WHERE pid=? AND id!=?")
+            ->limit(1)
+            ->execute($arrRow['pid'], $arrRow['id']);
+
+        if( $arrRow['always_use_this'] || $objOtherRow->always_use_this ) {
+            $key = $arrRow['always_use_this'] ? 'published' : 'unpublished';
+        }
+
         $class = 'limit_height';
 
         $objMI = NULL;
@@ -244,4 +265,83 @@ class tl_cms_content_group extends Backend {
         return $types;
     }
 
+
+    /**
+     * Return the "toggle visibility" button
+     *
+     * @param array  $row
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $icon
+     * @param string $attributes
+     *
+     * @return string
+     */
+    public function toggleAlwaysUseThis($row, $href, $label, $title, $icon, $attributes) {
+
+        $active = $row['always_use_this'];
+
+        $objAlways = \numero2\MarketingSuite\ContentGroupModel::findOneBy(["pid=? AND always_use_this=?"],[$row['pid'], 1]);
+
+        if( strlen(Input::get('tid')) ) {
+
+            // Set the ID and action
+            $intId = Input::get('tid');
+            Input::setGet('id', $intId);
+            Input::setGet('act', 'toggle');
+            $active = Input::get('state') == 1 ? '1' : '';
+
+            $time = time();
+
+            // check that only one can be active
+            $objRow = null;
+
+            if( $active ) {
+
+                $objRow = $this->Database->prepare("SELECT * FROM tl_cms_content_group WHERE id=?")
+                    ->limit(1)
+                    ->execute($intId);
+
+                $objOtherRow = $this->Database->prepare("SELECT * FROM tl_cms_content_group WHERE pid=? AND id!=?")
+                    ->limit(1)
+                    ->execute($objRow->pid, $intId);
+
+                if( $objOtherRow->always_use_this ) {
+                    $active = '';
+                    throw new \Contao\CoreBundle\Exception\AccessDeniedException('You cannot set multiple content groups to always_use_this.');
+                }
+            }
+
+            // Update the database
+            if( !$active || ($objRow && $objRow->always_use_this != $active) ) {
+
+                $this->Database->prepare("UPDATE tl_cms_content_group SET tstamp=?, always_use_this=? WHERE id=?")
+                    ->execute($time, $active, $intId);
+            }
+
+            $this->redirect($this->getReferer());
+        }
+
+        $href .= '&amp;id='.Input::get('id').'&amp;tid='.$row['id'].'&amp;state='.$active;
+
+        $icond = 'bundles/marketingsuite/img/backend/icons/icon_always_use_this_.svg';
+
+        if( !$active ) {
+            $path = $icond;
+            $title = sprintf($GLOBALS['TL_LANG']['tl_cms_content_group']['toggle_always_use_this'][0], $row['name']);
+            $label = $title;
+        } else {
+            $path = $icon;
+            $title = sprintf($GLOBALS['TL_LANG']['tl_cms_content_group']['toggle_always_use_this'][1], $row['name']);
+            $label = $title;
+        }
+
+        if( $objAlways && $objAlways->id != $row['id'] ) {
+            return '';
+        }
+
+        return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($path, $label, 'data-state="' . $active . '"').'</a> ';
+
+    }
 }

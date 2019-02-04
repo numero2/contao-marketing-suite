@@ -47,6 +47,7 @@
         width: 100%;
         line-height: normal;
         font-size: .875rem;
+        min-height: 30px;
 
         mark {
             background: $col-red;
@@ -61,6 +62,7 @@
 
     > textarea + div[contenteditable] {
         height: auto !important;
+        min-height: 30px;
     }
 
     h3 label {

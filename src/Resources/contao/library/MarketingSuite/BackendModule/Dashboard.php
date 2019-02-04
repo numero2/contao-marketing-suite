@@ -20,6 +20,8 @@ namespace numero2\MarketingSuite\BackendModule;
 
 use numero2\MarketingSuite\MarketingItemModel;
 use numero2\MarketingSuite\ContentGroupModel;
+use numero2\MarketingSuite\Backend\Help;
+use numero2\MarketingSuite\Backend\License;
 
 
 class Dashboard extends \BackendModule {
@@ -38,7 +40,7 @@ class Dashboard extends \BackendModule {
     protected function compile() {
 
         $this->loadLanguageFile('cms_be_dashboard');
-        \numero2\MarketingSuite\Backend\License::jakrut();
+        License::jakrut();
 
         // get fieldset states
         $objSessionBag = NULL;
@@ -64,7 +66,7 @@ class Dashboard extends \BackendModule {
         $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/marketingsuite/vendor/chartjs/Chart.bundle' .(\System::getContainer()->get('kernel')->isDebug()?'':'.min'). '.js';
 
         // initialize backend help
-        $objBEHelp = new \numero2\MarketingSuite\Backend\Help();
+        $objBEHelp = new Help();
         $this->Template->be_help = $objBEHelp->generate();
 
         // set template vars

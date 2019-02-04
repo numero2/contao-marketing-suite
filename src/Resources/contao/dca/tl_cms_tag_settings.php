@@ -26,8 +26,8 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
 ,   'palettes' => [
         '__selector__' => ['cms_tag_type', 'cms_tag_override_label']
     ,   'default' => "{title_legend},cms_tag_type"
-    ,   'cms_cookie_bar' => "{title_legend},cms_tag_type;{config_legend:hide},cms_tag_override_label,cms_tag_reject_label;{style_legend:hide},cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background;{template_legend:hide},cms_tag_customTpl;{expert_legend:hide},cms_tag_cssID"
-    ,   'cms_accept_tags' => "{title_legend},cms_tag_type;{config_legend:hide},cms_tag_override_label;{style_legend:hide},cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background;{template_legend:hide},cms_tag_customTpl;{expert_legend:hide},cms_tag_cssID"
+    ,   'cms_cookie_bar' => "{title_legend},cms_tag_type;{config_legend:hide},cms_tag_override_label,cms_tag_reject_label,cms_exclude_pages;{style_legend:hide},cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background;{template_legend:hide},cms_tag_customTpl;{expert_legend:hide},cms_tag_cssID"
+    ,   'cms_accept_tags' => "{title_legend},cms_tag_type;{config_legend:hide},cms_tag_override_label,cms_exclude_pages;{style_legend:hide},cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background;{template_legend:hide},cms_tag_customTpl;{expert_legend:hide},cms_tag_cssID"
     ]
 ,   'subpalettes' => [
         'cms_tag_override_label' => 'cms_tag_accept_label,cms_tag_text'
@@ -110,6 +110,12 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
         ,   'inputType'        => 'text'
         ,   'eval'             => ['maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50 wizard']
         ,   'mapping'          => 'rejectcolor'
+        ]
+    ,   'cms_exclude_pages' => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_exclude_pages']
+        ,   'inputType'        => 'pageTree'
+        ,   'foreignKey'       => 'tl_page.title'
+        ,   'eval'             => ['fieldType'=>'checkbox', 'multiple'=>true, 'tl_class'=>'clr']
         ]
     ]
 ];

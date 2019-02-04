@@ -311,6 +311,19 @@ class tl_cms_marketing_item extends Backend {
      */
     public function getLabel($row, $label, DataContainer $dc, $args) {
 
+        if( $row['type'] == 'a_b_test' ) {
+
+            $objAlways = \numero2\MarketingSuite\ContentGroupModel::findOneBy(["pid=? AND always_use_this=?"],[$row['id'], 1]);
+
+            if( $objAlways ) {
+
+                $strAlways = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['list_label']['always_use_this_name'];
+                $strAlways = sprintf($strAlways, $objAlways->name);
+
+                $args[0] .= '<span style="color:#999;padding-left:3px">['.$strAlways.']</span>';
+            }
+        }
+
         $args[1] = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['types'][$row['type']];
 
         $count = 0;

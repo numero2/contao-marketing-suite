@@ -60,26 +60,6 @@
 
                     thead tr th { background: $col-gray; }
                 }
-
-                .no-data {
-
-                    margin: auto;
-
-                    p {
-                        display: block;
-                        text-align: center;
-                        margin: auto;
-                        padding: 15px;
-                        opacity: 0.3;
-                    }
-
-                    p:before {
-                        content: "\2639";
-                        display: block;
-                        margin: 15px auto;
-                        font-size: 3em;
-                    }
-                }
             }
         }
 
@@ -88,6 +68,26 @@
             > .item {
                 width: 100%;
             }
+        }
+    }
+
+    .no-data {
+
+        margin: auto;
+
+        p {
+            display: block;
+            text-align: center;
+            margin: auto;
+            padding: 15px;
+            opacity: 0.3;
+        }
+
+        p:before {
+            content: "\2639";
+            display: block;
+            margin: 15px auto;
+            font-size: 3em;
         }
     }
 }

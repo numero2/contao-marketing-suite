@@ -20,6 +20,7 @@ namespace numero2\MarketingSuite\MarketingItem;
 
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use numero2\MarketingSuite\Tracking\ClickAndViews;
 use numero2\MarketingSuite\Tracking\Session;
 use numero2\MarketingSuite\ContentGroupModel;
 
@@ -249,11 +250,15 @@ class VisitedPages extends MarketingItem {
      */
     public function selectContentId($objContents, $objMI, $objContentParent, $objContent) {
 
+        global $objPage;
+
         if( !$objContents ) {
             return null;
         }
 
         $tracking = new Session();
+        $views = new ClickAndViews();
+
         $aVisitedPages = $tracking->getVisitedPages();
 
         foreach( $objContents as $key => $value ) {
@@ -263,21 +268,26 @@ class VisitedPages extends MarketingItem {
                 $pages = [];
             }
 
+            if( count($aVisitedPages) ) {
+                // remove current page id if this is also the last id
+                if( $aVisitedPages[0] == $objPage->id ) {
+                    array_shift($aVisitedPages);
+                }
+            }
+
             $same = array_intersect($pages, $aVisitedPages);
             if( $value->cms_mi_pages_criteria == 'one' ) {
 
                 if( count($same) >= 1 ) {
 
-                    $objContents->cms_mi_views += 1;
-                    $objContents->save();
+                    $views->increaseViewOnMarketingElement($value);
                     return $value->id;
                 }
             } else if( $value->cms_mi_pages_criteria == 'all' ) {
 
                 if( count($same) == count($pages) ) {
 
-                    $objContents->cms_mi_views += 1;
-                    $objContents->save();
+                    $views->increaseViewOnMarketingElement($value);
                     return $value->id;
                 }
             } else if( $value->cms_mi_pages_criteria == 'first' ) {
@@ -287,8 +297,7 @@ class VisitedPages extends MarketingItem {
                     $first = array_reverse($aVisitedPages)[0];
                     if( in_array($first, $pages) ) {
 
-                        $objContents->cms_mi_views += 1;
-                        $objContents->save();
+                        $views->increaseViewOnMarketingElement($value);
                         return $value->id;
                     }
                 }
@@ -299,15 +308,13 @@ class VisitedPages extends MarketingItem {
                     $last = $aVisitedPages[0];
                     if( in_array($last, $pages) ) {
 
-                        $objContents->cms_mi_views += 1;
-                        $objContents->save();
+                        $views->increaseViewOnMarketingElement($value);
                         return $value->id;
                     }
                 }
             } else if( $value->cms_mi_pages_criteria == 'always' ) {
 
-                $objContents->cms_mi_views += 1;
-                $objContents->save();
+                $views->increaseViewOnMarketingElement($value);
                 return $value->id;
             }
         }

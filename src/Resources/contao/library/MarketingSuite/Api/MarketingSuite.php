@@ -414,7 +414,7 @@ class MarketingSuite {
             $aData['data']['fb_setup'] = false;
         }
 
-        $this->send('/usage', $aData);
+        $this->send('/egasu', $aData);
     }
 
 

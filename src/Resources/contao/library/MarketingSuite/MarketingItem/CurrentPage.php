@@ -21,6 +21,7 @@ namespace numero2\MarketingSuite\MarketingItem;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use numero2\MarketingSuite\ContentGroupModel;
+use numero2\MarketingSuite\Tracking\ClickAndViews;
 
 
 class CurrentPage extends MarketingItem {
@@ -347,13 +348,14 @@ class CurrentPage extends MarketingItem {
 
         global $objPage;
 
+        $views = new ClickAndViews();
+
         foreach( $objContents as $key => $value) {
 
             $page = deserialize($value->cms_mi_pages)[0];
 
             if( $page == $objPage->id ) {
-                $objContents->cms_mi_views += 1;
-                $objContents->save();
+                $views->increaseViewOnMarketingElement($value);
                 return $value->id;
             }
         }
