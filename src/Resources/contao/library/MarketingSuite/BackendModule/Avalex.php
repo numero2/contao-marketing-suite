@@ -13,13 +13,16 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\BackendModule;
 
+use Contao\BackendModule as CoreBackendModule;
+use Contao\ModuleModel;
+use Contao\System;
+use Contao\ThemeModel;
+use numero2\MarketingSuite\Backend\License as jev;
 
-class Avalex extends \BackendModule {
+
+class Avalex extends CoreBackendModule {
 
 
     /**
@@ -38,16 +41,16 @@ class Avalex extends \BackendModule {
 
         // check if avalex is already installed and we have any configured frontend modules
         $oTheme = NULL;
-        $oTheme = \ThemeModel::findAll();
+        $oTheme = ThemeModel::findAll();
 
         if( $oTheme ) {
 
             $oModule = NULL;
-            $oModule = \ModuleModel::findOneByType('avalex_privacy_policy');
+            $oModule = ModuleModel::findOneByType('avalex_privacy_policy');
 
             if( $oModule ) {
 
-                $refererID = \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+                $refererID = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
                 $href = '/contao?do=themes&table=tl_module&id='.$oModule->id.'&act=edit&rt='.REQUEST_TOKEN.'&ref='.$refererID;
 
                 $this->redirect( $href );
@@ -63,7 +66,13 @@ class Avalex extends \BackendModule {
      */
     protected function compile() {}
 
+
+    /**
+     * Checks if the current module is available at all
+     *
+     * @return boolean
+     */
     public static function isAvailable() {
-        return \numero2\MarketingSuite\Backend\License::hasFeature('avalex');
+        return jev::hasFeature('avalex');
     }
 }

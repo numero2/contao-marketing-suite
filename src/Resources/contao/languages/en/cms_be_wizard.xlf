@@ -29,6 +29,9 @@
     <trans-unit id="cms_be_wizard.a_b_test.step_6_top.0">
         <source><![CDATA[<br /><strong>A/B Test - </strong> Bitte passen Sie nun die Inhalte für die einzelnen Fälle an.]]></source>
     </trans-unit>
+    <trans-unit id="cms_be_wizard.a_b_test_page.step_1_top.0">
+        <source><![CDATA[<br /><strong>A/B Test Seite - </strong>Wählen Sie die beiden Seiten für den A/B Test.]]></source>
+    </trans-unit>
     <trans-unit id="cms_be_wizard.current_page.step_1_top.0">
         <source><![CDATA[<br /><strong>Inhalt auf festgelegten Seiten verwenden - </strong>Namen für das Element vergeben und Inhaltselement festlegen.]]></source>
     </trans-unit>

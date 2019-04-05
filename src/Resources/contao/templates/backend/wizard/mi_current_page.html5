@@ -1,0 +1,8 @@
+<?php $this->extend('backend/wizard/popup'); ?>
+
+<?php $this->block('content'); ?>
+    <p>
+        <?= $this->type; ?><br>
+        Schritt <?= $this->step; ?>
+    </p>
+<?php $this->endblock(); ?>

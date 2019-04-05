@@ -13,13 +13,14 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\Database;
+use Contao\Model;
+use Contao\PageModel;
 
-class TagModel extends \Model {
+
+class TagModel extends Model {
 
 
     /**
@@ -39,7 +40,7 @@ class TagModel extends \Model {
     public static function findAllActiveByPage( $pageId ) {
 
         $oPage = NULL;
-        $oPage = \PageModel::findWithDetails($pageId);
+        $oPage = PageModel::findWithDetails($pageId);
 
         if( $oPage && !empty($oPage->id) ) {
 
@@ -50,7 +51,7 @@ class TagModel extends \Model {
             $values[] = '1';
 
             $objResult = NULL;
-            $objResult = \Database::getInstance()->prepare("
+            $objResult = Database::getInstance()->prepare("
                 SELECT
                     *
                 FROM ".self::$strTable."

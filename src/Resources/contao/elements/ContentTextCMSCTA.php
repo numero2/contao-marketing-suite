@@ -13,13 +13,17 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\ContentText;
+use Contao\Controller;
+use Contao\Environment;
+use Contao\Input;
+use numero2\MarketingSuite\Backend\License as sofdow;
+use numero2\MarketingSuite\Tracking\ClickAndViews;
 
-class ContentTextCMSCTA extends \ContentText {
+
+class ContentTextCMSCTA extends ContentText {
 
 
     /**
@@ -38,7 +42,7 @@ class ContentTextCMSCTA extends \ContentText {
 
         if( TL_MODE == 'FE' ) {
 
-            if( !\numero2\MarketingSuite\Backend\License::hasFeature('ce_'.$this->type, $objPage->trail[0]) ) {
+            if( !sofdow::hasFeature('ce_'.$this->type, $objPage->trail[0]) ) {
                 return '';
             }
         }
@@ -55,7 +59,7 @@ class ContentTextCMSCTA extends \ContentText {
         global $objPage;
 
         if( TL_MODE == "FE" ) {
-            $tracking = new Tracking\ClickAndViews();
+            $tracking = new ClickAndViews();
             $tracking->increaseViewOnContentElement($this->objModel);
         }
 
@@ -67,13 +71,13 @@ class ContentTextCMSCTA extends \ContentText {
 
         if( TL_MODE == "FE" ) {
 
-            if( \Input::get('follow') && \Input::get('follow') == $this->id ) {
+            if( Input::get('follow') && Input::get('follow') == $this->id ) {
 
                 $tracking->increaseClickOnContentElement($this->objModel);
-                $this->redirect(\Controller::replaceInsertTags($this->cta_link));
+                $this->redirect(Controller::replaceInsertTags($this->cta_link));
             }
 
-            $this->Template->ctaLink = \Environment::get('request').'?follow='.$this->id;
+            $this->Template->ctaLink = Environment::get('request').'?follow='.$this->id;
         }
     }
 }

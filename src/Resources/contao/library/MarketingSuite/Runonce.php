@@ -13,13 +13,12 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\Controller;
 
-class Runonce extends \Controller {
+
+class Runonce extends Controller {
 
 
     /**
@@ -34,10 +33,8 @@ class Runonce extends \Controller {
      * Run the controller
      */
     public function run() {
-
         $this->generateEmptyCMSConfigFile();
     }
-
 
 
     /**
@@ -46,7 +43,6 @@ class Runonce extends \Controller {
     protected function generateEmptyCMSConfigFile() {
 
         if( !file_exists(TL_ROOT . '/system/config/cmsconfig.php') ) {
-
             file_put_contents(TL_ROOT . '/system/config/cmsconfig.php', "<?php\n\n### INSTALL SCRIPT START ###\n### INSTALL SCRIPT STOP ###\n");
         }
     }

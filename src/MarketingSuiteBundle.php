@@ -13,9 +13,10 @@
  */
 
 
-namespace numero2\MarketingSuite;
+namespace numero2\MarketingSuiteBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+
 
 /**
  * Configures the Marketing Suite bundle.

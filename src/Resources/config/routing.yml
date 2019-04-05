@@ -1,0 +1,3 @@
+contao_cms:
+    resource: "@MarketingSuiteBundle/Controller"
+    type: annotation

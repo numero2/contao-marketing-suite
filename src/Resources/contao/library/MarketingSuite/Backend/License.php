@@ -13,12 +13,16 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Backend;
 
-use numero2\MarketingSuite\Api\MarketingSuite;
+use Contao\CMSConfig;
+use Contao\Config;
+use Contao\Crypto;
+use Contao\Date;
+use Contao\PageModel;
+use Contao\System;
+use Doctrine\DBAL\Exception\DriverException;
+use numero2\MarketingSuite\Api\MarketingSuite as API;
 
 
 class License {
@@ -39,15 +43,15 @@ class License {
 
 
     /**
-     * check if the license data is valid
+     * Check if the license data is valid
      */
     public static function checkRootData() {
 
         $objPages = null;
 
         try {
-            $objPages = \PageModel::findByType('root');
-        } catch( \Doctrine\DBAL\Exception\DriverException $e ) {
+            $objPages = PageModel::findByType('root');
+        } catch( DriverException $e ) {
             // exception in install tool
         }
 
@@ -58,7 +62,7 @@ class License {
                     continue;
                 }
 
-                $crypt = new \Crypto($value->cms_root_key);
+                $crypt = new Crypto($value->cms_root_key);
 
                 $msg = '';
                 if( !$crypt->verify($value->cms_root_data, $value->cms_root_sign) ) {
@@ -90,8 +94,8 @@ class License {
                         $oPage->preventSaving(false);
                         $oPage->cms_root_key = $msg;
 
-                        $oApi = new MarketingSuite();
-                        $oApi->checkLicense($oPage->cms_root_license, $oPage);
+                        $oAPI = new API();
+                        $oAPI->checkLicense($oPage->cms_root_license, $oPage);
 
                     } catch( \Exception $e ) {
 
@@ -105,40 +109,43 @@ class License {
     /**
      * Checks if the feature given by alias is available at all or for the given root page.
      *
-     * @param  string $strAlias
-     * @param  integer $pageId
+     * @param string $strAlias
+     * @param integer $pageId
      *
      * @return boolean
      */
-    public static function hasFeature($strAlias, $rootPageId=0) {
+    public static function hasFeature( $strAlias, $rootPageId=0 ) {
 
         $objPages = [];
 
         try {
+
             if( !$rootPageId ) {
-                $objPages = \PageModel::findByType('root');
+                $objPages = PageModel::findByType('root');
             } else {
-                $objPage = \PageModel::findById($rootPageId);
+                $objPage = PageModel::findById($rootPageId);
 
                 if( $objPage && $objPage->type == 'root' ) {
 
                     $objPages[] = $objPage;
                 }
             }
-        } catch( \Doctrine\DBAL\Exception\DriverException $e ) {
+
+        } catch( DriverException $e ) {
             // expected in install tool
         }
 
         $features = [];
 
         if( $objPages ) {
+
             foreach( $objPages as $value ) {
 
                 if( empty($value->cms_root_license) || empty($value->cms_root_key) || empty($value->cms_root_data) || empty($value->cms_root_sign) ) {
                     continue;
                 }
 
-                $crypt = new \Crypto($value->cms_root_key);
+                $crypt = new Crypto($value->cms_root_key);
 
                 if( !$crypt->verify($value->cms_root_data, $value->cms_root_sign) ) {
                     continue;
@@ -162,7 +169,7 @@ class License {
 
         if( $features && count($features) ) {
 
-            if( in_array($strAlias, $features) ){
+            if( in_array($strAlias, $features) ) {
                 return true;
             }
         }
@@ -172,29 +179,31 @@ class License {
 
 
     /**
-     * Lists all licenses with it's expire date
+     * Lists all licenses with their expire dates
      *
      * @return array
      */
     public static function expires() {
 
-        $objPages = \PageModel::findByType('root');
+        $objPages = PageModel::findByType('root');
 
         $expires = [];
 
         if( $objPages ) {
+
             foreach( $objPages as $value ) {
 
                 if( empty($value->cms_root_license) ) {
                     continue;
                 }
+
                 $expires[$value->cms_root_license] = ['page' => $value->id];
 
                 if( empty($value->cms_root_license) || empty($value->cms_root_key) || empty($value->cms_root_data) || empty($value->cms_root_sign) ) {
                     continue;
                 }
 
-                $crypt = new \Crypto($value->cms_root_key);
+                $crypt = new Crypto($value->cms_root_key);
 
                 if( !$crypt->verify($value->cms_root_data, $value->cms_root_sign) ) {
                     continue;
@@ -228,15 +237,17 @@ class License {
      */
     public function getSystemMessages() {
 
-        \System::loadLanguageFile('cms_license');
+        System::loadLanguageFile('cms_license');
 
         $aMessages = [];
+
         if( self::checkForUpdate() ) {
 
-            $aMessages[] = '<p class="tl_info">'.sprintf($GLOBALS['TL_LANG']['cms_license']['new_version'], \CMSCONFIG::get('latest_version')).'</p>';
+            $aMessages[] = '<p class="tl_info">'.sprintf($GLOBALS['TL_LANG']['cms_license']['new_version'], CMSConfig::get('latest_version')).'</p>';
         }
 
         $expireDates = self::expires();
+
         if( count($expireDates) ) {
 
             foreach( $expireDates as $key => $value ) {
@@ -252,45 +263,46 @@ class License {
 
                 if( $value['expires'] < time() ) {
 
-                    if( $value['expires'] != $value['expires_package'] ) {
+                    if( $value['expires_package'] <= time() ) {
 
-                        $aMessages[] = '<p class="tl_error">'
-                            .sprintf($GLOBALS['TL_LANG']['cms_license']['expired'],
+                        $aMessages[] = '<p class="tl_error">' .
+                            sprintf($GLOBALS['TL_LANG']['cms_license']['expired_package'],
                                 $key
-                            ,   \Date::parse(\Config::get('datimFormat'), $value['expires'])
-                            ,   $pageEditUrl
-                            )
-                            .'</p>';
-                    } else {
-
-                        $aMessages[] = '<p class="tl_error">'
-                            .sprintf($GLOBALS['TL_LANG']['cms_license']['expired_package'],
-                                $key
-                            ,   \Date::parse(\Config::get('datimFormat'), $value['expires'])
+                            ,   Date::parse(Config::get('datimFormat'), $value['expires_package'])
                             ,   $packageCMSUrl
                             )
-                            .'</p>';
+                            . '</p>';
+
+                    } else {
+
+                        $aMessages[] = '<p class="tl_error">' .
+                            sprintf($GLOBALS['TL_LANG']['cms_license']['expired'],
+                                $key
+                            ,   Date::parse(Config::get('datimFormat'), $value['expires'])
+                            ,   $pageEditUrl
+                            )
+                            . '</p>';
                     }
 
                 } else if( $value['expires'] < time()+7*86400 ) {
 
                     if( $value['expires'] != $value['expires_package'] ) {
 
-                        $aMessages[] = '<p class="tl_error">'
-                            .sprintf($GLOBALS['TL_LANG']['cms_license']['no_check'],
+                        $aMessages[] = '<p class="tl_error">' .
+                            sprintf($GLOBALS['TL_LANG']['cms_license']['no_check'],
                                 $key
                             ,   $pageEditUrl
                             )
-                            .'</p>';
+                            . '</p>';
                     } else {
 
-                        $aMessages[] = '<p class="tl_info">'
-                            .sprintf($GLOBALS['TL_LANG']['cms_license']['will_expire'],
+                        $aMessages[] = '<p class="tl_info">' .
+                            sprintf($GLOBALS['TL_LANG']['cms_license']['will_expire'],
                                 $key
-                            ,   \Date::parse(\Config::get('datimFormat'), $value['expires'])
+                            ,   Date::parse(Config::get('datimFormat'), $value['expires'])
                             ,   $packageCMSUrl
                             )
-                            .'</p>';
+                            . '</p>';
                     }
                 }
             }
@@ -311,8 +323,8 @@ class License {
      */
     public static function checkForUpdate() {
 
-        $latestVersion = \CMSConfig::get('latest_version');
-        $lastCheck = \CMSConfig::get('last_version_check');
+        $latestVersion = CMSConfig::get('latest_version');
+        $lastCheck = CMSConfig::get('last_version_check');
 
         if( $lastCheck > time() ) {
             $lastCheck = 0;
@@ -320,10 +332,10 @@ class License {
 
         if( !$latestVersion || !$lastCheck || $lastCheck < time()-86000 ) {
 
-            $oApi = new MarketingSuite();
-            $oApi->getLatestVersion();
-            $latestVersion = \CMSConfig::get('latest_version');
-            // $lastCheck = \CMSConfig::get('last_version_check');
+            $oAPI = new API();
+            $oAPI->getLatestVersion();
+            $latestVersion = CMSConfig::get('latest_version');
+            // $lastCheck = CMSConfig::get('last_version_check');
         }
 
         if( CMS_VERSION && $latestVersion ) {
@@ -338,17 +350,18 @@ class License {
 
 
     /**
-     * performs daily actions
+     * Performs daily actions
      *
      * @return boolean
      */
     public static function dailyCron() {
 
-        $objPages = \PageModel::findByType('root');
-        $lastChecks = deserialize(\CMSConfig::get('last_checks'));
+        $objPages = PageModel::findByType('root');
+        $lastChecks = deserialize(CMSConfig::get('last_checks'));
         $lastChecksUp=[];
 
         if( $objPages ) {
+
             foreach( $objPages as $value ) {
 
                 if( empty($value->cms_root_license) ) {
@@ -356,15 +369,15 @@ class License {
                 }
 
                 $lastCheck = 0;
-                if( !empty($lastChecks[$value->cms_root_license]) && $lastChecks[$value->cms_root_license] < time() ) {
 
+                if( !empty($lastChecks[$value->cms_root_license]) && $lastChecks[$value->cms_root_license] < time() ) {
                     $lastCheck = $lastChecks[$value->cms_root_license];
                 }
 
                 if( $lastCheck < time()-86000 ) {
 
                     $oAPI = NULL;
-                    $oAPI = new \numero2\MarketingSuite\Api\MarketingSuite();
+                    $oAPI = new API();
 
                     try {
 
@@ -377,6 +390,7 @@ class License {
                     }
 
                     $lastChecksUp[$value->cms_root_license] = time();
+
                 } else {
 
                     $lastChecksUp[$value->cms_root_license] = $lastCheck;
@@ -384,27 +398,27 @@ class License {
             }
 
             if( $lastChecksUp ) {
-                \CMSConfig::persist('last_checks', serialize($lastChecksUp));
+                CMSConfig::persist('last_checks', serialize($lastChecksUp));
             }
         }
     }
 
 
     /**
-     * performs weekly actions
+     * Performs weekly actions
      *
      * @return boolean
      */
     public static function weeklyCron() {
 
-        $lastRun = \CMSConfig::get('weekly_run');
+        $lastRun = CMSConfig::get('weekly_run');
 
         if( !$lastRun || $lastRun < strtotime("-1 week") ) {
 
             // send usage
-            if( \CMSConfig::get('send_anonymized_data') == '1' ) {
+            if( CMSConfig::get('send_anonymized_data') == '1' ) {
 
-                $oAPI = new \numero2\MarketingSuite\Api\MarketingSuite();
+                $oAPI = new API();
                 try {
 
                     $oAPI->sendUsageData();
@@ -413,7 +427,7 @@ class License {
                 }
             }
 
-            \CMSConfig::persist('weekly_run', time());
+            CMSConfig::persist('weekly_run', time());
         }
     }
 }

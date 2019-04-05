@@ -37,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['type']
         ,   'default'          => 'default'
         ,   'inputType'        => 'select'
-        ,   'options_callback' => [ 'tl_cms_tag_settings', 'getFronendTypes']
+        ,   'options_callback' => [ '\numero2\MarketingSuite\DCAHelper\TagSettings', 'getFrontendTypes']
         ,   'reference'        => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['types']
         ,   'eval'             => [ 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50' ]
         ,   'mapping'          => 'type'
@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
     ,   'cms_tag_customTpl' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_customTpl']
         ,   'inputType'        => 'select'
-        ,   'options_callback' => ['tl_cms_tag_Settings', 'getModuleTemplates']
+        ,   'options_callback' => ['\numero2\MarketingSuite\DCAHelper\TagSettings', 'getModuleTemplates']
         ,   'eval'             => ['includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50']
         ,   'mapping'          => 'customTpl'
         ]
@@ -119,45 +119,3 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
         ]
     ]
 ];
-
-
-class tl_cms_tag_settings extends Backend {
-
-
-    /**
-     * Return all module templates as array
-     *
-     * @param \DataContainer $dc
-     *
-     * @return array
-     */
-    public function getModuleTemplates( \DataContainer $dc ) {
-
-        return $this->getTemplateGroup('mod_' . \Config::get('cms_tag_type'));
-    }
-
-
-    /**
-     * Return all types as array
-     *
-     * @return array
-     */
-    public function getFronendTypes( \DataContainer $dc ) {
-
-        $types = [];
-
-        foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'] as $k=>$v ) {
-
-            if( $k == '__selector__' ) {
-                continue;
-            }
-            if( !\numero2\MarketingSuite\Backend\License::hasFeature('tag'.substr($k, 3)) && $k != 'default') {
-                continue;
-            }
-
-            $types[$k] = $k;
-        }
-
-        return $types;
-    }
-}

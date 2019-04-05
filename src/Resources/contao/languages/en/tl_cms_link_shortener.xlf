@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_cms_link_shortener.php" source-language="en">
+<body>
+    <!-- ACTIONS -->
+    <trans-unit id="tl_cms_link_shortener.new.0">
+        <source>Neuer Kurz-Link</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.new.1">
+        <source>Einen neuen Kurz-Link hinzufügen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.edit.0">
+        <source>Kurz-Link bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.edit.1">
+        <source>Kurz-Link ID %s bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.statistics.0">
+        <source>Statistik anzeigen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.statistics.1">
+        <source>Statistik des Kurz-Link ID %s anzeigen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.delete.0">
+        <source>Kurz-Link löschen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.delete.1">
+        <source>Kurz-Link ID %s löschen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.toggle.0">
+        <source>Aktivieren / deaktivieren</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.toggle.1">
+        <source>Kurz-Link ID %s aktivieren / deaktivieren</source>
+    </trans-unit>
+    <!-- LEGENDS -->
+    <trans-unit id="tl_cms_link_shortener.common_legend">
+        <source>Allgemein</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.link_legend">
+        <source>Kurz-Link Einstellungen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.description_legend">
+        <source>Beschreibung</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.publish_legend">
+        <source>Veröffentlichung</source>
+    </trans-unit>
+    <!-- FIELDS -->
+    <trans-unit id="tl_cms_link_shortener.target.0">
+        <source>Ziel-URL</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.target.1">
+        <source>Bitte geben Sie die URL die Sie verkürzen möchten.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.group_name.0">
+        <source>Gruppe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.group_name.1">
+        <source>Bitte ordnen Sie den Kurz-Link einer Gruppe zu.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.domain.0">
+        <source>Domain</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.domain.1">
+        <source>Bitte wählen Sie auf welche Domain der Kurz-Link reagieren soll.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.prefix.0">
+        <source>Präfix (optional) + Zufällige ID (automatisch)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.prefix.1">
+        <source>Bitte wählen Sie ob der Kurz-Link ein Präfix haben soll.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.prefix_preview.0">
+        <source>Vorschau der zufälligen Url</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.alias.0">
+        <source>Alias</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.alias.1">
+        <source>Bitte wählen Sie einen Alias für den Kurz-Link.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.alias_preview.0">
+        <source>Vorschau der Alias Url</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.description.0">
+        <source>Beschreibung</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.description.1">
+        <source>Bitte geben Sie ein Beschreibung an.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.active.0">
+        <source>Aktiv?</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.active.1">
+        <source>Diesen Kurz-Link aktivieren?</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.fallback.0">
+        <source>Umleitung wenn deaktiviert</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.fallback.1">
+        <source>Wohin soll dieser Kurz-Link umgeleitet werden wenn er deaktiviert wurde.</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

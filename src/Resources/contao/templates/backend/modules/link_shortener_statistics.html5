@@ -1,0 +1,138 @@
+<?php if( $this->be_help ): ?>
+    <?= $this->be_help; ?>
+<?php endif; ?>
+
+<?php if( $this->filter ): ?>
+    <form action="<?= $this->action; ?>" class="tl_form" id="tl_filter" method="post">
+        <div class="tl_formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+
+            <div class="tl_panel cf">
+                <div class="tl_submit_panel tl_subpanel">
+                    <button name="filter" id="filter" class="tl_img_submit filter_apply" title="Änderungen anwenden">Anwenden</button>
+                    <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="Filter zurücksetzen">Zurücksetzen</button>
+                </div>
+                <?= $this->filter; ?>
+            </div>
+        </div>
+    </form>
+<?php endif; ?>
+
+<div class="tl_cms_link_shortener_statistics">
+
+    <div class="cms_overview">
+        <div class="numbers">
+            <?php foreach($this->overview['numbers'] as $key => $value ): ?>
+                <strong><?= $key; ?>:</strong>
+                <?= $value; ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="graph_wrapper">
+            <?php if( $this->overview['graph']['values'] && count($this->overview['graph']['values'])): ?>
+                <canvas id="chart_overview"></canvas>
+                <script>
+                    var chartOverview = new Chart(document.getElementById("chart_overview"), {
+                        "type": "bar",
+                        "data": {
+                            "labels": ["<?= implode('", "', $this->overview['graph']['labels']); ?>"],
+                            "datasets": [{
+                                "label": "<?= $this->overview['graph']['label']; ?>",
+                                "data": [ <?= implode(', ', $this->overview['graph']['values']); ?>],
+                                "fill": false,
+                                "backgroundColor": "rgba(244,124,0,1)",
+                                "hoverBackgroundColor": "rgba(23,43,59,1)"
+                            }]
+                        },
+                        "options": {
+                            "scales": {"yAxes": [{"ticks": {"beginAtZero": true } }] },
+                            'legend': {'display': false},
+                            "maintainAspectRatio": false
+                        }
+                    });
+                </script>
+            <?php else: ?>
+                <div class="no-data">
+                    <p><?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['no_data_found']; ?></p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <?php if( $this->overview['numbers'][array_keys($this->overview['numbers'])[0]]): ?>
+
+        <div class="cms_details">
+
+            <?php if( $this->tabs ): ?>
+                <div class="tabs">
+                    <?php $first = true; ?>
+
+                    <?php foreach( $this->tabs as $key => $value ): ?>
+                        <?php if( empty($value) ) continue; ?>
+                        <input type="radio" name="ctrl_tabs" id="ctrl_tab_<?= \StringUtil::standardize($key);?>"<?php if ($first): ?> checked<?php endif; ?>/>
+                        <?php $first = false; ?>
+                    <?php endforeach; ?>
+                    <div class="tab-header">
+                        <?php foreach( $this->tabs as $key => $value ): ?>
+                            <?php if( empty($value) ) continue; ?>
+                            <label for="ctrl_tab_<?= \StringUtil::standardize($key);?>"><?= $key; ?></label>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="tab-content">
+                        <?php foreach( $this->tabs as $tabName => $tab ): ?>
+                            <?php if( empty($tab) ) continue; ?>
+                            <div class="inner">
+                                <div class="pie-chart">
+                                    <canvas id="chart_<?= \StringUtil::standardize($tabName);?>"></canvas>
+                                    <script>
+                                        new Chart(document.getElementById("chart_<?= \StringUtil::standardize($tabName);?>"), {
+                                            "type": "pie",
+                                            "data": {
+                                                "labels": ["<?= implode('", "', array_column($tab, 'label')); ?>"],
+                                                "datasets": [{
+                                                    "label": "<?= $tabName; ?>",
+                                                    "data": [<?= implode(', ', array_column($tab, 'count')); ?>],
+                                                    "fill": false,
+                                                    <?php
+                                                        $aColors = ["rgba(235, 47, 6, 1)","rgba(30, 55, 153, 1)","rgba(7, 153, 146, 1)","rgba(120, 224, 143, 1)","rgba(246, 185, 59, 1)"];
+                                                        $aCol = [];
+                                                        while( count($aCol) <= count($tab) ) {
+                                                            $aCol = array_merge($aCol, $aColors);
+                                                        }
+                                                        $aColors = array_slice($aCol, 0,  count($tab));
+                                                    ?>
+                                                    "backgroundColor": ["<?= implode('", "', $aColors); ?>"],
+                                                    "hoverBackgroundColor": "rgba(23,43,59,1)"
+                                                }]
+                                            },
+                                            'options':{ 'legend': {'position': 'bottom'}}
+                                        });
+                                    </script>
+                                </div>
+                                <div class="data">
+                                    <table>
+                                        <tr>
+                                            <th><?= $key; ?></th>
+                                            <th><?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['requests']; ?></th>
+                                            <th><?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['share']; ?></th>
+                                        </tr>
+                                        <?php $sum = array_sum(array_column($tab, 'count')); ?>
+                                        <?php foreach( $tab as $index => $value ): ?>
+                                            <tr>
+                                                <td><?= $value['label']; ?></td>
+                                                <td><?= $value['count']; ?></td>
+                                                <td><?= round($value['count']/$sum*100,2); ?> %</td>
+                                            </tr>
+                                        <?php endforeach; ?>
+
+                                    </table>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+</div>

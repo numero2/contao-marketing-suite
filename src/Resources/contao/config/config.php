@@ -20,6 +20,8 @@ require_once TL_ROOT.'/vendor/numero2/contao-marketing-suite/src/Resources/conta
  * MODELS
  */
 $GLOBALS['TL_MODELS'][\numero2\MarketingSuite\TagModel::getTable()] = '\numero2\MarketingSuite\TagModel';
+$GLOBALS['TL_MODELS'][\numero2\MarketingSuite\LinkShortenerModel::getTable()] = '\numero2\MarketingSuite\LinkShortenerModel';
+$GLOBALS['TL_MODELS'][\numero2\MarketingSuite\LinkShortenerStatisticsModel::getTable()] = '\numero2\MarketingSuite\LinkShortenerStatisticsModel';
 $GLOBALS['TL_MODELS'][\numero2\MarketingSuite\ContentGroupModel::getTable()] = '\numero2\MarketingSuite\ContentGroupModel';
 $GLOBALS['TL_MODELS'][\numero2\MarketingSuite\ConversionItemModel::getTable()] = '\numero2\MarketingSuite\ConversionItemModel';
 $GLOBALS['TL_MODELS'][\numero2\MarketingSuite\MarketingItemModel::getTable()] = '\numero2\MarketingSuite\MarketingItemModel';
@@ -48,6 +50,9 @@ array_insert($GLOBALS['BE_MOD'], 1, [
     ,   'cms_health_check' => [
             'callback'  => '\numero2\MarketingSuite\BackendModule\HealthCheck'
         ]
+    ,   'cms_tools' => [
+            'callback'  => '\numero2\MarketingSuite\BackendModule\Module'
+        ]
     ,   'cms_settings' => [
             'callback'  => '\numero2\MarketingSuite\BackendModule\Module'
         ]
@@ -63,8 +68,14 @@ array_insert($GLOBALS['BE_MOD'], 1, [
  */
 $GLOBALS['CMS_MOD'] = [
 
-    'settings' => [
-
+    'tools' => [
+        'link_shortener' => [
+            'tables'    => ['tl_cms_link_shortener', 'tl_cms_link_shortener_statistics']
+        ,   'icon'      => 'bundles/marketingsuite/img/backend/icons/icon_link_shortener.svg'
+        ,   'link_shortener_statistics' => [ '\numero2\MarketingSuite\DCAHelper\LinkShortenerStatistics', 'generate' ]
+        ]
+    ]
+,   'settings' => [
         'settings' => [
             'tables'    => ['tl_cms_settings']
         ,   'icon'      => 'bundles/marketingsuite/img/backend/icons/icon_settings.svg'
@@ -73,7 +84,6 @@ $GLOBALS['CMS_MOD'] = [
             'tables'    => ['tl_cms_tag', 'tl_cms_tag_settings']
         ,   'icon'      => 'bundles/marketingsuite/img/backend/icons/icon_tags.svg'
         ]
-
     ,   'avalex' => [
             'callback'  => '\numero2\MarketingSuite\BackendModule\Avalex'
         ,   'icon'      => 'bundles/marketingsuite/img/backend/icons/icon_avalex.svg'
@@ -106,10 +116,10 @@ if( TL_MODE === 'BE' ) {
 /**
  * FRONT END MODULES
  */
-$GLOBALS['FE_MOD']['marketing_suite'] = array(
+$GLOBALS['FE_MOD']['marketing_suite'] = [
     'cms_marketing_item'    => '\numero2\MarketingSuite\ModuleMarketingItem'
 ,   'cms_conversion_item'   => '\numero2\MarketingSuite\ModuleConversionItem'
-);
+];
 
 
 /**
@@ -136,17 +146,19 @@ $GLOBALS['TL_CTE']['conversion_elements'] = [
  * REGISTER HOOKS
  */
 $GLOBALS['TL_HOOKS']['addCustomRegexp'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'validateRgxp'];
-$GLOBALS['TL_HOOKS']['processFormData'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseClickOnForm'];
-$GLOBALS['TL_HOOKS']['compileFormFields'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseViewOnForm'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateScripts'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateCookieBar'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Tracking\Session', 'storeVisitedPage'];
-$GLOBALS['TL_HOOKS']['executePreActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'executePreActions'];
-$GLOBALS['TL_HOOKS']['executePostActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'postActionHookForDC_CMSFile'];
 $GLOBALS['TL_HOOKS']['cmsBeHelperParseSimpleTokens']['cms_settings_facebook'][] = ['\numero2\MarketingSuite\BackendModule\Facebook', 'parseSimpleTokens'];
-$GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'initializeSystem'];
+$GLOBALS['TL_HOOKS']['compileFormFields'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseViewOnForm'];
+$GLOBALS['TL_HOOKS']['executePostActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'postActionHookForDC_CMSFile'];
+$GLOBALS['TL_HOOKS']['executePreActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'executePreActions'];
+$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateCookieBar'];
+$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateScripts'];
+$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Tracking\Session', 'storeVisitedPage'];
+$GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = ['\numero2\MarketingSuite\MarketingItem\ABTestPage', 'selectAorBPage'];
 $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\License', 'getSystemMessages'];
 $GLOBALS['TL_HOOKS']['getUserNavigation'][] = ['\numero2\MarketingSuite\BackendModule\Feedback', 'setNavigationLink'];
+$GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'initializeSystem'];
+$GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\Hooks\DCA', 'addStylingFields'];
+$GLOBALS['TL_HOOKS']['processFormData'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseClickOnForm'];
 
 if( TL_MODE === 'BE' ) {
     $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\BackendModule\Module', 'initializeBackendModuleTables'];

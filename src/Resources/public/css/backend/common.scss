@@ -105,8 +105,20 @@ select[readonly].tl_chosen ~ .tl_chosen,
     pointer-events: none;
 }
 
+.widget.readonly .tl_help,
 .widget.disabled .tl_help,
+input[readonly] ~ .tl_help { visibility: hidden; }
 select[readonly] ~ .tl_help { visibility: hidden; }
+
+input[type="radio"][readonly],
+input[type="radio"][readonly] + label {
+
+    opacity: 0.5;
+    pointer-events: none;
+}
+.widget.readonly {
+    cursor: not-allowed;
+}
 
 .content #tl_buttons + #tl_buttons { display: none; }
 
@@ -158,12 +170,32 @@ select[readonly] ~ .tl_help { visibility: hidden; }
     }
 }
 
-.moor-box{
+.moor-box {
     z-index:100;
 }
 
 #tl_messages .tl_error, #tl_messages .tl_confirm, #tl_messages .tl_info, #tl_messages .tl_new {
     a {
         text-decoration: underline;
+    }
+}
+
+.page_a, .page_b {
+    .selector_container .tl_submit + .tl_submit {
+        margin-left: 15px;
+        img {
+            width: 13px;
+            height: 13px;
+            margin-right: 8px;
+        }
+    }
+}
+
+.cms_flex {
+
+    display: flex;
+
+    .cms_right {
+        margin-left: auto
     }
 }

@@ -1,0 +1,138 @@
+<?php if( count($this->pages) > 1 ): ?>
+<div class="item <?=$this->type;?>">
+    <div class="name">
+        <span><?= $this->name; ?></span>
+        <a href="<?= $this->href; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][1],$this->id);?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][1],$this->id);?>','url':this.href+'&popup=1'});return false" class="edit">
+            <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0];?>">
+        </a>
+    </div>
+    <div class="inner">
+        <div class="chart">
+            <canvas id="chart_marketing_<?= $this->id; ?>" height="120px"></canvas>
+        </div>
+        <div class="reset">
+            <?php if( $this->pages[0]['cms_mi_reset'] > 0 ): ?>
+                <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Date::parse(\Config::get('datimFormat'), $this->pages->cms_mi_reset) ); ?></p>
+            <?php endif; ?>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?></th>
+                    <th><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['clicks']; ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach( $this->pages as $p ): ?>
+                <tr>
+                    <td><?=$p['title'];?></td>
+                    <td><?=$p['cms_mi_views'];?></td>
+                    <td><?=$p['cms_mi_clicks'];?></td>
+                </tr>
+                <?php endforeach; ?>
+                <tr>
+                    <td><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['total']; ?></td>
+                    <td><?=array_sum(array_column($this->pages, 'cms_mi_views'));?></td>
+                    <td><?=array_sum(array_column($this->pages, 'cms_mi_clicks'));?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    const config_marketing_<?= $this->id; ?> = {
+        type: 'doughnut',
+        data: {
+            datasets: [
+                {
+                    _type: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['cms_mi_clicks']; ?>',
+                    data: [
+                        <?php foreach( $this->pages as $p ): ?>
+                        <?=$p['cms_mi_clicks'];?>,
+                        <?php endforeach; ?>
+                    ],
+                    backgroundColor: [
+                        'rgba(244,124,0,1)',
+                        'rgba(244,124,0,0.5)'
+                    ],
+                    hoverBackgroundColor: [
+                        'rgba(23,43,59,1)',
+                        'rgba(23,43,59,1)',
+                    ]
+                }
+            ,   {
+                    _type: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['cms_mi_views']; ?>',
+                    data: [
+                        <?php foreach( $this->pages as $p ): ?>
+                        <?=$p['cms_mi_views'];?>,
+                        <?php endforeach; ?>
+                    ],
+                    backgroundColor: [
+                        'rgba(244,124,0,1)',
+                        'rgba(244,124,0,0.5)'
+                    ],
+                    hoverBackgroundColor: [
+                        'rgba(23,43,59,1)',
+                        'rgba(23,43,59,1)',
+                    ],
+                    hoverBorderColor: [
+                        'rgba(255,255,255,1)',
+                        'rgba(255,255,255,1)',
+                    ],
+                }
+            ],
+            labels: [
+                <?php foreach( $this->pages as $p ): ?>
+                '<?=$p['name'];?>',
+                <?php endforeach; ?>
+            ]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'bottom',
+                onClick: function(e) {
+                    e.stopPropagation();
+                }
+            },
+            tooltips: {
+                displayColors: false,
+                callbacks: {
+                    label: function(item, data) {
+
+                        const dataset = data.datasets[item.datasetIndex];
+
+                        const total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                            return previousValue + currentValue;
+                        });
+
+                        const currentValue = dataset.data[item.index];
+                        const percentage = Math.floor(((currentValue/total) * 100)+0.5);
+
+                        const label = data.labels[item.index];
+                        const type = dataset._type;
+
+                        return `${label}: ${currentValue} ${type} / ${percentage}%`;
+                    }
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            },
+            circumference: Math.PI,
+            rotation: -Math.PI,
+        }
+    };
+
+    (function(){
+
+        const context = document.getElementById('chart_marketing_<?= $this->id; ?>').getContext('2d');
+        window.chart_marketing_<?= $this->id; ?> = new Chart(context, config_marketing_<?= $this->id; ?>);
+    })();
+
+</script>
+<?php endif; ?>

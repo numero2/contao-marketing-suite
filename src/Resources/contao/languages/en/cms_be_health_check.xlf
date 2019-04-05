@@ -8,6 +8,24 @@
     <trans-unit id="cms_be_health_check.missing_h1.1">
         <source>Bei den nachfolgenden Seiten fehlt eine H1 Überschrift.</source>
     </trans-unit>
+    <trans-unit id="cms_be_health_check.sitemap_disabled.0">
+        <source>Sitemap nicht aktiviert</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.sitemap_disabled.1">
+        <source>Für die nachfolgenden Seiten-Startpunkte wurden keine XML-Sitemaps konfiguriert.</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.https.0">
+        <source>HTTPS nicht verfügbar</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.https.1">
+        <source>Die nachfolgenden Seiten-Startpunkte sind nicht per HTTPS erreichbar.</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.www.0">
+        <source>Inhalte mit und ohne „www.” erreichbar</source>
+    </trans-unit>
+    <trans-unit id="cms_be_health_check.www.1">
+        <source>Die nachfolgenden Seiten-Startpunkte weisen „Duplicate Content” auf da die Seiten sowohl mit als auch ohne „www.” erreichbar sind.</source>
+    </trans-unit>
     <trans-unit id="cms_be_health_check.missing_meta.0">
         <source>Meta-Daten fehlen</source>
     </trans-unit>

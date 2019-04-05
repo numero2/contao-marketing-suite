@@ -13,13 +13,19 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\BackendTemplate;
+use Contao\Environment;
+use Contao\Input;
+use Contao\Module;
+use Contao\StyleSheets;
+use Contao\System;
+use numero2\MarketingSuite\Backend\License as baguru;
+use Patchwork\Utf8;
 
-class ModuleAcceptTags extends \Module {
+
+class ModuleAcceptTags extends Module {
 
 
     /**
@@ -40,9 +46,9 @@ class ModuleAcceptTags extends \Module {
 
         if( TL_MODE == 'BE' ) {
 
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
 
-            $objTemplate->wildcard = '### '.\Patchwork\Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['cms_accept_tags'][0]).' ###';
+            $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['cms_accept_tags'][0]).' ###';
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
@@ -53,7 +59,7 @@ class ModuleAcceptTags extends \Module {
 
         if( TL_MODE == 'FE' ) {
 
-            if( !\numero2\MarketingSuite\Backend\License::hasFeature('tag_settings', $objPage->trail[0]) || !\numero2\MarketingSuite\Backend\License::hasFeature('tag'.substr($this->type, 3), $objPage->trail[0]) ) {
+            if( !baguru::hasFeature('tag_settings', $objPage->trail[0]) || !baguru::hasFeature('tag'.substr($this->type, 3), $objPage->trail[0]) ) {
                 return '';
             }
         }
@@ -69,16 +75,16 @@ class ModuleAcceptTags extends \Module {
 
         global $objPage;
 
-        \System::loadLanguageFile('cms_default');
+        System::loadLanguageFile('cms_default');
 
-        $this->Template->action = \Environment::get('request');
+        $this->Template->action = Environment::get('request');
         $this->Template->formId = 'cms_accept_tags';
 
         $oTags = TagModel::findBy( ['type=? AND active=?'], ['group', '1'], ['order'=>'sorting ASC']);
 
         $accepted = [];
-        if( !empty(\Input::cookie('cms_cookies')) ) {
-            $accepted = explode('-', \Input::cookie('cms_cookies'));
+        if( !empty(Input::cookie('cms_cookies')) ) {
+            $accepted = explode('-', Input::cookie('cms_cookies'));
         }
 
         $aTags = [];
@@ -110,7 +116,7 @@ class ModuleAcceptTags extends \Module {
             $aTagIds = $oTags->fetchEach('id');
         }
 
-        if( \Input::post('FORM_SUBMIT') && \Input::post('FORM_SUBMIT') == $this->Template->formId ) {
+        if( Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $this->Template->formId ) {
 
             $accepted = [];
             foreach( array_keys($_POST) as $value) {
@@ -130,7 +136,7 @@ class ModuleAcceptTags extends \Module {
             $this->redirect($this->Template->action);
         }
 
-        if( \Input::cookie('cms_cookies_saved') === "true" ) {
+        if( Input::cookie('cms_cookies_saved') === "true" ) {
             $this->Template->cookiesSaved = true;
         } else {
             $this->Template->cookiesSaved = false;
@@ -165,7 +171,7 @@ class ModuleAcceptTags extends \Module {
     /**
      * Generates stylesheet for this element
      *
-     * @return String
+     * @return string
      */
     protected function generateStyling() {
 
@@ -173,7 +179,7 @@ class ModuleAcceptTags extends \Module {
 
         $strClass = "mod_".$this->type." form";
 
-        $oStyleSheet = new \StyleSheets();
+        $oStyleSheet = new StyleSheets();
 
         $mainStyle = [
             'font' => '1'

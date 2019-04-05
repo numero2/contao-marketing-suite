@@ -13,16 +13,21 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\MarketingItem;
 
-
+use Contao\Config;
+use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\Image;
+use Contao\Input;
+use Contao\PageModel;
+use Contao\System;
+use numero2\MarketingSuite\Backend;
+use numero2\MarketingSuite\Backend\Wizard;
+use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\Tracking\ClickAndViews;
 use numero2\MarketingSuite\Tracking\Session;
-use numero2\MarketingSuite\ContentGroupModel;
 
 
 class VisitedPages extends MarketingItem {
@@ -31,13 +36,15 @@ class VisitedPages extends MarketingItem {
     /**
      * Alter child record of tl_content
      *
-     * @param  array $arrRow
-     * @param  string $buffer
-     * @param  object $objMarketingItem
+     * @param array $arrRow
+     * @param string $buffer
+     * @param object $objMarketingItem
+     * @param object $objContentParent
      *
      * @return string
      */
-    public function alterContentChildRecord($arrRow, $buffer, $objMarketingItem, $objContentParent) {
+    public function alterContentChildRecord( $arrRow, $buffer, $objMarketingItem, $objContentParent ) {
+
         $buffer = explode('</div>', $buffer );
 
         $strType = $arrRow['cms_mi_pages_criteria'];
@@ -45,7 +52,7 @@ class VisitedPages extends MarketingItem {
             $strType = $GLOBALS['TL_LANG']['tl_content']['cms_mi_pages_criterias'][$strType];
         }
 
-        $pages = \PageModel::findMultipleByIds(deserialize($arrRow['cms_mi_pages']));
+        $pages = PageModel::findMultipleByIds(deserialize($arrRow['cms_mi_pages']));
 
         if( $arrRow['cms_mi_pages_criteria'] == 'always' ){
 
@@ -55,7 +62,7 @@ class VisitedPages extends MarketingItem {
             $strPages = '';
 
             foreach( $pages as $value ) {
-                $strPages .= \Image::getHtml(\Controller::getPageStatusIcon($value)) . ' ' . $value->title . ' (' . $value->alias . \Config::get('urlSuffix') . ')<br>';
+                $strPages .= Image::getHtml(Controller::getPageStatusIcon($value)) . ' ' . $value->title . ' (' . $value->alias . Config::get('urlSuffix') . ')<br>';
             }
 
             $aOverlay = [
@@ -63,7 +70,7 @@ class VisitedPages extends MarketingItem {
             ,   'content' => $strPages
             ];
 
-            $buffer[0] .= \numero2\MarketingSuite\Backend::parseWithTemplate('backend/elements/overlay', $aOverlay );
+            $buffer[0] .= Backend::parseWithTemplate('backend/elements/overlay', $aOverlay );
         }
 
         $buffer = implode('</div>', $buffer );
@@ -75,14 +82,12 @@ class VisitedPages extends MarketingItem {
     /**
      * Alter header of tl_content
      *
-     * @param  array $args
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     *
-     * @return none
+     * @param array $args
+     * @param \DataContainer $dc
+     * @param object $objMarketingItem
+     * @param object $objContentParent
      */
-    public function alterContentHeader($args, $dc, $objMarketingItem, $objContentParent) {
-
+    public function alterContentHeader( $args, $dc, $objMarketingItem, $objContentParent ) {
 
         $GLOBALS['TL_MOOTOOLS'][] =
         "<script>
@@ -91,14 +96,14 @@ class VisitedPages extends MarketingItem {
 
         if( $objMarketingItem && $objMarketingItem->type == 'visited_pages' && !empty($objMarketingItem->init_step) ) {
 
-            if( \Input::get('finish') && \Input::get('finish') == "true" ) {
+            if( Input::get('finish') && Input::get('finish') == "true" ) {
                 $objMarketingItem->init_step = '';
                 $objMarketingItem->save();
 
                 $this->redirect($this->addToUrl('', true, ['finish']));
             }
 
-            $beWizard = new \numero2\MarketingSuite\Backend\Wizard();
+            $beWizard = new Wizard();
             $aWizardConfig = [
                 'step' => 2
             ,   'type' => $objMarketingItem->type
@@ -119,7 +124,6 @@ class VisitedPages extends MarketingItem {
                 +'</div>'
             );
             </script>";
-
         }
 
         return $args;
@@ -127,25 +131,23 @@ class VisitedPages extends MarketingItem {
 
 
     /**
-     * alter dca configuration of tl_content
+     * Alter dca configuration of tl_content
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     * @param  object $objContent
-     *
-     * @return none
+     * @param \DataContainer $dc
+     * @param object $objMarketingItem
+     * @param object $objContent
+     * @param object $objContentParent
      */
-    public function alterContentDCA($dc, $objMarketingItem, $objContent, $objContentParent) {
+    public function alterContentDCA( $dc, $objMarketingItem, $objContent, $objContentParent ) {
 
+        if( Input::get('act') == 'edit' ) {
 
-        if( \Input::get('act') == 'edit' ) {
-
-            $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = ['numero2\MarketingSuite\MarketingItem\VisitedPages', 'submitContent'];
-            $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['numero2\MarketingSuite\MarketingItem\VisitedPages', 'loadContent'];
+            $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = ['\numero2\MarketingSuite\MarketingItem\VisitedPages', 'submitContent'];
+            $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\MarketingItem\VisitedPages', 'loadContent'];
         }
 
         // only change palette during edit
-        if( \Input::get('act') == 'edit' && $objContent ) {
+        if( Input::get('act') == 'edit' && $objContent ) {
 
             // $objContent
             if( $objContent->cms_mi_pages_criteria == 'always' ) {
@@ -167,23 +169,22 @@ class VisitedPages extends MarketingItem {
     }
 
 
-
     /**
-     * handles what happens after a user submits the child edit form
+     * Handles what happens after a user submits the child edit form
      *
-     * @return none
+     * @param \DataContainer $dc
      */
-    public function submitContent($dc) {
+    public function submitContent( $dc ) {
 
-        if( \Input::post('SUBMIT_TYPE') == 'auto' ) {
+        if( Input::post('SUBMIT_TYPE') == 'auto' ) {
             return;
         }
 
-        $content = \ContentModel::findOneById($dc->activeRecord->id);
+        $content = ContentModel::findOneById($dc->activeRecord->id);
 
         if( $content && $content->cms_mi_pages_criteria == 'always' ) {
 
-            $lastContent = \ContentModel::findOneBy(['pid=? AND ptable=?'], [$content->pid, $content->ptable], ['order'=>'sorting DESC']);
+            $lastContent = ContentModel::findOneBy(['pid=? AND ptable=?'], [$content->pid, $content->ptable], ['order'=>'sorting DESC']);
 
             if( $lastContent && $lastContent->id != $content->id ) {
 
@@ -191,33 +192,31 @@ class VisitedPages extends MarketingItem {
                 $content->save();
             }
         }
+
         // $group = \numero2\MarketingSuite\ContentGroupModel::findOneById($dc->activeRecord->pid);
         // $objMI = \numero2\MarketingSuite\MarketingItemModel::findById($group->pid);
-
     }
 
 
     /**
-     * handles what happens after a user submits the child edit form
+     * Handles what happens after a user submits the child edit form
      *
-     * @return none
+     * @param \DataContainer $dc
      */
-    public function loadContent($dc) {
+    public function loadContent( $dc ) {
 
         // $group = \numero2\MarketingSuite\ContentGroupModel::findOneById($dc->activeRecord->pid);
         // $objMI = \numero2\MarketingSuite\MarketingItemModel::findById($group->pid);
-
     }
 
+
     /**
-     * handles what happens after a user submits the form
+     * Handles what happens after a user submits the form
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     *
-     * @return none
+     * @param \DataContainer $dc
+     * @param object $objMarketingItem
      */
-    public function submitMarketingItem($dc, $objMarketingItem) {
+    public function submitMarketingItem( $dc, $objMarketingItem ) {
 
         $group = ContentGroupModel::findOneByPid($objMarketingItem->id);
 
@@ -229,7 +228,7 @@ class VisitedPages extends MarketingItem {
             $group->active = '1';
             $group->save();
 
-            $refererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+            $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
             $objMarketingItem->init_step = 'contao?do=cms_marketing&amp;table=tl_content&amp;id='.$group->id;
             $objMarketingItem->save();
@@ -240,15 +239,16 @@ class VisitedPages extends MarketingItem {
 
 
     /**
-     * selects one contentId that should be displayed to the user
+     * Selects one contentId that should be displayed to the user
      *
-     * @param  object $objContents
-     * @param  object $objMI
-     * @param  object $objContent
+     * @param object $objContents
+     * @param object $objMI
+     * @param object $objContentParent
+     * @param object $objContent
      *
-     * @return integer
+     * @return integer|null
      */
-    public function selectContentId($objContents, $objMI, $objContentParent, $objContent) {
+    public function selectContentId( $objContents, $objMI, $objContentParent, $objContent ) {
 
         global $objPage;
 
@@ -276,42 +276,45 @@ class VisitedPages extends MarketingItem {
             }
 
             $same = array_intersect($pages, $aVisitedPages);
+
             if( $value->cms_mi_pages_criteria == 'one' ) {
 
                 if( count($same) >= 1 ) {
-
                     $views->increaseViewOnMarketingElement($value);
                     return $value->id;
                 }
+
             } else if( $value->cms_mi_pages_criteria == 'all' ) {
 
                 if( count($same) == count($pages) ) {
-
                     $views->increaseViewOnMarketingElement($value);
                     return $value->id;
                 }
+
             } else if( $value->cms_mi_pages_criteria == 'first' ) {
 
                 if( count($pages) > 0 ) {
 
                     $first = array_reverse($aVisitedPages)[0];
-                    if( in_array($first, $pages) ) {
 
+                    if( in_array($first, $pages) ) {
                         $views->increaseViewOnMarketingElement($value);
                         return $value->id;
                     }
                 }
+
             } else if( $value->cms_mi_pages_criteria == 'last' ) {
 
                 if( count($pages) > 0 ) {
 
                     $last = $aVisitedPages[0];
-                    if( in_array($last, $pages) ) {
 
+                    if( in_array($last, $pages) ) {
                         $views->increaseViewOnMarketingElement($value);
                         return $value->id;
                     }
                 }
+
             } else if( $value->cms_mi_pages_criteria == 'always' ) {
 
                 $views->increaseViewOnMarketingElement($value);
@@ -321,6 +324,7 @@ class VisitedPages extends MarketingItem {
 
         return null;
     }
+
 
     /**
      * Return all pages criterias as array

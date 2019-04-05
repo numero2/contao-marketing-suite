@@ -13,30 +13,37 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\MarketingItem;
 
+use Contao\Backend;
+use Contao\Input;
+use Contao\System;
 
-abstract class MarketingItem extends \Backend {
+
+abstract class MarketingItem extends Backend {
 
 
     /**
-     * get Instance of this class based on type
+     * Get Instance of this class based on type
      *
-     * @param  string $type
+     * @param string $type
      *
-     * @return object
+     * @return CurrentPage|ABTest|VisitedPages|null
      */
-     public static function getChildInstance($type) {
+     public static function getChildInstance( $type ) {
+
+         if( $type == 'a_b_test' ) {
+             return new ABTest();
+         }
+
+         if( $type == 'a_b_test_page' ) {
+             return new ABTestPage();
+         }
 
         if( $type == 'current_page' ) {
             return new CurrentPage();
         }
-        if( $type == 'a_b_test' ) {
-            return new ABTest();
-        }
+
         if( $type == 'visited_pages' ) {
             return new VisitedPages();
         }
@@ -44,90 +51,91 @@ abstract class MarketingItem extends \Backend {
         return null;
     }
 
+
     /**
-     * calculates a sorting value for the content element
+     * Calculates a sorting value for the content element
      *
-     * @param  integer $id
-     * @param  array $aOrder
+     * @param integer $id
+     * @param array $aOrder
      *
      * @return integer
      */
-    protected static function getSorting($id, $aOrder) {
-
+    protected static function getSorting( $id, $aOrder ) {
         return (array_search($id, $aOrder)+1)*32;
     }
 
 
     /**
-     * generates the edit url to the given element
+     * Generates the edit url to the given element
      *
-     * @param  Model $obj
+     * @param \Model $obj
      *
      * @return string
      */
-    protected static function switchToEdit($obj) {
+    protected static function switchToEdit( $obj ) {
 
-        $refererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+        $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
-        return TL_SCRIPT . '?do='.\Input::get('do').'&table='.$obj->getTable().'&id='.$obj->id.'&pid='.$obj->pid.'&mode=1&act=edit&rt='.REQUEST_TOKEN.'&ref='.$refererId;
+        return TL_SCRIPT . '?do='.Input::get('do').'&table='.$obj->getTable().'&id='.$obj->id.'&pid='.$obj->pid.'&mode=1&act=edit&rt='.REQUEST_TOKEN.'&ref='.$refererId;
     }
+
 
     /**
      * Alter child record of tl_content
      *
-     * @param  array $arrRow
-     * @param  string $buffer
-     * @param  object $objMI
+     * @param array $arrRow
+     * @param string $buffer
+     * @param object $objMI
+     * @param object $objCP
      *
      * @return string
      */
-    abstract public function alterContentChildRecord($arrRow, $buffer, $objMI, $objCP);
+    abstract public function alterContentChildRecord( $arrRow, $buffer, $objMI, $objCP );
 
 
     /**
      * Alter header of tl_content
      *
-     * @param  array $args
-     * @param  DataContainer $dc
-     * @param  object $objMI
+     * @param array $args
+     * @param \DataContainer $dc
+     * @param object $objMI
+     * @param object $objCP
      *
      * @return array
      */
-    abstract public function alterContentHeader($args, $dc, $objMI, $objCP);
+    abstract public function alterContentHeader( $args, $dc, $objMI, $objCP );
 
 
     /**
-     * alter dca configuration of tl_content
+     * Alter dca configuration of tl_content
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     * @param  object $objContent
-     *
-     * @return none
+     * @param \DataContainer $dc
+     * @param object $objMI
+     * @param object $objContent
+     * @param object $objCP
      */
-    abstract public function alterContentDCA($dc, $objMI, $objContent, $objCP);
+    abstract public function alterContentDCA( $dc, $objMI, $objContent, $objCP );
 
 
     /**
-     * handles what happens after a user submits the form
+     * Handles what happens after a user submits the form
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     *
-     * @return none
+     * @param \DataContainer $dc
+     * @param object $objMI
      */
-    abstract public function submitMarketingItem($dc, $objMI);
+    abstract public function submitMarketingItem( $dc, $objMI );
 
 
     /**
-     * selects one contentId that should be displayed to the user
+     * Selects one contentId that should be displayed to the user
      *
-     * @param  object $objContents
-     * @param  object $objMI
-     * @param  object $objContent
+     * @param object $objContents
+     * @param object $objMI
+     * @param object $objCP
+     * @param object $objContent
      *
      * @return integer
      */
-    abstract public function selectContentId($objContents, $objMI, $objCP, $objContent);
+    abstract public function selectContentId( $objContents, $objMI, $objCP, $objContent );
 
 }

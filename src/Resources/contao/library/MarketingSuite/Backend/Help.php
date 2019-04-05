@@ -13,13 +13,14 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Backend;
 
+use Contao\BackendModule;
+use Contao\Input;
+use Contao\StringUtil;
 
-class Help extends \BackendModule {
+
+class Help extends BackendModule {
 
 
     /**
@@ -66,21 +67,21 @@ class Help extends \BackendModule {
             return '';
         }
 
-        $this->strModule = \Input::get('do');
+        $this->strModule = Input::get('do');
 
-        if( !empty(\Input::get('mod')) ) {
-            $this->strModule = \Input::get('do').'_'.\Input::get('mod');
+        if( !empty(Input::get('mod')) ) {
+            $this->strModule = Input::get('do').'_'.Input::get('mod');
         }
 
         self::loadLanguageFile('cms_be_help');
 
         $aLabelIndixes = [
-            \Input::get('do').'_'.\Input::get('mod').'_'.\Input::get('table').'_'.$this->strSuffix
-        ,   \Input::get('do').'_'.\Input::get('mod').'_'.\Input::get('table')
-        ,   \Input::get('do').'_'.\Input::get('mod').'_'.$this->strSuffix
-        ,   \Input::get('do').'_'.\Input::get('mod')
-        ,   \Input::get('do').'_'.$this->strSuffix
-        ,   \Input::get('do')
+            Input::get('do').'_'.Input::get('mod').'_'.Input::get('table').'_'.$this->strSuffix
+        ,   Input::get('do').'_'.Input::get('mod').'_'.Input::get('table')
+        ,   Input::get('do').'_'.Input::get('mod').'_'.$this->strSuffix
+        ,   Input::get('do').'_'.Input::get('mod')
+        ,   Input::get('do').'_'.$this->strSuffix
+        ,   Input::get('do')
         ];
 
         $sLabelIndex = array_reduce(
@@ -128,7 +129,7 @@ class Help extends \BackendModule {
         foreach( $this->aLabels as $key => $value ) {
 
             if( !empty($this->aTokens) ) {
-                $value = \StringUtil::parseSimpleTokens($value,$this->aTokens);
+                $value = StringUtil::parseSimpleTokens($value,$this->aTokens);
             }
 
             $this->Template->$key = $value;

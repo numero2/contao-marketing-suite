@@ -9,12 +9,21 @@
     <trans-unit id="tl_cms_settings.test_legend">
         <source>Testumgebung</source>
     </trans-unit>
+    <trans-unit id="tl_cms_settings.health_check_legend">
+        <source>Health Check</source>
+    </trans-unit>
     <!-- FIELDS -->
     <trans-unit id="tl_cms_settings.send_anonymized_data.0">
         <source>Sende anonyme Nutzungsdaten</source>
     </trans-unit>
     <trans-unit id="tl_cms_settings.send_anonymized_data.1">
         <source>Unterstützen Sie das Marketing Suite Team, indem Sie anonym mitteilen welche Features Sie verwenden.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_settings.health_check_ignore_older_than.0">
+        <source>Ignoriere älter Einträge</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_settings.health_check_ignore_older_than.1">
+        <source>Dies schließt ältere Einträge aus den Nachrichten und Events Erweiterung vom Health Check aus.</source>
     </trans-unit>
     <trans-unit id="tl_cms_settings.testmode.0">
         <source>Test-Modus</source>

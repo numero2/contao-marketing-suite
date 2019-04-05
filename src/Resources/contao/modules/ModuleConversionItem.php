@@ -13,13 +13,12 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\Module;
 
-class ModuleConversionItem extends \Module {
+
+class ModuleConversionItem extends Module {
 
 
     /**
@@ -37,7 +36,6 @@ class ModuleConversionItem extends \Module {
     public function generate() {
 
         $ce = new ContentConversionItem($this->objModel);
-
         return $ce->generate();
     }
 
@@ -46,5 +44,6 @@ class ModuleConversionItem extends \Module {
      * Generate module
      */
     protected function compile() {
+
     }
 }

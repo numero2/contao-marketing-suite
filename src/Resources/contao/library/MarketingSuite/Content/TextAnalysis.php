@@ -13,15 +13,14 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Content;
 
-use \Org\Heigl\Hyphenator;
+use numero2\MarketingSuite\Backend\License as sefeca;
+use Org\Heigl\Hyphenator;
+use Org\Heigl\Hyphenator\Options;
 
 
-class Analysis {
+class TextAnalysis {
 
 
     /**
@@ -29,7 +28,6 @@ class Analysis {
      * @var string
      */
     private $strText = "";
-
 
     /**
      * Public properties
@@ -53,7 +51,7 @@ class Analysis {
         $this->analyzeSyllables();
         $this->analyzeSentences();
         $this->calculateFleschIndex();
-        \numero2\MarketingSuite\Backend\License::epo();
+        sefeca::epo();
     }
 
 
@@ -86,7 +84,7 @@ class Analysis {
     private function analyzeSyllables() {
 
         $opts = NULL;
-        $opts = new Hyphenator\Options();
+        $opts = new Options();
         $opts->setHyphen('__')
           ->setDefaultLocale('de_DE')
           ->setRightMin(2)
@@ -283,7 +281,7 @@ class Analysis {
      * Converts the given string into mostly a hexadecimal representation
      * but also supporting unicode characters
      *
-     * @param  string $str
+     * @param string $str
      *
      * @return string
      */

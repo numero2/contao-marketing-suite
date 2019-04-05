@@ -1143,7 +1143,6 @@ document.addEventListener('tinyMCEInitialized', function (e) {
 
         } else {
 
-
             // TODO as we use exact matching a word with ':' '.' ',' '?' '!' won't match
             // but partial matching is no solution
             markInstance.mark(
@@ -1334,6 +1333,146 @@ document.addEventListener('DOMContentLoaded', function(){
                         form.submit();
                     });
                 }
+            }
+        }
+    })();
+
+
+    // link preview
+    (function(){
+
+        var linkPreview = document.querySelectorAll('.link-preview .preview a');
+        var domain = document.querySelectorAll('input[name="domain"]');
+
+        if( linkPreview ) {
+
+            for( var i = 0; i < linkPreview.length; i++ ) {
+
+                linkPreview[i].addEventListener('click', function(e) {
+
+                    e.preventDefault();
+
+                    var selection = window.getSelection();
+                    var range = document.createRange();
+                    range.selectNodeContents(e.target);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+
+                    var message = "";
+                    try {
+                        document.execCommand("copy");
+                    } catch(err) {
+                    }
+                    selection.removeAllRanges();
+                });
+
+                var field = linkPreview[i].getAttribute('data-field');
+
+                if( field ) {
+
+                    var input = document.querySelector('input[name="'+field+'"]');
+
+                    if( input ) {
+
+                        if( domain ) {
+                            for( var j = 0; j < domain.length; j++ ) {
+
+                                if( typeof domain[j].ref == "undefined" ) {
+                                    domain[j].ref = [];
+                                }
+
+                                domain[j].ref.push(input);
+                                domain[j].addEventListener('change', function(e) {
+
+                                    var event;
+                                    if(typeof Event === 'function') {
+                                        event = new Event('keyup');
+                                    } else {
+                                        event = document.createEvent('Event');
+                                        event.initEvent('keyup', true, true);
+                                    }
+
+                                    for( var k = 0; k < e.target.ref.length; k++ ) {
+                                        e.target.ref[k].dispatchEvent(event);
+                                    }
+                                });
+                            }
+                        }
+
+                        input.refField = linkPreview[i];
+                        input.addEventListener('keyup', function(e) {
+
+                            var domain = document.querySelector('input[name="domain"]:checked');
+
+                            if( domain ) {
+                                var link = 'https://' + domain.value + '/' + e.target.value;
+                                if( e.target.name == 'prefix' ) {
+                                    link += "/abc123";
+                                }
+
+                                link = link.replace(/\/+/g, "/")
+                                anchor = e.target.refField;
+                                anchor.href = link;
+                                anchor.innerHTML = link;
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    })();
+
+
+    // suggest wizard
+    (function(){
+
+        var suggestInput = document.querySelectorAll('fieldset .suggest.wizard input');
+
+        if( suggestInput ) {
+
+            function filter(e) {
+
+                var wizard = e.target ? e.target : e.relatedTarget;
+                wizard = wizard.nextElementSibling;
+
+                var val = e.target.value;
+                var list = wizard.querySelectorAll('ul li');
+                if( list ) {
+                    for( var j=0; j < list.length; j++) {
+                        if( list[j].innerHTML.toLowerCase().indexOf(val.toLowerCase()) >= 0 ) {
+                            list[j].style.display = 'block';
+                        } else {
+                            list[j].style.display = 'none';
+                        }
+                    }
+                }
+            }
+
+            for( var i = 0; i < suggestInput.length; i++ ) {
+
+                // filter on input
+                suggestInput[i].addEventListener('focus', filter);
+                suggestInput[i].addEventListener('keyup', filter);
+            }
+        }
+
+        var suggestEntries = document.querySelectorAll('fieldset .suggest.wizard .suggest_wizard ul[data-field] li');
+
+        if( suggestEntries ) {
+
+            for( var i = 0; i < suggestEntries.length; i++ ) {
+
+                // use selected value
+                suggestEntries[i].addEventListener('click', function(e) {
+                    var entry = e.target;
+                    var list = entry.parentNode;
+                    var field = list.getAttribute('data-field')
+
+                    var input = document.querySelector('input[name="'+field+'"]');
+                    if( input ){
+                        input.value = entry.innerHTML;
+                    }
+                });
             }
         }
     })();

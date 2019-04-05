@@ -13,13 +13,15 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Backend;
 
+use Contao\Controller;
+use Contao\DataContainer;
+use Contao\Input;
+use Contao\StringUtil;
 
-class Wizard extends \Controller {
+
+class Wizard extends Controller {
 
 
     /**
@@ -28,7 +30,9 @@ class Wizard extends \Controller {
     public function __construct() {
 
         self::loadLanguageFile('cms_be_wizard');
-        \Input::setGet('nb', 1);
+
+        // while we are using the wizard we disable all buttons with "save and ..."
+        Input::setGet('nb', 1);
     }
 
 
@@ -39,7 +43,7 @@ class Wizard extends \Controller {
      *
      * @return string
      */
-    public function generateTopForInputField( \DataContainer $dc ) {
+    public function generateTopForInputField( DataContainer $dc ) {
 
         $aDCA = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field];
 
@@ -57,6 +61,10 @@ class Wizard extends \Controller {
 
         if( !$lng || empty($aDCA['step']) ) {
             return '';
+        }
+
+        if( !empty($aDCA['show_popup']) ) {
+            // TODO $this->showPopup($aDCA['show_popup'], $aDCA);
         }
 
         $str = '<div class="helper top">';
@@ -119,7 +127,7 @@ class Wizard extends \Controller {
      *
      * @return string
      */
-    public function generateBottomForInputField( \DataContainer $dc ) {
+    public function generateBottomForInputField( DataContainer $dc ) {
 
         $aDCA = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field];
 
@@ -176,5 +184,67 @@ class Wizard extends \Controller {
         }
 
         return $aButtons;
+    }
+
+
+    /**
+     * Overwrites all buttons with one continue button
+     *
+     * @param array $aButtons
+     *
+     * @return array
+     */
+    public function addFinishButton( $aButtons ) {
+
+        if( $aButtons ) {
+
+            foreach( $aButtons as $key => $value ) {
+
+                if( $key === 'save' ) {
+                } else {
+                    unset($aButtons[$key]);
+                }
+            }
+
+            $aButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['finish'].'</button>';
+        }
+
+        return $aButtons;
+    }
+
+
+    /**
+     * Adds a modal window to the current backend page that will be open
+     *
+     * @param string $strTemplate
+     * @param array $arrQueryData
+     */
+    public function showPopup( $strTemplate, $arrData ) {
+
+        $title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wizard_popup_title']);
+
+        $aQueryData = [
+            'type' => $arrData['type']
+        ,   'step' => $arrData['step']
+        ];
+
+        if( \System::getContainer()->get('request_stack')->getCurrentRequest()->getMethod() == "GET" ) {
+
+            $GLOBALS['TL_MOOTOOLS'][] = "<script>Backend.openModalIframe({'title':'$title','url':'" . $this->generatePopupUrl($strTemplate, $aQueryData). "'});</script>";
+        }
+    }
+
+
+    /**
+     * generates the url for the popup with the given data
+     *
+     * @param string $strTemplate
+     * @param array $arrQueryData
+     *
+     * @return string
+     */
+    public function generatePopupUrl( $strTemplate, $arrQueryData=[] ) {
+
+        return TL_PATH.'/contao/cms_wizard_popup?do='.urlencode($strTemplate).'&'.http_build_query($arrQueryData);
     }
 }

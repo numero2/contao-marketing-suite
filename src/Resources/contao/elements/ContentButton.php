@@ -13,13 +13,14 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\StyleSheets;
+use numero2\MarketingSuite\Helper\styleable;
+use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
 
-class ContentButton extends ContentHyperlink {
+
+class ContentButton extends ContentHyperlink implements styleable {
 
 
     /**
@@ -28,52 +29,85 @@ class ContentButton extends ContentHyperlink {
      */
     protected $strTemplate = 'ce_cms_button';
 
+    /**
+     * Marker if style preview is enabled
+     * @var boolean
+     */
+    protected $isStylePreview;
+
 
     /**
      * Generate the content element
      */
     protected function compile() {
 
+        // set default values for styling preview
+        if( $this->isStylePreview ) {
+
+            if( !$this->url && !$this->linkTitle ) {
+
+                $this->url = '#';
+                $this->linkTitle = 'Button';
+            }
+
+            $this->titleText = $this->titleText?:'Tooltip';
+        }
+
         parent::compile();
 
-        $this->Template->unique = $this->getUnique();
+        $this->Template->unique = Helper::getUniqueID($this);
 
-        if( $this->cms_inline_style ) {
+        $strStyle = $this->generateStylesheet();
 
-            $strStyle = $this->generateStyle();
-
-            if( strlen($strStyle) ) {
-                $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
-            }
+        if( strlen($strStyle) ) {
+            $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
         }
     }
 
 
     /**
-     * Generate the needed style for this button
-     *
-     * @return string
+     * @inheritdoc
      */
-    public function generateStyle() {
+    public function generateStylesheet() {
 
-        $strStyle = '';
+        if( !$this->cms_element_style ) {
+            return;
+        }
 
-        if( $this->cms_inline_style ) {
+        // get default styling
+        $strStyle = NULL;
+        $strStyle = Helper::getDefaultStylesheet($this);
 
+        if( $this->cms_style ) {
+
+            $aStyle = [];
             $aStyle = deserialize($this->cms_style);
 
-            $stylesheet = new \StyleSheets();
+            $oStyleSheet = NULL;
+            $oStyleSheet = new StyleSheets();
 
-            $this->unique = $this->getUnique();
+            $uniqueID = Helper::getUniqueID($this);
 
             // split in normal styling and hover stylings
             $aStyleHover = [];
 
             if( $aStyle && count($aStyle) ) {
+
                 foreach( $aStyle as $key => $value ) {
 
-                    if( in_array($key, ['bgcolor', 'bordercolor', 'fontcolor', 'hover_bgcolor', 'hover_bordercolor', 'hover_fontcolor']) ) {
+                    // text-align won't work, we need justify-content
+                    if( $key == 'textalign' ) {
 
+                        if( $value == 'left' ) {
+                            $aStyle['own'] .= 'justify-content: flex-start;';
+                        } else if( $value == 'right' ) {
+                            $aStyle['own'] .= 'justify-content: flex-end;';
+                        }
+
+                        continue;
+                    }
+
+                    if( in_array($key, ['bgcolor', 'bordercolor', 'fontcolor', 'hover_bgcolor', 'hover_bordercolor', 'hover_fontcolor']) ) {
                         $aStyle[$key] = (string)$value;
                     }
 
@@ -96,9 +130,9 @@ class ContentButton extends ContentHyperlink {
                     'font' => 1,
                 ];
 
-                $styleDef = $stylesheet->compileDefinition($aStyle, false, [], [], true);
+                $styleDef = $oStyleSheet->compileDefinition($aStyle, false, [], [], true);
 
-                $strStyle .= '[data-unique="'.$this->unique.'"]'. $styleDef;
+                $strStyle .= '[data-cms-unique="'.$uniqueID.'"]'. $styleDef;
             }
 
             if( count($aStyleHover) ) {
@@ -109,9 +143,13 @@ class ContentButton extends ContentHyperlink {
                     'font' => 1,
                 ];
 
-                $styleHoverDef = $stylesheet->compileDefinition($aStyleHover, false, [], [], true);
+                $styleHoverDef = $oStyleSheet->compileDefinition($aStyleHover, false, [], [], true);
 
-                $strStyle .= '[data-unique="'.$this->unique.'"]:hover'. $styleHoverDef;
+                $strStyle .= '[data-cms-unique="'.$uniqueID.'"]:hover'. $styleHoverDef;
+            }
+
+            if( !empty($aStyle['cms_element_style_custom']) ) {
+                $strStyle .= $aStyle['cms_element_style_custom'];
             }
         }
 
@@ -120,17 +158,11 @@ class ContentButton extends ContentHyperlink {
 
 
     /**
-     * Generates a unique hash for this element
-     *
-     * @return string
+     * @inheritdoc
      */
-    public function getUnique() {
+    public function setStylePreview( $active=true ) {
 
-        if( empty($this->unique) ) {
-
-            $this->unique = sha1($this->id);
-        }
-
-        return $this->unique;
+        $this->isStylePreview = $active;
     }
+
 }

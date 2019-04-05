@@ -13,13 +13,17 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\BackendTemplate;
+use Contao\ContentElement;
+use Contao\ContentModel;
+use Contao\Controller;
+use Patchwork\Utf8;
+use numero2\MarketingSuite\Backend\License as lajema;
 
-class ContentConversionItem extends \ContentElement {
+
+class ContentConversionItem extends ContentElement {
 
 
     /**
@@ -38,28 +42,28 @@ class ContentConversionItem extends \ContentElement {
 
         if( TL_MODE == 'BE' ) {
 
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
 
-            $oContent = \ContentModel::findOneById($this->cms_ci_id);
+            $oContent = ContentModel::findOneById($this->cms_ci_id);
 
             if( $oContent ) {
 
-                $objTemplate->wildcard = '### '. \Patchwork\Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0] .' ('. $GLOBALS['TL_LANG']['CTE'][$oContent->type][0] .')').' ###';
+                $objTemplate->wildcard = '### '. Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0] .' ('. $GLOBALS['TL_LANG']['CTE'][$oContent->type][0] .')').' ###';
                 $objTemplate->id = $oContent->id;
                 $objTemplate->link = $oContent->cms_mi_label;
                 $objTemplate->href = 'contao/main.php?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $oContent->id;
 
             } else {
 
-                $objTemplate->wildcard = '### '. \Patchwork\Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0]) .' ###';
+                $objTemplate->wildcard = '### '. Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0]) .' ###';
             }
 
             return $objTemplate->parse();
         }
 
-        $oContent = \ContentModel::findOneById($this->cms_ci_id);
+        $oContent = ContentModel::findOneById($this->cms_ci_id);
 
-        if( !$oContent || !\numero2\MarketingSuite\Backend\License::hasFeature('conversion_element', $objPage->trail[0]) || !\numero2\MarketingSuite\Backend\License::hasFeature('ce_'.$oContent->type, $objPage->trail[0]) ) {
+        if( !$oContent || !lajema::hasFeature('conversion_element', $objPage->trail[0]) || !lajema::hasFeature('ce_'.$oContent->type, $objPage->trail[0]) ) {
             return '';
         }
 
@@ -72,7 +76,8 @@ class ContentConversionItem extends \ContentElement {
      */
     protected function compile() {
 
-        $strEle = \Controller::getContentElement($this->cms_ci_id, $this->strColumn);
+        $strEle = Controller::getContentElement($this->cms_ci_id, $this->strColumn);
+
         if( $strEle === '' ) {
             return ;
         }

@@ -13,11 +13,16 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Api;
 
+use Contao\CMSConfig;
+use Contao\Controller;
+use Contao\Environment;
+use Contao\Input;
+use Contao\System;
+use Facebook\Exceptions\FacebookResponseException;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Facebook as FacebookAPI;
 use numero2\MarketingSuite\Encryption;
 
 
@@ -45,13 +50,13 @@ class Facebook {
      */
     public function __construct() {
 
-        $this->appID = \CMSConfig::get('cms_fb_app_id');
-        $this->appSecret = Encryption::decrypt( \CMSConfig::get('cms_fb_app_secret') );
-        $this->accessToken = \CMSConfig::get('cms_fb_token') ? Encryption::decrypt( \CMSConfig::get('cms_fb_token') ) : NULL;
+        $this->appID = CMSConfig::get('cms_fb_app_id');
+        $this->appSecret = Encryption::decrypt( CMSConfig::get('cms_fb_app_secret') );
+        $this->accessToken = CMSConfig::get('cms_fb_token') ? Encryption::decrypt( CMSConfig::get('cms_fb_token') ) : NULL;
 
         if( $this->appID && $this->appSecret ) {
 
-            $this->oFB = new \Facebook\Facebook([
+            $this->oFB = new FacebookAPI([
                 'app_id' => $this->appID
             ,   'app_secret' => $this->appSecret
             ,   'default_graph_version' => 'v3.1'
@@ -70,7 +75,7 @@ class Facebook {
     private function setAccessToken() {
 
         // check if we're at the correct url and got the code parameter
-        if( strpos(\Environment::get('url').\Environment::get('requestUri'), self::getOAuthRedirectUrl()) === false || !\Input::get('code') ) {
+        if( strpos(Environment::get('url').Environment::get('requestUri'), self::getOAuthRedirectUrl()) === false || !Input::get('code') ) {
             return false;
         }
 
@@ -88,11 +93,11 @@ class Facebook {
 
             $accessToken = $oHelper->getAccessToken();
 
-        } catch( \Facebook\Exceptions\FacebookResponseException $e ) {
-            \System::log('Graph returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+        } catch( FacebookResponseException $e ) {
+            System::log('Graph returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
 
-        } catch( \Facebook\Exceptions\FacebookSDKException $e ) {
-            \System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+        } catch( FacebookSDKException $e ) {
+            System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
         }
 
         if( $accessToken ) {
@@ -107,9 +112,9 @@ class Facebook {
 
                     $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
 
-                } catch( \Facebook\Exceptions\FacebookSDKException $e ) {
+                } catch( FacebookSDKException $e ) {
 
-                    \System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+                    System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
                     return;
                 }
             }
@@ -117,9 +122,9 @@ class Facebook {
             $accessToken = $accessToken->getValue();
 
             $this->oFB->setDefaultAccessToken( $accessToken );
-            \CMSConfig::persist('cms_fb_token', Encryption::encrypt($accessToken));
+            CMSConfig::persist('cms_fb_token', Encryption::encrypt($accessToken));
 
-            \Controller::redirect( self::getOAuthRedirectUrl() );
+            Controller::redirect( self::getOAuthRedirectUrl() );
         }
     }
 
@@ -127,7 +132,7 @@ class Facebook {
     /**
      * Returns if we have an access_token
      *
-     * @return bool
+     * @return boolean
      */
     public function hasAccessToken() {
         return $this->accessToken ? true : false;
@@ -153,18 +158,18 @@ class Facebook {
 
             return $token;
 
-        } catch( \Facebook\Exceptions\FacebookResponseException $e ) {
+        } catch( FacebookResponseException $e ) {
 
             // Session has expired, that's expected
             if( $e->getCode() != 190 ) {
-                \System::log('Graph returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+                System::log('Graph returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
             }
 
             return false;
 
-        } catch( \Facebook\Exceptions\FacebookSDKException $e ) {
+        } catch( FacebookSDKException $e ) {
 
-            \System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+            System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
         }
 
         return false;
@@ -175,7 +180,7 @@ class Facebook {
      * Checks if the given app credentials are valid by trying to get
      * information about the app itself
      *
-     * @return bool
+     * @return boolean
      */
     public function testCredentials() {
 
@@ -192,19 +197,19 @@ class Facebook {
 
             return true;
 
-        } catch( \Facebook\Exceptions\FacebookResponseException $e ) {
+        } catch( FacebookResponseException $e ) {
 
             // Invalid OAuth access token signature, that's expected
             if( $e->getCode() != 190 ) {
-                \System::log('Graph returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+                System::log('Graph returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
                 return $e->getMessage();
             }
 
             return false;
 
-        } catch( \Facebook\Exceptions\FacebookSDKException $e ) {
+        } catch( FacebookSDKException $e ) {
 
-            \System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+            System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
         }
 
         return;
@@ -218,9 +223,9 @@ class Facebook {
      */
     public static function getOAuthRedirectUrl() {
 
-        $url = \Environment::get('url') . \Environment::get('path');
+        $url = Environment::get('url') . Environment::get('path');
         $url = str_replace('http:','https:',$url);
-        $url = $url . '/contao?do=' . \Input::get('do') . '&mod=' . \Input::get('mod') . '&table=' . \Input::get('table');
+        $url = $url . '/contao?do=' . Input::get('do') . '&mod=' . Input::get('mod') . '&table=' . Input::get('table');
 
         return $url;
     }
@@ -250,7 +255,7 @@ class Facebook {
     /**
      * Returns a list of all available pages
      *
-     * @return array|bool
+     * @return array|boolean
      */
     public function getPages() {
 
@@ -284,7 +289,7 @@ class Facebook {
 
         } catch( \Exception $e ) {
 
-            \System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+            System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
         }
 
         return false;
@@ -317,7 +322,7 @@ class Facebook {
 
         } catch( \Exception $e ) {
 
-            \System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+            System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
         }
 
         return false;
@@ -350,7 +355,7 @@ class Facebook {
 
         } catch( \Exception $e ) {
 
-            \System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+            System::log('Facebook SDK returned an error: ' . $e->getMessage(), __METHOD__, TL_ERROR);
         }
 
         return false;

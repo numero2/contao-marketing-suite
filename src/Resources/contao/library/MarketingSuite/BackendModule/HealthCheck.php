@@ -13,17 +13,30 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\BackendModule;
 
+use Contao\ArticleModel;
+use Contao\BackendModule as CoreBackendModule;
+use Contao\CalendarEventsModel;
+use Contao\CMSConfig;
+use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use numero2\MarketingSuite\Backend\License;
+use Contao\Database;
+use Contao\Environment;
+use Contao\Image;
+use Contao\ModuleModel;
+use Contao\NewsModel;
+use Contao\PageModel;
+use Contao\System;
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use numero2\MarketingSuite\Backend\Help;
+use numero2\MarketingSuite\Backend\License as varzegju;
+use numero2\MarketingSuite\Encryption;
 
 
-class HealthCheck extends \BackendModule {
+class HealthCheck extends CoreBackendModule {
 
 
     /**
@@ -31,7 +44,6 @@ class HealthCheck extends \BackendModule {
      * @var string
      */
     protected $strTemplate = 'backend/modules/health_check';
-
 
     /**
      * Fieldset states
@@ -47,7 +59,7 @@ class HealthCheck extends \BackendModule {
     */
     public function generate() {
 
-        if( !License::hasFeature('health_check') ) {
+        if( !varzegju::hasFeature('health_check') ) {
             throw new AccessDeniedException('This feature is not included in your Marketing Suite package.');
         }
 
@@ -62,11 +74,17 @@ class HealthCheck extends \BackendModule {
 
         $this->loadLanguageFile('tl_page');
         $this->loadLanguageFile('cms_be_health_check');
-        License::buk();
+        if( class_exists('\Contao\News') ) {
+            $this->loadLanguageFile('tl_news');
+        }
+        if( class_exists('\Contao\Calendar') ) {
+            $this->loadLanguageFile('tl_calendar_events');
+        }
+        varzegju::buk();
 
         // get fieldset states
         $objSessionBag = NULL;
-        $objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+        $objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
         $fs = NULL;
         $fs = $objSessionBag->get('fieldset_states');
@@ -77,11 +95,14 @@ class HealthCheck extends \BackendModule {
 
         // check the different health categories
         $aCategories = [
-            License::hasFeature('health_check_h1_missing') ? $this->checkH1Missing() : null
-        ,   License::hasFeature('health_check_meta_missing') ? $this->checkMetaMissing() : null
-        ,   License::hasFeature('health_check_meta_too_short') ? $this->checkMetaTooShort() : null
-        ,   License::hasFeature('health_check_meta_too_long') ? $this->checkMetaTooLong() : null
-        ,   License::hasFeature('health_check_open_graph_missing') ? $this->checkOpenGraphMissing() : null
+            $this->checkH1Missing()
+        ,   $this->checkSitemapDisabled()
+        ,   $this->checkHTTPSEnabled()
+        ,   $this->checkWWWContent()
+        ,   $this->checkMetaMissing()
+        ,   $this->checkMetaTooShort()
+        ,   $this->checkMetaTooLong()
+        ,   $this->checkOpenGraphMissing()
         ];
 
         $aCategories = array_filter($aCategories);
@@ -105,7 +126,7 @@ class HealthCheck extends \BackendModule {
      * @return string
      */
     private function getRefererID() {
-        return \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+        return System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
     }
 
 
@@ -116,7 +137,7 @@ class HealthCheck extends \BackendModule {
      */
     private function checkH1Missing() {
 
-        if( !License::hasFeature('health_check_h1_missing') ) {
+        if( !varzegju::hasFeature('health_check_h1_missing') ) {
             return null;
         }
 
@@ -160,7 +181,7 @@ class HealthCheck extends \BackendModule {
 
         // find pages
         $oPages = NULL;
-        $oPages = \PageModel::findAll([
+        $oPages = PageModel::findAll([
             'column' => [
                 "type=?"
             ,   empty($aExcludePageIDs)?:"id NOT IN(".implode(',',$aExcludePageIDs).")"
@@ -173,13 +194,18 @@ class HealthCheck extends \BackendModule {
 
             while( $oPages->next() ) {
 
+                $objPage = NULL;
+                $objPage = PageModel::findWithDetails( $oPages->id );
+
+                if( !varzegju::hasFeature('health_check_h1_missing', $objPage->trail[0]) ) {
+                    continue;
+                }
+
                 // check if we find any h1 by statically looking at the content
                 if( !$this->checkForH1InContentElements($oPages->id) ) {
 
-                    $objPage = NULL;
-                    $objPage = \PageModel::findWithDetails( $oPages->id );
-
                     $aAttributes = [];
+                    varzegju::wcyt();
 
                     // if it's a published page add the absolute url so
                     // we can perform some analysis on the frontend side
@@ -188,7 +214,7 @@ class HealthCheck extends \BackendModule {
                     }
 
                     $oCategory->items[] = (object) [
-                        'icon'  => \Image::getPath( \Controller::getPageStatusIcon($oPages) )
+                        'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                     ,   'type'  => 'page'
                     ,   'name'  => $oPages->title
                     ,   'href'  => 'contao?do=article&amp;pn='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID()
@@ -216,7 +242,7 @@ class HealthCheck extends \BackendModule {
     private function checkForH1InContentElements( $pageID ) {
 
         $oArticles = NULL;
-        $oArticles = \ArticleModel::findByPid( $pageID );
+        $oArticles = ArticleModel::findByPid( $pageID );
 
         if( $oArticles ) {
 
@@ -226,7 +252,7 @@ class HealthCheck extends \BackendModule {
             while( $oArticles->next() ) {
 
                 $oContentElements = NULL;
-                $oContentElements = \ContentModel::findByPid( $oArticles->id );
+                $oContentElements = ContentModel::findByPid( $oArticles->id );
 
                 if( $oContentElements ) {
 
@@ -239,7 +265,7 @@ class HealthCheck extends \BackendModule {
                         if( $oElement->type == 'module' ) {
 
                             $oModule = NULL;
-                            $oModule = \ModuleModel::findById( $oElement->module );
+                            $oModule = ModuleModel::findById( $oElement->module );
 
                             $oElement = $oModule;
                             $sElementPalette = $GLOBALS['TL_DCA']['tl_module']['palettes'][ $oElement->type ];
@@ -282,15 +308,298 @@ class HealthCheck extends \BackendModule {
 
 
     /**
+     * Checks for root pages with no sitemap enabled
+     *
+     * @return object|void
+     */
+    private function checkSitemapDisabled() {
+
+        if( !varzegju::hasFeature('health_check_sitemap_disabled') ) {
+            return null;
+        }
+
+        $oCategory = (object) [
+            'type' => 'sitemap_disabled'
+        ,   'collapsed' => $this->fsStates['sitemap_disabled_legend']?0:1
+        ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['sitemap_disabled'][0]
+        ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['sitemap_disabled'][1]
+        ,   'items' => []
+        ];
+
+        // find pages
+        $oPages = NULL;
+        $oPages = PageModel::findAll([
+            'column' => ["type=?", "(createSitemap='')", "cms_exclude_health_check=0"]
+        ,   'value' => ['root']
+        ]);
+
+        if( $oPages ) {
+
+            while( $oPages->next() ) {
+
+                if( !varzegju::hasFeature('health_check_sitemap_disabled', $oPages->id) ) {
+                    continue;
+                }
+
+                $oCategory->items[] = (object) [
+                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
+                ,   'type'  => 'page'
+                ,   'name'  => $oPages->title
+                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ];
+            }
+        }
+
+        if( $oCategory->items ) {
+            return $oCategory;
+        }
+    }
+
+
+    /**
+     * Checks for root pages with no HTTPS enabled
+     *
+     * @return object|void
+     */
+    private function checkHTTPSEnabled() {
+
+        if( !varzegju::hasFeature('health_check_https') ) {
+            return null;
+        }
+
+        $oCategory = (object) [
+            'type' => 'https'
+        ,   'collapsed' => $this->fsStates['https_legend']?0:1
+        ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['https'][0]
+        ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['https'][1]
+        ,   'items' => []
+        ];
+
+        // find pages
+        $oPages = NULL;
+        $oPages = PageModel::findAll([
+            'column' => ["type=?", "cms_exclude_health_check=0"]
+        ,   'value' => ['root']
+        ]);
+
+        if( $oPages ) {
+
+            while( $oPages->next() ) {
+
+                if( !varzegju::hasFeature('health_check_https', $oPages->id) ) {
+                    continue;
+                }
+
+                // get domain
+                $sDomain = NULL;
+                $sDomain = $oPages->dns ? $oPages->dns : Environment::get('host');
+
+                // static check: domain matches current host and SSL already enabled
+                if( $sDomain == Environment::get('host') && Environment::get('ssl') ) {
+
+                    continue;
+
+                // check the response when trying to make a request to HTTPS
+                } else {
+
+                    $oClient = NULL;
+                    $oClient = new Client([
+                        RequestOptions::TIMEOUT         => 5
+                    ,   RequestOptions::CONNECT_TIMEOUT => 5
+                    ,   RequestOptions::HTTP_ERRORS     => true
+                    ]);
+
+                    try {
+
+                        $oRequest = NULL;
+                        $oRequest = $oClient->head('https://'.$sDomain);
+
+                        varzegju::tuvwahhe();
+
+                        // SSL seems to work but is it also enabled in tl_page?
+                        if( $oPages->useSSL ) {
+                            continue;
+                        }
+
+                    } catch( \Exception $e ) {
+
+                        // Exception indicates no successfull SSL connection
+                    }
+                }
+
+                $oCategory->items[] = (object) [
+                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
+                ,   'type'  => 'page'
+                ,   'name'  => $oPages->title
+                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ];
+            }
+        }
+
+        if( $oCategory->items ) {
+            return $oCategory;
+        }
+    }
+
+
+    /**
+     * Checks for duplicate content on www and non-www domains
+     *
+     * @return object|void
+     */
+    private function checkWWWContent() {
+
+        if( !varzegju::hasFeature('health_check_www') ) {
+            return null;
+        }
+
+        $oCategory = (object) [
+            'type' => 'www'
+        ,   'collapsed' => $this->fsStates['www_legend']?0:1
+        ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['www'][0]
+        ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['www'][1]
+        ,   'items' => []
+        ];
+
+        // find pages
+        $oPages = NULL;
+        $oPages = PageModel::findAll([
+            'column' => ["type=?", "cms_exclude_health_check=0"]
+        ,   'value' => ['root']
+        ]);
+
+        if( $oPages ) {
+
+            while( $oPages->next() ) {
+
+                if( !varzegju::hasFeature('health_check_www', $oPages->id) ) {
+                    continue;
+                }
+
+                // get domain(s)
+                $sBaseDomain = NULL;
+                $sBaseDomain = $oPages->dns ? $oPages->dns : Environment::get('host');
+                $sBaseDomain = preg_replace('|^www\.(.+\.)|i', '$1', $sBaseDomain);
+
+                $sWWWDomain = NULL;
+                $sWWWDomain = 'www.' . $sBaseDomain;
+
+                $lastPageID = NULL;
+                $lastRedirectHost = NULL;
+
+                varzegju::puwbeaf();
+
+                // send requests to both domains (with and without www)
+                foreach( [$sBaseDomain,$sWWWDomain] as $domain ) {
+
+                    $oClient = NULL;
+                    $oClient = new Client([
+                        RequestOptions::TIMEOUT         => 5
+                    ,   RequestOptions::CONNECT_TIMEOUT => 5
+                    ,   RequestOptions::HTTP_ERRORS     => true
+                    ,   RequestOptions::ALLOW_REDIRECTS => [
+                            'track_redirects' => true
+                        ]
+                    ,   RequestOptions::HEADERS => [
+                            'X-Requested-With' => 'CMS-HealthCheck'
+                        ]
+                    ]);
+
+                    try {
+
+                        $oResponse = NULL;
+                        $oResponse = $oClient->head('http://'.$domain);
+
+                        if( $oResponse->getStatusCode() === 200 ) {
+
+                            $aHeaders = [];
+                            $aHeaders = $oResponse->getHeaders();
+
+                            $currHost = NULL;
+
+                            // save current hostname
+                            if( array_key_exists('X-Guzzle-Redirect-History', $aHeaders) ) {
+
+                                $currHost = array_pop($aHeaders['X-Guzzle-Redirect-History']);
+                                $currHost = parse_url($currHost, PHP_URL_HOST);
+                            }
+
+                            // check if we already know the destination page id from the last request
+                            if( $lastPageID && array_key_exists('X-CMS-HealthCheck', $aHeaders) ) {
+
+                                $currPageID = Encryption::decrypt($aHeaders['X-CMS-HealthCheck'][0]);
+
+                                // different page? no problem, everything's fine
+                                if( $currPageID != $lastPageID ) {
+
+                                    varzegju::figgi();
+                                    continue 2;
+
+                                // same page? check if we've been redirected
+                                } else {
+
+                                    // seems like we've been redirected
+                                    if( array_key_exists('X-Guzzle-Redirect-History', $aHeaders) ) {
+
+                                        // different host - we're good
+                                        if( $currHost != $lastRedirectHost ) {
+                                            continue 2;
+                                        }
+                                    }
+                                }
+
+                            // first try?
+                            } else {
+
+                                // store the id of the destination page
+                                if( array_key_exists('X-CMS-HealthCheck', $aHeaders) ) {
+                                    $lastPageID = Encryption::decrypt($aHeaders['X-CMS-HealthCheck'][0]);
+                                }
+
+                                // store the destination host name if it differs
+                                if( !$lastRedirectHost && $currHost != $domain ) {
+                                    $lastRedirectHost = $currHost;
+                                }
+                            }
+                        }
+
+                    } catch( \Exception $e ) {
+
+                        // may occur if subdomain does not exist at all - thats fine
+                        continue 2;
+                    }
+                }
+
+                $oCategory->items[] = (object) [
+                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
+                ,   'type'  => 'page'
+                ,   'name'  => $oPages->title
+                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ];
+            }
+        }
+
+        if( $oCategory->items ) {
+            return $oCategory;
+        }
+    }
+
+
+    /**
      * Checks for pages with missing meta data
      *
      * @return object|void
      */
     private function checkMetaMissing() {
 
-        if( !License::hasFeature('health_check_meta_missing') ) {
+        if( !varzegju::hasFeature('health_check_meta_missing') ) {
             return null;
         }
+
+        $db = Database::getInstance();
 
         $oCategory = (object) [
             'type' => 'missing_meta'
@@ -302,8 +611,8 @@ class HealthCheck extends \BackendModule {
 
         // find pages
         $oPages = NULL;
-        $oPages = \PageModel::findAll([
-            'column' => ["type=?", "(pageTitle='' OR description = '')"]
+        $oPages = PageModel::findAll([
+            'column' => ["type=?", "(pageTitle='' OR description = '')", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
         ]);
 
@@ -311,13 +620,84 @@ class HealthCheck extends \BackendModule {
 
             while( $oPages->next() ) {
 
+                $objPage = NULL;
+                $objPage = PageModel::findWithDetails( $oPages->id );
+
+                if( !varzegju::hasFeature('health_check_meta_missing', $objPage->trail[0]) ) {
+                    continue;
+                }
+
                 $oCategory->items[] = (object) [
-                    'icon'  => \Image::getPath( \Controller::getPageStatusIcon($oPages) )
+                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                 ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
                 ];
+            }
+        }
+
+        // find news
+        if( class_exists('\Contao\News') && $db->fieldExists('pageTitle', 'tl_news') && $db->fieldExists('description', 'tl_news') ) {
+
+            $column = ["(pageTitle='' OR description = '')"];
+            $value = [];
+
+            if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
+                $column[] = "date>=?";
+                $value[] = CMSConfig::get('health_check_ignore_older_than');
+            }
+
+            $oNews = NULL;
+            $oNews = NewsModel::findAll([
+                'column' => $column
+            ,   'value' => $value
+            ]);
+
+            if( $oNews ) {
+
+                while( $oNews->next() ) {
+
+                    $oCategory->items[] = (object) [
+                        'icon'  => 'bundles/contaonews/news.svg'
+                    ,   'type'  => 'page'
+                    ,   'name'  => $oNews->headline
+                    ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id)
+                    ];
+                }
+            }
+        }
+
+        // find events
+        if( class_exists('\Contao\Calendar') && $db->fieldExists('pageTitle', 'tl_calendar_events') && $db->fieldExists('description', 'tl_calendar_events') ) {
+
+            $column = ["(pageTitle='' OR description = '')"];
+            $value = [];
+
+            if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
+                $column[] = "startDate>=?";
+                $value[] = CMSConfig::get('health_check_ignore_older_than');
+            }
+
+            $oEvents = NULL;
+            $oEvents = CalendarEventsModel::findAll([
+                'column' => $column
+            ,   'value' => $value
+            ]);
+
+            if( $oEvents ) {
+
+                while( $oEvents->next() ) {
+
+                    $oCategory->items[] = (object) [
+                        'icon'  => 'bundles/contaocalendar/calendar.svg'
+                    ,   'type'  => 'page'
+                    ,   'name'  => $oEvents->title
+                    ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id)
+                    ];
+                }
             }
         }
 
@@ -334,9 +714,11 @@ class HealthCheck extends \BackendModule {
      */
     private function checkMetaTooShort() {
 
-        if( !License::hasFeature('health_check_meta_too_short') ) {
+        if( !varzegju::hasFeature('health_check_meta_too_short') ) {
             return null;
         }
+
+        $db = Database::getInstance();
 
         $oCategory = (object) [
             'type' => 'short_meta'
@@ -348,8 +730,8 @@ class HealthCheck extends \BackendModule {
 
         // find pages
         $oPages = NULL;
-        $oPages = \PageModel::findAll([
-            'column' => ["type=?", "(CHAR_LENGTH(pageTitle) < 30 OR CHAR_LENGTH(description) < 79)"]
+        $oPages = PageModel::findAll([
+            'column' => ["type=?", "(CHAR_LENGTH(pageTitle) < 30 OR CHAR_LENGTH(description) < 79)", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
         ]);
 
@@ -357,13 +739,84 @@ class HealthCheck extends \BackendModule {
 
             while( $oPages->next() ) {
 
+                $objPage = NULL;
+                $objPage = PageModel::findWithDetails( $oPages->id );
+
+                if( !varzegju::hasFeature('health_check_meta_too_short', $objPage->trail[0]) ) {
+                    continue;
+                }
+
                 $oCategory->items[] = (object) [
-                    'icon'  => \Image::getPath( \Controller::getPageStatusIcon($oPages) )
+                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                 ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
                 ];
+            }
+        }
+
+        // find news
+        if( class_exists('\Contao\News') && $db->fieldExists('pageTitle', 'tl_news') && $db->fieldExists('description', 'tl_news') ) {
+
+            $column = ["(CHAR_LENGTH(pageTitle) < 30 OR CHAR_LENGTH(description) < 79)"];
+            $value = [];
+
+            if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
+                $column[] = "date>=?";
+                $value[] = CMSConfig::get('health_check_ignore_older_than');
+            }
+
+            $oNews = NULL;
+            $oNews = NewsModel::findAll([
+                'column' => $column
+            ,   'value' => $value
+            ]);
+
+            if( $oNews ) {
+
+                while( $oNews->next() ) {
+
+                    $oCategory->items[] = (object) [
+                        'icon'  => 'bundles/contaonews/news.svg'
+                    ,   'type'  => 'page'
+                    ,   'name'  => $oNews->headline
+                    ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id)
+                    ];
+                }
+            }
+        }
+
+        // find events
+        if( class_exists('\Contao\Calendar') && $db->fieldExists('pageTitle', 'tl_calendar_events') && $db->fieldExists('description', 'tl_calendar_events') ) {
+
+            $column = ["(CHAR_LENGTH(pageTitle) < 30 OR CHAR_LENGTH(description) < 79)"];
+            $value = [];
+
+            if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
+                $column[] = "startDate>=?";
+                $value[] = CMSConfig::get('health_check_ignore_older_than');
+            }
+
+            $oEvents = NULL;
+            $oEvents = CalendarEventsModel::findAll([
+                'column' => $column
+            ,   'value' => $value
+            ]);
+
+            if( $oEvents ) {
+
+                while( $oEvents->next() ) {
+
+                    $oCategory->items[] = (object) [
+                        'icon'  => 'bundles/contaocalendar/calendar.svg'
+                    ,   'type'  => 'page'
+                    ,   'name'  => $oEvents->title
+                    ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id)
+                    ];
+                }
             }
         }
 
@@ -380,9 +833,11 @@ class HealthCheck extends \BackendModule {
      */
     private function checkMetaTooLong() {
 
-        if( !License::hasFeature('health_check_meta_too_long') ) {
+        if( !varzegju::hasFeature('health_check_meta_too_long') ) {
             return null;
         }
+
+        $db = Database::getInstance();
 
         $oCategory = (object) [
             'type' => 'long_meta'
@@ -394,8 +849,8 @@ class HealthCheck extends \BackendModule {
 
         // find pages
         $oPages = NULL;
-        $oPages = \PageModel::findAll([
-            'column' => ["type=?", "(CHAR_LENGTH(pageTitle) > 60 OR CHAR_LENGTH(description) > 158)"]
+        $oPages = PageModel::findAll([
+            'column' => ["type=?", "(CHAR_LENGTH(pageTitle) > 60 OR CHAR_LENGTH(description) > 158)", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
         ]);
 
@@ -403,13 +858,84 @@ class HealthCheck extends \BackendModule {
 
             while( $oPages->next() ) {
 
+                $objPage = NULL;
+                $objPage = PageModel::findWithDetails( $oPages->id );
+
+                if( !varzegju::hasFeature('health_check_meta_too_long', $objPage->trail[0]) ) {
+                    continue;
+                }
+
                 $oCategory->items[] = (object) [
-                    'icon'  => \Image::getPath( \Controller::getPageStatusIcon($oPages) )
+                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                 ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
                 ];
+            }
+        }
+
+        // find news
+        if( class_exists('\Contao\News') && $db->fieldExists('pageTitle', 'tl_news') && $db->fieldExists('description', 'tl_news') ) {
+
+            $column = ["(CHAR_LENGTH(pageTitle) > 60 OR CHAR_LENGTH(description) > 158)"];
+            $value = [];
+
+            if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
+                $column[] = "date>=?";
+                $value[] = CMSConfig::get('health_check_ignore_older_than');
+            }
+
+            $oNews = NULL;
+            $oNews = NewsModel::findAll([
+                'column' => $column
+            ,   'value' => $value
+            ]);
+
+            if( $oNews ) {
+
+                while( $oNews->next() ) {
+
+                    $oCategory->items[] = (object) [
+                        'icon'  => 'bundles/contaonews/news.svg'
+                    ,   'type'  => 'page'
+                    ,   'name'  => $oNews->headline
+                    ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id)
+                    ];
+                }
+            }
+        }
+
+        // find events
+        if( class_exists('\Contao\Calendar') && $db->fieldExists('pageTitle', 'tl_calendar_events') && $db->fieldExists('description', 'tl_calendar_events') ) {
+
+            $column = ["(CHAR_LENGTH(pageTitle) > 60 OR CHAR_LENGTH(description) > 158)"];
+            $value = [];
+
+            if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
+                $column[] = "startDate>=?";
+                $value[] = CMSConfig::get('health_check_ignore_older_than');
+            }
+
+            $oEvents = NULL;
+            $oEvents = CalendarEventsModel::findAll([
+                'column' => $column
+            ,   'value' => $value
+            ]);
+
+            if( $oEvents ) {
+
+                while( $oEvents->next() ) {
+
+                    $oCategory->items[] = (object) [
+                        'icon'  => 'bundles/contaocalendar/calendar.svg'
+                    ,   'type'  => 'page'
+                    ,   'name'  => $oEvents->title
+                    ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id)
+                    ];
+                }
             }
         }
 
@@ -426,7 +952,7 @@ class HealthCheck extends \BackendModule {
      */
     private function checkOpenGraphMissing() {
 
-        if( !License::hasFeature('health_check_open_graph_missing') || !class_exists('numero2\OpenGraph3\OpenGraph3') ) {
+        if( !varzegju::hasFeature('health_check_open_graph_missing') || !class_exists('\numero2\OpenGraph3\OpenGraph3') ) {
             return null;
         }
 
@@ -440,8 +966,8 @@ class HealthCheck extends \BackendModule {
 
         // find pages
         $oPages = NULL;
-        $oPages = \PageModel::findAll([
-            'column' => ["type=?", "(og_title='' OR og_image=NULL)"]
+        $oPages = PageModel::findAll([
+            'column' => ["type=?", "(og_title='' OR og_image=NULL)", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
         ]);
 
@@ -449,8 +975,15 @@ class HealthCheck extends \BackendModule {
 
             while( $oPages->next() ) {
 
+                $objPage = NULL;
+                $objPage = PageModel::findWithDetails( $oPages->id );
+
+                if( !varzegju::hasFeature('health_check_open_graph_missing', $objPage->trail[0]) ) {
+                    continue;
+                }
+
                 $oCategory->items[] = (object) [
-                    'icon'  => \Image::getPath( \Controller::getPageStatusIcon($oPages) )
+                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
@@ -460,24 +993,27 @@ class HealthCheck extends \BackendModule {
         }
 
         // find news
-        $oNews = NULL;
-        $oNews = \NewsModel::findAll([
-            'column' => ["(og_title='' OR og_image=NULL)"]
-        ]);
+        if( class_exists('\Contao\News') ) {
 
-        if( $oNews ) {
+            $oNews = NULL;
+            $oNews = \NewsModel::findAll([
+                'column' => ["(og_title='' OR og_image=NULL)"]
+            ]);
 
-            $this->loadLanguageFile('tl_news');
+            if( $oNews ) {
 
-            while( $oNews->next() ) {
+                $this->loadLanguageFile('tl_news');
 
-                $oCategory->items[] = (object) [
-                    'icon'  => 'bundles/contaonews/news.svg'
-                ,   'type'  => 'news'
-                ,   'name'  => $oNews->headline
-                ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_opengraph_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['edit'][1],$oNews->id)
-                ];
+                while( $oNews->next() ) {
+
+                    $oCategory->items[] = (object) [
+                        'icon'  => 'bundles/contaonews/news.svg'
+                    ,   'type'  => 'news'
+                    ,   'name'  => $oNews->headline
+                    ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_opengraph_legend'
+                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id)
+                    ];
+                }
             }
         }
 

@@ -13,13 +13,12 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\Model;
 
-class ContentGroupModel extends \Model {
+
+class ContentGroupModel extends Model {
 
 
     /**

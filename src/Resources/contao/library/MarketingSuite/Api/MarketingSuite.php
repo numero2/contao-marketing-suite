@@ -13,12 +13,18 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Api;
 
-use numero2\MarketingSuite\Backend\License;
+use Contao\CMSConfig;
+use Contao\Controller;
+use Contao\Crypto;
+use Contao\Database;
+use Contao\Environment;
+use Contao\PageModel;
+use Contao\System;
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
+use numero2\MarketingSuite\Backend\License as wegilej;
 use numero2\MarketingSuite\Encryption;
 
 
@@ -33,13 +39,13 @@ class MarketingSuite {
 
 
     /**
-     * Constructor.
+     * Constructor
      */
     public function __construct() {
 
-        \Controller::loadLanguageFile('cms_api_messages');
+        Controller::loadLanguageFile('cms_api_messages');
 
-        $this->baseUrl = \System::getContainer()->getParameter('cms_api_endpoint');
+        $this->baseUrl = System::getContainer()->getParameter('cms_api_endpoint');
     }
 
 
@@ -57,12 +63,12 @@ class MarketingSuite {
             if( $response->status && $response->status === 'ok' ) {
 
                 // set temporarily
-                \CMSConfig::set('latest_version', $response->latest_version);
-                \CMSConfig::set('last_version_check', time());
+                CMSConfig::set('latest_version', $response->latest_version);
+                CMSConfig::set('last_version_check', time());
 
                 // save permanently
-                \CMSConfig::persist('latest_version', $response->latest_version);
-                \CMSConfig::persist('last_version_check', time());
+                CMSConfig::persist('latest_version', $response->latest_version);
+                CMSConfig::persist('last_version_check', time());
             }
 
         } catch( \Exception $e ) {
@@ -79,7 +85,7 @@ class MarketingSuite {
      *
      * @return boolean
      */
-    public function checkLicense( string $key="", \PageModel $oRootPage ) {
+    public function checkLicense( string $key="", PageModel $oRootPage ) {
 
         if( !$key || !$oRootPage || $oRootPage->type !== "root" ) {
             return false;
@@ -87,7 +93,7 @@ class MarketingSuite {
 
         $aData = [
             'license' => $key
-        ,   'domain' => $oRootPage->dns?:\Environment::get('host')
+        ,   'domain' => $oRootPage->dns?:Environment::get('host')
         ];
 
         if( !empty($oRootPage->cms_root_key) ) {
@@ -102,7 +108,7 @@ class MarketingSuite {
             if( !empty($response->key) ) {
 
                 $oCrypto = NULL;
-                $oCrypto = new \Crypto($response->key);
+                $oCrypto = new Crypto($response->key);
 
                 if( $oCrypto->verify($response->key, $response->sign) ) {
 
@@ -139,7 +145,7 @@ class MarketingSuite {
      * @param string $key The license key
      * @param \PageModel $oRootPage
      */
-    public function getFeatures( string $key="", \PageModel $oRootPage ) {
+    public function getFeatures( string $key="", PageModel $oRootPage ) {
 
         if( !$key || !$oRootPage || $oRootPage->type !== "root" ) {
             return;
@@ -151,7 +157,7 @@ class MarketingSuite {
 
         $aData = [
             'license' => $key
-        ,   'domain' => $oRootPage->dns?:\Environment::get('host')
+        ,   'domain' => $oRootPage->dns?:Environment::get('host')
         ,   'key' => $oRootPage->cms_root_key
         ];
 
@@ -163,7 +169,7 @@ class MarketingSuite {
             if( !empty($response->data) && !empty($response->sign) ) {
 
                 $oCrypto = NULL;
-                $oCrypto = new \Crypto($oRootPage->cms_root_key);
+                $oCrypto = new Crypto($oRootPage->cms_root_key);
 
                 if( $oCrypto->verify($response->data, $response->sign) ) {
 
@@ -189,7 +195,6 @@ class MarketingSuite {
                 );
             }
         }
-
     }
 
 
@@ -201,14 +206,13 @@ class MarketingSuite {
         $aData = [
             "fingerprint" => $this->generateFingerprint()
         ,   "tstamp" => time()
-        ,   "testmode" => \CMSConfig::get('testmode')
+        ,   "testmode" => CMSConfig::get('testmode')
         ,   "cms_version" => CMS_VERSION
         ,   "cto_version" => VERSION.'.'.BUILD
         ];
 
-        $db = \Database::getInstance();
+        $db = Database::getInstance();
         $aData['data'] = [];
-        // TODO gather data
 
         // tl_page num roots with key and without
         $result = $db->prepare("
@@ -235,9 +239,9 @@ class MarketingSuite {
             }
         }
 
-
         // tl_cms_marketing_item num ele and which
-        if( License::hasFeature('marketing_element') ) {
+        if( wegilej::hasFeature('marketing_element') ) {
+
             $result = $db->prepare("
                 SELECT
                     type,
@@ -252,7 +256,7 @@ class MarketingSuite {
 
                 $aResult = $result->fetchAllAssoc();
 
-                $mi = \System::importStatic('\numero2\MarketingSuite\MarketingItem');
+                $mi = System::importStatic('\numero2\MarketingSuite\DCAHelper\MarketingItem');
                 $types = $mi->getMarketingItemTypes();
 
                 foreach( $types as $key => $value ) {
@@ -276,9 +280,9 @@ class MarketingSuite {
         }
 
         // tl_cms_conversion_item num ele and which and ptable
-        if( License::hasFeature('conversion_element') ) {
+        if( wegilej::hasFeature('conversion_element') ) {
 
-            $mi = \System::importStatic('\numero2\MarketingSuite\ConversionItem');
+            $mi = System::importStatic('\numero2\MarketingSuite\DCAHelper\ConversionItem');
             $types = $mi->getConversionElementTypes()['conversion_elements'];
 
             $result = $db->prepare("
@@ -295,7 +299,6 @@ class MarketingSuite {
             if( $result->numRows ) {
 
                 $aResult = $result->fetchAllAssoc();
-
 
                 foreach( $types as $key => $value ) {
                     if( $key == 'default' ) {
@@ -317,9 +320,8 @@ class MarketingSuite {
             $aData['data']['conversion_element'] = false;
         }
 
-
         // tl_cms_tags num with type
-        if( License::hasFeature('tags') ) {
+        if( wegilej::hasFeature('tags') ) {
 
             $result = $db->prepare("
                 SELECT
@@ -349,18 +351,17 @@ class MarketingSuite {
         }
 
         // tl_cms_tag_settings type
-        if( License::hasFeature('tag_settings') ) {
-
-            $aData['data']['tag_settings']['type'] = \CMSConfig::get('cms_tag_type');
+        if( wegilej::hasFeature('tag_settings') ) {
+            $aData['data']['tag_settings']['type'] = CMSConfig::get('cms_tag_type');
         } else {
-
             $aData['data']['tag_settings'] = false;
         }
 
         // tl_cms_facebook is setup
-        if( License::hasFeature('news_publish_facebook') ) {
+        if( wegilej::hasFeature('news_publish_facebook') ) {
 
-            $pages = \CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(\CMSConfig::get('cms_fb_pages_available'))) : null;
+            $pages = CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : null;
+
             if( is_array($pages) ) {
 
                 $aData['data']['fb_setup']['page_count'] = count($pages);
@@ -414,6 +415,33 @@ class MarketingSuite {
             $aData['data']['fb_setup'] = false;
         }
 
+
+        // link shortener
+        if( wegilej::hasFeature('link_shortener') ) {
+
+            $result = $db->prepare("
+                SELECT
+                    active='1' AS active,
+                    count(1) AS count
+                FROM tl_cms_link_shortener
+                GROUP BY active='1'
+            ")->execute();
+
+            if( $result->numRows ) {
+
+                $aResult = $result->fetchAllAssoc();
+
+                foreach( $aResult as $value ) {
+
+                    $key = $value['active']=='1'?'active':'inactive';
+
+                    $aData['data']['link_shortener'][$key] = $value['count'];
+                }
+            }
+        } else {
+            $aData['data']['link_shortener'] = false;
+        }
+
         $this->send('/egasu', $aData);
     }
 
@@ -425,7 +453,7 @@ class MarketingSuite {
      */
     protected function generateFingerprint() {
 
-        $fingerprint = \System::getContainer()->getParameter('secret');
+        $fingerprint = System::getContainer()->getParameter('secret');
         $md5 = str_repeat(md5($fingerprint), 2);
         $sha = hash('sha256', $fingerprint);
 
@@ -438,10 +466,10 @@ class MarketingSuite {
     /**
      * Send request to the API
      *
-     * @param  String $uri
-     * @param  array  $aData
+     * @param string $uri
+     * @param array  $aData
      *
-     * @return String
+     * @return string
      */
     private function send( $uri=NULL, $aData=NULL ) {
 
@@ -449,13 +477,11 @@ class MarketingSuite {
 
         try {
 
-            $request = new \GuzzleHttp\Client(
-                [
-                    \GuzzleHttp\RequestOptions::TIMEOUT         => 5
-                ,   \GuzzleHttp\RequestOptions::CONNECT_TIMEOUT => 5
-                ,   \GuzzleHttp\RequestOptions::HTTP_ERRORS     => false
-                ]
-            );
+            $request = new Client([
+                RequestOptions::TIMEOUT         => 5
+            ,   RequestOptions::CONNECT_TIMEOUT => 5
+            ,   RequestOptions::HTTP_ERRORS     => false
+            ]);
 
             try {
 
@@ -465,7 +491,7 @@ class MarketingSuite {
                     $response = $request->get($url);
                 } else {
 
-                    $response = $request->post($url, [\GuzzleHttp\RequestOptions::JSON => $aData]);
+                    $response = $request->post($url, [RequestOptions::JSON => $aData]);
                 }
 
             } catch( \Exception $e ) {
@@ -484,7 +510,7 @@ class MarketingSuite {
 
             } else {
 
-                \System::log('Received invalid data from Marketing Suite Server', __METHOD__, TL_ERROR);
+                System::log('Received invalid data from Marketing Suite Server', __METHOD__, TL_ERROR);
 
                 throw new \Exception(
                     'Received invalid data from Marketing Suite Server'
@@ -494,7 +520,7 @@ class MarketingSuite {
 
         } catch( \Exception $e ) {
 
-            \System::log('Exception while retrieving data from Marketing Suite Server (' . $e->getMessage() . ')', __METHOD__, TL_ERROR);
+            System::log('Exception while retrieving data from Marketing Suite Server (' . $e->getMessage() . ')', __METHOD__, TL_ERROR);
 
             throw new \Exception(
                 $e->getMessage()

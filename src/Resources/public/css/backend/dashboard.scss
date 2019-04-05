@@ -44,7 +44,19 @@
                 flex-direction: column;
 
                 .chart {
-                    margin-bottom: 15px;
+                    margin-bottom: auto;
+                    padding-bottom: 15px;
+                }
+
+                .reset {
+
+                    font-size: 0.8572em;
+                    text-align: right;
+                    color: darken($col-gray-1,10%);
+
+                    p {
+                        margin-bottom: 0.5em;
+                    }
                 }
 
                 table {
@@ -58,7 +70,10 @@
                         text-align: center;
                     }
 
-                    thead tr th { background: $col-gray; }
+                    tr th {
+                        background: $col-gray;
+                        border-bottom: 1px solid $col-white;
+                    }
                 }
             }
         }

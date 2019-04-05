@@ -13,15 +13,20 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
-use numero2\MarketingSuite\MarketingItem\MarketingItem as MarketingInstance;
+use Contao\BackendTemplate;
+use Contao\ContentElement;
+use Contao\ContentModel;
+use Contao\Controller;
+use Contao\Environment;
+use Contao\Input;
+use Patchwork\Utf8;
+use numero2\MarketingSuite\Backend\License as tokanugo;
+use numero2\MarketingSuite\MarketingItem\MarketingItem;
 
 
-class ContentMarketingItem extends \ContentElement {
+class ContentMarketingItem extends ContentElement {
 
 
     /**
@@ -40,7 +45,7 @@ class ContentMarketingItem extends \ContentElement {
 
         if( TL_MODE == 'BE' ) {
 
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
 
             $oMarketingItem = MarketingItemModel::findOneById($this->cms_mi_id);
 
@@ -48,7 +53,7 @@ class ContentMarketingItem extends \ContentElement {
 
                 $this->loadLanguageFile('tl_cms_marketing_item');
 
-                $objTemplate->wildcard = '### '.\Patchwork\Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_marketing_item'][0] .' ('. $GLOBALS['TL_LANG']['tl_cms_marketing_item']['types'][$oMarketingItem->type] .')').' ###';
+                $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_marketing_item'][0] .' ('. $GLOBALS['TL_LANG']['tl_cms_marketing_item']['types'][$oMarketingItem->type] .')').' ###';
                 $objTemplate->id = $oMarketingItem->id;
                 $objTemplate->link = $oMarketingItem->name;
 
@@ -64,7 +69,7 @@ class ContentMarketingItem extends \ContentElement {
 
             } else {
 
-                $objTemplate->wildcard = '### '.\Patchwork\Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_marketing_item'][0]).' ###';
+                $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_marketing_item'][0]).' ###';
             }
 
             return $objTemplate->parse();
@@ -77,7 +82,7 @@ class ContentMarketingItem extends \ContentElement {
             return '';
         }
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('marketing_element', $objPage->trail[0]) || !\numero2\MarketingSuite\Backend\License::hasFeature('me_'.$objMI->type, $objPage->trail[0]) ) {
+        if( !tokanugo::hasFeature('marketing_element', $objPage->trail[0]) || !tokanugo::hasFeature('me_'.$objMI->type, $objPage->trail[0]) ) {
             return '';
         }
 
@@ -93,10 +98,10 @@ class ContentMarketingItem extends \ContentElement {
         $objMI = NULL;
         $objMI = MarketingItemModel::findById($this->cms_mi_id);
 
-        if( \Input::get('follow') ) {
+        if( Input::get('follow') ) {
 
             $objContent = NULL;
-            $objContent = \ContentModel::findById(\Input::get('follow'));
+            $objContent = ContentModel::findById(Input::get('follow'));
 
             if( $objContent && $objContent->ptable === 'tl_cms_content_group' ) {
 
@@ -106,14 +111,20 @@ class ContentMarketingItem extends \ContentElement {
                 if( $objContentGroup && $objContentGroup->pid === $objMI->id ) {
 
                     if( $objContent->cta_link ) {
-                        $objContentGroup->clicks +=1;
-                        $objContentGroup->save();
+
+                        if( !$objContentGroup->always_use_this ) {
+                            $objContentGroup->clicks +=1;
+                            $objContentGroup->save();
+                        }
                         $this->redirect(\Controller::replaceInsertTags($objContent->cta_link));
                     }
 
                     if( $objContent->url ) {
-                        $objContentGroup->clicks +=1;
-                        $objContentGroup->save();
+
+                        if( !$objContentGroup->always_use_this ) {
+                            $objContentGroup->clicks +=1;
+                            $objContentGroup->save();
+                        }
                         $this->redirect(\Controller::replaceInsertTags($objContent->url));
                     }
                 }
@@ -125,12 +136,12 @@ class ContentMarketingItem extends \ContentElement {
 
         $oContents = NULL;
         if( $objCP && $objCP->count() === 1 ) {
-            $oContents = \ContentModel::findPublishedByPidAndTable($objCP->id, 'tl_cms_content_group');
+            $oContents = ContentModel::findPublishedByPidAndTable($objCP->id, 'tl_cms_content_group');
         }
         $selectedContent = NULL;
 
         $instance = NULL;
-        $instance = MarketingInstance::getChildInstance($objMI->type);
+        $instance = MarketingItem::getChildInstance($objMI->type);
 
         if( $instance ) {
             $selectedContent = $instance->selectContentId($oContents, $objMI, $objCP, $this);
@@ -146,21 +157,21 @@ class ContentMarketingItem extends \ContentElement {
             $this->Template->content = '';
             foreach( $selectedContent as $value ) {
 
-                $objContent = \ContentModel::findById($value);
+                $objContent = ContentModel::findById($value);
 
                 if($objMI->type === 'a_b_test' && $objContent->cms_mi_isMainTracker == '1' ){
 
-                    if( \Controller::getContentElement($value, $this->strColumn) !== '' ) {
+                    if( Controller::getContentElement($value, $this->strColumn) !== '' ) {
 
-                        $strClass = \ContentElement::findClass($objContent->type);
+                        $strClass = self::findClass($objContent->type);
 
                         $objContent->typePrefix = 'ce_';
 
                         if( $objContent->cta_link ) {
-                            $objContent->cta_link = \Environment::get('request').'?follow='.$value;
+                            $objContent->cta_link = Environment::get('request').'?follow='.$value;
                         }
                         if( $objContent->url ) {
-                            $objContent->url = \Environment::get('request').'?follow='.$value;
+                            $objContent->url = Environment::get('request').'?follow='.$value;
                         }
 
                         /** @var ContentElement $objElement */
@@ -171,7 +182,7 @@ class ContentMarketingItem extends \ContentElement {
                     continue;
                 }
 
-                $this->Template->content .= \Controller::getContentElement($value, $this->strColumn);
+                $this->Template->content .= Controller::getContentElement($value, $this->strColumn);
             }
 
         } else {

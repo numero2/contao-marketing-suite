@@ -13,14 +13,20 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Hooks;
 
-use numero2\MarketingSuite\TagModel;
-use numero2\MarketingSuite\ModuleCookieBar;
+use Contao\CMSConfig;
+use Contao\Controller;
+use Contao\FrontendTemplate;
+use Contao\Input;
+use Contao\LayoutModel;
+use Contao\ModuleModel;
+use Contao\PageModel;
+use Contao\PageRegular;
+use numero2\MarketingSuite\Backend\License as aczolku;
 use numero2\MarketingSuite\ModuleAcceptTags;
+use numero2\MarketingSuite\ModuleCookieBar;
+use numero2\MarketingSuite\TagModel;
 
 
 class Tags extends Hooks {
@@ -33,17 +39,17 @@ class Tags extends Hooks {
      * @param \LayoutModel $objLayout
      * @param \PageRegular $objPageRegular
      */
-    public function generateScripts( \PageModel $objPage, \LayoutModel $objLayout, \PageRegular $objPageRegular ) {
+    public function generateScripts( PageModel $objPage, LayoutModel $objLayout, PageRegular $objPageRegular ) {
 
         global $objPage;
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('tags', $objPage->trail[0]) ) {
+        if( !aczolku::hasFeature('tags', $objPage->trail[0]) ) {
             return;
         }
 
         $objTemplate = NULL;
-        $objTemplate = new \FrontendTemplate('mod_cms_tags');
-        \numero2\MarketingSuite\Backend\License::ezahew();
+        $objTemplate = new FrontendTemplate('mod_cms_tags');
+        aczolku::ezahew();
 
         $objTags = NULL;
         $objTags = TagModel::findAllActiveByPage($objPage->id);
@@ -81,15 +87,15 @@ class Tags extends Hooks {
                     continue;
                 }
 
-                if( !\numero2\MarketingSuite\Backend\License::hasFeature('tags_'.$tag->type, $objPage->trail[0]) ) {
+                if( !aczolku::hasFeature('tags_'.$tag->type, $objPage->trail[0]) ) {
                     continue;
                 }
 
                 // check if this tag was accepted
                 // cookie_bar
-                $boolAccepted = \Input::cookie('cms_cookie') == 'accept';
+                $boolAccepted = Input::cookie('cms_cookie') == 'accept';
                 // accept_tags
-                $boolAccepted |= (\Input::cookie('cms_cookies_saved') === "true" && in_array($tag->pid, explode('-', \Input::cookie('cms_cookies'))));
+                $boolAccepted |= (Input::cookie('cms_cookies_saved') === "true" && in_array($tag->pid, explode('-', Input::cookie('cms_cookies'))));
 
                 // skip if cookie needed but not cookie_accepted
                 if( $tag->enable_on_cookie_accept && !$boolAccepted ) {
@@ -125,7 +131,7 @@ class Tags extends Hooks {
                     }
 
                     $tagTemplate = NULL;
-                    $tagTemplate = new \FrontendTemplate($tag->customTpl);
+                    $tagTemplate = new FrontendTemplate($tag->customTpl);
 
                     $tagTemplate->setData( $tag->row() );
 
@@ -159,26 +165,26 @@ class Tags extends Hooks {
      * @param \LayoutModel $objLayout
      * @param \PageRegular $objPageRegular
      */
-    public function generateCookieBar( \PageModel $objPage, \LayoutModel $objLayout, \PageRegular $objPageRegular ) {
+    public function generateCookieBar( PageModel $objPage, LayoutModel $objLayout, PageRegular $objPageRegular ) {
 
-        if( !\numero2\MarketingSuite\Backend\License::hasFeature('tags', $objPage->trail[0]) || !\numero2\MarketingSuite\Backend\License::hasFeature('tag_settings', $objPage->trail[0]) ) {
+        if( !aczolku::hasFeature('tags', $objPage->trail[0]) || !aczolku::hasFeature('tag_settings', $objPage->trail[0]) ) {
             return;
         }
 
-        $objModel = new \ModuleModel();
+        $objModel = new ModuleModel();
         $objModel->preventSaving(false);
 
-        \Controller::loadDataContainer('tl_cms_tag_settings');
-        \numero2\MarketingSuite\Backend\License::udifuro();
+        Controller::loadDataContainer('tl_cms_tag_settings');
+        aczolku::udifuro();
 
         if( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields'] && count($GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields']) ) {
 
             foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields'] as $key => $value ) {
 
                 if( !empty($value['mapping']) ) {
-                    $objModel->{$value['mapping']} = \CMSConfig::get($key);
+                    $objModel->{$value['mapping']} = CMSConfig::get($key);
                 } else {
-                    $objModel->{$key} = \CMSConfig::get($key);
+                    $objModel->{$key} = CMSConfig::get($key);
                 }
             }
         }

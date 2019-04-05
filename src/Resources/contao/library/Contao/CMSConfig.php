@@ -15,6 +15,8 @@
 
 namespace Contao;
 
+use numero2\MarketingSuite\Backend\License as voudu;
+
 
 class CMSConfig {
 
@@ -59,13 +61,13 @@ class CMSConfig {
      * Data
      * @var array
      */
-    protected $arrData = array();
+    protected $arrData = [];
 
     /**
      * Cache
      * @var array
      */
-    protected $arrCache = array();
+    protected $arrCache = [];
 
 
     /**
@@ -118,7 +120,7 @@ class CMSConfig {
         }
 
         $strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
-        \numero2\MarketingSuite\Backend\License::con();
+        voudu::con();
 
         if( file_exists($strCacheDir . '/contao/config/cmsconfig.php') ) {
 
@@ -132,7 +134,7 @@ class CMSConfig {
 
             } catch (\InvalidArgumentException $e) {
 
-                $files = array();
+                $files = [];
             }
 
             foreach( $files as $file ) {
@@ -277,7 +279,7 @@ class CMSConfig {
      * @param string $strKey   The full variable name
      * @param mixed  $varValue The configuration value
      */
-    public function add($strKey, $varValue) {
+    public function add( $strKey, $varValue ) {
 
         $this->markModified();
         $this->arrData[$strKey] = $this->escape($varValue) . ';';
@@ -290,7 +292,7 @@ class CMSConfig {
      * @param string $strKey   The full variable name
      * @param mixed  $varValue The configuration value
      */
-    public function update($strKey, $varValue) {
+    public function update( $strKey, $varValue ) {
 
         $this->add($strKey, $varValue);
     }
@@ -301,7 +303,7 @@ class CMSConfig {
      *
      * @param string $strKey The full variable name
      */
-    public function delete($strKey) {
+    public function delete( $strKey ) {
 
         $this->markModified();
         unset($this->arrData[$strKey]);
@@ -315,7 +317,7 @@ class CMSConfig {
      *
      * @return boolean True if the configuration value exists
      */
-    public static function has($strKey) {
+    public static function has( $strKey ) {
 
         return array_key_exists($strKey, $GLOBALS['TL_CMSCONFIG']);
     }
@@ -328,10 +330,9 @@ class CMSConfig {
      *
      * @return mixed|null The configuration value
      */
-    public static function get($strKey) {
+    public static function get( $strKey ) {
 
         if( isset($GLOBALS['TL_CMSCONFIG'][$strKey]) ) {
-
             return $GLOBALS['TL_CMSCONFIG'][$strKey];
         }
 
@@ -342,10 +343,10 @@ class CMSConfig {
     /**
      * Temporarily set a configuration value
      *
-     * @param string $strKey   The short key
+     * @param string $strKey The short key
      * @param string $varValue The configuration value
      */
-    public static function set($strKey, $varValue) {
+    public static function set( $strKey, $varValue ) {
 
         $GLOBALS['TL_CMSCONFIG'][$strKey] = $varValue;
     }
@@ -354,10 +355,10 @@ class CMSConfig {
     /**
      * Permanently set a configuration value
      *
-     * @param string $strKey   The short key or full variable name
+     * @param string $strKey The short key or full variable name
      * @param mixed  $varValue The configuration value
      */
-    public static function persist($strKey, $varValue) {
+    public static function persist( $strKey, $varValue ) {
 
         $objConfig = static::getInstance();
 
@@ -374,7 +375,7 @@ class CMSConfig {
      *
      * @param string $strKey The short key or full variable name
      */
-    public static function remove($strKey) {
+    public static function remove( $strKey ) {
 
         $objConfig = static::getInstance();
 
@@ -392,9 +393,9 @@ class CMSConfig {
     public static function preload() {
 
         $blnHasLcf = file_exists(TL_ROOT . '/system/config/cmsconfig.php');
+
         // Include the local configuration file
         if( $blnHasLcf === true ) {
-
             include TL_ROOT . '/system/config/cmsconfig.php';
         }
 
@@ -409,25 +410,21 @@ class CMSConfig {
      *
      * @return mixed The escaped value
      */
-    protected function escape($varValue) {
+    protected function escape( $varValue ) {
 
         if( is_numeric($varValue) && !preg_match('/e|^[+-]?0[^.]/', $varValue) && $varValue < PHP_INT_MAX ) {
-
             return $varValue;
         }
 
         if( \is_bool($varValue) ) {
-
             return $varValue ? 'true' : 'false';
         }
 
         if( $varValue == 'true' ) {
-
             return 'true';
         }
 
         if( $varValue == 'false' ) {
-
             return 'false';
         }
 

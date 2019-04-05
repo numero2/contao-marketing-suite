@@ -13,13 +13,18 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\ContentElement;
+use Contao\Controller;
+use Contao\Environment;
+use Contao\Input;
+use Contao\StringUtil;
+use numero2\MarketingSuite\Backend\License as rakfib;
+use numero2\MarketingSuite\Tracking\ClickAndViews;
 
-class ContentHyperlink extends \ContentElement {
+
+class ContentHyperlink extends ContentElement {
 
 
     /**
@@ -38,7 +43,7 @@ class ContentHyperlink extends \ContentElement {
 
         if( TL_MODE == 'FE' ) {
 
-            if( !\numero2\MarketingSuite\Backend\License::hasFeature('ce_'.$this->type, $objPage->trail[0]) ) {
+            if( !rakfib::hasFeature('ce_'.$this->type, $objPage->trail[0]) ) {
                 return '';
             }
         }
@@ -52,13 +57,14 @@ class ContentHyperlink extends \ContentElement {
      */
     protected function compile() {
 
-        $tracking = new Tracking\ClickAndViews();
+        $tracking = new ClickAndViews();
+
         if( TL_MODE == "FE" ) {
             $tracking->increaseViewOnContentElement($this->objModel);
         }
 
         if( substr($this->url, 0, 7) == 'mailto:' ) {
-            $this->url = \StringUtil::encodeEmail($this->url);
+            $this->url = StringUtil::encodeEmail($this->url);
         } else {
             $this->url = ampersand($this->url);
         }
@@ -71,7 +77,7 @@ class ContentHyperlink extends \ContentElement {
         $this->Template->link = $this->linkTitle;
 
         if( $this->titleText ) {
-            $this->Template->linkTitle = \StringUtil::specialchars($this->titleText);
+            $this->Template->linkTitle = StringUtil::specialchars($this->titleText);
         }
 
         $this->Template->target = '';
@@ -81,13 +87,13 @@ class ContentHyperlink extends \ContentElement {
 
         if( TL_MODE == "FE" ) {
 
-            if( \Input::get('follow') && \Input::get('follow') == $this->id ) {
+            if( Input::get('follow') && Input::get('follow') == $this->id ) {
 
                 $tracking->increaseClickOnContentElement($this->objModel);
-                $this->redirect(\Controller::replaceInsertTags($this->url));
+                $this->redirect(Controller::replaceInsertTags($this->url));
             }
 
-            $this->Template->href = \Environment::get('request').'?follow='.$this->id;
+            $this->Template->href = Environment::get('request').'?follow='.$this->id;
         }
     }
 }

@@ -18,11 +18,6 @@ namespace Contao;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
-/**
- * Provide methods to edit the local configuration file.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class DC_CMSFile extends \DataContainer implements \editable {
 
 
@@ -31,7 +26,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
      *
      * @param string $strTable
      */
-    public function __construct($strTable) {
+    public function __construct( $strTable ) {
 
         parent::__construct();
 
@@ -72,7 +67,6 @@ class DC_CMSFile extends \DataContainer implements \editable {
      * @return string
      */
     public function create() {
-
         return $this->edit();
     }
 
@@ -83,7 +77,6 @@ class DC_CMSFile extends \DataContainer implements \editable {
      * @return string
      */
     public function cut() {
-
         return $this->edit();
     }
 
@@ -94,7 +87,6 @@ class DC_CMSFile extends \DataContainer implements \editable {
      * @return string
      */
     public function copy() {
-
         return $this->edit();
     }
 
@@ -105,7 +97,6 @@ class DC_CMSFile extends \DataContainer implements \editable {
      * @return string
      */
     public function move() {
-
         return $this->edit();
     }
 
@@ -127,7 +118,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
         // Build an array from boxes and rows
         $this->strPalette = $this->getPalette();
         $boxes = \StringUtil::trimsplit(';', $this->strPalette);
-        $legends = array();
+        $legends = [];
 
         if( !empty($boxes) ) {
 
@@ -275,7 +266,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
         }
 
         // Submit buttons
-        $arrButtons = array();
+        $arrButtons = [];
         $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
         $arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
 
@@ -367,10 +358,9 @@ class DC_CMSFile extends \DataContainer implements \editable {
      *
      * @param mixed $varValue
      */
-    protected function save($varValue) {
+    protected function save( $varValue ) {
 
         if( \Input::post('FORM_SUBMIT') != $this->strTable ) {
-
             return;
         }
 
@@ -378,7 +368,6 @@ class DC_CMSFile extends \DataContainer implements \editable {
 
         // Make sure that checkbox values are boolean
         if( $arrData['inputType'] == 'checkbox' && !$arrData['eval']['multiple'] ) {
-
             $varValue = $varValue ? true : false;
         }
 
@@ -390,11 +379,8 @@ class DC_CMSFile extends \DataContainer implements \editable {
                 $varValue = \StringUtil::deserialize($varValue);
 
                 if( !\is_array($varValue) ) {
-
                     $varValue = \StringUtil::binToUuid($varValue);
-
                 } else {
-
                     $varValue = serialize(array_map('StringUtil::binToUuid', $varValue));
                 }
             }
@@ -491,8 +477,8 @@ class DC_CMSFile extends \DataContainer implements \editable {
         // Check whether there are selector fields
         if( !empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) ) {
 
-            $sValues = array();
-            $subpalettes = array();
+            $sValues = [];
+            $subpalettes = [];
 
             foreach( $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name ) {
 
@@ -538,7 +524,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
             // Build possible palette names from the selector values
             if( empty($sValues) ) {
 
-                $names = array('default');
+                $names = ['default'];
 
             } else if( \count($sValues) > 1 ) {
 
@@ -546,7 +532,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
 
             } else {
 
-                $names = array($sValues[0]);
+                $names = [$sValues[0]];
             }
 
             // Get an existing palette
@@ -568,6 +554,4 @@ class DC_CMSFile extends \DataContainer implements \editable {
 
         return $strPalette;
     }
-
-
 }

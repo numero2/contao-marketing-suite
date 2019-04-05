@@ -13,13 +13,16 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\Model;
+use Contao\ContentModel;
+use Contao\ArticleModel;
+use Contao\PageModel;
+use Contao\Model\Collection;
 
-class ConversionItemModel extends \Model {
+
+class ConversionItemModel extends Model {
 
 
     /**
@@ -28,4 +31,67 @@ class ConversionItemModel extends \Model {
      */
     protected static $strTable = 'tl_cms_conversion_item';
 
+
+    /**
+     * List all inline conversion items on the given page or article
+     *
+     * @param Collection|PageModel|ArticleModel $objModels
+     *
+     * @return Collection|ConentModel|null
+     */
+    public static function findAllOn($objModels) {
+
+        if( $objModels === null ) {
+            return $objModels;
+        }
+
+        if( $objModels instanceof Collection ) {
+
+            if( $objModels->current() instanceof ContentModel ) {
+                return $objModels;
+            }
+
+            $result = array();
+            foreach( $objModels as $objModel ) {
+
+                $children = self::findAllOn($objModel);
+                if( $children ) {
+
+                    if( $children instanceof Collection ) {
+
+                        foreach( $children as $child ) {
+                            $result[] = $child;
+                        }
+                    } else {
+                        $result[] = $children;
+                    }
+                }
+            }
+
+            if( count($result) ) {
+
+                $colResult = new Collection( $result, $result[0]->getTable());
+                return self::findAllOn($colResult);
+            } else {
+
+                return null;
+            }
+
+        }
+
+        if( $objModels instanceof PageModel ) {
+
+            $objChildren = ArticleModel::findBy(['pid=? AND published=?'], [$objModels->id, '1']);
+            return self::findAllOn($objChildren);
+        }
+
+        if( $objModels instanceof ArticleModel ) {
+
+            $types = "'".implode("','", array_keys($GLOBALS['TL_CTE']['conversion_elements']))."'";
+            $objChildren = ContentModel::findBy(['ptable=? AND pid=? AND type IN ('.$types.') AND invisible=?'], ['tl_article', $objModels->id, '']);
+
+            return self::findAllOn($objChildren);
+        }
+
+    }
 }

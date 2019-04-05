@@ -13,13 +13,15 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\BackendTemplate;
+use Contao\Controller;
+use Contao\Image;
+use Contao\Model;
 
-class Backend extends \Controller {
+
+class Backend extends Controller {
 
 
     /**
@@ -32,7 +34,7 @@ class Backend extends \Controller {
      */
     public static function parseWithTemplate( $templateCls, $arrValues ) {
 
-        $objTemplate = new \BackendTemplate($templateCls);
+        $objTemplate = new BackendTemplate($templateCls);
 
         $objTemplate->setData( $arrValues );
 
@@ -43,7 +45,7 @@ class Backend extends \Controller {
     /**
      * Generates html code that will show the path where the given object is used
      *
-     * @param Model $obj
+     * @param \Model $obj
      * @param integer $limit
      *
      * @return string
@@ -55,10 +57,10 @@ class Backend extends \Controller {
         }
 
         $currentTable = $obj::getTable();
-        \Controller::loadDataContainer($currentTable);
+        Controller::loadDataContainer($currentTable);
 
         // find parent element
-        $parentTable = null;
+        $parentTable = NULL;
 
         if( !empty($GLOBALS['TL_DCA'][$currentTable]['config']['dynamicPtable']) && $GLOBALS['TL_DCA'][$currentTable]['config']['dynamicPtable'] ) {
 
@@ -73,24 +75,24 @@ class Backend extends \Controller {
             }
         }
 
-        $parentTable = \Model::getClassFromTable($parentTable);
+        $parentTable = Model::getClassFromTable($parentTable);
         if( $parentTable === "Model" ) {
-            $parentTable = null;
+            $parentTable = NULL;
         }
 
-        $parent = null;
+        $parent = NULL;
         if( $parentTable && $obj->pid ) {
             $parent = $parentTable::findOneById($obj->pid);
         }
 
-        return (($parent!=null)?self::generateReferencePath($parent, $limit-1):'') . '<span>' . self::generateReferenceItem($obj) . '</span>';
+        return (($parent!=NULL)?self::generateReferencePath($parent, $limit-1):'') . '<span>' . self::generateReferenceItem($obj) . '</span>';
     }
 
 
     /**
      * Generates html for one item in the referene path
      *
-     * @param Model $obj
+     * @param \Model $obj
      *
      * @return string
      */
@@ -114,7 +116,7 @@ class Backend extends \Controller {
                 break;
 
             case 'tl_page':
-                $icon = \Controller::getPageStatusIcon($obj);
+                $icon = Controller::getPageStatusIcon($obj);
                 $text = $obj->title . ' (' . $obj->alias . \Config::get('urlSuffix') . ')';
                 break;
 
@@ -148,6 +150,6 @@ class Backend extends \Controller {
                 break;
         }
 
-        return \Image::getHtml($icon) . ' ' . $text;
+        return Image::getHtml($icon) . ' ' . $text;
     }
 }

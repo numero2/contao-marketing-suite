@@ -15,6 +15,12 @@
     <trans-unit id="tl_cms_tag.edit.1">
         <source>Tag ID %s bearbeiten</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.cut.0">
+        <source>Tag verschieben</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.cut.1">
+        <source>Tag ID %s verschieben</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.pasteafter.0">
         <source>Einfügen nach</source>
     </trans-unit>
@@ -89,17 +95,39 @@
     <trans-unit id="tl_cms_tag.tag.1">
         <source>Tracking-ID, welche zu diesem Tag gehört.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.tag_google_analytics.0">
+        <source>Tracking-ID</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.tag_google_analytics.1">
+        <source>Die Tracking-ID im Format „UA-000000-0”.</source>
+    </trans-unit>
+
+    <trans-unit id="tl_cms_tag.tag_google_tag_manager.0">
+        <source>Container-ID</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.tag_google_tag_manager.1">
+        <source>Container-ID, welche zu diesem Tag Manager gehört.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.tag_facebook_pixel.0">
+        <source>Pixel-ID</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.tag_facebook_pixel.1">
+        <source>ID des Facebook Pixels.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.alias.0">
         <source>Alias</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.alias.1">
-        <source>Der Tag Alias ist eine eindeutige Referenz für diesen tag. Falls nichts angegebenw wird, wird dies automatisch erzeugt.</source>
+        <source>Benötigt falls mehrere Varianten dieses Tags auf der gleichen Seite ausgespielt werden. Wird automatisch vergeben.</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.html.0">
         <source>HTML Code</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.anonymize_ip.0">
         <source>IP anonymisieren</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.anonymize_ip.1">
+        <source>Die IP des Besuchers vor der Übertragung anonymisieren.</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.customTpl.0">
         <source>Individuelles Template</source>
@@ -147,8 +175,11 @@
     <trans-unit id="tl_cms_tag.types.google_analytics">
         <source>Google Analytics</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.types.google_tag_manager">
+        <source>Google Tag Manager</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.types.facebook_pixel">
-        <source>facebook Pixel</source>
+        <source>Facebook Pixel</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.page_scopes.current_page">
         <source>Nur ausgewählte Seiten</source>

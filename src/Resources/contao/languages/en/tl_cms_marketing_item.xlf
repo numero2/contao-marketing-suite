@@ -33,8 +33,14 @@
     <trans-unit id="tl_cms_marketing_item.toggle.1">
         <source>Marketing-Element ID %s aktivieren / deaktivieren</source>
     </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.reset_counter.0">
+        <source>Anzahl Aufrufe und Klicks zurücksetzen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.reset_counter.1">
+        <source>Anzahl Aufrufe und Klicks bei der ID %s zurücksetzen</source>
+    </trans-unit>
     <trans-unit id="tl_cms_marketing_item.init.0">
-        <source>Einrichten fortsetzen</source>
+        <source>Einrichtung fortsetzen</source>
     </trans-unit>
     <!-- LEGENDS -->
     <trans-unit id="tl_cms_marketing_item.common_legend">
@@ -80,6 +86,18 @@
     <trans-unit id="tl_cms_marketing_item.pages.1">
         <source>Bitte wählen Sie auf welchen Seiten Sie Inhalte ausspielen wollen.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.auto_winner_after.0">
+        <source>Automatisch besseren Inhalt anzeigen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.auto_winner_after.1">
+        <source>Zu einem festgelegtem Datum wird der besser Inhalt ausgewählt und zukünftig immer verwendet.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.stop_auto_winner.0">
+        <source>Enddatum des Testes</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.stop_auto_winner.1">
+        <source>Bitte wählen Sie zu welchem Zeitpunk der besser Inhalt ermittelt werden soll.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_marketing_item.ranking.0">
         <source>Ranking</source>
     </trans-unit>
@@ -104,6 +122,18 @@
     <trans-unit id="tl_cms_marketing_item.intervall.1">
         <source>Für eine sinnvolle Auswertung muss der Zeitraum mindestens 4 Wochen betragen.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.page_a.0">
+        <source>Seite A</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.page_a.1">
+        <source>Der Inhalt dieser Seite wird für den Fall A verwendet. Der A/B Test ist über den Alias dieser Seite zu erreichen.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.page_b.0">
+        <source>Seite B</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.page_b.1">
+        <source>Der Inhalt dieser Seite wird für den Fall B verwendet. Diese Seite sollte nicht direkt verlinkt werden, da hierdurch die Zählung verfälscht wird.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_marketing_item.active.0">
         <source>Aktiv?</source>
     </trans-unit>
@@ -113,12 +143,18 @@
     <trans-unit id="tl_cms_marketing_item.used.0">
         <source>Verwendung</source>
     </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.status.0">
+        <source>Status</source>
+    </trans-unit>
     <!-- OPTIONS -->
     <trans-unit id="tl_cms_marketing_item.types.default">
         <source>-</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.types.a_b_test">
-        <source>A/B Test</source>
+        <source>A/B Test Inhaltselemente</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.types.a_b_test_page">
+        <source>A/B Test Seite</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.types.visited_pages">
         <source>Seiten dynamisch</source>
@@ -161,7 +197,22 @@
         <source>Elemente werden nur auf der angegebenen Seite ausgespielt.</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.list_label.always_use_this_name">
-        <source>Fall: %s</source>
+        <source>Immer "%s" ausspielen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.list_label.auto_winner_after_date">
+        <source>Messung läuft bis %s</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.toggle_always_use_this.0">
+        <source>Immer diesen Fall ausspielen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.toggle_always_use_this.1">
+        <source>Wird immer ausgespielt</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.toggle_always_use_this_tooltip.0">
+        <source>Immer Fall "%s" ausspielen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_marketing_item.toggle_always_use_this_tooltip.1">
+        <source>Fall "%s" wird immer ausgespielt. Erneut klicken um künftig wieder beide Fälle auszuspielen.</source>
     </trans-unit>
 </body>
 </file>

@@ -11,7 +11,7 @@
         <source>Profimodus aktivieren</source>
     </trans-unit>
     <trans-unit id="tl_user.cms_pro_mode_enabled.1">
-        <source>Wenn aktiviert werden Ihnen keine Hilfetexte mehr angezeigt.</source>
+        <source>Wenn aktiviert werden Ihnen keine Hilfetexte, dafür ggf. erweiterte Einstellungsmöglichkeiten angezeigt.</source>
     </trans-unit>
 </body>
 </file>

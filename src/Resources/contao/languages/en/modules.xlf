@@ -39,6 +39,12 @@
     <trans-unit id="MOD.cms_settings.1">
         <source>Einstellungen - Marketing Suite</source>
     </trans-unit>
+    <trans-unit id="MOD.cms_tools.0">
+        <source>Tools</source>
+    </trans-unit>
+    <trans-unit id="MOD.cms_tools.1">
+        <source>Tools - Marketing Suite</source>
+    </trans-unit>
     <trans-unit id="MOD.cms_feedback.0">
         <source>Feedback</source>
     </trans-unit>
@@ -57,6 +63,12 @@
     </trans-unit>
     <trans-unit id="CMS.settings.1">
         <source>Hier werden die Einstellungen der Marketing Suite vorgenommen.</source>
+    </trans-unit>
+    <trans-unit id="CMS.link_shortener.0">
+        <source>Link Shortener</source>
+    </trans-unit>
+    <trans-unit id="CMS.link_shortener.1">
+        <source>Kurzlinks erzeugen, die auch getrackt werden.</source>
     </trans-unit>
     <trans-unit id="CMS.avalex.0">
         <source>avalex</source>

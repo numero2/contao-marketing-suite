@@ -13,7 +13,7 @@
  */
 
 
-namespace numero2\MarketingSuite\EventListener\KernelResponse;
+namespace numero2\MarketingSuiteBundle\EventListener\KernelResponse;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -34,7 +34,7 @@ class TestHeaderListener {
      *
      * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(ContaoFrameworkInterface $framework) {
+    public function __construct( ContaoFrameworkInterface $framework ) {
 
         $this->framework = $framework;
     }
@@ -45,7 +45,7 @@ class TestHeaderListener {
      *
      * @param FilterResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event) {
+    public function onKernelResponse( FilterResponseEvent $event ) {
 
         if( !$this->framework->isInitialized() ) {
             return;

@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_cms_link_shortener_statistics.php" source-language="en">
+<body>
+    <!-- FILTER -->
+    <trans-unit id="tl_cms_link_shortener_statistics.filter.period">
+        <source>Gruppierung</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.filter.start">
+        <source>Von</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.filter.stop">
+        <source>Bis</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.periods.hour">
+        <source>Stunde</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.periods.day">
+        <source>Tag</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.periods.week">
+        <source>Woche</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.periods.month">
+        <source>Monat</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.periods.year">
+        <source>Jahr</source>
+    </trans-unit>
+    <!-- LEGENDS -->
+    <!-- FIELDS -->
+    <trans-unit id="tl_cms_link_shortener_statistics.referer.0">
+        <source>Referer</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.unique_id.0">
+        <source>Unique ID</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.user_agent.0">
+        <source>User Agent</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os.0">
+        <source>Betriebssystem</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser.0">
+        <source>Browser</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.is_mobile.0">
+        <source>Mobilgerät?</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.is_bot.0">
+        <source>Bot?</source>
+    </trans-unit>
+    <!-- OPTIONS -->
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.mac">
+        <source>Macintosh</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.win-ce">
+        <source>Windows Phone</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.win">
+        <source>Windows</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.ios">
+        <source>iPad</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.android">
+        <source>Android</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.blackberry">
+        <source>Blackberry</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.symbian">
+        <source>Symbian</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.webos">
+        <source>WebOS</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.unix">
+        <source>Linux</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.unknown">
+        <source>Unbekannt</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.ie">
+        <source>Internet Explorer</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.edge">
+        <source>Edge</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.firefox">
+        <source>Firefox</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.chrome">
+        <source>Chrome</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.omniweb">
+        <source>OmniWeb</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.silk">
+        <source>Silk</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.safari">
+        <source>Safari</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.opera-mini">
+        <source>Opera Mini</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.opera-mobile">
+        <source>Opera Mobi</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.opera">
+        <source>Opera</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.ie-mobile">
+        <source>IEMobile</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.camino">
+        <source>Camino</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.konqueror">
+        <source>Konqueror</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.other">
+        <source>Unbekannt</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.devices.desktop">
+        <source>Desktop</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.devices.mobile">
+        <source>Mobil</source>
+    </trans-unit>
+    <!-- LABELS -->
+    <trans-unit id="tl_cms_link_shortener_statistics.no_data_found">
+        <source>Es wurde keine Daten gefunden</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.requests">
+        <source>Aufrufe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.unique_requests">
+        <source>Einmalige Aurufe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.bot_requests">
+        <source>Bot Aurufe</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.bots">
+        <source>Bot</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.device">
+        <source>Gerät</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.empty">
+        <source>Unbekannt</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.share">
+        <source>Anteil</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

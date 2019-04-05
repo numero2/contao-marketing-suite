@@ -8,7 +8,12 @@
     </div>
     <div class="inner">
         <div class="chart">
-            <canvas id="chart_<?= $this->id; ?>" height="120px"></canvas>
+            <canvas id="chart_marketing_<?= $this->id; ?>" height="120px"></canvas>
+        </div>
+        <div class="reset">
+            <?php if( $this->groups[0]['reset'] > 0 ): ?>
+                <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Date::parse(\Config::get('datimFormat'), $this->groups->reset) ); ?></p>
+            <?php endif; ?>
         </div>
         <table>
             <thead>
@@ -38,7 +43,7 @@
 
 <script>
 
-    const config_<?= $this->id; ?> = {
+    const config_marketing_<?= $this->id; ?> = {
         type: 'doughnut',
         data: {
             datasets: [
@@ -125,8 +130,8 @@
 
     (function(){
 
-        const context = document.getElementById('chart_<?= $this->id; ?>').getContext('2d');
-        window.chart_<?= $this->id; ?> = new Chart(context, config_<?= $this->id; ?>);
+        const context = document.getElementById('chart_marketing_<?= $this->id; ?>').getContext('2d');
+        window.chart_marketing_<?= $this->id; ?> = new Chart(context, config_marketing_<?= $this->id; ?>);
     })();
 
 </script>

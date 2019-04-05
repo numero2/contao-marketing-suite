@@ -10,7 +10,12 @@
     <div class="inner">
         <?php if( $this->cms_ci_views || $this->cms_ci_clicks ): ?>
         <div class="chart">
-            <canvas id="chart_<?= $this->id; ?>" height="80px"></canvas>
+            <canvas id="chart_conversion_<?= $this->id; ?>" height="80px"></canvas>
+        </div>
+        <div class="reset">
+            <?php if( $this->cms_ci_reset > 0 ): ?>
+                <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Date::parse(\Config::get('datimFormat'), $this->groups->reset) ); ?></p>
+            <?php endif; ?>
         </div>
         <table>
             <thead>
@@ -37,7 +42,7 @@
 <?php if( $this->cms_ci_views || $this->cms_ci_clicks ): ?>
 <script>
 
-    const config_<?= $this->id; ?> = {
+    const config_conversion_<?= $this->id; ?> = {
         type: 'horizontalBar',
         data: {
             datasets: [
@@ -90,8 +95,8 @@
 
     (function(){
 
-        const context = document.getElementById('chart_<?= $this->id; ?>').getContext('2d');
-        window.chart_<?= $this->id; ?> = new Chart(context, config_<?= $this->id; ?>);
+        const context = document.getElementById('chart_conversion_<?= $this->id; ?>').getContext('2d');
+        window.chart_conversion_<?= $this->id; ?> = new Chart(context, config_conversion_<?= $this->id; ?>);
     })();
 
 </script>

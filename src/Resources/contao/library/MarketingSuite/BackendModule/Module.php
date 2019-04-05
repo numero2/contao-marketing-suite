@@ -13,13 +13,22 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\BackendModule;
 
+use Contao\Backend;
+use Contao\BackendModule as CoreBackendModule;
+use Contao\BackendUser;
+use Contao\Controller;
+use Contao\Environment;
+use Contao\Input;
+use Contao\InvalidArgumentException;
+use Contao\StringUtil;
+use Contao\System;
+use numero2\MarketingSuite\Backend\Help;
+use numero2\MarketingSuite\Backend\License as tabizni;
 
-class Module extends \BackendModule {
+
+class Module extends CoreBackendModule {
 
 
     /**
@@ -27,7 +36,6 @@ class Module extends \BackendModule {
      * @var string
      */
     protected $strTemplate = 'backend/modules/module';
-
 
     /**
      * Backend modules
@@ -47,12 +55,12 @@ class Module extends \BackendModule {
         $this->arrModules = $this->getModules();
 
         // Open module
-        if( \Input::get('mod') != '' ) {
+        if( Input::get('mod') != '' ) {
 
             $objBEHelp = null;
-            $objBEHelp = new \numero2\MarketingSuite\Backend\Help();
+            $objBEHelp = new Help();
 
-            return $objBEHelp->generate() . $this->getModule(\Input::get('mod'));
+            return $objBEHelp->generate() . $this->getModule(Input::get('mod'));
         }
 
         return parent::generate();
@@ -77,12 +85,12 @@ class Module extends \BackendModule {
         $return = [];
 
         $moduleGroup = NULL;
-        $moduleGroup = \Input::get('do');
+        $moduleGroup = Input::get('do');
 
         $groupName = substr($moduleGroup,4);
 
         if( empty($GLOBALS['CMS_MOD'][$groupName]) ) {
-            throw new \InvalidArgumentException('Back end module "' . $groupName . '" is not defined in the CMS_MOD array');
+            throw new InvalidArgumentException('Back end module "' . $groupName . '" is not defined in the CMS_MOD array');
         }
 
         foreach( $GLOBALS['CMS_MOD'][$groupName] as $moduleName => $moduleConfig ) {
@@ -102,7 +110,7 @@ class Module extends \BackendModule {
             $return[$moduleName] += [
                 'label'         => $GLOBALS['TL_LANG']['CMS'][$moduleName][0]
             ,   'description'   => $GLOBALS['TL_LANG']['CMS'][$moduleName][1]
-            ,   'class'         => \StringUtil::standardize($moduleName)
+            ,   'class'         => StringUtil::standardize($moduleName)
             ,   'href'          => TL_SCRIPT . '?do=' . $moduleGroup . '&mod=' . $moduleName
             ];
         }
@@ -118,16 +126,16 @@ class Module extends \BackendModule {
      *
      * @return string|null
      */
-    protected function getModule($module) {
+    protected function getModule( $module ) {
 
         $arrModule = [];
         $arrModule = $this->arrModules[$module];
         $dc = null;
 
         // Redirect with table parameter
-        $strTable = \Input::get('table');
+        $strTable = Input::get('table');
         if( $strTable == '' && $arrModule['callback'] == '' ) {
-            \Controller::redirect(\Backend::addToUrl('table=' . $arrModule['tables'][0]));
+            Controller::redirect(Backend::addToUrl('table=' . $arrModule['tables'][0]));
         }
 
         // Add module style sheet
@@ -144,19 +152,19 @@ class Module extends \BackendModule {
 
             // Redirect if the current table does not belong to the current module
             if (!in_array($strTable, (array) $arrModule['tables'], true)) {
-                \System::log('Table "' . $strTable . '" is not allowed in module "' . $module . '"', __METHOD__, TL_ERROR);
-                \Controller::redirect('contao/main.php?act=error');
+                System::log('Table "' . $strTable . '" is not allowed in module "' . $module . '"', __METHOD__, TL_ERROR);
+                Controller::redirect('contao/main.php?act=error');
             }
 
             // Load the language and DCA file
-            \System::loadLanguageFile($strTable);
-            \Controller::loadDataContainer($strTable);
-            \numero2\MarketingSuite\Backend\License::riz();
+            System::loadLanguageFile($strTable);
+            Controller::loadDataContainer($strTable);
+            tabizni::riz();
 
             // Include all excluded fields which are allowed for the current user
             if( $GLOBALS['TL_DCA'][$strTable]['fields'] ) {
                 foreach( $GLOBALS['TL_DCA'][$strTable]['fields'] as $k => $v ) {
-                    if( $v['exclude'] && \BackendUser::getInstance()->hasAccess($strTable . '::' . $k, 'alexf') ) {
+                    if( $v['exclude'] && BackendUser::getInstance()->hasAccess($strTable . '::' . $k, 'alexf') ) {
                         $GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'] = false;
                     }
                 }
@@ -164,7 +172,7 @@ class Module extends \BackendModule {
 
             // Fabricate a new data container object
             if( !strlen($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']) ) {
-                \System::log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
+                System::log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
                 trigger_error('Could not create a data container object', E_USER_ERROR);
             }
 
@@ -173,7 +181,7 @@ class Module extends \BackendModule {
         }
 
         // AJAX request
-        if( $_POST && \Environment::get('isAjaxRequest') ) {
+        if( $_POST && Environment::get('isAjaxRequest') ) {
 
             $this->objAjax->executePostActions($dc);
 
@@ -184,15 +192,15 @@ class Module extends \BackendModule {
             return $objCallback->generate();
 
         // Custom action (if key is not defined in config.php the default action will be called)
-        } elseif( \Input::get('key') && isset($arrModule[\Input::get('key')]) ) {
+        } elseif( Input::get('key') && isset($arrModule[Input::get('key')]) ) {
 
-            $objCallback = new $arrModule[\Input::get('key')][0]();
-            return $objCallback->{$arrModule[\Input::get('key')][1]}($dc, $strTable, $arrModule);
+            $objCallback = new $arrModule[Input::get('key')][0]();
+            return $objCallback->{$arrModule[Input::get('key')][1]}($dc, $strTable, $arrModule);
 
         // Default action
         }  elseif( is_object($dc) ) {
 
-            $act = (string) \Input::get('act');
+            $act = (string) Input::get('act');
 
             if( '' === $act || 'paste' === $act || 'select' === $act ) {
                 $act = ($dc instanceof \listable) ? 'showAll' : 'edit';
@@ -204,7 +212,7 @@ class Module extends \BackendModule {
                 case 'showAll':
                 case 'undo':
                     if (!$dc instanceof \listable) {
-                        \System::log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
+                        System::log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
                         trigger_error('The current data container is not listable', E_USER_ERROR);
                     }
                     break;
@@ -216,7 +224,7 @@ class Module extends \BackendModule {
                 case 'move':
                 case 'edit':
                     if (!$dc instanceof \editable) {
-                        \System::log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
+                        System::log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
                         trigger_error('The current data container is not editable', E_USER_ERROR);
                     }
                     break;
@@ -247,7 +255,7 @@ class Module extends \BackendModule {
      */
     public function initializeBackendModuleTables() {
 
-        $moduleGroup = \Input::get('do');
+        $moduleGroup = Input::get('do');
 
         if( !array_key_exists($moduleGroup, $GLOBALS['BE_MOD']['marketing_suite']) ) {
             return false;
@@ -283,7 +291,6 @@ class Module extends \BackendModule {
                         }
                     }
                 }
-
             }
         }
     }

@@ -13,92 +13,98 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Tracking;
+
+use Contao\Database;
+use Contao\Environment;
+use Contao\Input;
+use Contao\System;
+use numero2\MarketingSuite\Backend\License as irsa;
+use numero2\MarketingSuite\ContentGroupModel;
+use numero2\MarketingSuite\MarketingItemModel;
 
 
 class ClickAndViews {
 
+
     /**
-     * increase the click counter for the given content element. Do not use the model as this is already modified.
+     * Increase the click counter for the given content element.
+     * Do not use the model as this is already modified.
      *
-     * @param  \Model $objContentModel
+     * @param \Model $objContentModel
      */
-    public function increaseClickOnContentElement($objContentModel) {
+    public function increaseClickOnContentElement( $objContentModel ) {
 
-        if( \numero2\MarketingSuite\Backend\License::hasFeature('conversion_element') && \numero2\MarketingSuite\Backend\License::hasFeature('ce_'.$objContentModel->type) ) {
-
-            \Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_clicks=cms_ci_clicks+1 WHERE id=?" )->execute($objContentModel->id);
+        if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
+            Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_clicks=cms_ci_clicks+1 WHERE id=?" )->execute($objContentModel->id);
         }
     }
 
+
     /**
-     * increase the view counter for the given content element. Do not use the model as this is already modified.
+     * Increase the view counter for the given content element.
+     * Do not use the model as this is already modified.
      *
-     * @param  \Model $objContentModel
+     * @param \Model $objContentModel
      */
-    public function increaseViewOnContentElement($objContentModel) {
+    public function increaseViewOnContentElement( $objContentModel ) {
 
         if( $this->isViewable() ) {
 
-            if( \numero2\MarketingSuite\Backend\License::hasFeature('conversion_element') && \numero2\MarketingSuite\Backend\License::hasFeature('ce_'.$objContentModel->type) ) {
-
-                \Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_views=cms_ci_views+1 WHERE id=?" )->execute($objContentModel->id);
+            if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
+                Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_views=cms_ci_views+1 WHERE id=?" )->execute($objContentModel->id);
             }
         }
     }
 
 
     /**
-     * increase the view counter for the given content element. Do not use the model as this is already modified.
+     * Increase the view counter for the given content element.
+     * Do not use the model as this is already modified.
      *
-     * @param  \Model $objContentModel
+     * @param \Model $objContentModel
      */
-    public function increaseViewOnMarketingElement($objContentCount) {
+    public function increaseViewOnMarketingElement( $objContentCount ) {
 
         if( $this->isViewable() ) {
 
-            if( \numero2\MarketingSuite\Backend\License::hasFeature('marketing_element') ) {
+            if( irsa::hasFeature('marketing_element') ) {
 
-                $db = \Database::getInstance();
+                $db = Database::getInstance();
                 if( $db->fieldExists('views', $objContentCount->getTable()) ) {
-                    \Database::getInstance()->prepare( "UPDATE ".$objContentCount->getTable()." SET views=views+1 WHERE id=?" )->execute($objContentCount->id);
+                    Database::getInstance()->prepare( "UPDATE ".$objContentCount->getTable()." SET views=views+1 WHERE id=?" )->execute($objContentCount->id);
                 } else if( $db->fieldExists('cms_mi_views', $objContentCount->getTable()) ) {
-                    \Database::getInstance()->prepare( "UPDATE ".$objContentCount->getTable()." SET cms_mi_views=cms_mi_views+1 WHERE id=?" )->execute($objContentCount->id);
+                    Database::getInstance()->prepare( "UPDATE ".$objContentCount->getTable()." SET cms_mi_views=cms_mi_views+1 WHERE id=?" )->execute($objContentCount->id);
                 }
             }
         }
     }
 
 
-
-
     /**
-     * increase the click counter for forms in a_b_test and in conversion element
+     * Increase the click counter for forms in a_b_test and in conversion element
      *
-     * @param  array $arrSubmitted
-     * @param  array $arrData
-     * @param  array $arrFiles
-     * @param  array $arrLabels
-     * @param  object $objForm
+     * @param array $arrSubmitted
+     * @param array $arrData
+     * @param array $arrFiles
+     * @param array $arrLabels
+     * @param object $objForm
      */
-    public function increaseClickOnForm($arrSubmitted, $arrData, $arrFiles, $arrLabels, $objForm) {
+    public function increaseClickOnForm( $arrSubmitted, $arrData, $arrFiles, $arrLabels, $objForm ) {
 
         $objContent = $objForm->getParent();
 
         if( $objContent->ptable === 'tl_cms_content_group' ) {
 
-            $objContentGroup = \numero2\MarketingSuite\ContentGroupModel::findById($objContent->pid);
+            $objContentGroup = ContentGroupModel::findById($objContent->pid);
 
             if( $objContentGroup && $objContentGroup->type == 'a_b_test' ) {
 
-                $objMI = \numero2\MarketingSuite\MarketingItemModel::findById($objContentGroup->pid);
+                $objMI = MarketingItemModel::findById($objContentGroup->pid);
 
                 if( $objMI && $objMI->type == "a_b_test" ) {
 
-                    if( \numero2\MarketingSuite\Backend\License::hasFeature('me_'.$objMI->type) ) {
+                    if( irsa::hasFeature('me_'.$objMI->type) ) {
                         $objContentGroup->clicks += 1;
                         $objContentGroup->save();
                     }
@@ -107,7 +113,7 @@ class ClickAndViews {
 
         } else {
 
-            if( \numero2\MarketingSuite\Backend\License::hasFeature('ce_form') ) {
+            if( irsa::hasFeature('ce_form') ) {
                 $objContent->cms_ci_clicks += 1;
                 $objContent->save();
             }
@@ -116,17 +122,17 @@ class ClickAndViews {
 
 
     /**
-     * increase the view counter for forms in a_b_test and in conversion element
+     * Increase the view counter for forms in a_b_test and in conversion element
      *
-     * @param  array $arrFields
-     * @param  String $formId
-     * @param  \Form $this
+     * @param array $arrFields
+     * @param string $formId
+     * @param \Form $this
      */
-    public function increaseViewOnForm($arrFields, $formId, $objForm) {
+    public function increaseViewOnForm( $arrFields, $formId, $objForm ) {
 
         $objContent = $objForm->getParent();
 
-        if( $this->isViewable() ){
+        if( $this->isViewable() ) {
 
             if( $objContent->ptable === 'tl_cms_content_group' ) {
 
@@ -134,7 +140,7 @@ class ClickAndViews {
 
             } else {
 
-                if( \numero2\MarketingSuite\Backend\License::hasFeature('ce_form') ) {
+                if( irsa::hasFeature('ce_form') ) {
                     $objContent->cms_ci_views += 1;
                     $objContent->save();
                 }
@@ -144,25 +150,26 @@ class ClickAndViews {
         return $arrFields;
     }
 
+
     /**
-     * checks if this view should be counted
+     * Checks if this view should be counted
      *
      * @return boolean
      */
     protected function isViewable() {
 
-        if( \Input::get('follow') ) {
+        if( Input::get('follow') ) {
             return false;
         }
 
-        if( (\Input::get('FORM_SUBMIT') && strpos(\Input::get('FORM_SUBMIT'), 'auto_form_') === 0 )
-            || (\Input::post('FORM_SUBMIT') && strpos(\Input::post('FORM_SUBMIT'), 'auto_form_') === 0 ) ) {
+        if( (Input::get('FORM_SUBMIT') && strpos(Input::get('FORM_SUBMIT'), 'auto_form_') === 0 )
+            || (Input::post('FORM_SUBMIT') && strpos(Input::post('FORM_SUBMIT'), 'auto_form_') === 0 ) ) {
 
             return false;
         }
 
-        $masterRequest = \System::getContainer()->get('request_stack')->getMasterRequest();
-        if( \Environment::get('isAjaxRequest') || $masterRequest->headers->get('X-Requested-With') === 'XMLHttpRequest' ) {
+        $masterRequest = System::getContainer()->get('request_stack')->getMasterRequest();
+        if( Environment::get('isAjaxRequest') || $masterRequest->headers->has('X-Requested-With') ) {
             return false;
         }
 

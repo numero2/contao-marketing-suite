@@ -1,0 +1,9 @@
+<?php if( $this->suggestions && count($this->suggestions) ): ?>
+    <div class="suggest_wizard">
+        <ul data-field="<?= $this->field; ?>">
+            <?php foreach( $this->suggestions as $value ): ?>
+                <li><?= $value; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

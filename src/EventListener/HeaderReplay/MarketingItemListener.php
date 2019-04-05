@@ -13,7 +13,7 @@
  */
 
 
-namespace numero2\MarketingSuite\EventListener\HeaderReplay;
+namespace numero2\MarketingSuiteBundle\EventListener\HeaderReplay;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -42,7 +42,7 @@ class MarketingItemListener {
      * @param ScopeMatcher $scopeMatcher
      * @param bool         $disableIpCheck
      */
-    public function __construct(ScopeMatcher $scopeMatcher, ContaoFrameworkInterface $framework) {
+    public function __construct( ScopeMatcher $scopeMatcher, ContaoFrameworkInterface $framework ) {
 
         $this->scopeMatcher = $scopeMatcher;
         $this->framework = $framework;
@@ -56,7 +56,7 @@ class MarketingItemListener {
      *
      * @param HeaderReplayEvent $event
      */
-    public function onReplay(HeaderReplayEvent $event) {
+    public function onReplay( HeaderReplayEvent $event ) {
 
         $request = $event->getRequest();
 
@@ -87,7 +87,7 @@ class MarketingItemListener {
      *
      * @return bool
      */
-    private function getMarketingItem(Request $request) {
+    private function getMarketingItem( Request $request ) {
 
         // TODO implement
         $this->framework->initialize();

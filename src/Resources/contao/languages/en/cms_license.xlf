@@ -6,19 +6,19 @@
         <source>Eine neue Version der Marketing Suite [%s] ist verfügbar, bitte updaten Sie jetzt.</source>
     </trans-unit>
     <trans-unit id="cms_license.no_data">
-        <source>Der Domain-Schlüssel %s konnte nicht überprüft werden. Bitte aktualisieren Sie die Lizenz manuell über den Eintrag in der <![CDATA[<a href="%s" target="_top">Seitenstruktur</a>]]>.</source>
+        <source>Der Domain-Schlüssel <![CDATA[<strong>%s</strong>]]> konnte nicht überprüft werden. Bitte aktualisieren Sie die Lizenz manuell über den Eintrag in der <![CDATA[<a href="%s" target="_top">Seitenstruktur</a>]]>.</source>
     </trans-unit>
     <trans-unit id="cms_license.no_check">
-        <source>Der Domain-Schlüssel %s konnte längere Zeit nicht überprüft werden. Kontrollieren Sie die Daten in der <![CDATA[<a href="%s" target="_top">Seitenstruktur</a>]]>. Falls das Problem nicht gelöst werden kann kontaktieren Sie den Marketing Suite Support.</source>
+        <source>Der Domain-Schlüssel <![CDATA[<strong>%s</strong>]]> konnte längere Zeit nicht überprüft werden. Kontrollieren Sie die Daten in der <![CDATA[<a href="%s" target="_top">Seitenstruktur</a>]]>. Falls das Problem nicht gelöst werden kann kontaktieren Sie den Marketing Suite Support.</source>
     </trans-unit>
     <trans-unit id="cms_license.expired">
-        <source>Der Domain-Schlüssel %s konnte längere Zeit nicht überprüft werden und ist seit %s deaktiviert. Kontrollieren Sie die Daten in der <![CDATA[<a href="%s" target="_top">Seitenstruktur</a>]]>. Falls das Problem nicht gelöst werden kann kontaktieren Sie den Marketing Suite Support.</source>
+        <source>Der Domain-Schlüssel <![CDATA[<strong>%s</strong>]]> konnte längere Zeit nicht überprüft werden und ist seit %s deaktiviert. Kontrollieren Sie die Daten in der <![CDATA[<a href="%s" target="_top">Seitenstruktur</a>]]>. Falls das Problem nicht gelöst werden kann kontaktieren Sie den Marketing Suite Support.</source>
     </trans-unit>
     <trans-unit id="cms_license.will_expire">
-        <source>Ihre Lizenz für den Domain-Schlüssel %s läuft zum %s ab. <![CDATA[<a href="%s">Erneuern Sie rechtzeitig Ihr Paket.</a>]]></source>
+        <source>Ihre Lizenz für den Domain-Schlüssel <![CDATA[<strong>%s</strong>]]> läuft zum %s ab. <![CDATA[<a href="%s">Erneuern Sie rechtzeitig Ihr Paket.</a>]]></source>
     </trans-unit>
     <trans-unit id="cms_license.expired_package">
-        <source>Ihre Lizenz für den Domain-Schlüssel %s ist am %s abgelaufen. <![CDATA[<a href="%s">Zur weiteren Nutzung der Marketing Suite erneuern Sie Ihr Paket.</a>]]></source>
+        <source>Ihre Lizenz für den Domain-Schlüssel <![CDATA[<strong>%s</strong>]]> ist am %s abgelaufen. <![CDATA[<a href="%s">Zur weiteren Nutzung der Marketing Suite erneuern Sie Ihr Paket.</a>]]></source>
     </trans-unit>
 </body>
 </file>

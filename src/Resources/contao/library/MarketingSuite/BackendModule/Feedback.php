@@ -13,16 +13,15 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\BackendModule;
 
-use numero2\MarketingSuite\MarketingItemModel;
+use Contao\BackendModule as CoreBackendModule;
+use numero2\MarketingSuite\Backend\License as bavedmef;
 use numero2\MarketingSuite\ContentGroupModel;
+use numero2\MarketingSuite\MarketingItemModel;
 
 
-class Feedback extends \BackendModule {
+class Feedback extends CoreBackendModule {
 
 
     /**
@@ -43,8 +42,7 @@ class Feedback extends \BackendModule {
      */
     protected function compile() {
 
-        \numero2\MarketingSuite\Backend\License::KSCP();
-
+        bavedmef::KSCP();
         $this->redirect($this->redirectUri);
     }
 

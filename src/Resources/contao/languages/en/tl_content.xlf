@@ -2,6 +2,13 @@
 <xliff version="1.1">
 <file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en">
 <body>
+    <!-- ACTIONS -->
+    <trans-unit id="tl_content.reset_counter.0">
+        <source>Anzahl Aufrufe und Klicks zurücksetzen</source>
+    </trans-unit>
+    <trans-unit id="tl_content.reset_counter.1">
+        <source>Anzahl Aufrufe und Klicks bei der ID %s zurücksetzen</source>
+    </trans-unit>
     <!-- LEGENDS -->
     <trans-unit id="tl_content.cta_legend">
         <source>Call-To-Action (CTA)</source>
@@ -37,53 +44,11 @@
     <trans-unit id="tl_content.cms_used.0">
         <source>Verwendung</source>
     </trans-unit>
-    <trans-unit id="tl_content.cms_inline_style.0">
+    <trans-unit id="tl_content.cms_element_style.0">
         <source>Aussehen anpassen</source>
     </trans-unit>
-    <trans-unit id="tl_content.cms_inline_style.1">
-        <source>Konfigurieren Sie damit das Aussehen des Buttons.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_bgcolor.0">
-        <source>Hintergrundfarbe</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_bgcolor.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_bordercolor.0">
-        <source>Rahmenfarbe </source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_bordercolor.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_fontcolor.0">
-        <source>Schriftfarbe</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_fontcolor.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_hover_bgcolor.0">
-        <source>Hover - Hintergrundfarbe</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_hover_bgcolor.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_hover_bordercolor.0">
-        <source>Hover - Rahmenfarbe </source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_hover_bordercolor.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_hover_fontcolor.0">
-        <source>Hover - Schriftfarbe</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_hover_fontcolor.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_hash_info.0">
-        <source>CSS-Selektor</source>
-    </trans-unit>
-    <trans-unit id="tl_content.cms_button_hash_info.1">
-        <source>Falls Sie im Stylesheet genau diesen Button zusätzlich stylen möchten, verwenden sie diesen Selektor.</source>
+    <trans-unit id="tl_content.cms_element_style.1">
+        <source>Konfigurieren Sie das Aussehen des Inhaltselements.</source>
     </trans-unit>
     <!-- LABELS -->
     <trans-unit id="tl_content.text_analysis_heading">
@@ -170,35 +135,11 @@
     <trans-unit id="tl_content.text_analysis_labels.syllables_6.0">
         <source>mehr Silben:</source>
     </trans-unit>
-    <trans-unit id="tl_content.button_preview.headline">
-        <source>Button Vorschau</source>
+    <trans-unit id="tl_content.cms_element_preview.headline">
+        <source>Element-Vorschau</source>
     </trans-unit>
-    <trans-unit id="tl_content.button_preview.empty">
-        <source>Bitte speichern für Button-Vorschau.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.button_preview.explanation">
-        <source>Die Vorschau zeigt den Button mit dem hier eingestellten Styling. Im Frontend kann die Darstellung durch andere CSS-Anweisungen erweitert oder überschrieben werden.</source>
-    </trans-unit>
-    <trans-unit id="tl_content.button_categories.headline">
-        <source>Kategorien</source>
-    </trans-unit>
-    <trans-unit id="tl_content.button_categories.start">
-        <source>Start</source>
-    </trans-unit>
-    <trans-unit id="tl_content.button_categories.sizes">
-        <source>Größe und Abstände</source>
-    </trans-unit>
-    <trans-unit id="tl_content.button_categories.background-border">
-        <source>Hintergrund und Rahmen</source>
-    </trans-unit>
-    <trans-unit id="tl_content.button_categories.text-font">
-        <source>Text und Schrift</source>
-    </trans-unit>
-    <trans-unit id="tl_content.button_categories.hover">
-        <source>Hover</source>
-    </trans-unit>
-    <trans-unit id="tl_content.button_categories.profi">
-        <source>Profi</source>
+    <trans-unit id="tl_content.cms_element_preview.explanation">
+        <source>Die Vorschau zeigt das Element mit dem hier eingestellten Styling. Im Frontend kann die Darstellung durch andere CSS-Anweisungen erweitert oder überschrieben werden.</source>
     </trans-unit>
     <!-- DYNAMIC CONTENT -->
     <!-- LEGENDS -->

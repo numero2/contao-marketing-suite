@@ -25,11 +25,11 @@
         "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "extra": {
-        "contao-manager-plugin": "numero2\\MarketingSuite\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "numero2\\MarketingSuiteBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
-            "numero2\\MarketingSuite\\": "src/"
+            "numero2\\MarketingSuiteBundle\\": "src/"
         },
         "classmap": [
             "src/Resources/contao/"

@@ -1,0 +1,95 @@
+// main: backend.scss
+@import "colors";
+
+.widget.element-preview {
+
+    iframe {
+
+        display: block;
+        width: calc(100% - 15px);
+        min-width: 250px;
+        overflow: hidden;
+        border: 2px solid $col-gray;
+        padding: 8px;
+    }
+
+    .tl_help { margin-top: 4px; }
+}
+
+.widget.styling-categories {
+
+    font-size: 1em;
+    padding-top: 14px;
+
+    nav {
+
+        ul {
+            display: flex;
+
+            li {
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                position: relative;
+                cursor: pointer;
+
+                padding: 10px;
+                border: 1px solid $col-gray;
+
+                &:nth-child(n+2) {
+                    margin-left: -1px;
+                }
+
+                &.active  {
+
+                    span:before {
+                        content: "";
+                        display: block;
+                        position: absolute;
+                        top: -3px;
+                        left: -1px;
+                        right: -1px;
+                        height: 3px;
+                        background: $col-orange;
+                        z-index: 1;
+                    }
+
+                    span:after {
+                        content: "";
+                        display: block;
+                        position: absolute;
+                        bottom: -3px;
+                        left: 0px;
+                        right: 0px;
+                        height: 1px;
+                        border-top: 3px solid $col-white;
+                    }
+                }
+
+                &:not(.active) {
+                    background: $col-gray;
+                    color: $col-gray-1;
+
+                    &:hover { opacity: 0.8; }
+                }
+            }
+        }
+    }
+
+    .widgets {
+
+        width: 100%;
+        border: 1px solid $col-gray;
+        overflow: hidden;
+        padding-bottom: 14px;
+
+        .tl_text_unit { width: 78%; }
+        .tl_text_trbl { width: 18%; }
+
+        .w50 {
+            //height: auto;
+        }
+    }
+}

@@ -13,9 +13,6 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
 
@@ -36,7 +33,6 @@ class ModuleMarketingItem extends \Module {
     public function generate() {
 
         $ce = new ContentMarketingItem($this->objModel);
-
         return $ce->generate();
     }
 
@@ -45,5 +41,6 @@ class ModuleMarketingItem extends \Module {
      * Generate module
      */
     protected function compile() {
+
     }
 }

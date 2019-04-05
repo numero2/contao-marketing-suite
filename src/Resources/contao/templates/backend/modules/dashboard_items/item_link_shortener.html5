@@ -1,0 +1,67 @@
+<div class="item <?=$this->type;?>">
+    <div class="name">
+        <span>
+            <?= $this->target; ?>
+        </span>
+        <a href="<?= $this->href; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['tl_content']['edit'][1],$this->id);?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($GLOBALS['TL_LANG']['tl_content']['edit'][1],$this->id);?>','url':this.href+'&popup=1'});return false" class="edit">
+            <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_content']['edit'][0];?>">
+        </a>
+    </div>
+    <div class="inner">
+        <?php if( !empty($this->stats['requests']) && $this->stats['requests'] > 0 ): ?>
+            <div class="chart">
+                <canvas id="chart_link_shortener_<?= $this->id; ?>" height="80px"></canvas>
+            </div>
+            <table>
+                <tbody>
+                    <?php foreach( $this->stats as $key => $value ): ?>
+                        <tr>
+                            <th><?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics'][$key] ?></th>
+                            <td><?= $value; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <div class="no-data">
+                <p><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['no_data']; ?></p>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php if( !empty($this->stats['requests']) && $this->stats['requests'] > 0 ): ?>
+<script>
+
+    const config_link_shortener_<?= $this->id; ?> = {
+        type: 'horizontalBar',
+        data: {
+            labels : ["<?= implode('", "',
+                array_map( function($key){
+                    return $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics'][$key];
+                }
+            ,   array_keys($this->stats))
+            ); ?>"],
+            datasets: [
+                {
+                    label: '<?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['requests']; ?>',
+                    data: [<?= implode(', ', array_values($this->stats)); ?> ],
+                    backgroundColor: ['rgba(244,124,0,1)', 'rgba(244,124,0,0.75)', 'rgba(244,124,0,0.5)']
+                }
+            ],
+        },
+        options: {
+            scales: { xAxes: [{ticks: { beginAtZero: true } }] },
+            responsive: true,
+            legend: {display: false},
+        }
+    };
+
+    (function(){
+
+        const context = document.getElementById('chart_link_shortener_<?= $this->id; ?>').getContext('2d');
+        window.chart_link_shortener_<?= $this->id; ?> = new Chart(context, config_link_shortener_<?= $this->id; ?>);
+    })();
+
+</script>
+<?php endif; ?>

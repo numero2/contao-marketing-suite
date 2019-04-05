@@ -13,7 +13,7 @@
  */
 
 
-namespace numero2\MarketingSuite\DependencyInjection;
+namespace numero2\MarketingSuiteBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,7 +27,7 @@ class MarketingSuiteExtension extends Extension {
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container): void {
+    public function load( array $configs, ContainerBuilder $container ): void {
 
         $loader = new YamlFileLoader(
             $container,
@@ -36,5 +36,6 @@ class MarketingSuiteExtension extends Extension {
 
         $loader->load('listener.yml');
         $loader->load('parameters.yml');
+        $loader->load('services.yml');
     }
 }

@@ -13,12 +13,14 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Widget;
 
+use Contao\DataContainer;
+use Contao\PageModel;
+use Contao\Model;
+use Contao\Environment;
 use numero2\MarketingSuite\Backend;
+use numero2\MarketingSuite\Backend\License as jebto;
 
 
 class SnippetPreview {
@@ -39,16 +41,30 @@ class SnippetPreview {
      *
      * @return string
      */
-    public function generate( \DataContainer $dc ) {
+    public function generate( DataContainer $dc ) {
 
-        // if( !\numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
-        //     return '';
-        // }
+        if( !jebto::hasFeature('page_snippet_preview') ) {
+            return '';
+        }
 
         $objPage = NULL;
-        $objPage = \PageModel::findById( $dc->activeRecord->id );
+        if( $dc->table == 'tl_page' ) {
+            $objPage = PageModel::findById( $dc->activeRecord->id );
+        } else {
+            $parentTable = Model::getClassFromTable($dc->table);
 
-        $title = $dc->activeRecord->pageTitle ? $dc->activeRecord->pageTitle : $dc->activeRecord->title;
+            if( $parentTable !== "Model" ) {
+
+                $objElement = $parentTable::findOneById($dc->activeRecord->id);
+                $objArchive = $objElement->getRelated('pid');
+
+                if( !empty($objArchive->jumpTo) ) {
+                    $objPage = PageModel::findById( $objArchive->jumpTo );
+                }
+            }
+        }
+
+        $title = $dc->activeRecord->pageTitle ?  : ($dc->activeRecord->title ?  : $dc->activeRecord->headline);
         $description = $dc->activeRecord->description;
 
         if( strlen($title) > self::TITLE_LENGTH ) {
@@ -61,7 +77,7 @@ class SnippetPreview {
 
         $aData = [
             'title' => $title
-        ,   'uri' => $objPage->getAbsoluteUrl()
+        ,   'uri' => $objPage?$objPage->getAbsoluteUrl():(Environment::get('base').'...')
         ,   'description' => $description
         ,   'headline' => $GLOBALS['TL_LANG'][$dc->table]['snippet_preview'][0]
         ];
@@ -77,17 +93,33 @@ class SnippetPreview {
      *
      * @return string
      */
-    public function generateInputField( \DataContainer $dc ) {
+    public function generateInputField( DataContainer $dc ) {
 
         $fieldName = $dc->field;
         $value = $dc->activeRecord->{$fieldName};
 
-        $type = $GLOBALS['TL_DCA']['tl_page']['fields'][$fieldName]['inputType'];
+        $type = $GLOBALS['TL_DCA'][$dc->table]['fields'][$fieldName]['inputType'];
 
         if( $type === "textarea" ) {
             $type = "text";
         }
 
         return '<div class="tl_'.$type.'" contenteditable="true">'.$value.'</div>';
+    }
+
+
+    /**
+     * Adds html mark up to the label to show live count
+     *
+     * @param string $value
+     * @param \DataContainer $dc
+     *
+     * @return string
+     */
+    public function addSnippetCount($value, DataContainer $dc) {
+
+        $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0] .= '<span class="snippet-count" data-template="'.$GLOBALS['TL_LANG']['MSC']['snippet_count'].'"></span>';
+
+        return $value;
     }
 }

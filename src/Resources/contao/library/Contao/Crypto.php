@@ -13,38 +13,62 @@
  */
 
 
-/**
- * Namespace
- */
 namespace Contao;
 
 
 class Crypto {
 
+
+    /**
+     * Public key used for encryption
+     * @var string
+     */
     private $publicKey;
 
+
+    /**
+     * Cipher used
+     * @var string
+     */
     const CIPHER = "AES-256-CTR";
 
-    function __construct($public=null) {
+
+    /**
+     * Constructor
+     */
+    function __construct( $public=NULL ) {
 
         if( $public ) {
-
             $this->publicKey = $this->expandKey($public, "PUBLIC");
         } else {
-
             $this->publicKey = \System::getContainer()->getParameter('kernel.secret');
         }
-
     }
 
-    protected function expandKey($strKey, $strType) {
+
+    /**
+     * Expands the given key
+     *
+     * @param string $strKey
+     * @param string $strType
+     *
+     * @return string
+     */
+    protected function expandKey( $strKey, $strType ) {
 
         $strKey = "-----BEGIN ".$strType." KEY-----\n".chunk_split($strKey,64,"\n")."-----END ".$strType." KEY-----\n";
-
         return $strKey;
     }
 
-    public function encrypt($strMessage) {
+
+    /**
+     * Encrypts the given message
+     *
+     * @param string $strMessage
+     *
+     * @return string
+     */
+    public function encrypt( $strMessage ) {
 
         $strCrypted = null;
         openssl_public_encrypt($strMessage, $strCrypted, $this->publicKey);
@@ -52,7 +76,15 @@ class Crypto {
         return $strCrypted;
     }
 
-    public function encryptPublic($strMessage) {
+
+    /**
+     * Encrypts the given message
+     *
+     * @param string $strMessage
+     *
+     * @return string
+     */
+    public function encryptPublic( $strMessage ) {
 
         if( $strMessage === null || $strMessage === '' ) {
             return '';
@@ -67,7 +99,15 @@ class Crypto {
         return $ciphertext;
     }
 
-    public function decryptPublic($strCrypted) {
+
+    /**
+     * Decrypts the given message
+     *
+     * @param string $strCrypted
+     *
+     * @return string
+     */
+    public function decryptPublic( $strCrypted ) {
 
         if( $strCrypted === null || $strMessage === '' ) {
             return '';
@@ -94,13 +134,23 @@ class Crypto {
         return '';
     }
 
-    public function verify($strMessage, $sign) {
+
+    /**
+     * Verifies the given message
+     *
+     * @param string $strMessage
+     * @param string $sign
+     *
+     * @return boolean
+     */
+    public function verify( $strMessage, $sign ) {
 
         $res = openssl_verify($strMessage, base64_decode($sign), $this->publicKey);
 
         if( $res === 1 ) {
             return true;
         }
+
         return false;
     }
 }

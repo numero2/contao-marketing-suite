@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_cms_conversion_item'] = [
     'config' => [
         'dataContainer'             => 'Table'
     ,   'ctable'                    => ['tl_content']
-    ,   'onload_callback'           => [ ['tl_cms_conversion_item', 'generateOneEntryAndRedirect'] ]
+    ,   'onload_callback'           => [ ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'generateOneEntryAndRedirect'] ]
     ,   'switchToEdit'              => true
     ,   'sql' => [
             'keys' => [
@@ -63,80 +63,22 @@ $GLOBALS['TL_DCA']['tl_cms_conversion_item'] = [
         ]
     ]
 ,   'palettes' => [
-        '__selector__'              => ['type']
-    ,   'default'                   => '{common_legend},name'
+        '__selector__'      => ['type']
+    ,   'default'           => '{common_legend},name'
     ]
 ,   'fields' => [
         'id' => [
-            'sql'         => "int(10) unsigned NOT NULL auto_increment"
+            'sql'           => "int(10) unsigned NOT NULL auto_increment"
         ]
     ,   'tstamp' => [
-            'sql'         => "int(10) unsigned NOT NULL default '0'"
+            'sql'           => "int(10) unsigned NOT NULL default '0'"
         ]
     ,   'name' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_conversion_item']['name']
-        ,   'inputType'             => 'text'
-        ,   'search'                => true
-        ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50']
-        ,   'sql'                   => "varchar(64) NOT NULL default ''"
+            'label'         => &$GLOBALS['TL_LANG']['tl_cms_conversion_item']['name']
+        ,   'inputType'     => 'text'
+        ,   'search'        => true
+        ,   'eval'          => ['mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50']
+        ,   'sql'           => "varchar(64) NOT NULL default ''"
         ]
     ]
 ];
-
-
-
-class tl_cms_conversion_item extends Backend {
-
-
-    /**
-     * Return all content elements as array
-     *
-     * @return array
-     */
-    public function getContentElements( $dc ) {
-
-        $groups = array();
-
-        foreach( $GLOBALS['TL_CTE'] as $k => $v ) {
-
-            foreach( array_keys($v) as $kk ) {
-
-                if( $dc->activeRecord->type == 'a_b_test' && !in_array($kk, ['text_cms_cta', 'hyperlink', 'form']) ) {
-                    continue;
-                }
-
-                $groups[$k][] = $kk;
-            }
-        }
-
-        return $groups;
-    }
-
-
-    /**
-     * Change palette during onload
-     *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     *
-     * @return none
-     */
-    public function generateOneEntryAndRedirect( $dc ) {
-
-        $count = \numero2\MarketingSuite\ConversionItemModel::countAll();
-
-        if( !$count ){
-
-            $default = new \numero2\MarketingSuite\ConversionItemModel();
-
-            $default->id = 1;
-            $default->tstamp = time();
-            $default->name = 'default';
-            $default->save();
-        }
-
-        $refererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
-
-        $this->redirect($this->addToUrl('table=tl_content&amp;id=1'));
-    }
-}

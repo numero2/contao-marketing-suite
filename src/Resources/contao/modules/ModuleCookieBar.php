@@ -13,13 +13,19 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\BackendTemplate;
+use Contao\Environment;
+use Contao\FrontendTemplate;
+use Contao\Input;
+use Contao\Module;
+use Contao\StyleSheets;
+use numero2\MarketingSuite\Backend\License as agoc;
+use Patchwork\Utf8;
 
-class ModuleCookieBar extends \Module {
+
+class ModuleCookieBar extends Module {
 
 
     /**
@@ -40,9 +46,9 @@ class ModuleCookieBar extends \Module {
 
         if( TL_MODE == 'BE' ) {
 
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
 
-            $objTemplate->wildcard = '### '.\Patchwork\Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['cms_cookie_bar'][0]).' ###';
+            $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['cms_cookie_bar'][0]).' ###';
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
@@ -53,7 +59,7 @@ class ModuleCookieBar extends \Module {
 
         if( TL_MODE == 'FE' ) {
 
-            if( !\numero2\MarketingSuite\Backend\License::hasFeature('tag_settings', $objPage->trail[0]) || !\numero2\MarketingSuite\Backend\License::hasFeature('tag'.substr($this->type, 3), $objPage->trail[0]) ) {
+            if( !agoc::hasFeature('tag_settings', $objPage->trail[0]) || !agoc::hasFeature('tag'.substr($this->type, 3), $objPage->trail[0]) ) {
                 return '';
             }
         }
@@ -70,19 +76,17 @@ class ModuleCookieBar extends \Module {
         $this->loadLanguageFile('cms_default');
 
         if( !empty($this->customTpl) ) {
-            $this->Template = new \FrontendTemplate($this->customTpl);
+            $this->Template = new FrontendTemplate($this->customTpl);
         }
 
-        $this->Template->action = \Environment::get('request');
+        $this->Template->action = Environment::get('request');
         $this->Template->formId = 'cms_cookie_bar';
 
-        if( \Input::post('FORM_SUBMIT') && \Input::post('FORM_SUBMIT') == $this->Template->formId ) {
+        if( Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $this->Template->formId ) {
 
-            if( \Input::post('submit') == 'accept' ) {
-
+            if( Input::post('submit') == 'accept' ) {
                 $this->setCookie('cms_cookie', 'accept', strtotime('+7 days'));
-            } else if( \Input::post('submit') == 'reject' ) {
-
+            } else if( Input::post('submit') == 'reject' ) {
                 $this->setCookie('cms_cookie', 'reject', strtotime('+7 days'));
             }
 
@@ -91,10 +95,10 @@ class ModuleCookieBar extends \Module {
 
         $this->Template->cookie_accepted = false;
 
-        if( \Input::cookie('cms_cookie') == 'accept' ) {
+        if( Input::cookie('cms_cookie') == 'accept' ) {
             $this->Template->cookie_accepted = true;
         }
-        if( \Input::cookie('cms_cookie') == 'reject' ) {
+        if( Input::cookie('cms_cookie') == 'reject' ) {
             $this->Template->cookie_rejected = true;
         }
 
@@ -108,6 +112,7 @@ class ModuleCookieBar extends \Module {
             $this->Template->acceptLabel = $this->cms_tag_accept_label;
             $this->Template->content = $this->cms_tag_text;
         }
+
         $this->Template->rejectLabel = $this->cms_tag_reject_label;
 
         $this->Template->acceptLabel = $this->replaceInsertTags($this->Template->acceptLabel);
@@ -130,7 +135,7 @@ class ModuleCookieBar extends \Module {
     /**
      * Generates stylesheet for this element
      *
-     * @return String
+     * @return string
      */
     protected function generateStyling() {
 
@@ -138,7 +143,7 @@ class ModuleCookieBar extends \Module {
 
         $strClass = "mod_".$this->type;
 
-        $oStyleSheet = new \StyleSheets();
+        $oStyleSheet = new StyleSheets();
 
         $mainStyle = [
             'font' => '1'

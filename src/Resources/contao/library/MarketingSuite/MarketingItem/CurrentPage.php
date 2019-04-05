@@ -13,14 +13,20 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\MarketingItem;
 
-
+use Contao\Config;
+use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\Image;
+use Contao\Input;
+use Contao\Message;
+use Contao\PageModel;
+use Contao\System;
+use numero2\MarketingSuite\Backend\Wizard;
 use numero2\MarketingSuite\ContentGroupModel;
+use numero2\MarketingSuite\MarketingItemModel;
 use numero2\MarketingSuite\Tracking\ClickAndViews;
 
 
@@ -30,17 +36,18 @@ class CurrentPage extends MarketingItem {
     /**
      * Alter child record of tl_content
      *
-     * @param  array $arrRow
-     * @param  string $buffer
-     * @param  object $objMarketingItem
+     * @param array $arrRow
+     * @param string $buffer
+     * @param object $objMarketingItem
+     * @param object $objContentParent
      *
      * @return string
      */
-    public function alterContentChildRecord($arrRow, $buffer, $objMarketingItem, $objContentParent) {
+    public function alterContentChildRecord( $arrRow, $buffer, $objMarketingItem, $objContentParent ) {
 
         $buffer = explode('</div>', $buffer );
 
-        $pages = \PageModel::findMultipleByIds(deserialize($arrRow['cms_mi_pages']));
+        $pages = PageModel::findMultipleByIds(deserialize($arrRow['cms_mi_pages']));
 
         // remove content type
         $buffer[0] = substr($buffer[0], 0, strpos($buffer[0], '>')+1);
@@ -48,9 +55,9 @@ class CurrentPage extends MarketingItem {
         // display page
         $buffer[0] .= ' ';
 
-        if( $pages ){
+        if( $pages ) {
             foreach( $pages as $value ) {
-                $buffer[0] .= \Image::getHtml(\Controller::getPageStatusIcon($value)) . ' ' . $value->title . ' (' . $value->alias . \Config::get('urlSuffix') . ')';
+                $buffer[0] .= Image::getHtml(Controller::getPageStatusIcon($value)) . ' ' . $value->title . ' (' . $value->alias . Config::get('urlSuffix') . ')';
             }
         }
 
@@ -63,13 +70,14 @@ class CurrentPage extends MarketingItem {
     /**
      * Alter header of tl_content
      *
-     * @param  array $args
-     * @param  DataContainer $dc
-     * @param  object $objMI
+     * @param array $args
+     * @param \DataContainer $dc
+     * @param object $objMarketingItem
+     * @param object $objContentParent
      *
      * @return array
      */
-    public function alterContentHeader($args, $dc, $objMarketingItem, $objContentParent) {
+    public function alterContentHeader( $args, $dc, $objMarketingItem, $objContentParent ) {
 
         $GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
         $GLOBALS['TL_DCA']['tl_content']['config']['notDeletable'] = true;
@@ -83,8 +91,7 @@ class CurrentPage extends MarketingItem {
         // add content type
         $args[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['content_type'][0]] = $GLOBALS['TL_LANG']['CTE'][$objMarketingItem->content_type][0];
 
-
-        $refererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+        $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
         $GLOBALS['TL_MOOTOOLS'][] =
         "<script>
@@ -93,14 +100,14 @@ class CurrentPage extends MarketingItem {
 
         if( $objMarketingItem && $objMarketingItem->type == 'current_page' && !empty($objMarketingItem->init_step) ) {
 
-            if( \Input::get('finish') && \Input::get('finish') == "true" ) {
+            if( Input::get('finish') && Input::get('finish') == "true" ) {
                 $objMarketingItem->init_step = '';
                 $objMarketingItem->save();
 
                 $this->redirect($this->addToUrl('', true, ['finish']));
             }
 
-            $beWizard = new \numero2\MarketingSuite\Backend\Wizard();
+            $beWizard = new Wizard();
             $aWizardConfig = [
                 'step' => 3
             ,   'type' => $objMarketingItem->type
@@ -121,34 +128,32 @@ class CurrentPage extends MarketingItem {
                 +'</div>'
             );
             </script>";
-
         }
-
 
         return $args;
     }
 
 
     /**
-     * alter dca configuration of tl_content
+     * Alter dca configuration of tl_content
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     * @param  object $objContent
-     *
-     * @return none
+     * @param \DataContainer $dc
+     * @param object $objMarketingItem
+     * @param object $objContent
+     * @param object $objContentParent
      */
-    public function alterContentDCA($dc, $objMarketingItem, $objContent, $objContentParent) {
+    public function alterContentDCA( $dc, $objMarketingItem, $objContent, $objContentParent ) {
 
-        if( \Input::get('act') == 'edit' || \Input::get('act') == 'editAll' ) {
+        if( Input::get('act') == 'edit' || Input::get('act') == 'editAll' ) {
 
-            $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = ['numero2\MarketingSuite\MarketingItem\CurrentPage', 'submitContent'];
+            $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = ['\numero2\MarketingSuite\MarketingItem\CurrentPage', 'submitContent'];
             $GLOBALS['TL_DCA']['tl_content']['fields']['pid']['eval']['readonly'] = 'readonly';
             $GLOBALS['TL_DCA']['tl_content']['fields']['type']['eval']['readonly'] = 'readonly';
         }
 
-        if( \Input::get('act') == 'edit' && $objContent ) {
-            $contents = \ContentModel::countBy(['pid=? AND ptable=?'],[$objContent->pid, $objContent->ptable]);
+        if( Input::get('act') == 'edit' && $objContent ) {
+
+            $contents = ContentModel::countBy(['pid=? AND ptable=?'],[$objContent->pid, $objContent->ptable]);
 
             // only change palette if it's not the default element
             if( !empty($objContent->cms_mi_pages) ) {
@@ -181,14 +186,12 @@ class CurrentPage extends MarketingItem {
 
 
     /**
-     * handles what happens after a user submits the form
+     * Handles what happens after a user submits the form
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     *
-     * @return none
+     * @param \DataContainer $dc
+     * @param object $objMarketingItem
      */
-    public function submitMarketingItem($dc, $objMarketingItem) {
+    public function submitMarketingItem( $dc, $objMarketingItem ) {
 
         $aPages = deserialize($objMarketingItem->pages);
         $aPagesOrder = deserialize($objMarketingItem->orderPages);
@@ -204,7 +207,7 @@ class CurrentPage extends MarketingItem {
             $group->save();
         }
 
-        $contents = \ContentModel::findBy(['pid=? AND ptable=?'],[$group->id, 'tl_cms_content_group']);
+        $contents = ContentModel::findBy(['pid=? AND ptable=?'],[$group->id, 'tl_cms_content_group']);
 
         // create default content element and redirect to edit
         if( !$contents ){
@@ -212,7 +215,7 @@ class CurrentPage extends MarketingItem {
             // only go on if save was used
             if( array_key_exists('save', $_POST) ) {
 
-                $content = new \ContentModel();
+                $content = new ContentModel();
                 $content->tstamp = time();
                 $content->pid = $group->id;
                 $content->ptable = 'tl_cms_content_group';
@@ -224,7 +227,6 @@ class CurrentPage extends MarketingItem {
 
                 $this->redirect(self::switchToEdit($content));
             }
-
 
         // add or delete content elements when pages change
         } else {
@@ -242,7 +244,7 @@ class CurrentPage extends MarketingItem {
                         $value->save();
                     }
 
-                    \Message::addInfo($GLOBALS['TL_LANG']['tl_content']['cms_msg']['unpublished_content_element']);
+                    Message::addInfo($GLOBALS['TL_LANG']['tl_content']['cms_msg']['unpublished_content_element']);
                 }
 
                 // changed pages
@@ -262,7 +264,7 @@ class CurrentPage extends MarketingItem {
 
                         $oContent->delete();
 
-                        \Message::addInfo($GLOBALS['TL_LANG']['tl_content']['cms_msg']['removed_content_element']);
+                        Message::addInfo($GLOBALS['TL_LANG']['tl_content']['cms_msg']['removed_content_element']);
                         continue;
                     }
 
@@ -282,7 +284,7 @@ class CurrentPage extends MarketingItem {
                     $oContent->invisible = '1';
                     $oContent->save();
 
-                    \Message::addInfo($GLOBALS['TL_LANG']['tl_content']['cms_msg']['added_content_element']);
+                    Message::addInfo($GLOBALS['TL_LANG']['tl_content']['cms_msg']['added_content_element']);
                 }
             }
         }
@@ -290,23 +292,23 @@ class CurrentPage extends MarketingItem {
 
 
     /**
-     * handles what happens after a user submits the child edit form
+     * Handles what happens after a user submits the child edit form
      *
-     * @return none
+     * @param \DataContainer $dc
      */
-    public function submitContent($dc) {
+    public function submitContent( $dc ) {
 
-        if( \Input::post('SUBMIT_TYPE') == 'auto' ) {
+        if( Input::post('SUBMIT_TYPE') == 'auto' ) {
             return;
         }
 
-        $group = \numero2\MarketingSuite\ContentGroupModel::findOneById($dc->activeRecord->pid);
+        $group = ContentGroupModel::findOneById($dc->activeRecord->pid);
 
-        $objMarketingItem = \numero2\MarketingSuite\MarketingItemModel::findById($group->pid);
+        $objMarketingItem = MarketingItemModel::findById($group->pid);
         $aPages = deserialize($objMarketingItem->pages);
         $aPagesOrder = deserialize($objMarketingItem->orderPages);
 
-        $default = \ContentModel::findById($dc->activeRecord->id);
+        $default = ContentModel::findById($dc->activeRecord->id);
         $default->refresh();
 
         // only do something if it's not the default element
@@ -329,22 +331,23 @@ class CurrentPage extends MarketingItem {
         $objMarketingItem->init_step = 'contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid;
         $objMarketingItem->save();
 
-        $refererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+        $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
         $this->redirect('contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
     }
 
 
     /**
-     * selects one contentId that should be displayed to the user
+     * Selects one contentId that should be displayed to the user
      *
-     * @param  object $objContents
-     * @param  object $objMI
-     * @param  object $objContent
+     * @param object $objContents
+     * @param object $objMI
+     * @param object $objContentParent
+     * @param object $objContent
      *
      * @return integer
      */
-    public function selectContentId($objContents, $objMI, $objContentParent, $objContent) {
+    public function selectContentId( $objContents, $objMI, $objContentParent, $objContent ) {
 
         global $objPage;
 
@@ -362,5 +365,4 @@ class CurrentPage extends MarketingItem {
 
         return null;
     }
-
 }

@@ -2,6 +2,7 @@
 <xliff version="1.1">
 <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en">
 <body>
+    <!-- CONTENT ELEMENTS -->
     <trans-unit id="CTE.marketing_suite">
         <source>Marketing Suite (aus Bibliothek einfügen)</source>
     </trans-unit>
@@ -47,14 +48,118 @@
     <trans-unit id="CTE.cms_hyperlink.1">
         <source>Erzeugt ein Hyperlink-Element.</source>
     </trans-unit>
+    <!-- LABELS AND MESSAGES -->
     <trans-unit id="MSC.snippet_count">
         <source>{1} von {2} Zeichen</source>
     </trans-unit>
     <trans-unit id="MSC.finish">
-        <source>fertigstellen</source>
+        <source>Fertigstellen</source>
+    </trans-unit>
+    <trans-unit id="MSC.reset_warning">
+        <source>Sollen die Aufrufe und Klicks der ID %s wirklich zurückgesetzt werden? Diese Aktion kann nicht rückgängig gemacht werden.</source>
+    </trans-unit>
+    <trans-unit id="MSC.wizard_popup_title">
+        <source>Zusatzinformationen zur Einrichtung</source>
+    </trans-unit>
+    <trans-unit id="MSC.copy_to_clipboard">
+        <source>klicken um in Zwischenablage zu kopieren</source>
+    </trans-unit>
+    <trans-unit id="MSC.empty_input">
+        <source>keine Eingabe vorhanden</source>
+    </trans-unit>
+    <trans-unit id="LABEL.reset_since">
+        <source>zurückgesetzt am %s</source>
     </trans-unit>
     <trans-unit id="ERR.natural_min_4_weeks">
         <source>Die Zeitspanne muss mindestes 4 Wochen betragen.</source>
+    </trans-unit>
+    <trans-unit id="ERR.unique_page_for_a_b_test_page">
+        <source>Diese Seite wird bereits in einem A/B Test verwendet.</source>
+    </trans-unit>
+    <trans-unit id="ERR.no_conversion_item_for_a_b_test_page">
+        <source>Diese Seite enthält keine eigenen Conversion-Elemente. In der Bibliothek angelegte Conversion-Elemente könenn nicht für einzelne Seiten ausgewertet werden.</source>
+    </trans-unit>
+    <trans-unit id="ERR.not_same_root_for_a_b_test_page">
+        <source>Die Seiten für den A/B Testen müssen dem gleichen "Startpunkt der Webseite" untergeordnet sein.</source>
+    </trans-unit>
+    <trans-unit id="ERR.non_index_page_for_a_b_test_page">
+        <source>Die Seiten mit dem Alias "index" oder "/" können nicht für die Seite A verwendet werden.</source>
+    </trans-unit>
+    <trans-unit id="ERR.link_shortener_alias_already_exist">
+        <source>Dieser Alias wird bereits in Verbindung mit dieser Domain verwendet.</source>
+    </trans-unit>
+    <trans-unit id="ERR.link_shortener_page_already_exist">
+        <source>Es existiert bereits eine Seite für diese Url.</source>
+    </trans-unit>
+    <trans-unit id="ERR.cms_url_parse_failed">
+        <source>Url "%s" konnte nicht überprüft werden.</source>
+    </trans-unit>
+    <trans-unit id="ERR.cms_url_scheme_missing">
+        <source>Url "%s" enthält kein Protokoll.</source>
+    </trans-unit>
+    <trans-unit id="ERR.cms_url_host_missing">
+        <source>Url "%s" enthält keine Domain.</source>
+    </trans-unit>
+    <!-- CUSTOM STYLING -->
+    <trans-unit id="CMS_ELEMENT_STYLE.categories.start">
+        <source>Start</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.categories.sizes">
+        <source>Größe und Abstände</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.categories.background-border">
+        <source>Hintergrund und Rahmen</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.categories.text-font">
+        <source>Text und Schrift</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.categories.hover">
+        <source>Hover</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.categories.custom">
+        <source>Eigenes CSS</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.bgcolor.0">
+        <source>Hintergrundfarbe</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.bgcolor.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.bordercolor.0">
+        <source>Rahmenfarbe </source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.bordercolor.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.fontcolor.0">
+        <source>Schriftfarbe</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.fontcolor.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.hover_bgcolor.0">
+        <source>Hover - Hintergrundfarbe</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.hover_bgcolor.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.hover_bordercolor.0">
+        <source>Hover - Rahmenfarbe </source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.hover_bordercolor.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.hover_fontcolor.0">
+        <source>Hover - Schriftfarbe</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.hover_fontcolor.1">
+        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.cms_element_style_custom.0">
+        <source>CSS-Code</source>
+    </trans-unit>
+    <trans-unit id="CMS_ELEMENT_STYLE.fields.cms_element_style_custom.1">
+        <source>Anweisungen die Sie hier hinterlegen überschreiben Einstellungen die Sie zuvor in den anderen Masken getroffen haben.</source>
     </trans-unit>
 </body>
 </file>

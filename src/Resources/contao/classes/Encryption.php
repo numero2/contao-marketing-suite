@@ -13,13 +13,14 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite;
 
+use Contao\Crypto;
+use Contao\System;
 
-class Encryption extends \System {
+
+class Encryption extends System {
+
 
     /**
      * Encrypt a value
@@ -28,11 +29,12 @@ class Encryption extends \System {
      *
      * @return string The encrypted value
      */
-    public static function encrypt($strValue) {
+    public static function encrypt( $strValue ) {
 
-        $crypto = new \Crypto();
+        $crypto = new Crypto();
         return $crypto->encryptPublic($strValue);
     }
+
 
     /**
      * Decrypt a value
@@ -41,9 +43,9 @@ class Encryption extends \System {
      *
      * @return string The decrypted value or null
      */
-    public static function decrypt($strValue) {
+    public static function decrypt( $strValue ) {
 
-        $crypto = new \Crypto();
+        $crypto = new Crypto();
         return $crypto->decryptPublic($strValue);
     }
 }

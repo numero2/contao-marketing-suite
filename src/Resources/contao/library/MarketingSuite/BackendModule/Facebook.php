@@ -13,11 +13,21 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\BackendModule;
 
+use Contao\Backend;
+use Contao\CMSConfig;
+use Contao\Controller;
+use Contao\Database;
+use Contao\DataContainer;
+use Contao\DC_Table;
+use Contao\Environment;
+use Contao\Input;
+use Contao\Message;
+use Contao\News;
+use Contao\NewsArchiveModel;
+use Contao\NewsModel;
+use Contao\StringUtil;
 use numero2\MarketingSuite\Api\Facebook as FacebookAPI;
 use numero2\MarketingSuite\Encryption;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -42,11 +52,11 @@ class Facebook {
 
         if( $oFB->hasAccessToken() ) {
 
-            $return .= '<a href="'.\Backend::addToUrl('act=revoke').'" class="header_icon" style="background-image: url(bundles/marketingsuite/img/backend/icons/icon_revoke_authentication.svg);" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_cms_facebook']['invalidate_authentication']).'" onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['tl_cms_facebook']['invalidate_authentication_confirm'] . '\'))return false; Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['tl_cms_facebook']['invalidate_authentication'].'</a>';
+            $return .= '<a href="'.Backend::addToUrl('act=revoke').'" class="header_icon" style="background-image: url(bundles/marketingsuite/img/backend/icons/icon_revoke_authentication.svg);" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['tl_cms_facebook']['invalidate_authentication']).'" onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['tl_cms_facebook']['invalidate_authentication_confirm'] . '\'))return false; Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['tl_cms_facebook']['invalidate_authentication'].'</a>';
         }
 
         $return .= '
-            <a href="'.\Controller::getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+            <a href="'.Controller::getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
         </div>';
 
         return $return;
@@ -59,7 +69,7 @@ class Facebook {
     * @return string
     */
     public function generateMessages() {
-        return \Message::generate('CMS_FACEBOOK');
+        return Message::generate('CMS_FACEBOOK');
     }
 
 
@@ -68,8 +78,8 @@ class Facebook {
      */
     public function showOpenGraphHint() {
 
-        if( !class_exists('numero2\OpenGraph3\OpenGraph3') ) {
-            \Message::addInfo($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['opengraph_missing']);
+        if( !class_exists('\numero2\OpenGraph3\OpenGraph3') ) {
+            Message::addInfo($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['opengraph_missing']);
         }
     }
 
@@ -80,7 +90,7 @@ class Facebook {
      *
      * @param \DataContainer $dc
      */
-    public function checkNewsArchiveHasPages( \DataContainer $dc ) {
+    public function checkNewsArchiveHasPages( DataContainer $dc ) {
 
         $hasPages = false;
 
@@ -88,7 +98,7 @@ class Facebook {
         if( $dc->parentTable == "tl_news_archive" ) {
 
             $oNews = NULL;
-            $oNews = \NewsModel::findById( $dc->id );
+            $oNews = NewsModel::findById( $dc->id );
 
             $hasPages = $this->getAvailablePagesOptionsForNews($oNews->pid) ? true : false;
 
@@ -112,7 +122,7 @@ class Facebook {
     /**
      * Checks if the access token (if available) is still valid
      *
-     * @return bool
+     * @return boolean
      */
     public function checkTokenStatus() {
 
@@ -133,11 +143,11 @@ class Facebook {
                     $diff = $currDate->diff($aToken['expires_at']);
 
                     if( $diff->h < 1 ) {
-                        \Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['token_expires_minutes'],$diff->i), 'CMS_FACEBOOK');
+                        Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['token_expires_minutes'],$diff->i), 'CMS_FACEBOOK');
                     } else if( $diff->d < 1 ) {
-                        \Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['token_expires_hours'],$diff->h), 'CMS_FACEBOOK');
+                        Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['token_expires_hours'],$diff->h), 'CMS_FACEBOOK');
                     } else {
-                        \Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['token_expires_days'],$diff->d), 'CMS_FACEBOOK');
+                        Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['token_expires_days'],$diff->d), 'CMS_FACEBOOK');
                     }
                 }
 
@@ -145,7 +155,7 @@ class Facebook {
 
             } else {
 
-                \Message::addError($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['token_expired'], 'CMS_FACEBOOK');
+                Message::addError($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['token_expired'], 'CMS_FACEBOOK');
                 return false;
             }
         }
@@ -164,7 +174,7 @@ class Facebook {
         $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('a.header_back').href = 'contao?do=cms_settings';</script>";
 
         // hide authorization / pages if no app credentials given
-        if( !\CMSConfig::get('cms_fb_app_id') || !\CMSConfig::get('cms_fb_app_secret') ) {
+        if( !CMSConfig::get('cms_fb_app_id') || !CMSConfig::get('cms_fb_app_secret') ) {
 
             unset($GLOBALS['TL_DCA']['tl_cms_facebook']['fields']['cms_fb_pages_available']);
             unset($GLOBALS['TL_DCA']['tl_cms_facebook']['fields']['authorization']);
@@ -182,11 +192,11 @@ class Facebook {
                 // false = really, just wrong credentials
                 if( $res === false ) {
 
-                    \Message::addError($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['credentials_invalid'], 'CMS_FACEBOOK');
+                    Message::addError($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['credentials_invalid'], 'CMS_FACEBOOK');
 
                 // everything else is an error message from the api
                 } else {
-                    \Message::addError($res, 'CMS_FACEBOOK');
+                    Message::addError($res, 'CMS_FACEBOOK');
                 }
 
                 unset($GLOBALS['TL_DCA']['tl_cms_facebook']['fields']['authorization']);
@@ -251,7 +261,7 @@ class Facebook {
      /**
       * Generates array of pages for use in checkbox wizard
       *
-      * @param bool $fromConfig
+      * @param boolean $fromConfig
       *
       * @return array
       */
@@ -263,7 +273,7 @@ class Facebook {
         if( $fromConfig === true ) {
 
             $aPages = [];
-            $aPages = \CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(\CMSConfig::get('cms_fb_pages_available'))) : [];
+            $aPages = CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : [];
 
         // get pages via API
         } else {
@@ -292,7 +302,6 @@ class Facebook {
      * @return array
      */
     public function getAvailablePagesOptions() {
-
         return self::getPagesOptions(true);
     }
 
@@ -306,13 +315,13 @@ class Facebook {
      */
     public function getAvailablePagesOptionsForNews( $dc ) {
 
-        $pid = $dc instanceof \DataContainer ? $dc->activeRecord->pid : $dc;
+        $pid = $dc instanceof DataContainer ? $dc->activeRecord->pid : $dc;
 
         $aPages = [];
         $aPages = self::getPagesOptions(true);
 
         $oArchive = NULL;
-        $oArchive = \NewsArchiveModel::findById($pid);
+        $oArchive = NewsArchiveModel::findById($pid);
 
         if( $aPages && $oArchive ) {
 
@@ -336,7 +345,7 @@ class Facebook {
     /**
      * Decrypts and returns the id of the selected pages
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return array
      */
@@ -410,18 +419,18 @@ class Facebook {
      */
     public function revokeAuthentication( $force=false ) {
 
-        if( \Input::get('act') != 'revoke' && $force !== true ) {
+        if( Input::get('act') != 'revoke' && $force !== true ) {
             return;
         }
 
         // add message
-        \Message::addInfo($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['authentication_revoked'], 'CMS_FACEBOOK');
+        Message::addInfo($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['authentication_revoked'], 'CMS_FACEBOOK');
 
         // remove tokens from config
-        \CMSConfig::remove('cms_fb_token');
-        \CMSConfig::remove('cms_fb_pages_available');
+        CMSConfig::remove('cms_fb_token');
+        CMSConfig::remove('cms_fb_pages_available');
 
-        \Controller::redirect( \Backend::addToUrl('act=') );
+        Controller::redirect( Backend::addToUrl('act=') );
     }
 
 
@@ -434,12 +443,12 @@ class Facebook {
      *
      * @return string
      */
-    public function queueForPublishing( $value, \DC_Table $dc ) {
+    public function queueForPublishing( $value, DC_Table $dc ) {
 
         if( $value && $dc->activeRecord->cms_publish_facebook ) {
-            \Database::getInstance()->prepare("UPDATE ".$dc->table." SET cms_facebook_queue_publish = 1 WHERE id = ? ")->execute($dc->activeRecord->id);
+            Database::getInstance()->prepare("UPDATE ".$dc->table." SET cms_facebook_queue_publish = 1 WHERE id = ? ")->execute($dc->activeRecord->id);
         } else {
-            \Database::getInstance()->prepare("UPDATE ".$dc->table." SET cms_facebook_queue_publish = '' WHERE id = ? ")->execute($dc->activeRecord->id);
+            Database::getInstance()->prepare("UPDATE ".$dc->table." SET cms_facebook_queue_publish = '' WHERE id = ? ")->execute($dc->activeRecord->id);
         }
 
         return $value;
@@ -455,7 +464,7 @@ class Facebook {
      * @return string
      * @throws \Exception if publishing failed
      */
-    public function publishUpdatePost( $value, \DC_Table $dc ) {
+    public function publishUpdatePost( $value, DC_Table $dc ) {
 
         if( !$dc->activeRecord->cms_facebook_queue_publish ) {
             return $value;
@@ -472,7 +481,7 @@ class Facebook {
         $oFB = new FacebookAPI();
 
         $aPages = [];
-        $aPages = \CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(\CMSConfig::get('cms_fb_pages_available'))) : [];
+        $aPages = CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : [];
 
         $aPosts = [];
         $aPosts = $dc->activeRecord->cms_facebook_posts ? deserialize($dc->activeRecord->cms_facebook_posts) : NULL;
@@ -490,7 +499,7 @@ class Facebook {
         if( $aPages ) {
 
             $oNews = NULL;
-            $oNews = \NewsModel::findById( $dc->activeRecord->id );
+            $oNews = NewsModel::findById( $dc->activeRecord->id );
 
             // prepare the post data
             $arrPostData = [];
@@ -512,7 +521,7 @@ class Facebook {
 
                     } else {
 
-                        \Message::addError(sprintf(
+                        Message::addError(sprintf(
                             $GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['publish_failed']
                         ,   $aPages[$pageId]['name']
                         ));
@@ -522,7 +531,7 @@ class Facebook {
                 // store post id in database
                 // reset publish marker
                 if( $aPostIds ) {
-                    \Database::getInstance()->prepare("UPDATE tl_news SET cms_facebook_posts = ?, cms_facebook_queue_publish = '' WHERE id = ?")->execute( serialize($aPostIds), $dc->activeRecord->id );
+                    Database::getInstance()->prepare("UPDATE tl_news SET cms_facebook_posts = ?, cms_facebook_queue_publish = '' WHERE id = ?")->execute( serialize($aPostIds), $dc->activeRecord->id );
                 }
             }
         }
@@ -538,15 +547,15 @@ class Facebook {
      *
      * @return array
      */
-    private function preparePostData( \NewsModel $oNews ) {
+    private function preparePostData( NewsModel $oNews ) {
 
         $arrData = [];
 
         // generate link
-        $href = \News::generateNewsUrl( $oNews, false, true );
+        $href = News::generateNewsUrl( $oNews, false, true );
 
         if( strpos($href, 'http') === FALSE ) {
-            $href = \Environment::get('url') . '/' . $href;
+            $href = Environment::get('url') . '/' . $href;
         }
 
         $arrData['link'] = $href;

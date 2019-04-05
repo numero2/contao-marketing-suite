@@ -1,0 +1,103 @@
+<div class="widget element-preview">
+
+    <h3><?= $this->headline; ?></h3>
+    <iframe id="element_preview" src="about:blank"></iframe>
+    <p class="tl_help"><?= $this->explanation; ?></p>
+
+    <script id="frameContent">
+
+        const html = `
+        <html>
+            <head>
+                <style>
+                    html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; }
+                    body { font-family: Arial, Helvetica, Sans-serif; display: flex; justify-content: center; align-items: center; }
+                </style>
+                <?= $this->style; ?>
+            <head>
+            <body>
+                <?= $this->element; ?>
+                <script>
+
+                    function reportContentHeight() {
+                        var data = { height: document.querySelector('body > *').clientHeight };
+                        window.parent.postMessage(data, '*');
+                    }
+
+                    window.addEventListener('message', reportContentHeight, false);
+                    window.addEventListener('resize', reportContentHeight);
+
+                <\/script>
+            </body>
+        </html>`;
+
+        const frame = document.querySelector('iframe#element_preview');
+        const frameDocument = frame.contentWindow.document;
+
+        frameDocument.open();
+        frameDocument.write(html);
+        frameDocument.close();
+
+        frame.contentWindow.postMessage('', '*');
+
+    </script>
+
+    <script>
+
+        const channel = new MessageChannel();
+        const form = document.querySelector('form.tl_edit_form');
+
+        window.addEventListener("message", updatePreviewFrameHeight, false);
+
+        function updatePreviewFrameHeight(e) {
+
+            if( e.data.height ) {
+                frame.height = e.data.height;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const updatePreview = function() {
+
+                const formData = new FormData(form);
+
+                formData.append('action', 'updateElementPreview');
+                formData.append('id', <?= $this->id; ?>);
+                formData.append('REQUEST_TOKEN', Contao.request_token);
+
+                const request = new XMLHttpRequest();
+                request.open('POST', form.action);
+                request.responseType = 'document';
+                request.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
+
+                request.addEventListener('load', function(e) {
+
+                    // execute javascript in response which updates the iframes content
+                    const element = request.responseXML.querySelector('.widget.element-preview');
+                    const scr = element.querySelector('script#frameContent');
+                    eval(scr.innerHTML);
+                });
+
+                request.send(formData);
+            };
+
+            // watch normal form fields
+            const inputs = form.querySelectorAll('input, select');
+
+            for( let i=0; i < inputs.length; i++ ) {
+                inputs[i].addEventListener('input', updatePreview);
+                inputs[i].addEventListener('change', updatePreview);
+            }
+
+            // watch mootools-widgets (colorpicker)
+            const buttons = document.querySelectorAll('.moor-okButton');
+
+            for( let i=0; i < buttons.length; i++ ) {
+                buttons[i].addEventListener('click', updatePreview);
+            }
+        });
+
+    </script>
+
+</div>

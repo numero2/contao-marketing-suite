@@ -13,14 +13,20 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\MarketingItem;
 
-
+use Contao\Config;
+use Contao\ContentModel;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\Date;
+use Contao\Image;
+use Contao\Input;
+use Contao\Message;
+use Contao\StringUtil;
+use Contao\System;
+use numero2\MarketingSuite\Backend\Wizard;
 use numero2\MarketingSuite\ContentGroupModel;
+use numero2\MarketingSuite\MarketingItemModel;
 use numero2\MarketingSuite\Tracking\ClickAndViews;
 use numero2\MarketingSuite\Tracking\Session;
 
@@ -31,13 +37,14 @@ class ABTest extends MarketingItem {
     /**
      * Alter child record of tl_content
      *
-     * @param  array $arrRow
-     * @param  string $buffer
-     * @param  object $objMarketingItem
+     * @param array $arrRow
+     * @param string $buffer
+     * @param object $objMarketingItem
+     * @param object $objContentGroup
      *
      * @return string
      */
-    public function alterContentChildRecord($arrRow, $buffer, $objMarketingItem, $objContentGroup) {
+    public function alterContentChildRecord( $arrRow, $buffer, $objMarketingItem, $objContentGroup ) {
 
         if( $arrRow['cms_mi_isMainTracker'] == '1' ) {
 
@@ -49,7 +56,6 @@ class ABTest extends MarketingItem {
             $buffer = implode('</div>', $buffer );
         }
 
-
         return $buffer;
     }
 
@@ -57,13 +63,14 @@ class ABTest extends MarketingItem {
     /**
      * Alter header of tl_content
      *
-     * @param  array $args
-     * @param  DataContainer $dc
-     * @param  object $objMI
+     * @param array $args
+     * @param \DataContainer $dc
+     * @param object $objMarketingItem
+     * @param object $objContentGroup
      *
      * @return array
      */
-    public function alterContentHeader($args, $dc, $objMarketingItem, $objContentGroup) {
+    public function alterContentHeader( $args, $dc, $objMarketingItem, $objContentGroup ) {
 
         $keys = array_keys($args);
         unset($args[$keys[0]]);
@@ -74,12 +81,12 @@ class ABTest extends MarketingItem {
         }
 
         // only display this button if we have one group
-        $groups =  ContentGroupModel::countByPid($objMarketingItem->id);
+        $groups = ContentGroupModel::countByPid($objMarketingItem->id);
         if( $groups == 1 ) {
 
             $GLOBALS['TL_MOOTOOLS'][] = "<script>CMSBackend.override('.tl_header .tl_content_right .edit','');</script>";
 
-            $beWizard = new \numero2\MarketingSuite\Backend\Wizard();
+            $beWizard = new Wizard();
             $aWizardConfig = [
                 'step' => 3
             ,   'type' => 'a_b_test'
@@ -104,12 +111,10 @@ class ABTest extends MarketingItem {
         }
 
         if( $objMarketingItem->init_step ) {
-
             $args[array_reverse($keys)[0]] = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['child_header_label']['a_b_test_info']['default'];
         } else {
             unset($args[array_reverse($keys)[0]]);
         }
-
 
         $GLOBALS['TL_DCA']['tl_content']['list']['operations']['delete']['button_callback'] = ['\numero2\MarketingSuite\MarketingItem\ABTest', 'deleteElement'];
 
@@ -118,7 +123,7 @@ class ABTest extends MarketingItem {
 
 
     /**
-     * will prevent deleting if you are on the 'cms_mi_isMainTracker' element
+     * Will prevent deleting if you are on the 'cms_mi_isMainTracker' element
      *
      * @param array  $row
      * @param string $href
@@ -129,28 +134,27 @@ class ABTest extends MarketingItem {
      *
      * @return string
      */
-    public function deleteElement($row, $href, $label, $title, $icon, $attributes) {
+    public function deleteElement( $row, $href, $label, $title, $icon, $attributes ) {
 
         $disabled = $row['cms_mi_isMainTracker'] == '1';
 
-        return $disabled ? \Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
+        return $disabled ? Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
     }
 
 
     /**
-     * alter dca configuration of tl_content
+     * Alter dca configuration of tl_content
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     * @param  object $objContent
-     *
-     * @return none
+     * @param \DataContainer $dc
+     * @param object $objMarketingItem
+     * @param object $objContent
+     * @param object $objContentGroup
      */
-    public function alterContentDCA($dc, $objMarketingItem, $objContent, $objContentGroup) {
+    public function alterContentDCA( $dc, $objMarketingItem, $objContent, $objContentGroup ) {
 
-        if( \Input::get('act') == 'edit' || \Input::get('act') == 'editAll' ) {
+        if( Input::get('act') == 'edit' || Input::get('act') == 'editAll' ) {
 
-            $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = ['numero2\MarketingSuite\MarketingItem\ABTest', 'submitContent'];
+            $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = ['\numero2\MarketingSuite\MarketingItem\ABTest', 'submitContent'];
 
             if( $objContent->cms_mi_isMainTracker === '1' ) {
 
@@ -159,7 +163,6 @@ class ABTest extends MarketingItem {
 
                 $GLOBALS['TL_DCA']['tl_content']['fields']['cms_mi_label']['eval']['readonly'] = 'readonly';
                 $GLOBALS['TL_DCA']['tl_content']['palettes'][$objContent->type] = str_replace(',cms_mi_label', '', $GLOBALS['TL_DCA']['tl_content']['palettes'][$objContent->type]);
-
 
                 $groups = ContentGroupModel::countByPid($objMarketingItem->id);
 
@@ -184,15 +187,12 @@ class ABTest extends MarketingItem {
 
 
     /**
-     * handles what happens after a user submits the form
+     * Handles what happens after a user submits the form
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     *
-     * @return none
+     * @param \DataContainer $dc
+     * @param object $objMI
      */
-    public function submitMarketingItem($dc, $objMarketingItem) {
-
+    public function submitMarketingItem( $dc, $objMarketingItem ) {
 
         $groups = ContentGroupModel::findBy(['pid=?'],[$objMarketingItem->id]);
 
@@ -206,7 +206,7 @@ class ABTest extends MarketingItem {
             $group->type = 'a_b_test';
             $group->save();
 
-            $content = new \ContentModel();
+            $content = new ContentModel();
             $content->tstamp = time();
             $content->pid = $group->id;
             $content->cms_mi_isMainTracker = '1';
@@ -223,7 +223,7 @@ class ABTest extends MarketingItem {
         // changed content_type
         foreach( $groups as $group) {
 
-            $contents = \ContentModel::findBy(['pid=? AND ptable=? AND cms_mi_isMainTracker=?'],[$group->id, 'tl_cms_content_group', '1']);
+            $contents = ContentModel::findBy(['pid=? AND ptable=? AND cms_mi_isMainTracker=?'],[$group->id, 'tl_cms_content_group', '1']);
 
             if( $contents ){
 
@@ -241,70 +241,98 @@ class ABTest extends MarketingItem {
                 }
             }
 
-            // TODO won't display this message
-            \Message::addInfo($GLOBALS['TL_LANG']['tl_content']['cms_msg']['unpublished_content_element']);
+            // FIXME won't display this message
+            Message::addInfo($GLOBALS['TL_LANG']['tl_content']['cms_msg']['unpublished_content_element']);
         }
     }
 
 
     /**
-     * selects one contentId that should be displayed to the user
+     * Selects one contentId that should be displayed to the user
      *
-     * @param  object $objContents
-     * @param  object $objMI
-     * @param  object $objContent
+     * @param object $objContents
+     * @param object $objMI
+     * @param object $objContentParent
+     * @param object $objContent
      *
      * @return integer
      */
-    public function selectContentId($objContents, $objMI, $objContentParent, $objContent) {
+    public function selectContentId( $objContents, $objMI, $objContentParent, $objContent ) {
 
         if( $objContentParent ) {
 
             $id = null;
 
+            if( $objMI->auto_winner_after && $objMI->stop_auto_winner < time() ) {
+
+                // find winner
+                $aClicks = $objContentParent->fetchEach('clicks');
+                arsort($aClicks);
+
+                // if no real winner keep it running
+                if( array_values($aClicks)[0] != array_values($aClicks)[1] ) {
+
+                    // select winner and make always use this
+                    $winnerId = array_keys($aClicks)[0];
+
+                    foreach( $objContentParent as $value) {
+
+                        if( $value->id == $winnerId ) {
+
+                            $value->always_use_this = '1';
+                            $value->save();
+                        } else {
+
+                            $value->always_use_this = '';
+                            $value->save();
+                        }
+                    }
+
+                    $objMI->auto_winner_after = '';
+                    $objMI->save();
+                }
+            }
+
             // check if alway_use_this was selected
             $aAlways = $objContentParent->fetchEach('always_use_this');
             foreach( $aAlways as $key => $value ) {
 
-                if( $value == 1 ){
+                if( $value == 1 ) {
                     $id = $key;
                     break;
                 }
             }
 
-            $views = new ClickAndViews();
-
             if( !$id ) {
 
                 $tracking = new Session();
+                $views = new ClickAndViews();
 
-                $aContentGroupsIds = $objContentParent->fetchEach('id');
+                $aContentViews = $objContentParent->fetchEach('views');
 
                 // if already selected in session tracking
                 $id = $tracking->getABTestSelected($objMI->id);
-                if( !in_array($id, $aContentGroupsIds) ) {
+                if( !array_key_exists($id, $aContentViews) ) {
 
-                    // choose random
-                    $rng = rand(0,count($aContentGroupsIds)-1);
+                    // choose content group with less views
+                    asort($aContentViews);
+                    $id = array_keys($aContentViews)[0];
 
-                    // get random and save
-                    $id = $aContentGroupsIds[$rng];
+                    // save selected
                     $tracking->storeABTestSelected($objMI->id, $id);
 
-                }
-            }
-
-            // increase view counter
-            foreach( $objContentParent as $key => $value) {
-
-                if( $value->id === $id ) {
-                    $views->increaseViewOnMarketingElement($value);
-                    break;
+                    // increase view counter
+                    foreach( $objContentParent as $key => $value) {
+                        if( $value->id == $id ) {
+                            $views->increaseViewOnMarketingElement($value);
+                            break;
+                        }
+                    }
                 }
             }
 
             $oContents = NULL;
-            $oContents = \ContentModel::findPublishedByPidAndTable($id, 'tl_cms_content_group');
+            $oContents = ContentModel::findPublishedByPidAndTable($id, 'tl_cms_content_group');
             if( !$oContents ){
                 return null;
             }
@@ -319,27 +347,27 @@ class ABTest extends MarketingItem {
 
 
     /**
-     * handles what happens after a user submits the child edit form
+     * Handles what happens after a user submits the child edit form
      *
-     * @return none
+     * @param \DataContainer $dc
      */
-    public function submitContent($dc) {
+    public function submitContent( $dc ) {
 
-        if( \Input::post('SUBMIT_TYPE') == 'auto' ) {
+        if( Input::post('SUBMIT_TYPE') == 'auto' ) {
             return;
         }
 
-        $objContent = \ContentModel::findById($dc->activeRecord->id);
+        $objContent = ContentModel::findById($dc->activeRecord->id);
         $objContent->refresh();
 
         if( $objContent->cms_mi_isMainTracker === '1' ) {
 
             $group = ContentGroupModel::findOneById($dc->activeRecord->pid);
-            $objMarketingItem = \numero2\MarketingSuite\MarketingItemModel::findById($group->pid);
+            $objMarketingItem = MarketingItemModel::findById($group->pid);
 
             if( !empty($objMarketingItem->init_step) ) {
 
-                $refererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+                $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
                 $objMarketingItem->init_step = 'contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId;
                 $objMarketingItem->save();
@@ -350,21 +378,18 @@ class ABTest extends MarketingItem {
 
 
     /**
-     * handles what happens after a user submits the form
+     * Handles what happens after a user submits the form
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     *
-     * @return none
+     * @param \DataContainer $dc
      */
-    public function submitContentGroup($dc) {
+    public function submitContentGroup( $dc ) {
 
-        if( \Input::post('SUBMIT_TYPE') == 'auto' ) {
+        if( Input::post('SUBMIT_TYPE') == 'auto' ) {
             return;
         }
 
         $groups = ContentGroupModel::countByPid($dc->activeRecord->pid);
-        $objMI = \numero2\MarketingSuite\MarketingItemModel::findById($dc->activeRecord->pid);
+        $objMI = MarketingItemModel::findById($dc->activeRecord->pid);
 
         // copy first case and redirect to second case
         if( $groups == 1 ) {
@@ -376,7 +401,7 @@ class ABTest extends MarketingItem {
             $objGroup->name = '';
             $objGroup->save();
 
-            $contents = \ContentModel::findBy(['pid=? and ptable=?'],[$dc->activeRecord->id, 'tl_cms_content_group']);
+            $contents = ContentModel::findBy(['pid=? and ptable=?'],[$dc->activeRecord->id, 'tl_cms_content_group']);
 
             foreach( $contents as $value ) {
 
@@ -397,7 +422,7 @@ class ABTest extends MarketingItem {
                 $objMI->init_step = 'contao?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id;
                 $objMI->save();
 
-                $refererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+                $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
                 $this->redirect('contao?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
             }
@@ -405,18 +430,14 @@ class ABTest extends MarketingItem {
     }
 
 
-
     /**
-     * change settings onload
+     * Change settings onload
      *
-     * @param  DataContainer $dc
-     * @param  object $objMI
-     *
-     * @return none
+     * @param \DataContainer $dc
      */
-    public function loadContentGroup($dc) {
+    public function loadContentGroup( $dc ) {
 
-        if( \Input::get('act') == 'edit') {
+        if( Input::get('act') == 'edit') {
 
             $group = ContentGroupModel::findOneById($dc->id);
             $groups = null;
@@ -454,18 +475,18 @@ class ABTest extends MarketingItem {
             }
         } else {
 
-            $objMI = \numero2\MarketingSuite\MarketingItemModel::findOneById($dc->id);
+            $objMI = MarketingItemModel::findOneById($dc->id);
 
             if( $objMI && $objMI->type == 'a_b_test' &&  !empty($objMI->init_step) ) {
 
-                if( \Input::get('finish') && \Input::get('finish') == "true" ) {
+                if( Input::get('finish') && Input::get('finish') == "true" ) {
                     $objMI->init_step = '';
                     $objMI->save();
 
                     $this->redirect($this->addToUrl('', true, ['finish']));
                 }
 
-                $beWizard = new \numero2\MarketingSuite\Backend\Wizard();
+                $beWizard = new Wizard();
                 $aWizardConfig = [
                     'step' => 6
                 ,   'type' => 'a_b_test'
@@ -486,9 +507,39 @@ class ABTest extends MarketingItem {
                     +'</div>'
                 );
                 </script>";
-
             }
         }
     }
 
+
+    /**
+     * Return a string describing the current status of this a_b_test.
+     *
+     * @param array $arrMI
+     *
+     * @return string
+     */
+    public function getStatus( $arrMI ) {
+
+        $strReturn = "";
+
+        $objAlways = ContentGroupModel::findOneBy(["pid=? AND always_use_this=?"], [$arrMI['id'], 1]);
+
+        if( $arrMI['auto_winner_after'] ) {
+
+            $strAutoWinner = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['list_label']['auto_winner_after_date'];
+            $strAutoWinner = sprintf($strAutoWinner, Date::parse(Config::get('datimFormat'), $arrMI['stop_auto_winner']));
+
+            $strReturn = $strAutoWinner;
+
+        } else if( $objAlways ) {
+
+            $strAlways = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['list_label']['always_use_this_name'];
+            $strAlways = sprintf($strAlways, $objAlways->name);
+
+            $strReturn = $strAlways;
+        }
+
+        return $strReturn;
+    }
 }

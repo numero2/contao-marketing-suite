@@ -13,17 +13,24 @@
  */
 
 
-/**
- * Namespace
- */
 namespace numero2\MarketingSuite\Hooks;
 
+use Contao\CMSConfig;
+use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Dbafs;
+use Contao\DC_CMSFile;
+use Contao\FilesModel;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\Widget;
+use numero2\MarketingSuite\ContentButton;
+use numero2\MarketingSuite\Widget\ElementStyle;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use numero2\MarketingSuite\ContentButton;
 
 
 class Hooks extends \Backend {
@@ -38,7 +45,7 @@ class Hooks extends \Backend {
      *
      * @return bool
      */
-    public static function validateRgxp( $strRgxp, $varValue, \Widget $objWidget ) {
+    public static function validateRgxp( $strRgxp, $varValue, Widget $objWidget ) {
 
         switch( $strRgxp ) {
 
@@ -46,18 +53,18 @@ class Hooks extends \Backend {
 
                 self::validateRgxp('natural', $varValue, $objWidget);
 
-                $aMin = array(
+                $aMin = [
                     'day' => 28
                 ,   'week' => 4
                 ,   'month' => 1
-                );
+                ];
 
                 $unit = array_keys($aMin)[0];
 
                 if( !empty($objWidget->value['unit']) ){
                     $unit = $objWidget->value['unit'];
                 }
-                $postUnit = \Input::post($objWidget->name);
+                $postUnit = Input::post($objWidget->name);
 
                 if( !empty($postUnit['unit']) ){
                     $unit = $postUnit['unit'];
@@ -73,6 +80,30 @@ class Hooks extends \Backend {
 
                 return true;
                 break;
+
+            case 'cms_url':
+
+                if( preg_match('/^{{[^{}]+}}$/', $varValue) ) {
+                    return true;
+                }
+
+                $varValue = Controller::replaceInsertTags($varValue);
+
+                $parsed = parse_url($varValue);
+
+                if( !is_array($parsed) ) {
+                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['cms_url_parse_failed'], $varValue));
+                }
+
+                if( !isset($parsed['scheme']) ) {
+                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['cms_url_scheme_missing'], $varValue));
+                }
+                if( !isset($parsed['host']) ) {
+                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['cms_url_host_missing'], $varValue));
+                }
+
+                return true;
+
         }
 
         return false;
@@ -86,31 +117,26 @@ class Hooks extends \Backend {
      */
     public function executePreActions( $strAction ) {
 
-        if( $strAction == "getButtonStyling" ) {
+        if( $strAction === 'updateElementPreview' ) {
 
-            $id = \Input::post('id');
+            $oElement = NULL;
+            $oElement = new ElementStyle();
 
-            $objModel = \ContentModel::findById($id);
-            $objModel->preventSaving(false);
+            $dc = (object) [
+                'table' => \Input::get('table')
+            ,   'activeRecord' => (object) [
+                    'id' => Input::post('id')
+                ,   'type' => Input::post('type')
+                ]
+            ];
 
-            $aStyle = deserialize($objModel->cms_style);
+            $sMarkup = '';
+            $sMarkup = $oElement->generatePreview( $dc, $_POST );
 
-            foreach( array_keys($_POST) as $key ) {
+            $oResponse = NULL;
+            $oResponse = new Response( Controller::replaceOldBePaths($sMarkup) );
 
-                if( strpos($GLOBALS['TL_DCA']['tl_content']['subpalettes']['cms_inline_style'], ','.$key) !== false ) {
-
-                    $aStyle[$key] = \Input::post($key);
-                }
-            }
-            $objModel->cms_style = serialize($aStyle);
-
-            $ceButton = new ContentButton($objModel);
-
-            $strButton = $ceButton->generateStyle();
-
-            $respone = new Response(\Controller::replaceOldBePaths($strButton));
-
-            throw new ResponseException($respone);
+            throw new ResponseException($oResponse);
         }
     }
 
@@ -121,7 +147,7 @@ class Hooks extends \Backend {
     public static function initializeSystem() {
 
         //initialize CMSConfig
-        \CMSConfig::getInstance();
+        CMSConfig::getInstance();
     }
 
 
@@ -140,7 +166,7 @@ class Hooks extends \Backend {
     public function postActionHookForDC_CMSFile( $strAction, $dc ) {
 
         // only use when DC_CMSFile
-        if( !$dc instanceof \DC_CMSFile ) {
+        if( !$dc instanceof DC_CMSFile ) {
             return ;
         }
 
@@ -150,7 +176,7 @@ class Hooks extends \Backend {
             case 'loadFiletree':
 
                 $varValue = null;
-                $strField = $dc->field = \Input::post('name');
+                $strField = $dc->field = Input::post('name');
 
                 // Call the load_callback
                 if( \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']) ) {
@@ -176,8 +202,8 @@ class Hooks extends \Backend {
                 $objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
                 // Load a particular node
-                if( \Input::post('folder', true) != '' )  {
-                    throw new ResponseException($this->convertToResponse($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), (int) \Input::post('level'))));
+                if( Input::post('folder', true) != '' )  {
+                    throw new ResponseException($this->convertToResponse($objWidget->generateAjax(Input::post('folder', true), Input::post('field'), (int) Input::post('level'))));
                 }
 
                 throw new ResponseException($this->convertToResponse($objWidget->generate()));
@@ -186,11 +212,11 @@ class Hooks extends \Backend {
             case 'reloadPagetree':
             case 'reloadFiletree':
 
-                $intId = \Input::get('id');
-                $strField = $dc->inputName = \Input::post('name');
+                $intId = Input::get('id');
+                $strField = $dc->inputName = Input::post('name');
 
                 // Handle the keys in "edit multiple" mode
-                if( \Input::get('act') == 'editAll' ) {
+                if( Input::get('act') == 'editAll' ) {
 
                     $intId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', $strField);
                     $strField = preg_replace('/(.*)_[0-9a-zA-Z]+$/', '$1', $strField);
@@ -209,8 +235,8 @@ class Hooks extends \Backend {
                 $varValue = null;
 
                 // Load the value
-                if( \Input::get('act') != 'overrideAll' ) {
-                    $varValue = \CMSConfig::get($strField);
+                if( Input::get('act') != 'overrideAll' ) {
+                    $varValue = CMSConfig::get($strField);
                 }
 
                 // Call the load_callback
@@ -231,13 +257,13 @@ class Hooks extends \Backend {
                 }
 
                 // Set the new value
-                $varValue = \Input::post('value', true);
+                $varValue = Input::post('value', true);
                 $strKey = ($strAction == 'reloadPagetree') ? 'pageTree' : 'fileTree';
 
                 // Convert the selected values
                 if( $varValue != '' ) {
 
-                    $varValue = \StringUtil::trimsplit("\t", $varValue);
+                    $varValue = StringUtil::trimsplit("\t", $varValue);
 
                     // Automatically add resources to the DBAFS
                     if( $strKey == 'fileTree' ) {
@@ -246,13 +272,13 @@ class Hooks extends \Backend {
 
                             $v = rawurldecode($v);
 
-                            if( \Dbafs::shouldBeSynchronized($v) ) {
+                            if( Dbafs::shouldBeSynchronized($v) ) {
 
-                                $objFile = \FilesModel::findByPath($v);
+                                $objFile = FilesModel::findByPath($v);
 
                                 if( $objFile === null ) {
 
-                                    $objFile = \Dbafs::addResource($v);
+                                    $objFile = Dbafs::addResource($v);
                                 }
 
                                 $varValue[$k] = $objFile->uuid;
@@ -277,20 +303,20 @@ class Hooks extends \Backend {
                 $this->import('BackendUser', 'User');
 
                 // Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
-                if( !\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !\in_array(\Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][\Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . \Input::post('field'), 'alexf')) ) {
+                if( !\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')) ) {
 
-                    $this->log('Field "' . \Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
+                    $this->log('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
                     throw new BadRequestHttpException('Bad request');
                 }
 
-                $val = ((\Input::post('state') == 1) ? true : false);
-                \CMSConfig::persist(\Input::post('field'), $val);
+                $val = ((Input::post('state') == 1) ? true : false);
+                CMSConfig::persist(Input::post('field'), $val);
 
-                if( \Input::post('load') ) {
+                if( Input::post('load') ) {
 
-                    \CMSConfig::set(\Input::post('field'), $val);
+                    CMSConfig::set(Input::post('field'), $val);
 
-                    throw new ResponseException($this->convertToResponse($dc->edit(false, \Input::post('id'))));
+                    throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
                 }
 
                 throw new NoContentResponseException();
@@ -312,6 +338,6 @@ class Hooks extends \Backend {
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function convertToResponse( $str ) {
-        return new Response( \Controller::replaceOldBePaths($str) );
+        return new Response( Controller::replaceOldBePaths($str) );
     }
 }
