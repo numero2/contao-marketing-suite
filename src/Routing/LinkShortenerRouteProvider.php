@@ -46,7 +46,7 @@ class LinkShortenerRouteProvider implements RouteProviderInterface {
     public function getRouteCollectionForRequest(Request $request) {
 
         if( !$this->framework->isInitialized() ) {
-            $this->framework->initialize();
+            $this->framework->initialize(true);
         }
 
         $alias = urldecode(substr($request->getPathInfo(), 1));
