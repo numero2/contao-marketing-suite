@@ -21,6 +21,7 @@ use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Image;
 use Contao\Input;
+use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
 use GuzzleHttp\Client;
@@ -38,13 +39,14 @@ class LinkShortener extends CoreBackend {
      *
      * @return array
      */
-    public function getAvailableDomains( DataContainer $dc) {
+    public function getAvailableDomains( DataContainer $dc ) {
 
         $objPages = \PageModel::findBy(['type=? AND useSSL=?'], ['root', '1']);
         $aPages = [];
         $hasEmptyLicense = false;
 
         if( $objPages ) {
+
             foreach( $objPages as $key => $objPage ) {
 
                 if( !safsewzk::hasFeature('link_shortener', $objPage->id) ) {
@@ -75,6 +77,10 @@ class LinkShortener extends CoreBackend {
 
                 array_insert($aPages, 0, [$domain => $domain]);
             }
+        }
+
+        if( empty($aPages) && Input::get('id') ) {
+            Message::addError($GLOBALS['TL_LANG']['ERR']['link_shortener_no_https_domains']);
         }
 
         return $aPages;
@@ -338,16 +344,16 @@ class LinkShortener extends CoreBackend {
         try {
 
             $oResponse = NULL;
-            $oResponse = $oClient->head('http://'.$domain.'/'.$value);
+            $oResponse = $oClient->head('https://'.$domain.'/'.$value);
 
-            $code = $oResponse->getCode();
+            $code = $oResponse->getStatusCode();
 
         } catch( \Exception $e ) {
 
             $code = $e->getCode();
         }
 
-        if( $code == "200" ) {
+        if( (int)$code == 200 ) {
             throw new \Exception($GLOBALS['TL_LANG']['ERR']['link_shortener_page_already_exist']);
         }
 

@@ -94,7 +94,7 @@ class Help extends BackendModule {
 
         $this->aLabels = $GLOBALS['TL_LANG']['cms_be_help'][$sLabelIndex];
 
-        if( count($this->aLabels) == 0 ) {
+        if( empty($this->aLabels) || count($this->aLabels) == 0 ) {
             return '';
         }
 

@@ -100,6 +100,9 @@
     <trans-unit id="ERR.cms_url_host_missing">
         <source>Url "%s" enthält keine Domain.</source>
     </trans-unit>
+    <trans-unit id="ERR.link_shortener_no_https_domains">
+        <source>Es können nur Domains genutzt werden, die in der Seitenstruktur "HTTPS verwenden" aktiviert haben.</source>
+    </trans-unit>
     <!-- CUSTOM STYLING -->
     <trans-unit id="CMS_ELEMENT_STYLE.categories.start">
         <source>Start</source>
