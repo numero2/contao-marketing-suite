@@ -56,9 +56,9 @@ array_insert($GLOBALS['BE_MOD'], 1, [
     ,   'cms_settings' => [
             'callback'  => '\numero2\MarketingSuite\BackendModule\Module'
         ]
-    ,   'cms_feedback' => [
+    /*,   'cms_feedback' => [
             'callback'  => '\numero2\MarketingSuite\BackendModule\Feedback'
-        ]
+        ]*/
     ]
 ]);
 
