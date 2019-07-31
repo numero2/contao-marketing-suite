@@ -1,8 +1,9 @@
 {
     "name": "numero2/contao-marketing-suite",
     "type": "contao-bundle",
-    "description": "Contao Marketing Suite",
+    "description": "Contao Marketing Suite - Get the most out of Contao",
     "license": "proprietary",
+    "homepage": "https://contao-marketingsuite.com/",
     "authors": [{
             "name": "numero2 - Agentur für digitales Marketing",
             "homepage": "https://www.numero2.de"

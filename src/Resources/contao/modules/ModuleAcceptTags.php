@@ -80,7 +80,7 @@ class ModuleAcceptTags extends Module {
         $this->Template->action = Environment::get('request');
         $this->Template->formId = 'cms_accept_tags';
 
-        $oTags = TagModel::findBy( ['type=? AND active=?'], ['group', '1'], ['order'=>'sorting ASC']);
+        $oTags = TagModel::findBy(['type=?'], ['group'], ['order'=>'sorting ASC']);
 
         $accepted = [];
         if( !empty(Input::cookie('cms_cookies')) ) {
@@ -92,7 +92,7 @@ class ModuleAcceptTags extends Module {
 
             foreach( $oTags as $key => $value ) {
 
-                $childTags = TagModel::findBy( ['pid=? AND active=?'], [$value->id, '1'], ['order'=>'sorting ASC']);
+                $childTags = TagModel::findBy(['pid=? AND active=?'], [$value->id, '1'], ['order'=>'sorting ASC']);
 
                 if( $childTags && $childTags->count() ) {
 

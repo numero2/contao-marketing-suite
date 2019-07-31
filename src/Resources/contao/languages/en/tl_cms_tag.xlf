@@ -154,7 +154,7 @@
         <source>Diesen Tag aktivieren?</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.enable_on_cookie_accept.0">
-        <source>E-Privacy konform</source>
+        <source>Opt-In / Eu-Privacy konform</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.enable_on_cookie_accept.1">
         <source>Wenn aktiviert, wird dieser Tag nur ausgespielt wenn Cookies akzeptiert wurden, ansonsten immer.</source>
