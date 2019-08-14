@@ -67,19 +67,28 @@ body:not(.lw) {
     text-decoration: underline;
     cursor: help;
 
-    &:hover .hover-overlay {
+    &:hover {
 
-        display: block;
-        position: absolute;
-        top: 0;
-        width: auto;
-        margin-left: 20px;
-        color: $col-black;
-        background: $col-white;
-        border: 1px solid $col-black;
-        white-space: nowrap;
-        padding: 10px;
-        z-index: 10;
+        .hover-overlay {
+            display: block;
+            position: absolute;
+            top: 0;
+            width: auto;
+            margin-left: 20px;
+            color: $col-black;
+            background: $col-white;
+            border: 1px solid $col-black;
+            white-space: nowrap;
+            padding: 10px;
+            z-index: 10;
+        }
+
+        @media (min-width: 767px) {
+            &.top_right .hover-overlay {
+                top: 0;
+                right: 0;
+            }
+        }
     }
 }
 

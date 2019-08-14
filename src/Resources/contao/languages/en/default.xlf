@@ -77,7 +77,7 @@
         <source>Diese Seite wird bereits in einem A/B Test verwendet.</source>
     </trans-unit>
     <trans-unit id="ERR.no_conversion_item_for_a_b_test_page">
-        <source>Diese Seite enthält keine eigenen Conversion-Elemente. In der Bibliothek angelegte Conversion-Elemente könenn nicht für einzelne Seiten ausgewertet werden.</source>
+        <source>Diese Seite enthält keine eigene Conversion-Elemente. In der Bibliothek angelegte Conversion-Elemente können nicht für einzelne Seiten ausgewertet werden.</source>
     </trans-unit>
     <trans-unit id="ERR.not_same_root_for_a_b_test_page">
         <source>Die Seiten für den A/B Testen müssen dem gleichen "Startpunkt der Webseite" untergeordnet sein.</source>

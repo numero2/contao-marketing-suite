@@ -225,11 +225,7 @@ class ABTestPage extends MarketingItem {
      * @param arr $arrFragments
      */
     public function selectAorBPage( $arrFragments ) {
-        // NOTE: this wont be called when domain.tld/ is requested
-
-        // if( $arrFragments[0] == 'test' ) {
-        //     throw new \Contao\CoreBundle\Exception\RedirectResponseException("http://google.com", 303);
-        // }
+        // NOTE: this won't be called when domain.tld/ is requested
 
         $objPage = null;
         $objPages = PageModel::findBy(['alias=?'], $arrFragments[0]);

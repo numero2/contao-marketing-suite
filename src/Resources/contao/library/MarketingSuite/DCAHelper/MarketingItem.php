@@ -177,7 +177,7 @@ class MarketingItem extends CoreBackend {
         }
 
         if( empty($row['id']) ) {
-            return Image::getHtml('edit_.svg', $label);
+            return Image::getHtml('edit_.svg', $label).' ';
         }
 
         return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
@@ -198,11 +198,7 @@ class MarketingItem extends CoreBackend {
      */
     public function editHeaderButton( $row, $href, $label, $title, $icon, $attributes ) {
 
-        if( !empty($row['init_step']) ) {
-            return Image::getHtml('header_.svg', $label).' ';
-        }
-
-        if( empty($row['id']) ) {
+        if( !empty($row['init_step']) || empty($row['id']) || !array_key_exists($row['type'], self::getMarketingItemTypes()) ) {
             return Image::getHtml('header_.svg', $label).' ';
         }
 
@@ -306,54 +302,90 @@ class MarketingItem extends CoreBackend {
 
         $count = 0;
         $aElements = [];
-        $oContent = ContentModel::findBy(['type=? AND cms_mi_id=?'], ['cms_marketing_item', $row['id']]);
+        $oContent = ContentModel::findBy(['type=? AND cms_mi_id=?'], ['cms_marketing_item', $row['id']], ['return'=>'Collection']);
 
-        if( count($oContent) ) {
+        if( $oContent && $oContent->count() ) {
 
-            $count += count($oContent);
+            $count += $oContent->count();
             $aElements[$GLOBALS['TL_LANG']['MOD']['tl_content']] = $oContent;
         }
 
-        $oModule = ModuleModel::findBy(['tl_module.type=? AND tl_module.cms_mi_id=?'], ['cms_marketing_item', $row['id']]);
+        $oModule = ModuleModel::findBy(['tl_module.type=? AND tl_module.cms_mi_id=?'], ['cms_marketing_item', $row['id']], ['return'=>'Collection']);
 
-        if( count($oModule) ) {
+        if( $oModule && $oModule->count() ) {
 
-            $count += count($oModule);
+            $count += $oModule->count();
             $aElements[$GLOBALS['TL_LANG']['MOD']['tl_module']] = $oModule;
         }
 
-        $args[3] = '';
+        $args[3] = self::generateUsedOverlay($row, "Elemente (%s)");
+
+        return $args;
+    }
+
+
+    /**
+     * Generates a overlay to show where the element is used
+     *
+     * @param array $aRow
+     *
+     * @return string
+     */
+    public static function generateUsedOverlay($aRow, $label) {
+
+        $strView = '';
+
+        $count = 0;
+        $aElements = [];
+        $oContent = ContentModel::findBy(['type=? AND cms_mi_id=?'], ['cms_marketing_item', $aRow['id']], ['return'=>'Collection']);
+
+        if( $oContent && $oContent->count() ) {
+
+            $count += $oContent->count();
+            $aElements[$GLOBALS['TL_LANG']['MOD']['tl_content']] = $oContent;
+        }
+
+        $oModule = ModuleModel::findBy(['tl_module.type=? AND tl_module.cms_mi_id=?'], ['cms_marketing_item', $aRow['id']], ['return'=>'Collection']);
+
+        if( $oModule && $oModule->count() ) {
+
+            $count += $oModule->count();
+            $aElements[$GLOBALS['TL_LANG']['MOD']['tl_module']] = $oModule;
+        }
 
         if( count($aElements) ) {
 
             $aOverlay = [
-                'label' => 'Elemente (' . $count . ')'
+                'label' => (strpos($label, '%')===false)?$label:sprintf($label, (string)$count)
             ,   'content' => $aElements
+            ,   'position' => 'top_right'
             ];
-            $args[3] = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay );
+            $strView = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay );
 
         } else {
 
-            if( !empty($row['page_a']) ) {
+            if( !empty($aRow['page_a']) ) {
                 $count +=1;
-                $aElements[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['page_a'][0]] = new Collection([PageModel::findOneById($row['page_a'])], 'tl_page');
+                $aElements[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['page_a'][0]] = new Collection([PageModel::findOneById($aRow['page_a'])], 'tl_page');
             }
 
-            if( !empty($row['page_b']) ) {
+            if( !empty($aRow['page_b']) ) {
                 $count +=1;
-                $aElements[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['page_b'][0]] = new Collection([PageModel::findOneById($row['page_b'])], 'tl_page');
+                $aElements[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['page_b'][0]] = new Collection([PageModel::findOneById($aRow['page_b'])], 'tl_page');
             }
-            if( count($aElements) ||true) {
+
+            if( count($aElements) ) {
 
                 $aOverlay = [
-                    'label' => 'Elemente (' . $count . ')'
+                    'label' => (strpos($label, '%')===false)?$label:sprintf($label, (string)$count)
                 ,   'content' => $aElements
+                ,   'position' => 'top_right'
                 ];
-                $args[3] = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay );
+                $strView = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay );
             }
         }
 
-        return $args;
+        return $strView;
     }
 
 
@@ -718,7 +750,17 @@ class MarketingItem extends CoreBackend {
      */
     public function marketingItemWizard( DataContainer $dc ) {
 
-        return ($dc->activeRecord->cms_mi_id < 1) ? '' : ' <a href="contao/main.php?do=cms_marketing&amp;table=tl_cms_marketing_item&amp;act=edit&amp;id=' . $dc->activeRecord->cms_mi_id . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->activeRecord->cms_mi_id) . '" onclick="Backend.openModalIframe({\'title\':\'' . \StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->activeRecord->cms_mi_id))) . '\',\'url\':this.href});return false">' . \Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
+        if( $dc->activeRecord->cms_mi_id < 1 ) {
+            return '';
+        }
+
+        $oMI = MarketingItemModel::findOneById($dc->activeRecord->cms_mi_id);
+
+        if( !$oMI || !array_key_exists($oMI->type, self::getMarketingItemTypes()) ) {
+            return '';
+        }
+
+        return ' <a href="contao/main.php?do=cms_marketing&amp;table=tl_cms_marketing_item&amp;act=edit&amp;id=' . $dc->activeRecord->cms_mi_id . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->activeRecord->cms_mi_id) . '" onclick="Backend.openModalIframe({\'title\':\'' . \StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->activeRecord->cms_mi_id))) . '\',\'url\':this.href});return false">' . \Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
     }
 
 
@@ -862,9 +904,18 @@ class MarketingItem extends CoreBackend {
 
         if( !$strAlways || $active ) {
 
-            $html= '<a class="tl_submit" href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($path, $label, 'data-state="' . $active . '"').$label.'</a>';
+            $html= Image::getHtml($path, $label, 'data-state="' . $active . '"').$label;
 
-            $GLOBALS['TL_MOOTOOLS'][] = '<script>CMSBackend.append("fieldset .'.$dc->field.' .selector_container p", \''.$html.'\');</script>';
+            $GLOBALS['TL_MOOTOOLS'][] = '<script>
+                (function(){
+                    var anchor = document.createElement("a");
+                    anchor.className = "tl_submit";
+                    anchor.href = "'.preg_replace('/&amp;/', '&', $this->addToUrl($href)).'";
+                    anchor.title = "'.StringUtil::specialchars($title).'";
+                    anchor.innerHTML = \''.$html.'\';
+                    document.querySelector("fieldset .'.$dc->field.' .selector_container p").appendChild(anchor);
+                })();
+            </script>';
         }
 
         return $value;

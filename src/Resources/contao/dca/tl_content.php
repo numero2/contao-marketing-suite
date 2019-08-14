@@ -43,15 +43,20 @@ if( Input::get('do') == 'cms_conversion' ) {
     $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_cms_conversion_item';
     $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'onlyShowConversionItems'];
     $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'modifyDCHeadline'];
+    $GLOBALS['TL_DCA']['tl_content']['config']['notSortable'] = true;
+    $GLOBALS['TL_DCA']['tl_content']['config']['notCopyable'] = true;
+    unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['cut']);
+    unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']);
 
     // change view to table
     $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = [
         'mode'                  => 1
     ,   'fields'                => ['cms_mi_label']
     ,   'flag'                  => 6
-    ,   'panelLayout'           => 'cms_help;filter;search,limit'
+    ,   'panelLayout'           => 'cms_license_message;cms_help;filter;search,limit'
     ,   'panel_callback'        => [
-            'cms_help' => ['\numero2\MarketingSuite\Backend\Help', 'generate']
+            'cms_license_message' => ['\numero2\MarketingSuite\Backend\LicenseMessage', 'generate']
+        ,   'cms_help' => ['\numero2\MarketingSuite\Backend\Help', 'generate']
         ]
     ];
     $GLOBALS['TL_DCA']['tl_content']['list']['label'] = [
@@ -80,6 +85,8 @@ $GLOBALS['TL_DCA']['tl_content']['palettes'] = array_merge_recursive(
     ,   'cms_hyperlink' => '{type_legend},type,headline;{link_legend},url,target,linkTitle,titleText;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop'
     ]
 );
+
+$GLOBALS['TL_DCA']['tl_content']['list']['operations']['edit']['button_callback'] = ['\numero2\MarketingSuite\DCAHelper\Content', 'editButton'];
 
 
 /**

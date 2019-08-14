@@ -32,6 +32,7 @@ use Contao\System;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use numero2\MarketingSuite\Backend\Help;
+use numero2\MarketingSuite\Backend\LicenseMessage;
 use numero2\MarketingSuite\Backend\License as varzegju;
 use numero2\MarketingSuite\Encryption;
 
@@ -60,7 +61,8 @@ class HealthCheck extends CoreBackendModule {
     public function generate() {
 
         if( !varzegju::hasFeature('health_check') ) {
-            throw new AccessDeniedException('This feature is not included in your Marketing Suite package.');
+            $lm = new LicenseMessage();
+            return $lm->generate();
         }
 
         return parent::generate();

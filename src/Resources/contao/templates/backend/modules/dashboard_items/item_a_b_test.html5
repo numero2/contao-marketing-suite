@@ -2,9 +2,14 @@
 <div class="item <?=$this->type;?>">
     <div class="name">
         <span><?= $this->name; ?> (<?= $this->typeLabel; ?>)</span>
-        <a href="<?= $this->href; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][1],$this->id);?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][1],$this->id);?>','url':this.href+'&popup=1'});return false" class="edit">
-            <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0];?>">
-        </a>
+        <?php if( $this->used ): ?>
+            <?= $this->used; ?>
+        <?php endif; ?>
+        <?php if( $this->href ): ?>
+            <a href="<?= $this->href; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][1],$this->id);?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][1],$this->id);?>','url':this.href+'&popup=1'});return false" class="edit">
+                <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0];?>">
+            </a>
+        <?php endif; ?>
     </div>
     <div class="inner">
         <div class="chart">

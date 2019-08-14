@@ -54,8 +54,7 @@ class LinkShortenerController {
 
             $data = json_decode(file_get_contents(TL_ROOT.'/vendor/numero2/contao-marketing-suite/src/Resources/vendor/crawler-user-agents/crawler-user-agents.json'), true);
 
-            $patterns = array();
-            foreach($data as $entry) {
+            foreach( $data as $entry ) {
                 if( preg_match('/'.$entry['pattern'].'/', $aAgent->string) ) {
                     $oStats->is_bot = '1';
                     break;

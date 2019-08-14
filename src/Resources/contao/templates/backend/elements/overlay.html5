@@ -1,4 +1,4 @@
-<a class="hover-label">
+<a class="hover-label<?php if( $this->position ): ?> <?= $this->position; ?><?php endif; ?>">
     <?php $this->block('label'); ?>
         <?= $this->label; ?>
     <?php $this->endblock(); ?>

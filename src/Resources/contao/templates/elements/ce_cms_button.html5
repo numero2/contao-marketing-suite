@@ -2,6 +2,6 @@
 
 <?php $this->block('content'); ?>
 
-    <a href="<?= $this->href; ?>" rel="nofollow" title="<?= $this->linkTitle; ?>" data-cms-unique="<?= $this->unique; ?>"<?= $this->target ?>><?= $this->link; ?></a>
+    <a href="<?= $this->url; ?>" onmousedown="this._hr||(this._hr=this.href),this.href='<?= $this->href; ?>'" onmouseup="this._hr&&setTimeout(function(){this.href=this._hr}.bind(this),1)" data-cms-unique="<?= $this->unique; ?>"<?= $this->target ?>><?= $this->link; ?></a>
 
 <?php $this->endblock(); ?>

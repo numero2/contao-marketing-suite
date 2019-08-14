@@ -30,7 +30,10 @@
     <!-- LEGENDS -->
     <!-- FIELDS -->
     <trans-unit id="tl_cms_link_shortener_statistics.referer.0">
-        <source>Referer</source>
+        <source>Referrer</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener_statistics.referer_domain.0">
+        <source>Referrer (Domain)</source>
     </trans-unit>
     <trans-unit id="tl_cms_link_shortener_statistics.unique_id.0">
         <source>Unique ID</source>
@@ -61,7 +64,7 @@
         <source>Windows</source>
     </trans-unit>
     <trans-unit id="tl_cms_link_shortener_statistics.os_names.ios">
-        <source>iPad</source>
+        <source>iOS</source>
     </trans-unit>
     <trans-unit id="tl_cms_link_shortener_statistics.os_names.android">
         <source>Android</source>
@@ -137,10 +140,10 @@
         <source>Aufrufe</source>
     </trans-unit>
     <trans-unit id="tl_cms_link_shortener_statistics.unique_requests">
-        <source>Einmalige Aurufe</source>
+        <source>Einmalige Aufrufe</source>
     </trans-unit>
     <trans-unit id="tl_cms_link_shortener_statistics.bot_requests">
-        <source>Bot Aurufe</source>
+        <source>Bot Aufrufe</source>
     </trans-unit>
     <trans-unit id="tl_cms_link_shortener_statistics.bots">
         <source>Bot</source>

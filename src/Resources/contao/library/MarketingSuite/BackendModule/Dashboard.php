@@ -18,15 +18,20 @@ namespace numero2\MarketingSuite\BackendModule;
 use Contao\BackendModule as CoreBackendModule;
 use Contao\BackendTemplate;
 use Contao\ContentModel;
-use Contao\PageModel;
 use Contao\Database;
+use Contao\Image;
+use Contao\PageModel;
 use Contao\System;
+use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\Help;
+use numero2\MarketingSuite\Backend\LicenseMessage;
 use numero2\MarketingSuite\Backend\License as ekga;
 use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\ConversionItemModel;
-use numero2\MarketingSuite\MarketingItemModel;
+use numero2\MarketingSuite\DCAHelper\ConversionItem;
+use numero2\MarketingSuite\DCAHelper\MarketingItem;
 use numero2\MarketingSuite\LinkShortenerModel;
+use numero2\MarketingSuite\MarketingItemModel;
 
 
 class Dashboard extends CoreBackendModule {
@@ -74,6 +79,9 @@ class Dashboard extends CoreBackendModule {
         // initialize backend help
         $objBEHelp = new Help();
         $this->Template->be_help = $objBEHelp->generate();
+
+        $lm = new LicenseMessage();
+        $this->Template->licence_message = $lm->generate();
 
         // set template vars
         $this->Template->items = $aItems;
@@ -123,7 +131,9 @@ class Dashboard extends CoreBackendModule {
                     }
 
                     $arrRow['typeLabel'] = $GLOBALS['TL_LANG']['CTE'][$arrRow['content_type']][0];
-                    $arrRow['href'] = 'contao?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                    if( ekga::hasFeature('me_'.$oMarketingItems->type) ) {
+                        $arrRow['href'] = 'contao?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                    }
 
                 } else if( $oMarketingItems->type == 'a_b_test_page' ) {
 
@@ -150,12 +160,16 @@ class Dashboard extends CoreBackendModule {
                         }
                     }
 
-                    $arrRow['href'] = 'contao?do=cms_marketing&amp;act=edit&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                    if( ekga::hasFeature('me_'.$oMarketingItems->type) ) {
+                        $arrRow['href'] = 'contao?do=cms_marketing&amp;act=edit&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                    }
 
                 } else {
 
                     continue;
                 }
+
+                $arrRow['used'] = MarketingItem::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBAL['TL_LANG']['tl_cms_marketing_item']['used']['0']));
 
                 $objTemplate->setData( $arrRow );
 
@@ -205,7 +219,30 @@ class Dashboard extends CoreBackendModule {
 
                 $do = $this->getModuleNameForPTable( $arrRow['ptable'] );
                 $ref = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
-                $arrRow['href'] = 'contao?do='.$do.'&amp;table=tl_content&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                if( ekga::hasFeature('ce_'.$oConversionElements->type) ) {
+                    $arrRow['href'] = 'contao?do='.$do.'&amp;table=tl_content&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                }
+                if( $do == 'cms_conversion' ) {
+                    $arrRow['used'] = ConversionItem::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBAL['TL_LANG']['tl_content']['cms_used']['0']));
+                } else {
+
+                    $aElements = [];
+                    $oContent = ContentModel::findBy(['id=?'], [$arrRow['id']], ['return'=>'Collection']);
+
+                    if( $oContent && $oContent->count() ) {
+                        $aElements[$GLOBALS['TL_LANG']['MOD']['tl_content']] = $oContent;
+                    }
+
+                    if( count($aElements) ) {
+
+                        $aOverlay = [
+                            'label' => Image::getHtml('monitor', $GLOBAL['TL_LANG']['tl_content']['cms_used']['0'])
+                        ,   'content' => $aElements
+                        ,   'position' => 'top_right'
+                        ];
+                        $arrRow['used'] = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay);
+                    }
+                }
 
                 $objTemplate->setData( $arrRow );
 
@@ -223,6 +260,7 @@ class Dashboard extends CoreBackendModule {
      */
     private function addLinkShortener( &$aItems, &$aLegends ) {
 
+        $this->loadLanguageFile('tl_cms_link_shortener');
         $this->loadLanguageFile('tl_cms_link_shortener_statistics');
 
         $oLinkShortener = NULL;
@@ -280,7 +318,10 @@ class Dashboard extends CoreBackendModule {
                 }
 
                 $ref = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
-                $arrRow['href'] = 'contao?do=cms_tools&amp;mod=link_shortener&amp;table=tl_cms_link_shortener&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                if( ekga::hasFeature('link_shortener') ) {
+                    $arrRow['href'] = 'contao?do=cms_tools&amp;mod=link_shortener&amp;table=tl_cms_link_shortener&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                    $arrRow['hrefStats'] = 'contao?do=cms_tools&amp;mod=link_shortener&amp;table=tl_cms_link_shortener&amp;key=link_shortener_statistics&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                }
 
                 $objTemplate->setData( $arrRow );
 

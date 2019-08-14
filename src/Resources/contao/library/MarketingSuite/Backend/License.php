@@ -308,6 +308,17 @@ class License {
             }
         }
 
+        if( self::hasNoLicense() ) {
+
+            $helpUrl = "https://contao-marketingsuite.com/support/wy372o";
+
+            $aMessages[] = '<p class="tl_error">' .
+                sprintf($GLOBALS['TL_LANG']['cms_license']['no_license']
+                ,   $helpUrl
+                )
+                . '</p>';
+        }
+
         if( count($aMessages) ) {
             return implode('', $aMessages);
         }
@@ -343,6 +354,23 @@ class License {
             if( version_compare(CMS_VERSION, $latestVersion, '<') ) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Checks if there is no license at all
+     *
+     * @return boolean
+     */
+    public static function hasNoLicense() {
+
+        $numLicense = PageModel::countBy(['cms_root_license!=?'], ['']);
+
+        if( !$numLicense ) {
+            return true;
         }
 
         return false;

@@ -35,9 +35,10 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
             'mode'                  => 2
         ,   'fields'                => ['name']
         ,   'flag'                  => 1
-        ,   'panelLayout'           => 'cms_help;filter;search'
+        ,   'panelLayout'           => 'cms_license_message;cms_cms_help;filter;search'
         ,   'panel_callback'        => [
-                'cms_help' => ['\numero2\MarketingSuite\Backend\Help', 'generate']
+                'cms_license_message' => ['\numero2\MarketingSuite\Backend\LicenseMessage', 'generate']
+            ,   'cms_help' => ['\numero2\MarketingSuite\Backend\Help', 'generate']
             ]
         ]
     ,   'label' => [

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/cms_be_license_message.php" source-language="en">
+<body>
+    <trans-unit id="cms_be_license_message.cms_dashboard.type">
+        <source>Dashboard</source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_dashboard.verb">
+        <source>ist</source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_dashboard.needed_package">
+        <source><![CDATA[<strong>Basic</strong>]]>, <![CDATA[<strong>Komplett</strong>]]> oder <![CDATA[<strong>Agentur</strong>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_marketing.type">
+        <source>Content Marketing Elemente</source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_marketing.verb">
+        <source>sind</source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_marketing.needed_package">
+        <source><![CDATA[<strong>Komplett</strong>]]> oder <![CDATA[<strong>Agentur</strong>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_conversion.type">
+        <source>Conversion Elemente</source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_conversion.verb">
+        <source>sind</source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_conversion.needed_package">
+        <source><![CDATA[<strong>Basic</strong>]]>, <![CDATA[<strong>Komplett</strong>]]> oder <![CDATA[<strong>Agentur</strong>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_health_check.type">
+        <source>Health Check</source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_health_check.verb">
+        <source>ist</source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_health_check.needed_package">
+        <source><![CDATA[<strong>Free</strong>]]>, <![CDATA[<strong>Basic</strong>]]>, <![CDATA[<strong>Komplett</strong>]]> oder <![CDATA[<strong>Agentur</strong>]]></source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

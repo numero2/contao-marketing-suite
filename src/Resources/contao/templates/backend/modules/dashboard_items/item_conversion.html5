@@ -3,9 +3,14 @@
         <span>
             <?= $this->cms_mi_label; ?> (<?= $GLOBALS['TL_LANG']['CTE'][$this->type][0]; ?>)
         </span>
-        <a href="<?= $this->href; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['tl_content']['edit'][1],$this->id);?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($GLOBALS['TL_LANG']['tl_content']['edit'][1],$this->id);?>','url':this.href+'&popup=1'});return false" class="edit">
-            <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_content']['edit'][0];?>">
-        </a>
+        <?php if( $this->used ): ?>
+            <?= $this->used; ?>
+        <?php endif; ?>
+        <?php if( $this->href ): ?>
+            <a href="<?= $this->href; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['tl_content']['edit'][1],$this->id);?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($GLOBALS['TL_LANG']['tl_content']['edit'][1],$this->id);?>','url':this.href+'&popup=1'});return false" class="edit">
+                <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_content']['edit'][0];?>">
+            </a>
+        <?php endif; ?>
     </div>
     <div class="inner">
         <?php if( $this->cms_ci_views || $this->cms_ci_clicks ): ?>

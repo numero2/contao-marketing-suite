@@ -25,6 +25,7 @@ use Contao\System;
 use Contao\Input;
 use Contao\SelectMenu;
 use Contao\TextField;
+use Contao\StringUtil;
 use numero2\MarketingSuite\Backend\License as safsewzk;
 
 
@@ -358,7 +359,6 @@ class LinkShortenerStatistics extends CoreBackendModule {
             ORDER BY referer ASC
         ")->execute($aCondition['value']);
 
-
         if( $objResult ) {
 
             $aList = [];
@@ -375,10 +375,50 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
                 $aList[] = $entry;
             }
-        }
 
-        $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['referer'][0];
-        $aTemplateData[$label] = $aList;
+            $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['referer'][0];
+            $aTemplateData[$label] = $aList;
+
+            // referer domain
+            if( count($aList) ) {
+                $aDomains = [];
+                foreach( $aList as $key => $value ) {
+
+                    $domain = parse_url($value['label'], PHP_URL_HOST);
+                    if( $domain ) {
+
+                        $domainParts = array_reverse(explode('.', $domain));
+                        $mainDomain = strtolower($domainParts[1].'.'.$domainParts[0]);
+
+                        if( array_key_exists($mainDomain, $aDomains) ) {
+
+                            $aDomains[$mainDomain]['count'] += $value['count'];
+                            $aDomains[$mainDomain]['subitems'][] = [
+                                "count" => $value['count'],
+                                "label" => $value['label']
+                            ];
+
+                        } else {
+
+                            $entry = [
+                                "count" => $value['count'],
+                                "label" => $mainDomain,
+                                "subitems" => [[
+                                    "count" => $value['count'],
+                                    "label" => $value['label']
+                                ]]
+                            ];
+
+                            $aDomains[$mainDomain] = $entry;
+                        }
+                    }
+                }
+
+                $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['referer_domain'][0];
+                ksort($aDomains);
+                $aTemplateData[$label] = $aDomains;
+            }
+        }
 
         // bot
         $objResult = $this->database->prepare("
@@ -391,20 +431,39 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
         if( $objResult ) {
 
+            $aBots = json_decode(file_get_contents(TL_ROOT.'/vendor/numero2/contao-marketing-suite/src/Resources/vendor/crawler-user-agents/crawler-user-agents.json'), true);
+
             $aList = [];
             while( $objResult->next() ) {
 
-                $entry = [
-                    "count" => $objResult->count,
-                    "label" => $objResult->user_agent
-                ];
+                $pattern = null;
 
-                $aList[] = $entry;
+                foreach( $aBots as $entry ) {
+                    if( preg_match('/'.$entry['pattern'].'/', $objResult->user_agent) ) {
+                        $pattern = $entry['pattern'];
+                        break;
+                    }
+                }
+
+                $pattern = StringUtil::standardize($pattern?:$objResult->user_agent,true);
+
+                if( array_key_exists($pattern, $aList) ) {
+
+                    $aList[$pattern]['count'] += $objResult->count;
+                } else {
+
+                    $entry = [
+                        "count" => $objResult->count,
+                        "label" => $pattern?:$objResult->user_agent
+                    ];
+
+                    $aList[$pattern] = $entry;
+                }
             }
-        }
 
-        $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['bots'];
-        $aTemplateData[$label] = $aList;
+            $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['bots'];
+            $aTemplateData[$label] = $aList;
+        }
 
         // browser
         $objResult = $this->database->prepare("
@@ -432,10 +491,10 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
                 $aList[] = $entry;
             }
-        }
 
-        $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['browser'][0];
-        $aTemplateData[$label] = $aList;
+            $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['browser'][0];
+            $aTemplateData[$label] = $aList;
+        }
 
         // os
         $objResult = $this->database->prepare("
@@ -463,10 +522,10 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
                 $aList[] = $entry;
             }
-        }
 
-        $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['os'][0];
-        $aTemplateData[$label] = $aList;
+            $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['os'][0];
+            $aTemplateData[$label] = $aList;
+        }
 
         // device
         $objResult = $this->database->prepare("
@@ -490,10 +549,10 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
                 $aList[] = $entry;
             }
-        }
 
-        $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['device'];
-        $aTemplateData[$label] = $aList;
+            $label = $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['device'];
+            $aTemplateData[$label] = $aList;
+        }
 
         return $aTemplateData;
     }
@@ -563,6 +622,8 @@ class LinkShortenerStatistics extends CoreBackendModule {
         $this->Template->filter = $this->generateFilters();
         $this->Template->overview = $this->generateOverview();
         $this->Template->tabs = $this->generateTabs();
+
+        $this->Template->backURL = $this->getReferer(true);
 
         return $this->Template->parse();
     }

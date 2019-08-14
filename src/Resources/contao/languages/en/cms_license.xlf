@@ -20,6 +20,9 @@
     <trans-unit id="cms_license.expired_package">
         <source>Ihre Lizenz für den Domain-Schlüssel <![CDATA[<strong>%s</strong>]]> ist am %s abgelaufen. <![CDATA[<a href="%s">Zur weiteren Nutzung der Marketing Suite erneuern Sie Ihr Paket.</a>]]></source>
     </trans-unit>
+    <trans-unit id="cms_license.no_license">
+        <source>Es wurde noch keine Lizenz für die Marketing Suite hinterlegt. Für weiter Hilfe schauen Sie auf <![CDATA[<a href="%s" target="_blank">unserer Hilfeseite</a>]]>.</source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

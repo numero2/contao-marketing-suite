@@ -30,6 +30,9 @@
                 display: flex;
                 justify-content: space-between;
                 flex-wrap: nowrap;
+
+                span { margin-right: auto; }
+                a { padding: 0 4px; }
             }
 
             .inner {

@@ -1,5 +1,7 @@
 <?php $this->extend('block_searchable'); ?>
 
 <?php $this->block('content'); ?>
-    <a href="<?= $this->href; ?>"  rel="nofollow" title="<?= $this->linkTitle; ?>"<?php if( $this->unique ): ?> data-unique="<?= $this->unique; ?>"<?php endif; ?><?= $this->target ?>><?= $this->link; ?></a>
+
+    <a href="<?= $this->url; ?>" onmousedown="this._hr||(this._hr=this.href),this.href='<?= $this->href; ?>'" onmouseup="this._hr&&setTimeout(function(){this.href=this._hr}.bind(this),1)"<?= $this->target ?>><?= $this->link; ?></a>
+
 <?php $this->endblock(); ?>

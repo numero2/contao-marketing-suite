@@ -255,41 +255,41 @@ class Module extends CoreBackendModule {
      */
     public function initializeBackendModuleTables() {
 
-        $moduleGroup = Input::get('do');
+        foreach( $GLOBALS['CMS_MOD'] as $groupName => $cmsConfig) {
+            $moduleGroup = 'cms_'.$groupName;
 
-        if( !array_key_exists($moduleGroup, $GLOBALS['BE_MOD']['marketing_suite']) ) {
-            return false;
-        }
-
-        $groupName = substr($moduleGroup,4);
-
-        if( empty($GLOBALS['CMS_MOD'][$groupName]) ) {
-            return false;
-        }
-
-        foreach( $GLOBALS['CMS_MOD'][$groupName] as $moduleName => $moduleConfig ) {
-
-            if( !array_key_exists('tables', $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]) ) {
-                $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'] = [];
+            if( !array_key_exists($moduleGroup, $GLOBALS['BE_MOD']['marketing_suite']) ) {
+                continue;
             }
 
-            if( array_key_exists('tables', $moduleConfig) ) {
+            foreach( $GLOBALS['CMS_MOD'][$groupName] as $moduleName => $moduleConfig ) {
 
-                if( count($GLOBALS['CMS_MOD'][$groupName]) ) {
+                if( !array_key_exists('tables', $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]) ) {
+                    $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'] = [];
+                }
 
-                    foreach( $moduleConfig['tables'] as $moduleTable ) {
+                if( array_key_exists('tables', $moduleConfig) ) {
 
-                        if( !in_array($moduleTable, $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
+                    if( count($GLOBALS['CMS_MOD'][$groupName]) ) {
 
-                            $this->loadDataContainer($moduleTable);
+                        foreach( $moduleConfig['tables'] as $moduleTable ) {
 
-                            if( !$GLOBALS['TL_DCA'][$moduleTable]['config']['isAvailable'] ) {
-                                continue;
+                            if( !in_array($moduleTable, $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
+
+                                $this->loadDataContainer($moduleTable);
+
+                                if( !$GLOBALS['TL_DCA'][$moduleTable]['config']['isAvailable'] ) {
+                                    continue;
+                                }
+
+                                $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'][] = $moduleTable;
                             }
-
-                            $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'][] = $moduleTable;
                         }
                     }
+                }
+
+                if( empty($GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
+                    unset($GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]);
                 }
             }
         }

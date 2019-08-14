@@ -44,37 +44,53 @@ class ConversionItem extends CoreBackend {
      */
     public function getLabel( $row, $label, DataContainer $dc, $args ) {
 
+        $args[3] = self::generateUsedOverlay($row, "Elemente (%s)");
+
+        return $args;
+    }
+
+
+    /**
+     * Generates a overlay to show where the element is used
+     *
+     * @param array $aRow
+     *
+     * @return string
+     */
+    public static function generateUsedOverlay($aRow, $label) {
+
+        $strView = '';
+
         $count = 0;
         $aElements = [];
 
-        $oContent = ContentModel::findBy(['type=? AND cms_ci_id=?'], ['cms_conversion_item', $row['id']]);
+        $oContent = ContentModel::findBy(['type=? AND cms_ci_id=?'], ['cms_conversion_item', $aRow['id']], ['return'=>'Collection']);
 
-        if( count($oContent) ) {
+        if( $oContent && $oContent->count() ) {
 
-            $count += count($oContent);
+            $count += $oContent->count();
             $aElements[$GLOBALS['TL_LANG']['MOD']['tl_content']] = $oContent;
         }
 
-        $oModule = ModuleModel::findBy(['tl_module.type=? AND tl_module.cms_ci_id=?'], ['cms_conversion_item', $row['id']]);
+        $oModule = ModuleModel::findBy(['tl_module.type=? AND tl_module.cms_ci_id=?'], ['cms_conversion_item', $aRow['id']], ['return'=>'Collection']);
 
-        if( count($oModule) ) {
+        if( $oModule && $oModule->count() ) {
 
-            $count += count($oModule);
+            $count += $oModule->count();
             $aElements[$GLOBALS['TL_LANG']['MOD']['tl_module']] = $oModule;
         }
-
-        $args[3] = '';
 
         if( count($aElements) ) {
 
             $aOverlay = [
-                'label' => 'Elemente (' . $count . ')'
+                'label' => (strpos($label, '%')===false)?$label:sprintf($label, (string)$count)
             ,   'content' => $aElements
+            ,   'position' => 'top_right'
             ];
-            $args[3] = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay );
+            $strView = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay);
         }
 
-        return $args;
+        return $strView;
     }
 
 
@@ -102,7 +118,7 @@ class ConversionItem extends CoreBackend {
 
         $href .= '&amp;rid='.$row['id'];
 
-        if( !array_key_exists($row['type'], $GLOBALS['TL_CTE']['conversion_elements']) ) {
+        if( empty($GLOBALS['TL_CTE']['conversion_elements']) || !array_key_exists($row['type'], $GLOBALS['TL_CTE']['conversion_elements']) ) {
             return '';
         }
 
@@ -260,6 +276,16 @@ class ConversionItem extends CoreBackend {
      */
     public function conversionItemWizard( $dc ) {
 
-        return ($dc->activeRecord->cms_ci_id < 1) ? '' : ' <a href="contao/main.php?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $dc->activeRecord->cms_ci_id . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->activeRecord->cms_ci_id) . '" onclick="Backend.openModalIframe({\'title\':\'' . \StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->activeRecord->cms_ci_id))) . '\',\'url\':this.href});return false">' . \Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
+        if( $dc->activeRecord->cms_ci_id < 1 ) {
+            return '';
+        }
+
+        $oCI = ContentModel::findOneById($dc->activeRecord->cms_ci_id);
+
+        if( !$oCI || !array_key_exists($oCI->type, $GLOBALS['TL_CTE']['conversion_elements']) ) {
+            return '';
+        }
+
+        return ' <a href="contao/main.php?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $dc->activeRecord->cms_ci_id . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->activeRecord->cms_ci_id) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->activeRecord->cms_ci_id))) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
     }
 }

@@ -19,6 +19,10 @@
     </form>
 <?php endif; ?>
 
+<div id="tl_buttons">
+    <a href="<?= ampersand($this->backURL); ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']); ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT']; ?></a>
+</div>
+
 <div class="tl_cms_link_shortener_statistics">
 
     <div class="cms_overview">
@@ -94,7 +98,7 @@
                                                     "data": [<?= implode(', ', array_column($tab, 'count')); ?>],
                                                     "fill": false,
                                                     <?php
-                                                        $aColors = ["rgba(235, 47, 6, 1)","rgba(30, 55, 153, 1)","rgba(7, 153, 146, 1)","rgba(120, 224, 143, 1)","rgba(246, 185, 59, 1)"];
+                                                        $aColors = ["#F44336", "#FF4081", "#7B1FA2", "#303F9F", "#1976D2", "#00796B", "#388E3C", "#AFB42B", "#FFA000", "#E64A19", "#5D4037", "#5D4037", "#455A64"];
                                                         $aCol = [];
                                                         while( count($aCol) <= count($tab) ) {
                                                             $aCol = array_merge($aCol, $aColors);
@@ -105,14 +109,18 @@
                                                     "hoverBackgroundColor": "rgba(23,43,59,1)"
                                                 }]
                                             },
-                                            'options':{ 'legend': {'position': 'bottom'}}
+                                            'options': {
+                                                'legend': {'position': 'bottom', 'display': false},
+                                                'responsive':true,
+                                                'maintainAspectRatio': false
+                                            }
                                         });
                                     </script>
                                 </div>
                                 <div class="data">
                                     <table>
                                         <tr>
-                                            <th><?= $key; ?></th>
+                                            <th><?= $tabName; ?></th>
                                             <th><?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['requests']; ?></th>
                                             <th><?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['share']; ?></th>
                                         </tr>
@@ -121,8 +129,25 @@
                                             <tr>
                                                 <td><?= $value['label']; ?></td>
                                                 <td><?= $value['count']; ?></td>
-                                                <td><?= round($value['count']/$sum*100,2); ?> %</td>
+                                                <td><?= number_format($value['count']/$sum*100, 2); ?> %</td>
                                             </tr>
+                                            <?php if( !empty($value['subitems']) ): ?>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <?php if( count($value['subitems']) > 1 ): ?>
+                                                            <table>
+                                                                <?php foreach( $value['subitems'] as $subindex => $subvalue ): ?>
+                                                                    <tr class="subitems">
+                                                                        <td><?= $subvalue['label']; ?></td>
+                                                                        <td><?= $subvalue['count']; ?></td>
+                                                                        <td><?= number_format($subvalue['count']/$sum*100, 2); ?> %</td>
+                                                                    </tr>
+                                                                <?php endforeach; ?>
+                                                            </table>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endif; ?>
                                         <?php endforeach; ?>
 
                                     </table>
