@@ -69,12 +69,16 @@ class TextCMS extends CoreBackend {
     */
     public function saveContentToOriginalField( $value, DataContainer $dc ) {
 
-        if( $dc->activeRecord->type == 'text_cms' ) {
-            return Input::postUnsafeRaw('text_cms');
+        if( array_key_exists('text_cms', $_POST) ) {
+            if( $dc->activeRecord->type == 'text_cms' ) {
+                return Input::postUnsafeRaw('text_cms');
+            }
         }
 
-        if( $dc->activeRecord->type == 'text_cms_cta' ) {
-            return Input::postUnsafeRaw('text_cms_cta');
+        if( array_key_exists('text_cms_cta', $_POST) ) {
+            if( $dc->activeRecord->type == 'text_cms_cta' ) {
+                return Input::postUnsafeRaw('text_cms_cta');
+            }
         }
 
         return $value;
@@ -127,5 +131,28 @@ class TextCMS extends CoreBackend {
         $data['labels'] = $GLOBALS['TL_LANG']['tl_content']['text_analysis_labels'];
 
         return Backend::parseWithTemplate('backend/widgets/textAnalysis', $data);
+    }
+
+
+    /**
+     * Return all content element templates as array
+     *
+     * @param DataContainer $dc
+     *
+     * @return array
+     */
+    public function getElementTemplates( DataContainer $dc ) {
+
+        $this->loadDatacontainer('tl_content');
+
+        // 'text_cms' should behave the same like 'text'
+        if( $dc->activeRecord->type == 'text_cms' ) {
+            $dc->activeRecord->type = 'text';
+        }
+
+        $oContent = NULL;
+        $oContent = new \tl_content();
+
+        return $oContent->getElementTemplates($dc);
     }
 }

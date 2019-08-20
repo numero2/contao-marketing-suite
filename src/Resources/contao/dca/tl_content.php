@@ -219,29 +219,4 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['text']['save_callback'][] = ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'saveContentToOriginalField'];
-$GLOBALS['TL_DCA']['tl_content']['fields']['customTpl']['options_callback']  = ['tl_content_cms', 'getElementTemplates'];
-
-
-class tl_content_cms extends Backend {
-
-
-    /**
-     * Return all content element templates as array
-     *
-     * @param DataContainer $dc
-     *
-     * @return array
-     */
-    public function getElementTemplates( DataContainer $dc ) {
-
-        // 'text_cms' should behave the same like 'text'
-        if( $dc->activeRecord->type == 'text_cms' ) {
-            $dc->activeRecord->type = 'text';
-        }
-
-        $oContent = NULL;
-        $oContent = new tl_content();
-
-        return $oContent->getElementTemplates($dc);
-    }
-}
+$GLOBALS['TL_DCA']['tl_content']['fields']['customTpl']['options_callback']  = ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'getElementTemplates'];

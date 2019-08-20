@@ -133,7 +133,13 @@ class Tags extends Hooks {
                     $tagTemplate = NULL;
                     $tagTemplate = new FrontendTemplate($tag->customTpl);
 
-                    $tagTemplate->setData( $tag->row() );
+                    $aTag = $tag->row();
+
+                    if( strlen($aTag['html']) ) {
+                        $aTag['html'] = self::replaceInsertTags($aTag['html']);
+                    }
+
+                    $tagTemplate->setData($aTag);
 
                     $tagTemplate->typeFirst = false;
                     if( $i == 1 ) {
