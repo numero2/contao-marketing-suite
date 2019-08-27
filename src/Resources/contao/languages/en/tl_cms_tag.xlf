@@ -132,7 +132,7 @@
         <source>Fallback Template</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.fallbackTpl.1">
-        <source>Hier müssen Sie das Fallback-Template angeben. Dies wird ausgespielt wenn der Tag nicht bestätigt ist.</source>
+        <source>Hier können Sie ein "Fallback-Template" angeben welches dem Nutzer angezeigt wird wenn der Tag nicht bestätigt wurde.</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.customTpl.0">
         <source>Individuelles Template</source>

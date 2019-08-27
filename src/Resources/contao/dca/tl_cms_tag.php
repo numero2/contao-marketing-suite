@@ -165,7 +165,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['fallbackTpl']
         ,   'inputType'             => 'select'
         ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getFallbackTemplates']
-        ,   'eval'                  => ['mandatory'=>true, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50']
+        ,   'eval'                  => ['mandatory'=>false, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
     ,   'customTpl' => [
