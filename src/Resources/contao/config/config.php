@@ -159,6 +159,9 @@ $GLOBALS['TL_HOOKS']['getUserNavigation'][] = ['\numero2\MarketingSuite\BackendM
 $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'initializeSystem'];
 $GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\Hooks\DCA', 'addStylingFields'];
 $GLOBALS['TL_HOOKS']['processFormData'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseClickOnForm'];
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagInsertTags'];
+$GLOBALS['TL_HOOKS']['getContentElement'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
+$GLOBALS['TL_HOOKS']['getFrontendModule'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
 
 if( TL_MODE === 'BE' ) {
     $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\BackendModule\Module', 'initializeBackendModuleTables'];

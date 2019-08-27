@@ -101,7 +101,6 @@
     <trans-unit id="tl_cms_tag.tag_google_analytics.1">
         <source>Die Tracking-ID im Format „UA-000000-0”.</source>
     </trans-unit>
-
     <trans-unit id="tl_cms_tag.tag_google_tag_manager.0">
         <source>Container-ID</source>
     </trans-unit>
@@ -129,6 +128,12 @@
     <trans-unit id="tl_cms_tag.anonymize_ip.1">
         <source>Die IP des Besuchers vor der Übertragung anonymisieren.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.fallbackTpl.0">
+        <source>Fallback Template</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.fallbackTpl.1">
+        <source>Hier müssen Sie das Fallback-Template angeben. Dies wird ausgespielt wenn der Tag nicht bestätigt ist.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.customTpl.0">
         <source>Individuelles Template</source>
     </trans-unit>
@@ -154,7 +159,7 @@
         <source>Diesen Tag aktivieren?</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.enable_on_cookie_accept.0">
-        <source>Opt-In / Eu-Privacy konform</source>
+        <source>Opt-In / EU-Privacy konform</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.enable_on_cookie_accept.1">
         <source>Wenn aktiviert, wird dieser Tag nur ausgespielt wenn Cookies akzeptiert wurden, ansonsten immer.</source>
@@ -171,6 +176,9 @@
     </trans-unit>
     <trans-unit id="tl_cms_tag.types.html">
         <source>HTML</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.types.content_module_element">
+        <source>Inhaltselement / Frontend-Modul</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.types.google_analytics">
         <source>Google Analytics</source>

@@ -117,7 +117,7 @@
         <source>Erzeugt eine Cookie Bar mit dem hinterlegten Inhalt</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag_settings.types.cms_accept_tags.0">
-        <source>Tracking Opt-In (Eu-Privacy)</source>
+        <source>Tracking Opt-In (EU-Privacy)</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag_settings.types.cms_accept_tags.1">
         <source>Erzeugt eine Element in dem verschieden Kategorien des Trackings zugestimmt werden kann.</source>

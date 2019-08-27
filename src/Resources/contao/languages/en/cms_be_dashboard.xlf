@@ -14,6 +14,13 @@
     <trans-unit id="cms_be_dashboard.no_data">
         <source>Noch keine Daten vorhanden</source>
     </trans-unit>
+    <!-- Fallback label since 4.8 needed -->
+    <trans-unit id="cms_be_dashboard.edit_content.0">
+        <source>Element bearbeiten</source>
+    </trans-unit>
+    <trans-unit id="cms_be_dashboard.edit_content.1">
+        <source>Inhaltselement ID %s bearbeiten</source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

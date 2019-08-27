@@ -50,12 +50,12 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
     ,   'cms_tag_accept_label' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_accept_label']
         ,   'inputType'        => 'text'
-        ,   'eval'             => [ 'mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50' ]
+        ,   'eval'             => [ 'mandatory'=>true, 'tl_class'=>'w50' ]
         ]
     ,   'cms_tag_reject_label' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_reject_label']
         ,   'inputType'        => 'text'
-        ,   'eval'             => [ 'maxlength'=>64, 'tl_class'=>'clr w50' ]
+        ,   'eval'             => [ 'tl_class'=>'clr w50' ]
         ]
     ,   'cms_tag_text' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_text']

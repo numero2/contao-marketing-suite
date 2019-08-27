@@ -7,8 +7,8 @@
             <?= $this->used; ?>
         <?php endif; ?>
         <?php if( $this->href ): ?>
-            <a href="<?= $this->href; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['tl_content']['edit'][1],$this->id);?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($GLOBALS['TL_LANG']['tl_content']['edit'][1],$this->id);?>','url':this.href+'&popup=1'});return false" class="edit">
-                <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_content']['edit'][0];?>">
+            <a href="<?= $this->href; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['cms_be_dashboard']['edit_content'][1],$this->id);?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($GLOBALS['TL_LANG']['cms_be_dashboard']['edit_content'][1],$this->id);?>','url':this.href+'&popup=1'});return false" class="edit">
+                <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['edit_content'][0];?>">
             </a>
         <?php endif; ?>
     </div>

@@ -15,6 +15,7 @@
 
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'addLabel'];
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\Widget\ElementStyle', 'addStylingFields'];
+$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Content', 'addTagVisibilityFields'];
 
 array_insert($GLOBALS['TL_DCA']['tl_content']['list']['operations'], 3, [
     'reset_counter' => [
@@ -87,6 +88,13 @@ $GLOBALS['TL_DCA']['tl_content']['palettes'] = array_merge_recursive(
 );
 
 $GLOBALS['TL_DCA']['tl_content']['list']['operations']['edit']['button_callback'] = ['\numero2\MarketingSuite\DCAHelper\Content', 'editButton'];
+
+
+/**
+ * Add subpalettes to tl_content
+ */
+$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'cms_tag_visibility';
+$GLOBALS['TL_DCA']['tl_content']['subpalettes']['cms_tag_visibility']= 'cms_tag';
 
 
 /**
@@ -214,6 +222,19 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
         ]
     ,   'cms_used' => [
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_used']
+        ]
+    ,   'cms_tag_visibility' => [
+            'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_tag_visibility']
+        ,   'inputType'         => 'checkbox'
+        ,   'eval'              => ['submitOnChange'=>true]
+        ,   'sql'               => "char(1) NOT NULL default ''"
+        ]
+    ,   'cms_tag' => [
+            'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_tag']
+        ,   'inputType'         => 'select'
+        ,   'options_callback'  => ['\numero2\MarketingSuite\DCAHelper\Content', 'getContentElementTags']
+        ,   'eval'              => ['mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'clr w50']
+        ,   'sql'               => "int(10) unsigned NOT NULL default '0'"
         ]
     ]
 );

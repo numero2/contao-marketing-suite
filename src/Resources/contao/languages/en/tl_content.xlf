@@ -16,6 +16,9 @@
     <trans-unit id="tl_content.style_legend">
         <source>Styling-Einstellungen</source>
     </trans-unit>
+    <trans-unit id="tl_content.cms_tag_visibility_legend">
+        <source>Opt-In/ EU-Privacy</source>
+    </trans-unit>
     <!-- FIELDS -->
     <trans-unit id="tl_content.cta_title.0">
         <source>CTA Titel</source>
@@ -40,6 +43,18 @@
     </trans-unit>
     <trans-unit id="tl_content.cms_ci_id.1">
         <source>Welches Conversion-Element soll angezeigt werden?</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_tag_visibility.0">
+        <source>Nur mit expliziter Zustimmung anzeigen</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_tag_visibility.1">
+        <source>Das Element nur anzeigen wenn der Nutzer explizit seine Zustimmung für das entsprechende "Inhaltselement / Frontend-Modul-Tag" gegeben hat.</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_tag.0">
+        <source>Inhaltselement / Frontend-Modul-Tag</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_tag.1">
+        <source>Wählen Sie aus welchem Tag zugestimmt werden muss um das Element anzuzeigen.</source>
     </trans-unit>
     <trans-unit id="tl_content.cms_used.0">
         <source>Verwendung</source>

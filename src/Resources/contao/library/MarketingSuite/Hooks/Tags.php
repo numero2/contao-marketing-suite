@@ -17,6 +17,7 @@ namespace numero2\MarketingSuite\Hooks;
 
 use Contao\CMSConfig;
 use Contao\Controller;
+use Contao\Environment;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\LayoutModel;
@@ -91,14 +92,8 @@ class Tags extends Hooks {
                     continue;
                 }
 
-                // check if this tag was accepted
-                // cookie_bar
-                $boolAccepted = Input::cookie('cms_cookie') == 'accept';
-                // accept_tags
-                $boolAccepted |= (Input::cookie('cms_cookies_saved') === "true" && in_array($tag->pid, explode('-', Input::cookie('cms_cookies'))));
-
                 // skip if cookie needed but not cookie_accepted
-                if( $tag->enable_on_cookie_accept && !$boolAccepted ) {
+                if( $tag->enable_on_cookie_accept && !self::isAccepted($tag->id, $tag->pid) ) {
                     continue;
                 }
 
@@ -122,7 +117,7 @@ class Tags extends Hooks {
 
                 foreach( $tags as $key => $tag ) {
 
-                    if( $tag->type == "session" ) {
+                    if( in_array($tag->type, ['session','content_module_element']) ) {
                         continue;
                     }
 
@@ -177,12 +172,19 @@ class Tags extends Hooks {
             return;
         }
 
+        global $objPage;
+
+        $forceShow = false;
+        $forceShow = \Input::get('_cmsscb') ? true : $forceShow;
+
+        $objModel = NULL;
         $objModel = new ModuleModel();
         $objModel->preventSaving(false);
 
         Controller::loadDataContainer('tl_cms_tag_settings');
         aczolku::udifuro();
 
+        // get settings for cokie bar from config
         if( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields'] && count($GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields']) ) {
 
             foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields'] as $key => $value ) {
@@ -195,7 +197,9 @@ class Tags extends Hooks {
             }
         }
 
-        if( $objModel->cms_exclude_pages ) {
+        // check if cookie bar is excluded from current page and not forced
+        // to show up
+        if( $objModel->cms_exclude_pages && !$forceShow ) {
 
             $excludePages = deserialize($objModel->cms_exclude_pages);
 
@@ -216,6 +220,215 @@ class Tags extends Hooks {
 
         if( $oModule ) {
             $GLOBALS['TL_BODY'][] = $oModule->generate();
+            $objPage->cssClass .= ' cookie-bar-visible';
         }
+    }
+
+
+    /**
+     * Checks if the given tag is accepted by the user
+     *
+     * @param integer $tagId
+     * @param integer $tagPid
+     *
+     * @return boolean
+     */
+    public static function isAccepted($tagId, $tagPid) {
+
+        $isAccepted = false;
+
+        $moduleType = NULL;
+        $moduleType = CMSConfig::get('cms_tag_type');
+
+        // cookie_bar
+        if( $moduleType === 'cms_cookie_bar' ) {
+
+            $isAccepted = Input::cookie('cms_cookie') == 'accept';
+
+        // accept_tags
+        } else if( $moduleType === 'cms_accept_tags' ) {
+
+            $isAccepted = (Input::cookie('cms_cookies_saved') === "true" && in_array($tagPid, explode('-', Input::cookie('cms_cookies'))));
+        }
+
+        return $isAccepted;
+    }
+
+
+    /**
+     * Replace a render content element or frontend module with a fallback
+     * template if configured to be only visible on cookie accept
+     *
+     * @param ContentModel|ModuleModel $oRow
+     * @param string $strBuffer
+     * @param ContentElement|Module $oElement
+     *
+     * @return string
+     */
+    public function replaceTagContentModuleElement($oRow, $strBuffer, $oElement) {
+
+        global $objPage;
+
+        // replace buffer if cms_tag_visibility is set and selected tag is accepted
+        if( $oRow->cms_tag_visibility ) {
+
+            if( !aczolku::hasFeature('tags', $objPage->trail[0]) ) {
+                return '';
+            }
+
+            $oTag = NULL;
+            $oTag = TagModel::findOneById($oRow->cms_tag);
+
+            if( !$oTag || !aczolku::hasFeature('tags_'.$oTag->type, $objPage->trail[0]) ) {
+                return '';
+            }
+
+            if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
+
+                $oTemplate = new \FrontendTemplate($oTag->fallbackTpl);
+                $oTemplate->setData($oRow->row());
+                $oTemplate->optinLink = self::generateCookieBarForceLink();
+
+                $strBuffer = $oTemplate->parse();
+            }
+        }
+
+        return $strBuffer;
+    }
+
+
+    /**
+     * Generates a link to the current page with a parameter that forces
+     * the cookie bar to show up again
+     *
+     * @return string
+     */
+    private function generateCookieBarForceLink() {
+
+        $href = Environment::get('request');
+
+        if( strpos($href, '?') !== FALSE ) {
+            $href = substr($href,0,strpos($href, '?'));
+        }
+
+        $href = $href . '?_cmsscb=1';
+
+        return $href;
+    }
+
+
+    /**
+     * Replace insert tags for the tags
+     *
+     * @param string $tag
+     * @param boolean $blnCache
+     * @param string $strCached
+     * @param array $flags
+     * @param array $tags
+     * @param array $arrCache
+     * @param integer $_rit
+     * @param integer $_cnt
+     *
+     * @return string|false
+     */
+    public function replaceTagInsertTags($tag, $blnCache, $strCached, $flags, &$tags, $arrCache, $_rit, $_cnt) {
+
+        $elements = explode('::', $tag);
+        $strTag = $tags[$_rit+1];
+
+        switch( strtolower($elements[0]) ) {
+
+            case 'ifoptin':
+
+                $show = true;
+
+                if( !aczolku::hasFeature('tags', $objPage->trail[0]) ) {
+                    $show = false;
+                }
+
+                if( empty($elements[1]) ) {
+                    return '';
+                }
+
+                $oTag = TagModel::findOneById($elements[1]);
+
+                if( !$oTag || !aczolku::hasFeature('tags_'.$oTag->type, $objPage->trail[0]) ) {
+                    $show = false;
+                }
+
+                if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
+                    $show = false;
+                }
+
+                if( !$show ) {
+                    $open = true;
+                    for( $i = $_rit; $i<$_cnt; $i+=2 ) {
+
+                        if( $open ) {
+                            $tags[$i+1] = ''; // also empty tag else nested would be replaced
+                            $tags[$i+2] = '';
+                        }
+
+                        if( $tags[$i+3] == 'ifoptin' || stripos($tags[$i+3] , 'ifoptin::') ) {
+                            $open = false;
+
+                        }
+                        if( $tags[$i+3] == $tag ) {
+                            $open = true;
+                        }
+                    }
+                }
+                return'';
+            break;
+
+            case 'ifnoptin':
+
+                $show = true;
+
+                if( !aczolku::hasFeature('tags', $objPage->trail[0]) ) {
+                    $show = false;
+                }
+
+                if( empty($elements[1]) ) {
+                    return '';
+                }
+
+                $oTag = TagModel::findOneById($elements[1]);
+
+                if( !$oTag || !aczolku::hasFeature('tags_'.$oTag->type, $objPage->trail[0]) ) {
+                    $show = false;
+                }
+
+                if( self::isAccepted($oTag->id, $oTag->pid) && $oTag->active ) {
+                    $show = false;
+                }
+
+                if( !$show ) {
+                    $open = true;
+                    for( $i = $_rit; $i<$_cnt; $i+=2 ) {
+
+                        if( $open ) {
+                            $tags[$i+1] = ''; // also empty tag else nested would be replaced
+                            $tags[$i+2] = '';
+                        }
+
+                        if( $tags[$i+3] == 'ifnoptin' || stripos($tags[$i+3] , 'ifnoptin::') ) {
+                            $open = false;
+
+                        }
+                        if( $tags[$i+3] == $tag ) {
+                            $open = true;
+                        }
+                    }
+                }
+                return'';
+            break;
+
+            case 'cms_optinlink':
+                return self::generateCookieBarForceLink();
+            break;
+        }
+
+        return false;
     }
 }

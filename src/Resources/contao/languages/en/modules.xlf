@@ -53,7 +53,7 @@
     </trans-unit>
     <!-- BACKEND -->
     <trans-unit id="CMS.tags.0">
-        <source>Cookie / Opt-In / Eu-Privacy Einstellungen</source>
+        <source>Cookie / Opt-In / EU-Privacy Einstellungen</source>
     </trans-unit>
     <trans-unit id="CMS.tags.1">
         <source>Ermöglicht den Einbau von JavaScript-Tags z.B. für das Tracking via Google Analytics.</source>
@@ -80,7 +80,7 @@
         <source>Cookies</source>
     </trans-unit>
     <trans-unit id="CMS.cookies.1">
-        <source>Einstellungen für die Nutzung von Cookies (DSGVO / Eu-Privacy) festlegen.</source>
+        <source>Einstellungen für die Nutzung von Cookies (DSGVO / EU-Privacy) festlegen.</source>
     </trans-unit>
     <trans-unit id="CMS.facebook.0">
         <source>Facebook</source>

@@ -20,7 +20,7 @@
         <source>Unterstützen Sie das Marketing Suite Team, indem Sie anonym mitteilen welche Features Sie verwenden.</source>
     </trans-unit>
     <trans-unit id="tl_cms_settings.health_check_ignore_older_than.0">
-        <source>Ignoriere älter Einträge</source>
+        <source>Ignoriere ältere Einträge</source>
     </trans-unit>
     <trans-unit id="tl_cms_settings.health_check_ignore_older_than.1">
         <source>Dies schließt ältere Einträge aus den Nachrichten und Events Erweiterung vom Health Check aus.</source>

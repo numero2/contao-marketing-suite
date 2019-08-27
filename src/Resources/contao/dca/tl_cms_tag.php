@@ -27,6 +27,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             ['\numero2\MarketingSuite\DCAHelper\Tag', 'setRootType']
         ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'addDefault']
         ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'setTagFieldLabel']
+        ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'unsetEnableOnCookieAcceptForSession']
     ]
     ,   'sql' => [
             'keys' => [
@@ -91,11 +92,12 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
         '__selector__'              => ['type']
     ,   'default'                   => '{common_legend},type,name'
     ,   'group'                     => '{common_legend},type,name;{description_legend},description;{expert_legend:hide},customTpl'
-    ,   'session'                   => '{common_legend},type,name;{publish_legend},active,enable_on_cookie_accept'
+    ,   'session'                   => '{common_legend},type,name;{publish_legend},active'
     ,   'html'                      => '{common_legend},type,name;{tag_legend},html;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'google_analytics'          => '{common_legend},type,name;{tag_legend},tag,alias;{config_legend},anonymize_ip;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'google_tag_manager'        => '{common_legend},type,name;{tag_legend},tag;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'facebook_pixel'            => '{common_legend},type,name;{tag_legend},tag;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
+    ,   'content_module_element'    => '{common_legend},type,name;{tag_legend},fallbackTpl;{publish_legend},active'
     ]
 ,   'fields' => [
         'id' => [
@@ -158,6 +160,13 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
         ,   'eval'                  => ['rgxp'=>'alnum', 'maxlength'=>32, 'tl_class'=>'w50']
         ,   'save_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\Tag', 'generateAlias'] ]
         ,   'sql'                   => "varchar(32) NOT NULL default ''"
+        ]
+    ,   'fallbackTpl' => [
+            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['fallbackTpl']
+        ,   'inputType'             => 'select'
+        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getFallbackTemplates']
+        ,   'eval'                  => ['mandatory'=>true, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50']
+        ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
     ,   'customTpl' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['customTpl']

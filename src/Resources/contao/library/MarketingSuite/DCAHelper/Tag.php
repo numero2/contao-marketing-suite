@@ -67,6 +67,18 @@ class Tag extends CoreBackend {
 
 
     /**
+     * Return all fallback templates as array
+     *
+     * @param \DataContainer $dc
+     *
+     * @return array
+     */
+    public function getFallbackTemplates( DataContainer $dc ) {
+        return $this->getTemplateGroup('ce_optin_');
+    }
+
+
+    /**
      * Return the "toggle visibility" button
      *
      * @param array $row
@@ -390,5 +402,25 @@ class Tag extends CoreBackend {
         }
 
         return $types;
+    }
+
+    /**
+     * Unset enable_on_cookie_accept for session tags
+     *
+     * @param DataContainer $dc
+     */
+    public function unsetEnableOnCookieAcceptForSession( $dc ) {
+
+        $oTags = NULL;
+        $oTags = TagModel::findBy(['type=? AND enable_on_cookie_accept!=?'], ['session','']);
+
+        if( $oTags ) {
+
+            foreach( $oTags as $oTag ) {
+                $oTag->enable_on_cookie_accept = '';
+                $oTag->save();
+            }
+        }
+
     }
 }

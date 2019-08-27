@@ -15,5 +15,5 @@
 </script>
 
 <noscript>
-    <img height="1" width="1" src="https://www.facebook.com/tr?id=<?= $this->tag; ?>&ev=PageView&noscript=1"/>
+    <img height="1" width="1" src="https://www.facebook.com/tr?id=<?= $this->tag; ?>&ev=PageView&noscript=1" alt="" style="display:none !important;"/>
 </noscript>

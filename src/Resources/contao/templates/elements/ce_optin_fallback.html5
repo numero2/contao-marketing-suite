@@ -1,0 +1,6 @@
+<!--indexer::stop-->
+<div class="ce_optin_fallback block">
+    <p>Dieser Inhalt eines Drittanbieters wird aufgrund Ihrer fehlenden Zustimmung zu Drittanbieter-Inhalten nicht angezeigt.</p>
+    <p><a href="<?= $this->optinLink; ?>" style="font-weight:bold;">Klicken Sie hier um Ihre Einstellungen zu bearbeiten.</a></p>
+</div>
+<!--indexer::start-->

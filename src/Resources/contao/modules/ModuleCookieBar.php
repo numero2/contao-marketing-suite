@@ -79,7 +79,10 @@ class ModuleCookieBar extends Module {
             $this->Template = new FrontendTemplate($this->customTpl);
         }
 
-        $this->Template->action = Environment::get('request');
+        $action = Environment::get('request');
+        $action = preg_replace('|_cmsscb=[0-9]+[&]?|', '', $action);
+        $this->Template->action = $action;
+
         $this->Template->formId = 'cms_cookie_bar';
 
         if( Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $this->Template->formId ) {
@@ -95,11 +98,17 @@ class ModuleCookieBar extends Module {
 
         $this->Template->cookie_accepted = false;
 
-        if( Input::cookie('cms_cookie') == 'accept' ) {
-            $this->Template->cookie_accepted = true;
-        }
-        if( Input::cookie('cms_cookie') == 'reject' ) {
-            $this->Template->cookie_rejected = true;
+        $forceShow = false;
+        $forceShow = \Input::get('_cmsscb') ? true : $forceShow;
+
+        if( !$forceShow ) {
+
+            if( Input::cookie('cms_cookie') == 'accept' ) {
+                $this->Template->cookie_accepted = true;
+            }
+            if( Input::cookie('cms_cookie') == 'reject' ) {
+                $this->Template->cookie_rejected = true;
+            }
         }
 
         $this->Template->content = $this->cms_tag_text;

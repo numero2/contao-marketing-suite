@@ -77,7 +77,10 @@ class ModuleAcceptTags extends Module {
 
         System::loadLanguageFile('cms_default');
 
-        $this->Template->action = Environment::get('request');
+        $action = Environment::get('request');
+        $action = preg_replace('|_cmsscb=[0-9]+[&]?|', '', $action);
+        $this->Template->action = $action;
+
         $this->Template->formId = 'cms_accept_tags';
 
         $oTags = TagModel::findBy(['type=?'], ['group'], ['order'=>'sorting ASC']);
@@ -136,10 +139,16 @@ class ModuleAcceptTags extends Module {
             $this->redirect($this->Template->action);
         }
 
-        if( Input::cookie('cms_cookies_saved') === "true" ) {
-            $this->Template->cookiesSaved = true;
-        } else {
-            $this->Template->cookiesSaved = false;
+        $forceShow = false;
+        $forceShow = \Input::get('_cmsscb') ? true : $forceShow;
+
+        if( !$forceShow ) {
+
+            if( Input::cookie('cms_cookies_saved') === "true" ) {
+                $this->Template->cookiesSaved = true;
+            } else {
+                $this->Template->cookiesSaved = false;
+            }
         }
 
         $this->Template->tags = $aTags;
