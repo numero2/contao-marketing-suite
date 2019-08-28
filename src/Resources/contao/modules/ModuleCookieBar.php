@@ -96,21 +96,6 @@ class ModuleCookieBar extends Module {
             $this->redirect($this->Template->action);
         }
 
-        $this->Template->cookie_accepted = false;
-
-        $forceShow = false;
-        $forceShow = \Input::get('_cmsscb') ? true : $forceShow;
-
-        if( !$forceShow ) {
-
-            if( Input::cookie('cms_cookie') == 'accept' ) {
-                $this->Template->cookie_accepted = true;
-            }
-            if( Input::cookie('cms_cookie') == 'reject' ) {
-                $this->Template->cookie_rejected = true;
-            }
-        }
-
         $this->Template->content = $this->cms_tag_text;
 
         $this->Template->acceptLabel = $GLOBALS['TL_LANG']['cms_tag_settings_default']['accept_label'];
@@ -138,6 +123,27 @@ class ModuleCookieBar extends Module {
 
         $this->Template->tags = $aTags;
         $this->Template->cmsID = uniqid('cms');
+    }
+
+
+    /**
+     * Returns if the current module should be visible in frontend
+     *
+     * @return boolean
+     */
+    public function shouldBeShown() {
+
+        $show = false;
+        $show = Input::get('_cmsscb') ? true : $forceShow;
+
+        if( !$show ) {
+
+            if( !in_array(Input::cookie('cms_cookie'), ['accept','reject']) ) {
+                $show = true;
+            }
+        }
+
+        return $show;
     }
 
 

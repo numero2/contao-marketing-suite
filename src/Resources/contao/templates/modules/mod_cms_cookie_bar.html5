@@ -1,4 +1,3 @@
-<?php if( !$this->cookie_accepted && !$this->cookie_rejected ): ?>
 <!-- indexer::stop -->
 <div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> data-cms-id="<?= $this->cmsID; ?>">
 
@@ -26,4 +25,3 @@
 
 </div>
 <!-- indexer::continue -->
-<?php endif; ?>

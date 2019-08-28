@@ -139,18 +139,6 @@ class ModuleAcceptTags extends Module {
             $this->redirect($this->Template->action);
         }
 
-        $forceShow = false;
-        $forceShow = \Input::get('_cmsscb') ? true : $forceShow;
-
-        if( !$forceShow ) {
-
-            if( Input::cookie('cms_cookies_saved') === "true" ) {
-                $this->Template->cookiesSaved = true;
-            } else {
-                $this->Template->cookiesSaved = false;
-            }
-        }
-
         $this->Template->tags = $aTags;
 
         $this->Template->acceptLabel = $GLOBALS['TL_LANG']['cms_tag_settings_default']['accept_label'];
@@ -174,6 +162,27 @@ class ModuleAcceptTags extends Module {
         }
 
         $this->Template->cmsID = uniqid('cms');
+    }
+
+
+    /**
+     * Returns if the current module should be visible in frontend
+     *
+     * @return boolean
+     */
+    public function shouldBeShown() {
+
+        $show = false;
+        $show = Input::get('_cmsscb') ? true : $forceShow;
+
+        if( !$show ) {
+
+            if( Input::cookie('cms_cookies_saved') !== "true" ) {
+                $show = true;
+            }
+        }
+
+        return $show;
     }
 
 
