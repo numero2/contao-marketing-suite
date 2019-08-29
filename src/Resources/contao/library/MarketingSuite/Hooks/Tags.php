@@ -218,14 +218,17 @@ class Tags extends Hooks {
             $oModule = new ModuleAcceptTags($objModel);
         }
 
-        $sModule = "";
-        $sModule = $oModule->generate();
+        if( $oModule ) {
 
-        // check if bar / tags should be shown at all
-        if( $oModule->shouldBeShown() ) {
+            $sModule = "";
+            $sModule = $oModule->generate();
 
-            $GLOBALS['TL_BODY'][] = $sModule;
-            $objPage->cssClass .= ' cookie-bar-visible';
+            // check if bar / tags should be shown at all
+            if( $oModule->shouldBeShown() ) {
+
+                $GLOBALS['TL_BODY'][] = $sModule;
+                $objPage->cssClass .= ' cookie-bar-visible';
+            }
         }
     }
 
