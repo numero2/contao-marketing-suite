@@ -3,19 +3,20 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2019 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2019 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite\Hooks;
 
 use Contao\CMSConfig;
+use Contao\Config;
 use Contao\Controller;
 use Contao\Environment;
 use Contao\FrontendTemplate;
@@ -146,7 +147,11 @@ class Tags extends Hooks {
                         $tagTemplate->typeLast = true;
                     }
 
-                    $aTags[$tag->type.'_'.$tag->id] = $tagTemplate->parse();
+                    if( Config::get('debugMode') ) {
+                        $aTags[$tag->type.'_'.$tag->id] = '<!-- tag: '.$tag->type.'_'.$tag->id.' -->' . $tagTemplate->parse() . '<!-- endtag -->';
+                    } else {
+                        $aTags[$tag->type.'_'.$tag->id] = $tagTemplate->parse();
+                    }
 
                     $i += 1;
                 }
@@ -278,7 +283,7 @@ class Tags extends Hooks {
         global $objPage;
 
         // replace buffer if cms_tag_visibility is set and selected tag is accepted
-        if( $oRow->cms_tag_visibility ) {
+        if( $oRow->cms_tag_visibility && TL_MODE == 'FE' ) {
 
             if( !aczolku::hasFeature('tags', $objPage->trail[0]) ) {
                 return '';

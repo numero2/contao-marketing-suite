@@ -1,9 +1,7 @@
 <?php if( $this->tags && count($this->tags) ): ?>
 <!-- indexer::stop -->
     <?php foreach( $this->tags as $type => $tag ): ?>
-        <!-- tag: <?= $type; ?> -->
-        <?= $tag; ?>
-        <!-- endtag -->
+    <?= $tag; ?>
     <?php endforeach; ?>
 <!-- indexer::continue -->
 <?php endif; ?>
