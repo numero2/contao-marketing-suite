@@ -308,36 +308,23 @@ input[type="radio"][readonly] + label {
     margin-right: -10px;
 }
 
-.cms_be_license_message {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.license_message_wrapper > .cms_be_license_message {
+    margin: 0 !important;
 }
 
-.cms_be_license_message, .cms_be_license_message .background_overlay {
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+#main .cms_be_license_message {
+    margin-top: -8px;
+    margin-right: -10px;
+    margin-bottom: -8px;
 }
 
-.cms_be_license_message .background_overlay {
-    background-color: black;
-    opacity: 0.7;
-}
-
-.cms_be_license_message .content {
-    z-index: 9000;
-    background: #fff;
+#main .cms_be_license_message .content {
     text-align: left;
+    border: none !important;
+    margin: 0;
 }
 
-.cms_be_license_message .content .header {
-    border-bottom: 1px solid #ddd;
-    border-radius: 2px 2px 0 0;
+#main .cms_be_license_message .content .header {
     background-color: #f47c00;
     position: relative;
     display: flex;
@@ -345,32 +332,40 @@ input[type="radio"][readonly] + label {
     align-items: stretch;
 }
 
-.cms_be_license_message .content .header h2 {
+#main .cms_be_license_message .content .header h2 {
     display: block;
     line-height: 35px;
     padding-left: 10px;
-    color: #fff;
+    color: #ffffff;
 }
 
-.cms_be_license_message .content .header > .close {
-    margin-left: auto;
-    color: #fff;
-    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-    font-size: 30px;
-    font-weight: 400;
-    padding: 0 10px 5px 10px;
+#main .cms_be_license_message .content .inside {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
 }
 
-.cms_be_license_message .content .inside {
-    padding: 10px;
+#main .cms_be_license_message .content .inside > * {
+    margin: 15px;
 }
 
-.cms_be_license_message .content .inside a {
-    text-decoration: underline;
+#main .cms_be_license_message .content .inside .text p:last-child {
+    margin-bottom: 0;
 }
 
-.cms_be_license_message .content .inside img {
-    padding: 0 5px;
+#main .cms_be_license_message .content .inside > a {
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    background: #74b739;
+    color: #ffffff;
+    padding: 1em 2em;
+}
+
+#main .cms_be_license_message .content .inside > a:hover {
+    background: #5b902d;
 }
 
 .tl_dashboard fieldset > div {

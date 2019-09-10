@@ -112,12 +112,12 @@ if( !empty($GLOBALS['TL_DCA']['tl_news']) ) {
             ];
 
             $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['eval']['tl_class'] .= ' snippet';
-            $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::TITLE_LENGTH;
+            $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::TITLE_MAX_LENGTH;
             $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['load_callback'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'addSnippetCount'];
             $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['wizard'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generateInputField'];
 
             $GLOBALS['TL_DCA']['tl_news']['fields']['description']['eval']['tl_class'] .= ' snippet';
-            $GLOBALS['TL_DCA']['tl_news']['fields']['description']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::DESCRIPTION_LENGTH;
+            $GLOBALS['TL_DCA']['tl_news']['fields']['description']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::DESCRIPTION_MAX_LENGTH;
             $GLOBALS['TL_DCA']['tl_news']['fields']['description']['load_callback'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'addSnippetCount'];
             $GLOBALS['TL_DCA']['tl_news']['fields']['description']['wizard'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generateInputField'];
         }

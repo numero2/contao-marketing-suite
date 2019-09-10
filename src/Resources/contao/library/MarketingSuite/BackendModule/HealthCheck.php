@@ -32,9 +32,10 @@ use Contao\System;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use numero2\MarketingSuite\Backend\Help;
-use numero2\MarketingSuite\Backend\LicenseMessage;
 use numero2\MarketingSuite\Backend\License as varzegju;
+use numero2\MarketingSuite\Backend\LicenseMessage;
 use numero2\MarketingSuite\Encryption;
+use numero2\MarketingSuite\Widget\SnippetPreview;
 
 
 class HealthCheck extends CoreBackendModule {
@@ -733,7 +734,7 @@ class HealthCheck extends CoreBackendModule {
         // find pages
         $oPages = NULL;
         $oPages = PageModel::findAll([
-            'column' => ["type=?", "(CHAR_LENGTH(pageTitle) < 30 OR CHAR_LENGTH(description) < 79)", "cms_exclude_health_check=0"]
+            'column' => ["type=?", "(CHAR_LENGTH(pageTitle) < ".SnippetPreview::TITLE_MIN_LENGTH." OR CHAR_LENGTH(description) < ".SnippetPreview::DESCRIPTION_MIN_LENGTH.")", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
         ]);
 
@@ -761,7 +762,7 @@ class HealthCheck extends CoreBackendModule {
         // find news
         if( class_exists('\Contao\News') && $db->fieldExists('pageTitle', 'tl_news') && $db->fieldExists('description', 'tl_news') ) {
 
-            $column = ["(CHAR_LENGTH(pageTitle) < 30 OR CHAR_LENGTH(description) < 79)"];
+            $column = ["(CHAR_LENGTH(pageTitle) < ".SnippetPreview::TITLE_MIN_LENGTH." OR CHAR_LENGTH(description) < ".SnippetPreview::DESCRIPTION_MIN_LENGTH.")"];
             $value = [];
 
             if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
@@ -793,7 +794,7 @@ class HealthCheck extends CoreBackendModule {
         // find events
         if( class_exists('\Contao\Calendar') && $db->fieldExists('pageTitle', 'tl_calendar_events') && $db->fieldExists('description', 'tl_calendar_events') ) {
 
-            $column = ["(CHAR_LENGTH(pageTitle) < 30 OR CHAR_LENGTH(description) < 79)"];
+            $column = ["(CHAR_LENGTH(pageTitle) < ".SnippetPreview::TITLE_MIN_LENGTH." OR CHAR_LENGTH(description) < ".SnippetPreview::DESCRIPTION_MIN_LENGTH.")"];
             $value = [];
 
             if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
@@ -852,7 +853,7 @@ class HealthCheck extends CoreBackendModule {
         // find pages
         $oPages = NULL;
         $oPages = PageModel::findAll([
-            'column' => ["type=?", "(CHAR_LENGTH(pageTitle) > 60 OR CHAR_LENGTH(description) > 158)", "cms_exclude_health_check=0"]
+            'column' => ["type=?", "(CHAR_LENGTH(pageTitle) > ".SnippetPreview::TITLE_MAX_LENGTH." OR CHAR_LENGTH(description) > ".SnippetPreview::DESCRIPTION_MAX_LENGTH.")", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
         ]);
 
@@ -880,7 +881,7 @@ class HealthCheck extends CoreBackendModule {
         // find news
         if( class_exists('\Contao\News') && $db->fieldExists('pageTitle', 'tl_news') && $db->fieldExists('description', 'tl_news') ) {
 
-            $column = ["(CHAR_LENGTH(pageTitle) > 60 OR CHAR_LENGTH(description) > 158)"];
+            $column = ["(CHAR_LENGTH(pageTitle) > ".SnippetPreview::TITLE_MAX_LENGTH." OR CHAR_LENGTH(description) > ".SnippetPreview::DESCRIPTION_MAX_LENGTH.")"];
             $value = [];
 
             if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){
@@ -912,7 +913,7 @@ class HealthCheck extends CoreBackendModule {
         // find events
         if( class_exists('\Contao\Calendar') && $db->fieldExists('pageTitle', 'tl_calendar_events') && $db->fieldExists('description', 'tl_calendar_events') ) {
 
-            $column = ["(CHAR_LENGTH(pageTitle) > 60 OR CHAR_LENGTH(description) > 158)"];
+            $column = ["(CHAR_LENGTH(pageTitle) > ".SnippetPreview::TITLE_MAX_LENGTH." OR CHAR_LENGTH(description) > ".SnippetPreview::DESCRIPTION_MAX_LENGTH.")"];
             $value = [];
 
             if( !empty(CMSConfig::get('health_check_ignore_older_than')) ){

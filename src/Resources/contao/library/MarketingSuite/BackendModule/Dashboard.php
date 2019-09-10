@@ -131,6 +131,7 @@ class Dashboard extends CoreBackendModule {
                     }
 
                     $arrRow['typeLabel'] = $GLOBALS['TL_LANG']['CTE'][$arrRow['content_type']][0];
+
                     if( ekga::hasFeature('me_'.$oMarketingItems->type) ) {
                         $arrRow['href'] = 'contao?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
                     }

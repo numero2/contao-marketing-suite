@@ -35,12 +35,12 @@ if( !empty($GLOBALS['TL_DCA']['tl_calendar_events']) ) {
             ];
 
             $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['pageTitle']['eval']['tl_class'] .= ' snippet';
-            $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['pageTitle']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::TITLE_LENGTH;
+            $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['pageTitle']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::TITLE_MAX_LENGTH;
             $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['pageTitle']['load_callback'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'addSnippetCount'];
             $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['pageTitle']['wizard'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generateInputField'];
 
             $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['description']['eval']['tl_class'] .= ' snippet';
-            $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['description']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::DESCRIPTION_LENGTH;
+            $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['description']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::DESCRIPTION_MAX_LENGTH;
             $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['description']['load_callback'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'addSnippetCount'];
             $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['description']['wizard'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generateInputField'];
         }

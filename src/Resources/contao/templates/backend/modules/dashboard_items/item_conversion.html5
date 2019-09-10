@@ -14,28 +14,28 @@
     </div>
     <div class="inner">
         <?php if( $this->cms_ci_views || $this->cms_ci_clicks ): ?>
-        <div class="chart">
-            <canvas id="chart_conversion_<?= $this->id; ?>" height="80px"></canvas>
-        </div>
-        <div class="reset">
-            <?php if( $this->cms_ci_reset > 0 ): ?>
-                <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Date::parse(\Config::get('datimFormat'), $this->groups->reset) ); ?></p>
-            <?php endif; ?>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?></th>
-                    <th><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['clicks']; ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><?= $this->cms_ci_views; ?></td>
-                    <td><?= $this->cms_ci_clicks; ?></td>
-                </tr>
-            </tbody>
-        </table>
+            <div class="chart">
+                <canvas id="chart_conversion_<?= $this->id; ?>" height="80px"></canvas>
+            </div>
+            <div class="reset">
+                <?php if( $this->cms_ci_reset > 0 ): ?>
+                    <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Date::parse(\Config::get('datimFormat'), $this->groups->reset) ); ?></p>
+                <?php endif; ?>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?></th>
+                        <th><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['clicks']; ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?= $this->cms_ci_views; ?></td>
+                        <td><?= $this->cms_ci_clicks; ?></td>
+                    </tr>
+                </tbody>
+            </table>
         <?php else: ?>
             <div class="no-data">
                 <p><?= $GLOBALS['TL_LANG']['cms_be_dashboard']['no_data']; ?></p>

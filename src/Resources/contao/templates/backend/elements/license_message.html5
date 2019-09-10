@@ -1,34 +1,31 @@
 <div class="cms_be_license_message">
 
-    <div class="background_overlay"></div>
     <div class="content ">
+
         <div class="header">
-            <h2>Lizenz Upgrade notwendig</h2>
-            <a class="close" href="#">×</a>
-            <script>
-            (function(){
-                document.querySelector('.cms_be_license_message .header a.close').addEventListener('click', function(e){
-                    e.preventDefault();
-                    $(this).closest('.cms_be_license_message').parentNode.remove();
-                });
-            })();
-            </script>
+            <h2>Lizenz-Upgrade notwendig</h2>
         </div>
 
         <div class="inside">
-            <p>In der aktuellen Lizenz <?= $this->verb; ?> <strong><?= $this->type; ?></strong> nicht enthalten.</p>
 
-            <?php if( $this->existing_entries ): ?>
-                <p><?= $this->existing_entries; ?></p>
-            <?php endif; ?>
+            <div class="text">
 
-            <?php if( $this->needed_package ): ?>
-                <p><?= $this->type; ?> <?= $this->verb; ?> in folgenden Paketen enthalten: <br /> <br /> <?= $this->needed_package; ?></p>
-            <?php endif; ?>
+                <p>In der aktuellen Lizenz <?= $this->verb; ?> <strong><?= $this->type; ?></strong> nicht enthalten.</p>
 
-            <p><a class="upgrade" href="https://contao-marketingsuite.com/upgrade/408y5s" target="_blank">
-                <img src="bundles/marketingsuite/img/backend/icons/icon_shuttle.svg" width="20" height="32" alt="">Jetzt upgraden!
-            </a></p>
+                <?php if( $this->existing_entries ): ?>
+                    <p><?= $this->existing_entries; ?></p>
+                <?php endif; ?>
+
+                <?php if( $this->needed_package ): ?>
+                    <p><?= $this->type; ?> <?= $this->verb; ?> in folgenden Paketen enthalten: <br /><br /><?= $this->needed_package; ?></p>
+                <?php endif; ?>
+
+            </div>
+
+            <a href="https://contao-marketingsuite.com/upgrade/408y5s" target="_blank">
+                Jetzt upgraden!
+            </a>
+
         </div>
     </div>
 

@@ -4,7 +4,7 @@
     </a>
     <?php if( $this->facebook ): ?>
         <a href="javascript:void(0);" class="facebook-publish" title="<?= $this->facebookTitle; ?>">
-            <?= Image::getHtml('bundles/marketingsuite/icon_facebook_small.svg', ''); ?>
+            <?= Image::getHtml('bundles/marketingsuite/img/backend/icons/icon_facebook_small.svg', ''); ?>
         </a>
     <?php endif; ?>
 </span>

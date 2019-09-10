@@ -84,18 +84,18 @@ class LinkShortenerRedirect {
             if( $oLink ) {
 
                 // log request for statistics
-                $aAgent = \Environment::get('agent');
+                $oAgent = \Environment::get('agent');
 
                 $oStats = new LinkShortenerStatisticsModel();
 
                 $oStats->tstamp = time();
                 $oStats->pid = $oLink->id;
                 $oStats->referer = $request->headers->get('referer');
-                $oStats->unique = md5($request->getClientIp().$aAgent->string);
-                $oStats->user_agent = $aAgent->string;
-                $oStats->os = $aAgent->os;
-                $oStats->browser = $aAgent->browser;
-                $oStats->is_mobile = ($aAgent->mobile?'1':'');
+                $oStats->unique_id = md5($request->getClientIp().$oAgent->string);
+                $oStats->user_agent = $oAgent->string;
+                $oStats->os = $oAgent->os;
+                $oStats->browser = $oAgent->browser;
+                $oStats->is_mobile = ($oAgent->mobile?'1':'');
                 $oStats->is_bot = '';
 
                 if( $oStats->browser == "other" ){
@@ -104,7 +104,7 @@ class LinkShortenerRedirect {
 
                     $patterns = array();
                     foreach($data as $entry) {
-                        if( preg_match('/'.$entry['pattern'].'/', $aAgent->string) ) {
+                        if( preg_match('/'.$entry['pattern'].'/', $oAgent->string) ) {
                             $oStats->is_bot = '1';
                             break;
                         }

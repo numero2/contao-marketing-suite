@@ -1,10 +1,12 @@
 <?php if( $this->licence_message ): ?>
-    <div class="license_message_wrapper">
+    <div class="tl_panel cf">
         <?= $this->licence_message; ?>
     </div>
 <?php endif; ?>
 <?php if( $this->be_help ): ?>
-    <?= $this->be_help; ?>
+    <div class="tl_panel cf">
+        <?= $this->be_help; ?>
+    </div>
 <?php endif; ?>
 
 <div class="tl_dashboard">

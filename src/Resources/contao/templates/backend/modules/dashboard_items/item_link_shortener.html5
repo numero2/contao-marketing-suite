@@ -1,7 +1,7 @@
 <div class="item <?=$this->type;?>">
     <div class="name">
         <span>
-            <?= $this->target; ?>
+            <?= $this->replaceInsertTags($this->target); ?>
         </span>
         <?php if( $this->hrefStats ): ?>
             <a href="<?= $this->hrefStats; ?>" title="<?= sprintf($GLOBALS['TL_LANG']['tl_cms_link_shortener']['statistics'][1],$this->id);?>" class="statistics">

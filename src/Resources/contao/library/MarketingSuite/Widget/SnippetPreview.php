@@ -30,8 +30,10 @@ class SnippetPreview {
      * Maximum length for snippet preview title and description
      * @var integer
      */
-    const TITLE_LENGTH = 60;
-    const DESCRIPTION_LENGTH = 158;
+    const TITLE_MIN_LENGTH = 30;
+    const TITLE_MAX_LENGTH = 60;
+    const DESCRIPTION_MIN_LENGTH = 79;
+    const DESCRIPTION_MAX_LENGTH = 158;
 
 
     /**
@@ -67,12 +69,12 @@ class SnippetPreview {
         $title = $dc->activeRecord->pageTitle ?  : ($dc->activeRecord->title ?  : $dc->activeRecord->headline);
         $description = $dc->activeRecord->description;
 
-        if( strlen($title) > self::TITLE_LENGTH ) {
-            $title = substr($title,0,self::TITLE_LENGTH) . ' ...';
+        if( strlen($title) > self::TITLE_MAX_LENGTH ) {
+            $title = substr($title,0,self::TITLE_MAX_LENGTH) . ' ...';
         }
 
-        if( strlen($description) > self::DESCRIPTION_LENGTH ) {
-            $description = substr($description,0,self::DESCRIPTION_LENGTH) . ' ...';
+        if( strlen($description) > self::DESCRIPTION_MAX_LENGTH ) {
+            $description = substr($description,0,self::DESCRIPTION_MAX_LENGTH) . ' ...';
         }
 
         $aData = [
