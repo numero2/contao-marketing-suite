@@ -18,11 +18,13 @@ namespace numero2\MarketingSuiteBundle\EventListener\KernelException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Contao\Environment;
 use numero2\MarketingSuite\LinkShortenerModel;
 use numero2\MarketingSuite\LinkShortenerStatisticsModel;
+use numero2\MarketingSuite\Tracking\ClickAndViews;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 
 class LinkShortenerRedirect {
@@ -84,7 +86,7 @@ class LinkShortenerRedirect {
             if( $oLink ) {
 
                 // log request for statistics
-                $oAgent = \Environment::get('agent');
+                $oAgent = Environment::get('agent');
 
                 $oStats = new LinkShortenerStatisticsModel();
 
@@ -98,17 +100,8 @@ class LinkShortenerRedirect {
                 $oStats->is_mobile = ($oAgent->mobile?'1':'');
                 $oStats->is_bot = '';
 
-                if( $oStats->browser == "other" ){
-
-                    $data = json_decode(file_get_contents(TL_ROOT.'/vendor/numero2/contao-marketing-suite/src/Resources/vendor/crawler-user-agents/crawler-user-agents.json'), true);
-
-                    $patterns = array();
-                    foreach($data as $entry) {
-                        if( preg_match('/'.$entry['pattern'].'/', $oAgent->string) ) {
-                            $oStats->is_bot = '1';
-                            break;
-                        }
-                    }
+                if( ClickAndViews::isBot() ) {
+                    $oStats->is_bot = '1';
                 }
 
                 $oStats->save();

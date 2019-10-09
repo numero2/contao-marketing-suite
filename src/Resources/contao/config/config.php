@@ -162,6 +162,7 @@ $GLOBALS['TL_HOOKS']['processFormData'][] = ['\numero2\MarketingSuite\Tracking\C
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagInsertTags'];
 $GLOBALS['TL_HOOKS']['getContentElement'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
 $GLOBALS['TL_HOOKS']['getFrontendModule'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTags'];
 
 if( TL_MODE === 'BE' ) {
     $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\BackendModule\Module', 'initializeBackendModuleTables'];

@@ -77,11 +77,12 @@ class Dashboard extends CoreBackendModule {
         $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/marketingsuite/vendor/chartjs/Chart.bundle' .(System::getContainer()->get('kernel')->isDebug()?'':'.min'). '.js';
 
         // initialize backend help
-        $objBEHelp = new Help();
-        $this->Template->be_help = $objBEHelp->generate();
+        $oBEHelp = new Help();
+        $this->Template->be_help = $oBEHelp->generate();
 
-        $lm = new LicenseMessage();
-        $this->Template->licence_message = $lm->generate();
+        // intialize message for missing license
+        $oLicMessage = new LicenseMessage();
+        $this->Template->licence_message = $oLicMessage->generate();
 
         // set template vars
         $this->Template->items = $aItems;

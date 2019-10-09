@@ -35,8 +35,10 @@ class ClickAndViews {
      */
     public function increaseClickOnContentElement( $objContentModel ) {
 
-        if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
-            Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_clicks=cms_ci_clicks+1 WHERE id=?" )->execute($objContentModel->id);
+        if( !self::isBot() ) {
+            if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
+                Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_clicks=cms_ci_clicks+1 WHERE id=?" )->execute($objContentModel->id);
+            }
         }
     }
 
@@ -49,7 +51,7 @@ class ClickAndViews {
      */
     public function increaseViewOnContentElement( $objContentModel ) {
 
-        if( $this->isViewable() ) {
+        if( $this->isViewable() && !self::isBot() ) {
 
             if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
                 Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_views=cms_ci_views+1 WHERE id=?" )->execute($objContentModel->id);
@@ -66,7 +68,7 @@ class ClickAndViews {
      */
     public function increaseViewOnMarketingElement( $objContentCount ) {
 
-        if( $this->isViewable() ) {
+        if( $this->isViewable() && !self::isBot() ) {
 
             if( irsa::hasFeature('marketing_element') ) {
 
@@ -91,6 +93,10 @@ class ClickAndViews {
      * @param object $objForm
      */
     public function increaseClickOnForm( $arrSubmitted, $arrData, $arrFiles, $arrLabels, $objForm ) {
+
+        if( self::isBot() ) {
+            return;
+        }
 
         $objContent = $objForm->getParent();
 
@@ -132,7 +138,7 @@ class ClickAndViews {
 
         $objContent = $objForm->getParent();
 
-        if( $this->isViewable() ) {
+        if( $this->isViewable() && !self::isBot() ) {
 
             if( $objContent->ptable === 'tl_cms_content_group' ) {
 
@@ -174,5 +180,29 @@ class ClickAndViews {
         }
 
         return true;
+    }
+
+
+    /**
+     * Checks if the current request is a bot
+     *
+     * @return boolean
+     */
+    public static function isBot() {
+
+        $oAgent = Environment::get('agent');
+
+        if( $oAgent->browser == "other" ) {
+
+            $data = json_decode(file_get_contents(TL_ROOT.'/vendor/numero2/contao-marketing-suite/src/Resources/vendor/crawler-user-agents/crawler-user-agents.json'), true);
+
+            foreach( $data as $entry ) {
+                if( preg_match('/'.$entry['pattern'].'/', $oAgent->string) ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -79,15 +79,6 @@ class CurrentPage extends MarketingItem {
      */
     public function alterContentHeader( $args, $dc, $objMarketingItem, $objContentParent ) {
 
-        $GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
-        $GLOBALS['TL_DCA']['tl_content']['config']['notDeletable'] = true;
-        $GLOBALS['TL_DCA']['tl_content']['config']['notSortable'] = true;
-        $GLOBALS['TL_DCA']['tl_content']['config']['notCreatable'] = true;
-
-        unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']);
-        unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['cut']);
-        unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['delete']);
-
         // add content type
         $args[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['content_type'][0]] = $GLOBALS['TL_LANG']['CTE'][$objMarketingItem->content_type][0];
 
@@ -143,6 +134,15 @@ class CurrentPage extends MarketingItem {
      * @param object $objContentParent
      */
     public function alterContentDCA( $dc, $objMarketingItem, $objContent, $objContentParent ) {
+
+        $GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
+        $GLOBALS['TL_DCA']['tl_content']['config']['notDeletable'] = true;
+        $GLOBALS['TL_DCA']['tl_content']['config']['notSortable'] = true;
+        $GLOBALS['TL_DCA']['tl_content']['config']['notCreatable'] = true;
+
+        unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']);
+        unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['cut']);
+        unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['delete']);
 
         if( Input::get('act') == 'edit' || Input::get('act') == 'editAll' ) {
 
@@ -210,7 +210,7 @@ class CurrentPage extends MarketingItem {
         $contents = ContentModel::findBy(['pid=? AND ptable=?'],[$group->id, 'tl_cms_content_group']);
 
         // create default content element and redirect to edit
-        if( !$contents ){
+        if( !$contents ) {
 
             // only go on if save was used
             if( array_key_exists('save', $_POST) ) {
@@ -316,7 +316,7 @@ class CurrentPage extends MarketingItem {
 
             foreach( $aPagesOrder as $key => $value) {
 
-                if( $key == 0 ){
+                if( $key == 0 ) {
                     $objContent = $default;
                 } else {
                     $objContent = clone $default;
@@ -328,12 +328,16 @@ class CurrentPage extends MarketingItem {
             }
         }
 
-        $objMarketingItem->init_step = 'contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid;
-        $objMarketingItem->save();
+        // if in setup
+        if( !empty($objMarketingItem->init_step) ) {
 
-        $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+            $objMarketingItem->init_step = 'contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid;
+            $objMarketingItem->save();
 
-        $this->redirect('contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+            $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+
+            $this->redirect('contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+        }
     }
 
 

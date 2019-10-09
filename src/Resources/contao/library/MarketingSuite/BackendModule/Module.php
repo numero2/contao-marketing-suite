@@ -130,7 +130,8 @@ class Module extends CoreBackendModule {
 
         $arrModule = [];
         $arrModule = $this->arrModules[$module];
-        $dc = null;
+        $dc = $this->objDc;
+        tabizni::riz();
 
         // Redirect with table parameter
         $strTable = Input::get('table');
@@ -140,53 +141,20 @@ class Module extends CoreBackendModule {
 
         // Add module style sheet
         if( isset($arrModule['stylesheet']) ) {
-            $GLOBALS['TL_CSS'][] = $arrModule['stylesheet'];
+            foreach( (array)$arrModule['stylesheet'] as $stylesheet ) {
+                $GLOBALS['TL_CSS'][] = $stylesheet;
+            }
         }
 
         // Add module javascript
         if( isset($arrModule['javascript']) ) {
-            $GLOBALS['TL_JAVASCRIPT'][] = $arrModule['javascript'];
+            foreach( (array)$arrModule['javascript'] as $javascript ) {
+                $GLOBALS['TL_JAVASCRIPT'][] = $javascript;
+            }
         }
-
-        if( $strTable != '' ) {
-
-            // Redirect if the current table does not belong to the current module
-            if (!in_array($strTable, (array) $arrModule['tables'], true)) {
-                System::log('Table "' . $strTable . '" is not allowed in module "' . $module . '"', __METHOD__, TL_ERROR);
-                Controller::redirect('contao/main.php?act=error');
-            }
-
-            // Load the language and DCA file
-            System::loadLanguageFile($strTable);
-            Controller::loadDataContainer($strTable);
-            tabizni::riz();
-
-            // Include all excluded fields which are allowed for the current user
-            if( $GLOBALS['TL_DCA'][$strTable]['fields'] ) {
-                foreach( $GLOBALS['TL_DCA'][$strTable]['fields'] as $k => $v ) {
-                    if( $v['exclude'] && BackendUser::getInstance()->hasAccess($strTable . '::' . $k, 'alexf') ) {
-                        $GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'] = false;
-                    }
-                }
-            }
-
-            // Fabricate a new data container object
-            if( !strlen($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']) ) {
-                System::log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
-                trigger_error('Could not create a data container object', E_USER_ERROR);
-            }
-
-            $dataContainer = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
-            $dc = new $dataContainer($strTable);
-        }
-
-        // AJAX request
-        if( $_POST && Environment::get('isAjaxRequest') ) {
-
-            $this->objAjax->executePostActions($dc);
 
         // Call module callback
-        } elseif( class_exists($arrModule['callback']) ) {
+        if( class_exists($arrModule['callback']) ) {
 
             $objCallback = new $arrModule['callback']($dc, $arrModule);
             return $objCallback->generate();

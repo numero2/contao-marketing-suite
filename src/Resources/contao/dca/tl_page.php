@@ -17,7 +17,7 @@
  * Add palettes to tl_page
  */
 $GLOBALS['TL_DCA']['tl_page']['palettes']['regular'] = str_replace(
-    ',description;'
+    ',description'
 ,   ',description,snippet_preview;'
 ,   $GLOBALS['TL_DCA']['tl_page']['palettes']['regular']
 );
@@ -30,6 +30,11 @@ $GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace(
     ';{protected_legend'
 ,   ';{cms_legend:hide},cms_root_license,cms_refresh_license;{protected_legend'
 ,   $GLOBALS['TL_DCA']['tl_page']['palettes']['root']
+);
+$GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback'] = str_replace(
+    ';{protected_legend'
+,   ';{cms_legend:hide},cms_root_license,cms_refresh_license;{protected_legend'
+,   $GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback']
 );
 
 
@@ -83,24 +88,25 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
 );
 
 
-// disable snippet-preview in multi edit mode
-if( \Input::get('act') != 'editAll' ) {
+if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
 
-    if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
+    $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
+        array_slice(
+            $GLOBALS['TL_DCA']['tl_page']['fields']
+        ,   0
+        ,   array_search('description', array_keys($GLOBALS['TL_DCA']['tl_page']['fields'])) + 1
+        )
+    ,   [
+            'snippet_preview' => [
+                'label' => &$GLOBALS['TL_LANG']['MSC']['snippet_preview']
+            ,   'input_field_callback'  => ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generate']
+            ]
+        ]
+    ,   array_slice(
+            $GLOBALS['TL_DCA']['tl_page']['fields']
+        ,   array_search('description', array_keys($GLOBALS['TL_DCA']['tl_page']['fields']))
+        )
+    );
 
-        $GLOBALS['TL_DCA']['tl_page']['fields']['snippet_preview'] = [
-            'label' => &$GLOBALS['TL_LANG']['tl_page']['snippet_preview']
-        ,   'input_field_callback'  => ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generate']
-        ];
-
-        $GLOBALS['TL_DCA']['tl_page']['fields']['pageTitle']['eval']['tl_class'] .= ' snippet';
-        $GLOBALS['TL_DCA']['tl_page']['fields']['pageTitle']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::TITLE_MAX_LENGTH;
-        $GLOBALS['TL_DCA']['tl_page']['fields']['pageTitle']['load_callback'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'addSnippetCount'];
-        $GLOBALS['TL_DCA']['tl_page']['fields']['pageTitle']['wizard'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generateInputField'];
-
-        $GLOBALS['TL_DCA']['tl_page']['fields']['description']['eval']['tl_class'] .= ' snippet';
-        $GLOBALS['TL_DCA']['tl_page']['fields']['description']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::DESCRIPTION_MAX_LENGTH;
-        $GLOBALS['TL_DCA']['tl_page']['fields']['description']['load_callback'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'addSnippetCount'];
-        $GLOBALS['TL_DCA']['tl_page']['fields']['description']['wizard'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generateInputField'];
-    }
+    unset($GLOBALS['TL_DCA']['tl_page']['fields']['serp_preview']);
 }

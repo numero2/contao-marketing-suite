@@ -1,4 +1,14 @@
 services:
+    marketing_suite.picker.link_shortener_provider:
+        class: numero2\MarketingSuiteBundle\Picker\LinkShortenerPickerProvider
+        arguments:
+            - "@knp_menu.factory"
+            - "@router"
+        calls:
+            - [setTokenStorage, ["@security.token_storage"]]
+        tags:
+            - { name: contao.picker_provider, priority: 96 }
+
     marketing_suite.controller.link_shortener:
         class: numero2\MarketingSuiteBundle\Controller\LinkShortenerController
         tags:

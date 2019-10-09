@@ -180,13 +180,18 @@ input[type="radio"][readonly] + label {
 }
 
 .moor-box {
-    z-index:100;
+    z-index: 100;
 }
 
 #tl_messages .tl_error, #tl_messages .tl_confirm, #tl_messages .tl_info, #tl_messages .tl_new {
     a {
         text-decoration: underline;
     }
+}
+
+#picker-menu a.cmsLinkShortenerPicker {
+    background-image: url(../../img/backend/icons/icon_picker_link_shortener.svg);
+    background-size: 16px;
 }
 
 .page_a, .page_b {
@@ -203,6 +208,7 @@ input[type="radio"][readonly] + label {
 .cms_flex {
 
     display: flex;
+    align-items: center;
 
     .cms_right {
         margin-left: auto

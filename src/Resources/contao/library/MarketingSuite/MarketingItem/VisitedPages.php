@@ -61,8 +61,10 @@ class VisitedPages extends MarketingItem {
 
             $strPages = '';
 
-            foreach( $pages as $value ) {
-                $strPages .= Image::getHtml(Controller::getPageStatusIcon($value)) . ' ' . $value->title . ' (' . $value->alias . Config::get('urlSuffix') . ')<br>';
+            if( $pages ) {
+                foreach( $pages as $value ) {
+                    $strPages .= Image::getHtml(Controller::getPageStatusIcon($value)) . ' ' . $value->title . ' (' . $value->alias . Config::get('urlSuffix') . ')<br>';
+                }
             }
 
             $aOverlay = [
@@ -88,6 +90,8 @@ class VisitedPages extends MarketingItem {
      * @param object $objContentParent
      */
     public function alterContentHeader( $args, $dc, $objMarketingItem, $objContentParent ) {
+
+        $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
         $GLOBALS['TL_MOOTOOLS'][] =
         "<script>

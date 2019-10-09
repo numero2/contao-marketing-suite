@@ -5,7 +5,7 @@
         <div class="formbody">
 
             <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
-            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>" />
+            <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />
 
             <div class="info">
                 <?= $this->content; ?>

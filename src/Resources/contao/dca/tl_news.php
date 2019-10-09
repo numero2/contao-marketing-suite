@@ -22,7 +22,7 @@ if( !empty($GLOBALS['TL_DCA']['tl_news']) ) {
     \System::loadLanguageFile('tl_cms_facebook');
 
     $GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace(
-        ',description;'
+        ',description'
     ,   ',description,snippet_preview;'
     ,   $GLOBALS['TL_DCA']['tl_news']['palettes']['default']
     );
@@ -101,25 +101,26 @@ if( !empty($GLOBALS['TL_DCA']['tl_news']) ) {
         $GLOBALS['TL_DCA']['tl_news']['fields']['published']['load_callback'][] = [ '\numero2\MarketingSuite\BackendModule\Facebook', 'publishUpdatePost' ];
     }
 
-    // disable snippet-preview in multi edit mode
-    if( \Input::get('act') != 'editAll' ) {
+    if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
 
-        if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
+        $GLOBALS['TL_DCA']['tl_news']['fields'] = array_merge(
+            array_slice(
+                $GLOBALS['TL_DCA']['tl_news']['fields']
+            ,   0
+            ,   array_search('description', array_keys($GLOBALS['TL_DCA']['tl_news']['fields'])) + 1
+            )
+        ,   [
+                'snippet_preview' => [
+                    'label' => &$GLOBALS['TL_LANG']['MSC']['snippet_preview']
+                ,   'input_field_callback'  => ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generate']
+                ]
+            ]
+        ,   array_slice(
+                $GLOBALS['TL_DCA']['tl_news']['fields']
+            ,   array_search('description', array_keys($GLOBALS['TL_DCA']['tl_news']['fields']))
+            )
+        );
 
-            $GLOBALS['TL_DCA']['tl_news']['fields']['snippet_preview'] = [
-                'label' => &$GLOBALS['TL_LANG']['tl_news']['snippet_preview']
-            ,   'input_field_callback'  => ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generate']
-            ];
-
-            $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['eval']['tl_class'] .= ' snippet';
-            $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::TITLE_MAX_LENGTH;
-            $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['load_callback'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'addSnippetCount'];
-            $GLOBALS['TL_DCA']['tl_news']['fields']['pageTitle']['wizard'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generateInputField'];
-
-            $GLOBALS['TL_DCA']['tl_news']['fields']['description']['eval']['tl_class'] .= ' snippet';
-            $GLOBALS['TL_DCA']['tl_news']['fields']['description']['eval']['data-snippet-length'] = \numero2\MarketingSuite\Widget\SnippetPreview::DESCRIPTION_MAX_LENGTH;
-            $GLOBALS['TL_DCA']['tl_news']['fields']['description']['load_callback'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'addSnippetCount'];
-            $GLOBALS['TL_DCA']['tl_news']['fields']['description']['wizard'][] = ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generateInputField'];
-        }
+        unset($GLOBALS['TL_DCA']['tl_news']['fields']['serp_preview']);
     }
 }

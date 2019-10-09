@@ -1,8 +1,47 @@
-<div class="clr widget snippet-preview">
+<div class="clr widget snippet-preview" id="snippet_preview_<?= $this->id ?>">
+
     <h3><?= $this->headline; ?></h3>
+
     <div>
         <div class="title"><?= $this->title; ?></div>
-        <div class="uri"><?= $this->uri; ?></div>
+        <div class="url"><?= $this->url; ?></div>
         <div class="description"><?= $this->description; ?></div>
     </div>
+
+    <?php if( \Config::get('showHelp') ): ?>
+    <p class="tl_help tl_tip"><?= $this->tip; ?></p>
+    <?php endif; ?>
+
+    <?php if( $this->titleTagExplanation ): ?>
+    <p class="explanation">
+        <?= $this->titleTagExplanation; ?>
+    </p>
+    <?php endif; ?>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function(){
+
+            new CMSBackend.SnippetPreview({
+                id: <?= $this->id; ?>,
+                baseUrl: '<?= $this->baseUrl; ?>',
+                urlSuffix: '<?= $this->urlSuffix; ?>',
+                titleTag: '<?= $this->titleTag; ?>',
+                titleField: '<?= $this->titleField ?>',
+                titleFieldFallback: '<?= $this->titleFieldFallback ?>',
+                aliasField: '<?= $this->aliasField ?>',
+                descriptionField: '<?= $this->descriptionField ?>',
+                descriptionFieldFallback: '<?= $this->descriptionFieldFallback ?>',
+                titleMinLength: <?= $this->titleMinLength; ?>,
+                titleMaxLength: <?= $this->titleMaxLength; ?>,
+                descriptionMinLength: <?= $this->descriptionMinLength; ?>,
+                descriptionMaxLength: <?= $this->descriptionMaxLength; ?>,
+                lengthLabel: '<?= $this->lengthLabel ?>',
+                labelTooShort: '<?= $this->labelTooShort ?>',
+                labelTooLong: '<?= $this->labelTooLong ?>',
+                labelOptimal: '<?= $this->labelOptimal ?>'
+            });
+        });
+
+    </script>
 </div>

@@ -48,9 +48,31 @@
     <trans-unit id="CTE.cms_hyperlink.1">
         <source>Erzeugt ein Hyperlink-Element.</source>
     </trans-unit>
+    <!-- PICKER -->
+    <trans-unit id="MSC.cmsLinkShortenerPicker">
+        <source>Link Shortener</source>
+    </trans-unit>
     <!-- LABELS AND MESSAGES -->
+    <trans-unit id="MSC.snippet_preview.0">
+        <source>Vorschau in Suchergebnissen</source>
+    </trans-unit>
+    <trans-unit id="MSC.snippet_preview.1">
+        <source>So könnte die Seite in den Ergebnissen einer Suchmaschine aussehen.</source>
+    </trans-unit>
     <trans-unit id="MSC.snippet_count">
         <source>{1} von {2} Zeichen</source>
+    </trans-unit>
+    <trans-unit id="MSC.snippet_length_too_short">
+        <source>Der eingegebene Text ist zu kurz</source>
+    </trans-unit>
+    <trans-unit id="MSC.snippet_length_too_long">
+        <source>Der eingegebene Text ist zu lang</source>
+    </trans-unit>
+    <trans-unit id="MSC.snippet_length_optimal">
+        <source>Der eingegebene Text hat eine optimale Länge</source>
+    </trans-unit>
+    <trans-unit id="MSC.snippet_titletag_explanation">
+        <source><![CDATA[Der orangene Teil der Vorschau entspricht den Title-Tag-Einstellungen des Layouts der Contao-Installation. Diese Einstellung kann <a href="%s">im Layout</a> geändert werden. Wird kein Standard-Title-Tag gewünscht, muss in das Feld "Title-Tag" der Wert <em>{{page::pageTitle}}</em> eingetragen werden.]]></source>
     </trans-unit>
     <trans-unit id="MSC.finish">
         <source>Fertigstellen</source>

@@ -4,25 +4,46 @@
 .widget.snippet-preview {
 
     > div {
+
         font-family: Arial, Helvetica, Sans-serif;
+        font-size: 20px;
         padding: 15px;
         border: 1px solid $col-gray;
 
         > div {
+            width: calc(100% - 15px);
             max-width: 600px;
+            overflow: hidden;
+        }
+
+        @media screen and (max-width: 600px) {
+            > .title { white-space: normal; }
+        }
+
+        @media screen and (max-width: 566px) {
+            font-size: 16px;
         }
     }
 
     .title {
-        font-size: 18px;
-        line-height: 22px;
+
+        font-size: 1em;
+        line-height: 26/20*1em;
         font-weight: 400;
         color: #1a0dab;
+        white-space: nowrap;
+
+        span {
+            font-size: inherit;
+            line-height: inherit;
+            font-weight: inherit;
+            color: $col-orange;
+        }
     }
 
-    .uri {
-        font-size: 14px;
-        line-height: 16px;
+    .url {
+        font-size: 16/20*1em;
+        line-height: 24/20*1em;
         font-weight: 400;
         color: #006621;
 
@@ -30,10 +51,32 @@
     }
 
     .description {
-        font-size: 13px;
-        line-height: 18px;
+        font-size: 14/20*1em;
+        line-height: 22/20*1em;
         font-weight: 400;
         color: #545454;
+    }
+
+    p.explanation {
+
+        margin-top: 1em;
+        margin-bottom: 0;
+        padding: 15px;
+
+        background: $col-yellow-light;
+
+        line-height: 1.4;
+        color: darken($col-yellow-light,40%);
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+
+        em {
+            font-style: normal;
+            font-family: "Courier New", Courier, "Lucida Console", Monaco, monospace;
+        }
     }
 }
 
@@ -44,6 +87,7 @@
     }
 
     > div[contenteditable] {
+
         width: 100%;
         line-height: normal;
         font-size: .875rem;
@@ -53,6 +97,16 @@
             background: $col-red;
             color: $col-white;
         }
+
+        &[class*="length_"] {
+
+            outline: none;
+
+            &.length_short { box-shadow: 0px 3px 0px 0px $col-yellow-light; }
+            &.length_long { box-shadow: 0px 3px 0px 0px $col-red; }
+            &.length_optimal { box-shadow: 0px 3px 0px 0px $col-green; }
+        }
+
     }
 
     > input + div[contenteditable] {
@@ -77,5 +131,4 @@
 
         + img { display: none; }
     }
-
 }

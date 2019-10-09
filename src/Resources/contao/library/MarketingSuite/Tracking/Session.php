@@ -23,6 +23,12 @@ class Session {
 
 
     /**
+     * max entries of visited pages in the session
+     */
+    const MAX_ENTRIES = 100;
+
+
+    /**
      * Session data
      * @var \Session
      */
@@ -59,8 +65,15 @@ class Session {
             $pageId = Cache::get('cms_page_id');
         }
 
+        // stored pages if it's a new page id
         if( $aSession[0] != $pageId ) {
             array_unshift($aSession, $pageId);
+
+            // cut stored pages to MAX_ENTRIES length, leave last in as it is used in first page criteria
+            if( count($aSession) > self::MAX_ENTRIES ) {
+                array_splice($aSession, self::MAX_ENTRIES-1, -1);
+            }
+
             $this->session->set('cms_visitedPages', $aSession);
         }
     }

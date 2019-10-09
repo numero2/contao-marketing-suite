@@ -18,7 +18,7 @@
                 </div>
                 <div class="reset">
                     <?php if( $this->groups[0]['reset'] > 0 ): ?>
-                        <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Date::parse(\Config::get('datimFormat'), $this->groups->reset) ); ?></p>
+                        <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Date::parse(\Config::get('datimFormat'), $this->groups[0]['reset']) ); ?></p>
                     <?php endif; ?>
                 </div>
                 <table>

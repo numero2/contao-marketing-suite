@@ -16,10 +16,11 @@
 namespace numero2\MarketingSuiteBundle\Controller;
 
 
+use Contao\Environment;
+use numero2\MarketingSuite\LinkShortenerStatisticsModel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use numero2\MarketingSuite\LinkShortenerStatisticsModel;
 
 
 class LinkShortenerController {
@@ -36,7 +37,7 @@ class LinkShortenerController {
     public function __invoke($_content, Request $request) {
 
         // log request for statistics
-        $oAgent = \Environment::get('agent');
+        $oAgent = Environment::get('agent');
 
         $oStats = new LinkShortenerStatisticsModel();
 
@@ -50,16 +51,8 @@ class LinkShortenerController {
         $oStats->is_mobile = ($oAgent->mobile?'1':'');
         $oStats->is_bot = '';
 
-        if( $oStats->browser == "other" ){
-
-            $data = json_decode(file_get_contents(TL_ROOT.'/vendor/numero2/contao-marketing-suite/src/Resources/vendor/crawler-user-agents/crawler-user-agents.json'), true);
-
-            foreach( $data as $entry ) {
-                if( preg_match('/'.$entry['pattern'].'/', $oAgent->string) ) {
-                    $oStats->is_bot = '1';
-                    break;
-                }
-            }
+        if( ClickAndViews::isBot() ) {
+            $oStats->is_bot = '1';
         }
 
         $oStats->save();

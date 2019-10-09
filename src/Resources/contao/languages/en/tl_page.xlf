@@ -7,9 +7,6 @@
         <source>Marketing Suite</source>
     </trans-unit>
     <!-- FIELDS -->
-    <trans-unit id="tl_page.snippet_preview.0">
-        <source>Snippet-Vorschau in Suchergebnissen</source>
-    </trans-unit>
     <trans-unit id="tl_page.cms_root_license.0">
         <source>Domain-Schlüssel</source>
     </trans-unit>

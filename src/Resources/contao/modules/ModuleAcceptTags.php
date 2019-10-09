@@ -79,6 +79,8 @@ class ModuleAcceptTags extends Module {
 
         $action = Environment::get('request');
         $action = preg_replace('|_cmsscb=[0-9]+[&]?|', '', $action);
+        $action = preg_replace('|_cmselid=[\w]+[&]?|', '', $action);
+        $action = Input::get('_cmselid') ? $action.'#'.Input::get('_cmselid') : $action;
         $this->Template->action = $action;
 
         $this->Template->formId = 'cms_accept_tags';

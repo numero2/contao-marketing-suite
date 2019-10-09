@@ -166,7 +166,7 @@
         <source>Seiten Kriterium</source>
     </trans-unit>
     <trans-unit id="tl_content.cms_mi_pages_criteria.1">
-        <source>Wann ist das Seiten Kriterium erfüllt.</source>
+        <source>Wann ist das Seiten Kriterium erfüllt. Die Überprüfung umfasst nur die letzten 100 Seiten, die ein Besucher gesehen hat.</source>
     </trans-unit>
     <trans-unit id="tl_content.cms_mi_pages.0">
         <source>Seiten</source>

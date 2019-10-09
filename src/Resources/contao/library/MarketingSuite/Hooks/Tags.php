@@ -231,7 +231,7 @@ class Tags extends Hooks {
             // check if bar / tags should be shown at all
             if( $oModule->shouldBeShown() ) {
 
-                $GLOBALS['TL_BODY'][] = $sModule;
+                $GLOBALS['TL_BODY'][] = Controller::replaceInsertTags($sModule);
                 $objPage->cssClass .= ' cookie-bar-visible';
             }
         }
@@ -296,11 +296,18 @@ class Tags extends Hooks {
                 return '';
             }
 
+            $cssID = '';
+            $cssID = $this->_addIdAttribute($strBuffer, $oElement);
+
             if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
 
                 $oTemplate = new \FrontendTemplate($oTag->fallbackTpl);
-                $oTemplate->setData($oRow->row());
-                $oTemplate->optinLink = self::generateCookieBarForceLink();
+                $oTemplate->setData( $oRow->row() );
+
+                $oTemplate->optinLink = self::generateCookieBarForceLink($cssID);
+                $oTemplate->headline = null;
+                $oTemplate->class = 'ce_optin_fallback';
+                $oTemplate->cssID = 'id="'.$cssID.'"';
 
                 $strBuffer = $oTemplate->parse();
             }
@@ -311,12 +318,49 @@ class Tags extends Hooks {
 
 
     /**
-     * Generates a link to the current page with a parameter that forces
-     * the cookie bar to show up again
+     * Adds an id attribute to the given element markup if necessary
+     * and returns the found / generated id
+     *
+     * @param string $strBuffer
+     * @param ContentElement|Module $oElement
      *
      * @return string
      */
-    private function generateCookieBarForceLink() {
+    private function _addIdAttribute( &$strBuffer, $oElement ) {
+
+        $firstTag = [];
+
+        $id = '';
+
+        if( preg_match('/<[^\!][^>]*?>/m', $strBuffer, $firstTag) ) {
+
+            $firstTag = $firstTag[0];
+            $arrExistingID = [];
+
+            if( preg_match('/id="(.*?)"/', $firstTag, $arrExistingID) ) {
+
+                $id = $arrExistingID[1];
+
+            } else {
+
+                $id = 'cms_' . $oElement->typePrefix . $oElement->id;
+                $strBuffer = str_replace($firstTag, substr($firstTag, 0, -1).' id="'.$id.'">', $strBuffer);
+            }
+        }
+
+        return $id;
+    }
+
+
+    /**
+     * Generates a link to the current page with a parameter that forces
+     * the cookie bar to show up again
+     *
+     * @param string Optional id (cssID) of the original element
+     *
+     * @return string
+     */
+    private function generateCookieBarForceLink( $strElementId="" ) {
 
         $href = Environment::get('request');
 
@@ -325,6 +369,10 @@ class Tags extends Hooks {
         }
 
         $href = $href . '?_cmsscb=1';
+
+        if( !empty($strElementId) ) {
+            $href .= '&amp_cmselid='.$strElementId;
+        }
 
         return $href;
     }

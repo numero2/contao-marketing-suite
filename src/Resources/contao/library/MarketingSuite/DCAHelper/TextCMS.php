@@ -16,6 +16,7 @@
 namespace numero2\MarketingSuite\DCAHelper;
 
 use Contao\Backend as CoreBackend;
+use Contao\Controller;
 use Contao\DataContainer;
 use Contao\Input;
 use numero2\MarketingSuite\Backend;
@@ -150,9 +151,6 @@ class TextCMS extends CoreBackend {
             $dc->activeRecord->type = 'text';
         }
 
-        $oContent = NULL;
-        $oContent = new \tl_content();
-
-        return $oContent->getElementTemplates($dc);
+        return Controller::getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
     }
 }

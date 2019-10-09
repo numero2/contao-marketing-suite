@@ -685,6 +685,7 @@ class MarketingItem extends CoreBackend {
 
         $objContent = null;
         $objMI = null;
+
         if( Input::get('act') == 'edit' ) {
 
             $objContent = ContentModel::findById($dc->id);
@@ -701,7 +702,10 @@ class MarketingItem extends CoreBackend {
             }
         } else {
 
-            $objMI = MarketingItemModel::findById($dc->id);
+            $oContentGroup = ContentGroupModel::findById($dc->id);
+            if( $oContentGroup ) {
+                $objMI = MarketingItemModel::findById($oContentGroup->pid);
+            }
         }
 
         if( !empty($objMI) ) {
@@ -711,7 +715,6 @@ class MarketingItem extends CoreBackend {
             if( $instance ) {
                 $args = $instance->alterContentDCA($dc, $objMI, $objContent, $objContentParent);
             }
-
         }
     }
 
