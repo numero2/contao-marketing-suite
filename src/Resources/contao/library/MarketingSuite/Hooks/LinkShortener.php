@@ -69,4 +69,30 @@ class LinkShortener extends Hooks {
 
         return false;
     }
+
+
+    /**
+     * Replace insert tag flags for the link shortener
+     *
+     * @param string $flag
+     * @param string $tag
+     * @param string $result
+     * @param array $flags
+     * @param boolean $blnCache
+     * @param array $tags
+     * @param array $arrCache
+     * @param integer $_rit
+     * @param integer $_cnt
+     *
+     * @return string|false
+     */
+    public function replaceLinkShortenerInsertTagFlags($flag, $tag, $result, $flags, $blnCache, $tags, $arrCache, $_rit, $_cnt) {
+
+        if( strpos($tag, 'cms_link_shortener::') === 0  && in_array($flag, ['prefix', 'alias'])) {
+            return $result;
+        }
+
+        return false;
+    }
+
 }

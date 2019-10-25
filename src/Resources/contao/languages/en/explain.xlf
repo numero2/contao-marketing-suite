@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/explain.php" source-language="en">
+<body>
+    <!-- CONTENT ELEMENTS -->
+    <trans-unit id="XPL.matomoFields.0.0">
+        <source>Hinweis:</source>
+    </trans-unit>
+    <trans-unit id="XPL.matomoFields.0.1">
+        <source>Matomo selbst erzeugt beim Anlegen einer neuen Seite einen fertigen Tracking-Code. Aus diesem Tracking-Code benötigen wir lediglich die folgenden zwei Informationen.</source>
+    </trans-unit>
+    <trans-unit id="XPL.matomoFields.1.0">
+        <source>URL</source>
+    </trans-unit>
+    <trans-unit id="XPL.matomoFields.1.1">
+        <source><![CDATA[<pre class="matomo">&lt;!-- Matomo --&gt;
+&lt;script type="text/javascript"&gt;
+ var _paq = window._paq || [];
+ /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+ _paq.push(['trackPageView']);
+ _paq.push(['enableLinkTracking']);
+ (function() {
+   var u="//<mark>example.com</mark>/";
+   _paq.push(['setTrackerUrl', u+'matomo.php']);
+   _paq.push(['setSiteId', 'xxx']);
+   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+   g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+ })();
+&lt;/script&gt;
+&lt;!-- End Matomo Code --&gt;
+</pre>]]></source>
+    </trans-unit>
+    <trans-unit id="XPL.matomoFields.2.0">
+        <source>Seiten-ID</source>
+    </trans-unit>
+    <trans-unit id="XPL.matomoFields.2.1">
+        <source><![CDATA[<pre class="matomo">&lt;!-- Matomo --&gt;
+&lt;script type="text/javascript"&gt;
+ var _paq = window._paq || [];
+ /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+ _paq.push(['trackPageView']);
+ _paq.push(['enableLinkTracking']);
+ (function() {
+   var u="//example.com/";
+   _paq.push(['setTrackerUrl', u+'matomo.php']);
+   _paq.push(['setSiteId', '<mark>xxx</mark>']);
+   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+   g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+ })();
+&lt;/script&gt;
+&lt;!-- End Matomo Code --&gt;
+</pre>]]></source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

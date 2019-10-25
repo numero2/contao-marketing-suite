@@ -20,8 +20,9 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
 
     'config' => [
         'dataContainer'             => 'Table'
+    ,   'closed'                    => \numero2\MarketingSuite\DCAHelper\MarketingItem::isClosed()
     ,   'ctable'                    => ['tl_cms_content_group', 'tl_content']
-    ,   'onsubmit_callback'         => [['\numero2\MarketingSuite\DCAHelper\MarketingItem','submitMarketingItem']]
+    ,   'onsubmit_callback'         => [['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'submitMarketingItem']]
     ,   'onload_callback'           => [['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'loadMarketingItem']]
     ,   'switchToEdit'              => true
     ,   'sql' => [

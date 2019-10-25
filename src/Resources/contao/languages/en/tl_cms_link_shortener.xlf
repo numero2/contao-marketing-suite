@@ -21,6 +21,12 @@
     <trans-unit id="tl_cms_link_shortener.statistics.1">
         <source>Statistik des Kurz-Link ID %s anzeigen</source>
     </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.reset_counter.0">
+        <source>Anzahl Aufrufe und Klicks zurücksetzen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.reset_counter.1">
+        <source>Anzahl Aufrufe und Klicks bei der ID %s zurücksetzen</source>
+    </trans-unit>
     <trans-unit id="tl_cms_link_shortener.delete.0">
         <source>Kurz-Link löschen</source>
     </trans-unit>

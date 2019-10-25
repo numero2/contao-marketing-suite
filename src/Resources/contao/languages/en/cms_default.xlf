@@ -30,7 +30,7 @@
         <source>Bestätigen</source>
     </trans-unit>
     <trans-unit id="cms_tag_settings_default.text">
-        <source><![CDATA[<p>]]>Dazu speichern wir Informationen über Ihren Besuch in sogenannten Cookies. Durch die Nutzung dieser Webseite erklären Sie sich mit der Verwendung von Cookies einverstanden. Detaillierte Informationen über den Einsatz von Cookies auf dieser Webseite erhalten Sie in der Datenschutzerklärung.<![CDATA[</p>]]></source>
+        <source><![CDATA[<p>]]>Durch die Nutzung dieser Webseite erklären Sie sich mit der Verwendung von Cookies einverstanden. Detaillierte Informationen über den Einsatz von Cookies auf dieser Webseite erhalten Sie in der Datenschutzerklärung.<![CDATA[</p>]]></source>
     </trans-unit>
 </body>
 </file>

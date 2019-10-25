@@ -128,11 +128,29 @@
     <trans-unit id="tl_cms_tag.anonymize_ip.1">
         <source>Die IP des Besuchers vor der Übertragung anonymisieren.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.matomo_url.0">
+        <source>URL</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.matomo_url.1">
+        <source>Die URL zur Matomo-Installation (ohne Angabe von http:// oder https://)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.matomo_siteid.0">
+        <source>Seiten-ID</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.matomo_siteid.1">
+        <source>Die ID der Seite die in Matomo angelegt wurde.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.fallbackTpl.0">
         <source>Fallback Template</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.fallbackTpl.1">
         <source>Hier können Sie ein "Fallback-Template" angeben welches dem Nutzer angezeigt wird wenn der Tag nicht bestätigt wurde.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.fallback_text.0">
+        <source>Fallback Text</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.fallback_text.1">
+        <source>Hier können Sie ein Fallback-Text angeben welcher dem Nutzer angezeigt wird wenn der Tag nicht bestätigt wurde. Weitere Informationen zur Einrichtung <![CDATA[<a href="https://contao-marketingsuite.com/a6zb17" target="_blank">finden Sie hier</a>]]>.</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.customTpl.0">
         <source>Individuelles Template</source>
@@ -188,6 +206,9 @@
     </trans-unit>
     <trans-unit id="tl_cms_tag.types.facebook_pixel">
         <source>Facebook Pixel</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.types.matomo">
+        <source>Matomo</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.page_scopes.current_page">
         <source>Nur ausgewählte Seiten</source>

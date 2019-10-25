@@ -57,7 +57,7 @@
         <source>Anzeige-Einstellungen Hilfe</source>
     </trans-unit>
     <trans-unit id="cms_be_help.cms_settings_tags_tl_cms_tag_settings.description">
-        <source><![CDATA[<strong>Cookie-Bar Typ auswählen,</strong> entweder Standard-Cookie-Bar oder Opt-In Cookie Bar (EU-Privacy). Beschriftung, Texte und Aussehen der Cookie-Bar anpassen.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwrE-IgSQP5rbrHKEcwZR1Qr" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+        <source><![CDATA[<strong>Cookie-Bar Typ auswählen,</strong> entweder "Cookie-Bar" oder "Tracking Opt-In (EU-Privacy)". Beschriftung, Texte und Aussehen der Cookie-Bar anpassen.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwrE-IgSQP5rbrHKEcwZR1Qr" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
     </trans-unit>
 </body>
 </file>

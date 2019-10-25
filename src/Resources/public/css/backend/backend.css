@@ -185,7 +185,7 @@ input[type="radio"][readonly] + label {
     z-index: 100;
 }
 
-#tl_messages .tl_error a, #tl_messages .tl_confirm a, #tl_messages .tl_info a, #tl_messages .tl_new a {
+.tl_error a, .tl_confirm a, .tl_info a, .tl_new a {
     text-decoration: underline;
 }
 
@@ -211,6 +211,11 @@ input[type="radio"][readonly] + label {
 
 .cms_flex .cms_right {
     margin-left: auto;
+}
+
+.widget p.tl_help a,
+.widget p.tl_tip a {
+    text-decoration: underline;
 }
 
 #pal_cms_helper_top_legend, #pal_cms_helper_bottom_legend {
@@ -312,6 +317,17 @@ input[type="radio"][readonly] + label {
 .tl_panel .cms_be_help {
     margin-top: -8px;
     margin-right: -10px;
+}
+
+.tl_help_table td {
+    padding: 1em;
+}
+
+.tl_help_table pre.matomo {
+    padding: 1em;
+    border: 1px solid #d0d0d2;
+    max-width: 500px;
+    overflow: hidden;
 }
 
 .license_message_wrapper > .cms_be_license_message {

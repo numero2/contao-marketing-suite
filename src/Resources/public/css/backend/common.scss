@@ -183,10 +183,9 @@ input[type="radio"][readonly] + label {
     z-index: 100;
 }
 
-#tl_messages .tl_error, #tl_messages .tl_confirm, #tl_messages .tl_info, #tl_messages .tl_new {
-    a {
-        text-decoration: underline;
-    }
+.tl_error, .tl_confirm, .tl_info, .tl_new {
+
+    a { text-decoration: underline; }
 }
 
 #picker-menu a.cmsLinkShortenerPicker {
@@ -213,4 +212,9 @@ input[type="radio"][readonly] + label {
     .cms_right {
         margin-left: auto
     }
+}
+
+.widget p.tl_help a,
+.widget p.tl_tip a{
+    text-decoration: underline;
 }

@@ -97,7 +97,8 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
     ,   'google_analytics'          => '{common_legend},type,name;{tag_legend},tag,alias;{config_legend},anonymize_ip;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'google_tag_manager'        => '{common_legend},type,name;{tag_legend},tag;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'facebook_pixel'            => '{common_legend},type,name;{tag_legend},tag;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
-    ,   'content_module_element'    => '{common_legend},type,name;{tag_legend},fallbackTpl;{publish_legend},active'
+    ,   'content_module_element'    => '{common_legend},type,name;{tag_legend},fallbackTpl,fallback_text;{publish_legend},active'
+    ,   'matomo'                    => '{common_legend},type,name;{tag_legend},matomo_url,matomo_siteid;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ]
 ,   'fields' => [
         'id' => [
@@ -147,6 +148,20 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
+    ,   'matomo_url' => [
+            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['matomo_url']
+        ,   'inputType'             => 'text'
+        ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'helpwizard'=>true]
+        ,   'explanation'           => 'matomoFields'
+        ,   'sql'                   => "varchar(255) NOT NULL default ''"
+        ]
+    ,   'matomo_siteid' => [
+            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['matomo_siteid']
+        ,   'inputType'             => 'text'
+        ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'helpwizard'=>true]
+        ,   'explanation'           => 'matomoFields'
+        ,   'sql'                   => "varchar(255) NOT NULL default ''"
+        ]
     ,   'anonymize_ip' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['anonymize_ip']
         ,   'inputType'             => 'checkbox'
@@ -168,6 +183,12 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
         ,   'eval'                  => ['mandatory'=>false, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
+    ,   'fallback_text' => [
+            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['fallback_text']
+        ,   'inputType'             => 'textarea'
+        ,   'eval'                  => ['mandatory'=>false, 'rte'=>'tinyMarketing', 'tl_class'=>'clr']
+        ,   'sql'                   => "text NULL"
+        ]
     ,   'customTpl' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['customTpl']
         ,   'inputType'             => 'select'
@@ -187,6 +208,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['pages']
         ,   'inputType'             => 'pageTree'
         ,   'foreignKey'            => 'tl_page.title'
+        ,   'save_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\Tag', 'sanityCheckPageScopeWithPages'] ]
         ,   'eval'                  => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderPages', 'tl_class'=>'clr']
         ,   'relation'              => ['type'=>'hasMany', 'load'=>'lazy']
         ,   'sql'                   => "text NULL"

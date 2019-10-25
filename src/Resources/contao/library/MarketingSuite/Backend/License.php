@@ -21,6 +21,7 @@ use Contao\Crypto;
 use Contao\Date;
 use Contao\PageModel;
 use Contao\System;
+use Contao\Environment;
 use Doctrine\DBAL\Exception\DriverException;
 use numero2\MarketingSuite\Api\MarketingSuite as API;
 
@@ -120,14 +121,24 @@ class License {
 
         try {
 
+            // backend handling
             if( !$rootPageId ) {
+
                 $objPages = PageModel::findByType('root');
+
+            // frontend handling
             } else {
                 $objPage = PageModel::findById($rootPageId);
 
                 if( $objPage && $objPage->type == 'root' ) {
-
                     $objPages[] = $objPage;
+                }
+
+                if( self::isTestDomain($rootPageId) && !CMSConfig::get('testmode') ) {
+                    return false;
+                }
+                if( CMSConfig::get('testmode') && !Auth::isBackendUserLoggedIn() ) {
+                    return false;
                 }
             }
 
@@ -171,6 +182,43 @@ class License {
 
             if( in_array($strAlias, $features) ) {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * test if the given domain is a valid test domain for the given root page
+     *
+     * @param  integer $rootPageId
+     * @param  string  $domain
+     *
+     * @return boolean
+     */
+    public static function isTestDomain( $rootPageId ) {
+
+        $objPage = PageModel::findById($rootPageId);
+        $domain = $objPage->dns?:Environment::get('host');
+
+        if( $objPage && $objPage->type == 'root' ) {
+
+            $crypt = new Crypto($objPage->cms_root_key);
+
+            if( $crypt->verify($objPage->cms_root_data, $objPage->cms_root_sign) ) {
+
+                $data = $crypt->decryptPublic($objPage->cms_root_data);
+                $data = deserialize($data);
+
+                if( !empty($data['test_domains']) ) {
+                    $domain = strrev($domain);
+                    foreach( $data['test_domains'] as $testDomain ) {
+                        if( !empty($testDomain) && strlen($testDomain) && stripos($domain, strrev($testDomain))===0 ) {
+                            return true;
+                        }
+                    }
+                }
             }
         }
 

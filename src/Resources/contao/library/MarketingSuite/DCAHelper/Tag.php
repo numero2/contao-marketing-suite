@@ -20,6 +20,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use numero2\MarketingSuite\Backend;
@@ -175,8 +176,8 @@ class Tag extends CoreBackend {
         if( Input::get('mode') != 'create' ) {
 
             $objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
-            ->limit(1)
-            ->execute(Input::get('id'));
+                ->limit(1)
+                ->execute(Input::get('id'));
 
             if( $objPage->pid == '0' ) {
 
@@ -339,9 +340,9 @@ class Tag extends CoreBackend {
     public function getPageScopes() {
 
         $types = [
-            'current_page' => $GLOBALS['TL_LANG']['tl_cms_tag']['page_scopes']['current_page']
+            'current_and_all_children' => $GLOBALS['TL_LANG']['tl_cms_tag']['page_scopes']['current_and_all_children']
         ,   'current_and_direct_children' => $GLOBALS['TL_LANG']['tl_cms_tag']['page_scopes']['current_and_direct_children']
-        ,   'current_and_all_children' => $GLOBALS['TL_LANG']['tl_cms_tag']['page_scopes']['current_and_all_children']
+        ,   'current_page' => $GLOBALS['TL_LANG']['tl_cms_tag']['page_scopes']['current_page']
         ];
 
         return $types;
@@ -404,6 +405,7 @@ class Tag extends CoreBackend {
         return $types;
     }
 
+
     /**
      * Unset enable_on_cookie_accept for session tags
      *
@@ -421,6 +423,35 @@ class Tag extends CoreBackend {
                 $oTag->save();
             }
         }
+    }
 
+
+    /**
+     * performs a sanity chack for the field pages_scope and pages
+     *
+     * @param  string $varValue
+     * @param  Datacontainer $dc
+     *
+     * @return string
+     */
+    public function sanityCheckPageScopeWithPages( $varValue, Datacontainer $dc ) {
+
+        if( Input::post('pages_scope') == "current_page" ) {
+
+            $oPages = PageModel::findMultipleByIds(deserialize($varValue));
+
+            if( $oPages ) {
+                foreach( $oPages as $oPage ) {
+                    if( $oPage->type == 'root' ) {
+                        throw new \Exception($GLOBALS['TL_LANG']['ERR']['no_root_pages_for_pagescope_current']);
+                    }
+                    if( in_array($oPage->type, ['forward', 'redirect']) ) {
+                        throw new \Exception($GLOBALS['TL_LANG']['ERR']['no_forward_redirect_pages_for_pagescope_current']);
+                    }
+                }
+            }
+        }
+
+        return $varValue;
     }
 }

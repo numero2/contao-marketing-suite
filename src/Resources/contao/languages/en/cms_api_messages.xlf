@@ -5,6 +5,9 @@
     <trans-unit id="cms_api_messages.license_valid">
         <source>Die angegebene Marketing Suite Lizenz ist gültig (zuletzt geprüft %s).</source>
     </trans-unit>
+    <trans-unit id="cms_api_messages.is_testdomain">
+        <source>Bei der aktuellen Domain handelt es sich um eine Testdomain. Bitte aktivieren Sie in den <![CDATA[<a href="contao?do=cms_settings&mod=settings&table=tl_cms_settings#pal_test_legend">Einstellungen</a>]]> den Test-Modus.</source>
+    </trans-unit>
     <!-- ERROR CODES -->
     <trans-unit id="cms_api_messages.errors.connection_error">
         <source>Beim Verbinden mit dem Marketing Suite Lizenzserver ist ein Problem aufgetreten. Versuchen Sie es später noch einmal.</source>

@@ -105,3 +105,23 @@
         margin-right: -10px;
     }
 }
+
+.tl_help_table {
+
+    td {
+        padding: 1em;
+    }
+
+    pre.matomo {
+
+        padding: 1em;
+        border: 1px solid $col-gray-1;
+        max-width: 500px;
+        overflow: hidden;
+
+        mark {
+            //background: $col-orange;
+            //color: $col-white;
+        }
+    }
+}

@@ -923,4 +923,15 @@ class MarketingItem extends CoreBackend {
 
         return $value;
     }
+
+
+    /**
+     * Returns if the DCA should be closed or not
+     *
+     * @return boolean
+     */
+    public static function isClosed() {
+
+        return !dowcosko::hasFeature('marketing_element');
+    }
 }

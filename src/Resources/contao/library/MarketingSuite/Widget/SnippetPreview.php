@@ -149,7 +149,10 @@ class SnippetPreview extends Controller {
 
         $oPage = NULL;
         $oPage = PageModel::findById($dc->activeRecord->id);
-        $oPage->loadDetails();
+
+        if( $oPage ) {
+            $oPage->loadDetails();
+        }
 
         $sURL = "";
         $sURL = $oPage->getAbsoluteUrl();
@@ -186,7 +189,10 @@ class SnippetPreview extends Controller {
 
         $oPage = NULL;
         $oPage = $oNews->getRelated('pid')->getRelated('jumpTo');
-        $oPage->loadDetails();
+
+        if( $oPage ) {
+            $oPage->loadDetails();
+        }
 
         $sURL = "";
         $sURL = News::generateNewsUrl($oNews, false, true);
@@ -203,9 +209,15 @@ class SnippetPreview extends Controller {
         ,   'aliasField' => 'ctrl_alias'.$aData['fieldSuffix']
         ,   'descriptionField' => 'ctrl_description'.$aData['fieldSuffix']
         ,   'descriptionFieldFallback' => 'ctrl_teaser'.$aData['fieldSuffix']
-        ,   'titleTag' => $this->parseTitleTag($oPage)
-        ,   'layoutId' => $oPage->getRelated('layout')->id
         ];
+
+        if( $oPage ) {
+
+            $aData += [
+                'titleTag' => $this->parseTitleTag($oPage)
+            ,   'layoutId' => $oPage->getRelated('layout')->id
+            ];
+        }
     }
 
 
@@ -224,7 +236,10 @@ class SnippetPreview extends Controller {
 
         $oPage = NULL;
         $oPage = $oEvent->getRelated('pid')->getRelated('jumpTo');
-        $oPage->loadDetails();
+
+        if( $oPage ) {
+            $oPage->loadDetails();
+        }
 
         $sURL = "";
         $sURL = Events::generateEventUrl($oEvent, true);
@@ -241,8 +256,14 @@ class SnippetPreview extends Controller {
         ,   'aliasField' => 'ctrl_alias'.$aData['fieldSuffix']
         ,   'descriptionField' => 'ctrl_description'.$aData['fieldSuffix']
         ,   'descriptionFieldFallback' => 'ctrl_teaser'.$aData['fieldSuffix']
-        ,   'titleTag' => $this->parseTitleTag($oPage)
-        ,   'layoutId' => $oPage->getRelated('layout')->id
         ];
+
+        if( $oPage ) {
+
+            $aData += [
+                'titleTag' => $this->parseTitleTag($oPage)
+            ,   'layoutId' => $oPage->getRelated('layout')->id
+            ];
+        }
     }
 }

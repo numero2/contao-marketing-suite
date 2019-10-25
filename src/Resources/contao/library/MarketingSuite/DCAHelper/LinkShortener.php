@@ -91,16 +91,16 @@ class LinkShortener extends CoreBackend {
     /**
      * Generates the label for the overview
      *
-     * @param array         $row
-     * @param string        $label
+     * @param array $row
+     * @param string $label
      * @param DataContainer $dc
-     * @param string        $imageAttribute
-     * @param boolean       $blnReturnImage
-     * @param boolean       $blnProtected
+     * @param string $imageAttribute
+     * @param boolean $blnReturnImage
+     * @param boolean $blnProtected
      *
      * @return string
      */
-    public function labelCallback($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false) {
+    public function labelCallback( $row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false ) {
 
         $this->loadLanguageFile('tl_cms_link_shortener_statistics');
 
@@ -195,9 +195,9 @@ class LinkShortener extends CoreBackend {
      *
      * @return string
      */
-    public function lockIfNotEmpty($value, DataContainer $dc) {
+    public function lockIfNotEmpty( $value, DataContainer $dc ) {
 
-        if( strlen($value) && $dc->activeRecord->tstamp > 0) {
+        if( strlen($value) && $dc->activeRecord->tstamp > 0 ) {
             $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['readonly'] = 'readonly';
 
             if( $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['inputType'] == 'radio' ) {
@@ -223,7 +223,7 @@ class LinkShortener extends CoreBackend {
      */
     public function toggleIcon( $row, $href, $label, $title, $icon, $attributes ) {
 
-        if( \strlen(Input::get('tid')) ) {
+        if( strlen(Input::get('tid')) ) {
 
             $id = Input::get('tid');
             $active = (Input::get('state') == 1)?'1':'';
@@ -250,7 +250,7 @@ class LinkShortener extends CoreBackend {
      *
      * @return string
      */
-    public function addRandomId($value, DataContainer $dc) {
+    public function addRandomId( $value, DataContainer $dc ) {
 
         if( !empty($dc->activeRecord->domain) ) {
 
@@ -277,7 +277,7 @@ class LinkShortener extends CoreBackend {
      *
      * @return string
      */
-    public function checkUnique($value, DataContainer $dc) {
+    public function checkUnique( $value, DataContainer $dc ) {
 
         $domain = $dc->activeRecord->domain;
         if( Input::post('domain') ) {
@@ -321,7 +321,7 @@ class LinkShortener extends CoreBackend {
      *
      * @return string
      */
-    public function checkPageAlreadyExists($value, DataContainer $dc) {
+    public function checkPageAlreadyExists( $value, DataContainer $dc ) {
 
         $domain = $dc->activeRecord->domain;
         if( !empty(Input::post('domain')) ) {
@@ -359,4 +359,38 @@ class LinkShortener extends CoreBackend {
 
         return $value;
     }
+
+
+        /**
+         * Return the "reset_counter" button
+         *
+         * @param array  $row
+         * @param string $href
+         * @param string $label
+         * @param string $title
+         * @param string $icon
+         * @param string $attributes
+         *
+         * @return string
+         */
+        public function resetCounter( $row, $href, $label, $title, $icon, $attributes ) {
+
+            if( strlen(Input::get('rid')) ) {
+
+                $id = Input::get('rid');
+
+                if( $id == $row['id'] ) {
+
+                    Database::getInstance()->prepare( "DELETE FROM tl_cms_link_shortener_statistics WHERE pid=?")->execute($id);
+
+                    $this->redirect($this->getReferer());
+                }
+
+            }
+
+            $href .= '&amp;rid='.$row['id'];
+
+            return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, '').'</a> ';
+        }
+
 }

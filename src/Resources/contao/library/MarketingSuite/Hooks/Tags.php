@@ -209,8 +209,14 @@ class Tags extends Hooks {
             $excludePages = deserialize($objModel->cms_exclude_pages);
 
             if( is_array($excludePages) && count($excludePages) ) {
+
+                // page excluded
                 if( in_array($objPage->id, $excludePages) ) {
-                    return;
+
+                    // check if consent form has not been submitted
+                    if( \Input::post('FORM_SUBMIT') != $objModel->type ) {
+                        return;
+                    }
                 }
             }
         }
@@ -301,15 +307,17 @@ class Tags extends Hooks {
 
             if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
 
-                $oTemplate = new \FrontendTemplate($oTag->fallbackTpl);
+                $oTemplate = new \FrontendTemplate($oTag->fallbackTpl?:'ce_optin_fallback');
                 $oTemplate->setData( $oRow->row() );
 
-                $oTemplate->optinLink = self::generateCookieBarForceLink($cssID);
+                $oTemplate->optinLink = self::generateCookieBarForceLink($cssID); // DEPRECATED
                 $oTemplate->headline = null;
                 $oTemplate->class = 'ce_optin_fallback';
                 $oTemplate->cssID = 'id="'.$cssID.'"';
+                $oTemplate->fallback_text = $oTag->fallback_text;
 
                 $strBuffer = $oTemplate->parse();
+                $strBuffer = str_replace('{{cms_optinlink}}', '{{cms_optinlink::'.$cssID.'}}', $strBuffer);
             }
         }
 
@@ -486,7 +494,7 @@ class Tags extends Hooks {
             break;
 
             case 'cms_optinlink':
-                return self::generateCookieBarForceLink();
+                return self::generateCookieBarForceLink($elements[1]);
             break;
         }
 

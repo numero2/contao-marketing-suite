@@ -16,6 +16,7 @@
 namespace numero2\MarketingSuite\DCAHelper;
 
 use Contao\Backend as CoreBackend;
+use Contao\CMSConfig;
 use Contao\Config;
 use Contao\Database;
 use Contao\DataContainer;
@@ -106,12 +107,21 @@ class License extends CoreBackend {
 
                 try {
 
+                    // check if license valid
                     if( $oAPI->checkLicense($value, $objPage) ) {
 
-                        Message::addNew( sprintf(
+                        Message::addNew(sprintf(
                             $GLOBALS['TL_LANG']['cms_api_messages']['license_valid']
                         ,   Date::parse(Config::get('datimFormat'), time())
                         ));
+
+                        // update list of available features
+                        $oAPI->getFeatures($value, $objPage);
+
+                        // check if we're on a testdomain
+                        if( Lic::isTestDomain($dc->activeRecord->id) && !CMSConfig::get('testmode') ) {
+                            Message::addInfo($GLOBALS['TL_LANG']['cms_api_messages']['is_testdomain']);
+                        }
                     }
 
                 } catch( \Exception $e ) {

@@ -89,6 +89,9 @@
     <trans-unit id="MSC.empty_input">
         <source>keine Eingabe vorhanden</source>
     </trans-unit>
+    <trans-unit id="MSC.testmode_enabled">
+        <source>Der Testmodus der Contao Marketing Suite ist aktiv. Sämtliche Inhalte und Funktionen stehen aktuell nur eingeloggten Backend-Nutzern zur Verfügung.</source>
+    </trans-unit>
     <trans-unit id="LABEL.reset_since">
         <source>zurückgesetzt am %s</source>
     </trans-unit>
@@ -124,6 +127,12 @@
     </trans-unit>
     <trans-unit id="ERR.link_shortener_no_https_domains">
         <source>Es können nur Domains genutzt werden, die in der Seitenstruktur "HTTPS verwenden" aktiviert haben.</source>
+    </trans-unit>
+    <trans-unit id="ERR.no_root_pages_for_pagescope_current">
+        <source>Sie können keine "Startpunkt einer Webseite" auswählen, wenn Sie zuvor "Nur ausgewählte Seiten" gewählt haben.</source>
+    </trans-unit>
+    <trans-unit id="ERR.no_forward_redirect_pages_for_pagescope_current">
+        <source>Sie können keine "Weiterleitungsseite" auswählen, wenn Sie zuvor "Nur ausgewählte Seiten" gewählt haben.</source>
     </trans-unit>
     <!-- CUSTOM STYLING -->
     <trans-unit id="CMS_ELEMENT_STYLE.categories.start">

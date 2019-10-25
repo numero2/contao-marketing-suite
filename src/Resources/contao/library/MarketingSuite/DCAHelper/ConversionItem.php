@@ -288,4 +288,15 @@ class ConversionItem extends CoreBackend {
 
         return ' <a href="contao/main.php?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $dc->activeRecord->cms_ci_id . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->activeRecord->cms_ci_id) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->activeRecord->cms_ci_id))) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
     }
+
+
+    /**
+     * Returns if the DCA should be closed or not
+     *
+     * @return boolean
+     */
+    public static function isClosed() {
+
+        return !ehso::hasFeature('conversion_element');
+    }
 }

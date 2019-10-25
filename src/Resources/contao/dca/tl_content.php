@@ -41,11 +41,16 @@ if( Input::get('do') == 'cms_marketing' ) {
 }
 if( Input::get('do') == 'cms_conversion' ) {
 
+    $GLOBALS['TL_DCA']['tl_content']['config']['closed'] = \numero2\MarketingSuite\DCAHelper\ConversionItem::isClosed();
     $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_cms_conversion_item';
+    $GLOBALS['TL_DCA']['tl_content']['config']['backlink'] = 'foo';
+
     $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'onlyShowConversionItems'];
     $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'modifyDCHeadline'];
+
     $GLOBALS['TL_DCA']['tl_content']['config']['notSortable'] = true;
     $GLOBALS['TL_DCA']['tl_content']['config']['notCopyable'] = true;
+
     unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['cut']);
     unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']);
 
