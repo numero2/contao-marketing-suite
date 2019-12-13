@@ -782,7 +782,7 @@ var CMSBackend = {
                 // strip any html
                 description = new DOMParser().parseFromString(description, 'text/html').body.textContent;
 
-                preview.querySelector('div.description').textContent = description.trim();
+                preview.querySelector('div.description').textContent = (description !== "undefined"?description.trim():'');
 
             // update alias / url
             } else if( type == 'alias') {

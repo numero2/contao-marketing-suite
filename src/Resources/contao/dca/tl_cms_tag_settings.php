@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2019 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2019 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -26,8 +26,8 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
 ,   'palettes' => [
         '__selector__' => ['cms_tag_type', 'cms_tag_override_label']
     ,   'default' => "{title_legend},cms_tag_type"
-    ,   'cms_cookie_bar' => "{title_legend},cms_tag_type;{config_legend:hide},cms_tag_override_label,cms_tag_reject_label,cms_exclude_pages;{style_legend:hide},cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background;{template_legend:hide},cms_tag_customTpl;{expert_legend:hide},cms_tag_cssID"
-    ,   'cms_accept_tags' => "{title_legend},cms_tag_type;{config_legend:hide},cms_tag_override_label,cms_exclude_pages;{style_legend:hide},cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background;{template_legend:hide},cms_tag_customTpl;{expert_legend:hide},cms_tag_cssID"
+    ,   'cms_cookie_bar' => "{title_legend},cms_tag_type;{config_legend:hide},cms_tag_override_label,cms_tag_reject_label,cms_exclude_pages,cms_tag_cookie_lifetime;{style_legend:hide},cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background;{template_legend:hide},cms_tag_customTpl;{expert_legend:hide},cms_tag_cssID"
+    ,   'cms_accept_tags' => "{title_legend},cms_tag_type;{config_legend:hide},cms_tag_override_label,cms_exclude_pages,cms_tag_cookie_lifetime;{style_legend:hide},cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background;{template_legend:hide},cms_tag_customTpl;{expert_legend:hide},cms_tag_cssID"
     ]
 ,   'subpalettes' => [
         'cms_tag_override_label' => 'cms_tag_accept_label,cms_tag_text'
@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
     ,   'cms_tag_override_label' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_override_label']
         ,   'inputType'        => 'checkbox'
-        ,   'eval'             => [ 'tl_class'=>'w50', 'submitOnChange'=>true ]
+        ,   'eval'             => [ 'tl_class'=>'clr', 'submitOnChange'=>true ]
         ]
     ,   'cms_tag_accept_label' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_accept_label']
@@ -115,7 +115,14 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_exclude_pages']
         ,   'inputType'        => 'pageTree'
         ,   'foreignKey'       => 'tl_page.title'
-        ,   'eval'             => ['fieldType'=>'checkbox', 'multiple'=>true, 'tl_class'=>'clr']
+        ,   'eval'             => ['fieldType'=>'checkbox', 'multiple'=>true, 'tl_class'=>'w50']
+        ]
+    ,   'cms_tag_cookie_lifetime' => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_cookie_lifetime']
+        ,   'inputType'        => 'inputUnit'
+        ,   'options'          => ['days','weeks','months','years']
+        ,   'reference'        => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_cookie_lifetime_options']
+        ,   'eval'             => ['tl_class'=>'w50', 'disabled'=>!\numero2\MarketingSuite\Backend\License::hasFeature('tags_cookie_lifetime')]
         ]
     ]
 ];

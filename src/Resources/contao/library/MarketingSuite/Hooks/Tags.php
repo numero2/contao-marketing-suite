@@ -288,36 +288,45 @@ class Tags extends Hooks {
 
         global $objPage;
 
-        // replace buffer if cms_tag_visibility is set and selected tag is accepted
-        if( $oRow->cms_tag_visibility && TL_MODE == 'FE' ) {
+        if( TL_MODE == 'FE' ) {
 
-            if( !aczolku::hasFeature('tags', $objPage->trail[0]) ) {
-                return '';
+            // we may have a frontend module referenced by a content element
+            // in this case make sure to check the settings of the module itself
+            if( !$oRow->cms_tag_visibility && $oElement->type === "module" ) {
+                $oRow = ModuleModel::findOneById( $oRow->module );
             }
 
-            $oTag = NULL;
-            $oTag = TagModel::findOneById($oRow->cms_tag);
+            // replace buffer if cms_tag_visibility is set and selected tag is accepted
+            if( $oRow->cms_tag_visibility ) {
 
-            if( !$oTag || !aczolku::hasFeature('tags_'.$oTag->type, $objPage->trail[0]) ) {
-                return '';
-            }
+                if( !aczolku::hasFeature('tags', $objPage->trail[0]) ) {
+                    return '';
+                }
 
-            $cssID = '';
-            $cssID = $this->_addIdAttribute($strBuffer, $oElement);
+                $oTag = NULL;
+                $oTag = TagModel::findOneById($oRow->cms_tag);
 
-            if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
+                if( !$oTag || !aczolku::hasFeature('tags_'.$oTag->type, $objPage->trail[0]) ) {
+                    return '';
+                }
 
-                $oTemplate = new \FrontendTemplate($oTag->fallbackTpl?:'ce_optin_fallback');
-                $oTemplate->setData( $oRow->row() );
+                $cssID = '';
+                $cssID = $this->_addIdAttribute($strBuffer, $oElement);
 
-                $oTemplate->optinLink = self::generateCookieBarForceLink($cssID); // DEPRECATED
-                $oTemplate->headline = null;
-                $oTemplate->class = 'ce_optin_fallback';
-                $oTemplate->cssID = 'id="'.$cssID.'"';
-                $oTemplate->fallback_text = $oTag->fallback_text;
+                if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
 
-                $strBuffer = $oTemplate->parse();
-                $strBuffer = str_replace('{{cms_optinlink}}', '{{cms_optinlink::'.$cssID.'}}', $strBuffer);
+                    $oTemplate = new \FrontendTemplate($oTag->fallbackTpl?:'ce_optin_fallback');
+                    $oTemplate->setData( $oRow->row() );
+
+                    $oTemplate->optinLink = self::generateCookieBarForceLink($cssID); // DEPRECATED
+                    $oTemplate->headline = null;
+                    $oTemplate->class = 'ce_optin_fallback';
+                    $oTemplate->cssID = 'id="'.$cssID.'"';
+                    $oTemplate->fallback_text = $oTag->fallback_text;
+
+                    $strBuffer = $oTemplate->parse();
+                    $strBuffer = str_replace('{{cms_optinlink}}', '{{cms_optinlink::'.$cssID.'}}', $strBuffer);
+                }
             }
         }
 

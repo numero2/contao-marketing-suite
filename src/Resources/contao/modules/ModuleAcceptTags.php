@@ -3,19 +3,20 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2019 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2019 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite;
 
 use Contao\BackendTemplate;
+use Contao\CMSConfig;
 use Contao\Environment;
 use Contao\Input;
 use Contao\Module;
@@ -136,8 +137,19 @@ class ModuleAcceptTags extends Module {
                 }
             }
 
-            $this->setCookie('cms_cookies', implode('-', $accepted), strtotime('+7 days'));
-            $this->setCookie('cms_cookies_saved', "true", strtotime('+7 days'));
+            $iCookieExpires = strtotime('+7 days');
+
+            // get configured cookie lifetime
+            if( baguru::hasFeature('tags_cookie_lifetime') ) {
+
+                $aCookieConfig = [];
+                $aCookieConfig = CMSConfig::get('cms_tag_cookie_lifetime');
+                $aCookieConfig = !is_array($aCookieConfig)?deserialize($aCookieConfig):$aCookieConfig;
+                $iCookieExpires = strtotime('+'.(int)$aCookieConfig['value'].' '.$aCookieConfig['unit']);
+            }
+
+            $this->setCookie('cms_cookies', implode('-', $accepted), $iCookieExpires);
+            $this->setCookie('cms_cookies_saved', "true", $iCookieExpires);
             $this->redirect($this->Template->action);
         }
 

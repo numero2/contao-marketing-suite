@@ -3,19 +3,20 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2019 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2019 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite;
 
 use Contao\BackendTemplate;
+use Contao\CMSConfig;
 use Contao\Environment;
 use Contao\FrontendTemplate;
 use Contao\Input;
@@ -90,10 +91,21 @@ class ModuleCookieBar extends Module {
 
         if( Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $this->Template->formId ) {
 
+            $iCookieExpires = strtotime('+7 days');
+
+            // get configured cookie lifetime
+            if( agoc::hasFeature('tags_cookie_lifetime') ) {
+
+                $aCookieConfig = [];
+                $aCookieConfig = CMSConfig::get('cms_tag_cookie_lifetime');
+                $aCookieConfig = !is_array($aCookieConfig)?deserialize($aCookieConfig):$aCookieConfig;
+                $iCookieExpires = strtotime('+'.(int)$aCookieConfig['value'].' '.$aCookieConfig['unit']);
+            }
+
             if( Input::post('submit') == 'accept' ) {
-                $this->setCookie('cms_cookie', 'accept', strtotime('+7 days'));
+                $this->setCookie('cms_cookie', 'accept', $iCookieExpires);
             } else if( Input::post('submit') == 'reject' ) {
-                $this->setCookie('cms_cookie', 'reject', strtotime('+7 days'));
+                $this->setCookie('cms_cookie', 'reject', $iCookieExpires);
             }
 
             $this->redirect($this->Template->action);

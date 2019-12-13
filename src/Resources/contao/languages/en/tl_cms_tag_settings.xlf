@@ -55,6 +55,18 @@
     <trans-unit id="tl_cms_tag_settings.cms_tag_text.1">
         <source>Dieser Inhalt wird innerhalb der Cookie Bar angezeigt.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_exclude_pages.0">
+        <source>Auf diesen Seiten keinen Cookie-Hinweis zeigen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_exclude_pages.1">
+        <source>Cookie Hinweis wird nicht gezeigt. Die Seite ist nutzbar. Es wird kein Cookie auf dieser Seite gesetzt. Sinnvoll beispielsweise für die Datenschutzerklärung, damit diese immer ganz sichtbar und lesbar ist.</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime.0">
+        <source>Dauer der Einwilligung</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime.1">
+        <source>Wählen Sie aus wie lange die Einwilligung des Besuchers in Form eines Cookies gespeichert werden soll.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_font_color.0">
         <source>Schriftfarbe</source>
     </trans-unit>
@@ -122,11 +134,17 @@
     <trans-unit id="tl_cms_tag_settings.types.cms_accept_tags.1">
         <source>Erzeugt eine Element in dem verschieden Kategorien des Trackings zugestimmt werden kann.</source>
     </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_exclude_pages.0">
-        <source>Auf diesen Seiten keinen Cookie-Hinweis zeigen</source>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime_options.days">
+        <source>Tag(e)</source>
     </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_exclude_pages.1">
-        <source>Cookie Hinweis wird nicht gezeigt. Die Seite ist nutzbar. Es wird kein Cookie auf dieser Seite gesetzt. Sinnvoll beispielsweise für die Datenschutzerklärung, damit diese immer ganz sichtbar und lesbar ist.</source>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime_options.weeks">
+        <source>Woche(n)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime_options.months">
+        <source>Monat(e)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime_options.years">
+        <source>Jahr(e)</source>
     </trans-unit>
 </body>
 </file>

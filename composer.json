@@ -11,7 +11,7 @@
     ],
     "require": {
         "contao/core-bundle": "^4.4.0",
-        "Org_Heigl/Hyphenator": "^2.3",
+        "org_heigl/hyphenator": "^2.3",
         "facebook/graph-sdk": "^5.6"
     },
     "suggest": {

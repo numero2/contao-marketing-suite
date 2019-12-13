@@ -145,6 +145,10 @@ class Crypto {
      */
     public function verify( $strMessage, $sign ) {
 
+        if( $strMessage === null || $strMessage === '' || $sign === null || $sign === '' ) {
+            return false;
+        }
+
         $res = openssl_verify($strMessage, base64_decode($sign), $this->publicKey);
 
         if( $res === 1 ) {

@@ -199,7 +199,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
     ,   'pages_scope' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['pages_scope']
         ,   'inputType'             => 'radio'
-        ,   'default'               => 'current_page'
+        ,   'default'               => 'current_and_all_children'
         ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getPageScopes']
         ,   'eval'                  => ['tl_class'=>'clr w50 no-height']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"

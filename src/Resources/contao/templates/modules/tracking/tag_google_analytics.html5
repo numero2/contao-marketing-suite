@@ -1,12 +1,9 @@
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?= $this->tag; ?>"></script>
 <script>
-    <?php if( $this->typeFirst ): ?>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    <?php endif; ?>
-
-    ga('create', '<?= $this->tag; ?>', '<?= \Environment::get('host'); ?>', '<?= $this->alias; ?>');
-    <?php if ($this->anonymize_ip=='1'): ?>ga('<?= $this->alias; ?>.set', 'anonymize_ip', true);<?php endif; ?>
-    ga('<?= $this->alias; ?>.send', 'pageview');
+<?php if( $this->typeFirst ): ?>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+<?php endif; ?>
+    gtag('config', '<?= $this->tag; ?>'<?php if ($this->anonymize_ip=='1'): ?>, { 'anonymize_ip': true }<?php endif; ?>);
 </script>
