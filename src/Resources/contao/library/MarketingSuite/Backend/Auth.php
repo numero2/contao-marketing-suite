@@ -30,6 +30,17 @@ class Auth {
      */
     public static function isBackendUserLoggedIn() {
 
+        // since 4.8
+        if( System::getContainer()->has('contao.security.token_checker') ) {
+
+            $objTokenChecker = System::getContainer()->get('contao.security.token_checker');
+
+            if( $objTokenChecker->hasBackendUser() ) {
+                return true;
+            }
+        }
+
+        // needed for contao 4.4
         $strCookie = 'BE_USER_AUTH';
         $cookie = Input::cookie($strCookie);
 

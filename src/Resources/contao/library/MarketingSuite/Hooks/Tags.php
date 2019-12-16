@@ -180,7 +180,7 @@ class Tags extends Hooks {
         global $objPage;
 
         $forceShow = false;
-        $forceShow = \Input::get('_cmsscb') ? true : $forceShow;
+        $forceShow = Input::get('_cmsscb') ? true : $forceShow;
 
         $objModel = NULL;
         $objModel = new ModuleModel();
@@ -214,7 +214,7 @@ class Tags extends Hooks {
                 if( in_array($objPage->id, $excludePages) ) {
 
                     // check if consent form has not been submitted
-                    if( \Input::post('FORM_SUBMIT') != $objModel->type ) {
+                    if( Input::post('FORM_SUBMIT') != $objModel->type ) {
                         return;
                     }
                 }
