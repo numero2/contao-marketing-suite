@@ -292,12 +292,13 @@ input[type="radio"][readonly] + label {
 
 .cms_be_help fieldset legend {
     position: relative;
+    width: 100%;
 }
 
 .cms_be_help fieldset legend:after {
     content: "";
     display: block;
-    top: 13px;
+    top: 9px;
     right: 15px;
     position: absolute;
     width: 16px;
@@ -536,6 +537,7 @@ input[type="radio"][readonly] + label {
 
 .tl_health_check fieldset > legend {
     position: relative;
+    width: 100%;
 }
 
 .tl_health_check fieldset > legend > .count {
@@ -1791,7 +1793,7 @@ input[type="radio"][readonly] + label {
 }
 
 .widget.snippet-preview .url {
-    font-size: 0.8em;
+    font-size: 0.7em;
     line-height: 1.2em;
     font-weight: 400;
     color: #006621;
@@ -2023,3 +2025,5 @@ fieldset > div > .suggest_wizard ul li:hover {
 .widget.styling-categories .widgets .tl_text_trbl {
     width: 18%;
 }
+
+/*# sourceMappingURL=backend.css.map */

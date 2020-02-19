@@ -9,7 +9,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -21,9 +21,8 @@ use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
 use numero2\MarketingSuite\Backend;
-use numero2\MarketingSuite\ContentButton;
-use numero2\MarketingSuite\Helper\styleable;
 use numero2\MarketingSuite\Helper\ContentElementStyleable;
+use numero2\MarketingSuite\Helper\styleable;
 
 
 class ElementStyle extends CoreBackend {

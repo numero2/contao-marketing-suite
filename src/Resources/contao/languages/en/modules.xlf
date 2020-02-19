@@ -107,6 +107,30 @@
     <trans-unit id="FMD.cms_conversion_item.1">
         <source>Erzeugt ein Conversion-Element.</source>
     </trans-unit>
+    <trans-unit id="FMD.default.0">
+        <source>keine Anzeige</source>
+    </trans-unit>
+    <trans-unit id="FMD.default.1">
+        <source>Erzgeut keine Ausgabe für die Tags.</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_cookie_bar.0">
+        <source>Cookie Bar</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_cookie_bar.1">
+        <source>Erzeugt eine Cookie Bar mit dem hinterlegten Inhalt</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_accept_tags.0">
+        <source>Tracking Opt-In (EU-Privacy)</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_accept_tags.1">
+        <source>Erzeugt eine Element in dem verschieden Kategorien des Trackings zugestimmt werden kann.</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_tag_modules.0">
+        <source>Nur als Frontend-Modul ausspielen</source>
+    </trans-unit>
+    <trans-unit id="FMD.cms_tag_modules.1">
+        <source>Die entsprechenden Module können im Layout als Frontend-Module konfiguriert werden.</source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

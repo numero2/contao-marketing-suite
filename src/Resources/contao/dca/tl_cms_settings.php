@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -35,7 +35,7 @@ $GLOBALS['TL_DCA']['tl_cms_settings'] = [
     ,   'health_check_ignore_older_than' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_settings']['health_check_ignore_older_than']
         ,   'inputType'        => 'text'
-        ,   'eval'             => ['rgxp'=>'date', 'datepicker'=>true, 'tl_class'=>'w50 wizard']
+        ,   'eval'             => ['rgxp'=>'date', 'datepicker'=>true, 'tl_class'=>'w50']
     ]
     ,   'testmode' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_settings']['testmode']

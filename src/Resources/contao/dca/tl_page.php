@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -41,11 +41,14 @@ $GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback'] = str_replace(
 /**
  * Add fields to tl_page
  */
+
+// Note for Contao >= 4.9: Do not use references for labels in tl_page as it breaks
+// the default labels for all other fields
 $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
     $GLOBALS['TL_DCA']['tl_page']['fields']
 ,   [
         'cms_root_license' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_page']['cms_root_license']
+            'label'                 => $GLOBALS['TL_LANG']['tl_page']['cms_root_license']
         ,   'inputType'             => 'text'
         ,   'exclude'               => true
         ,   'save_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\License', 'save'] ]
@@ -54,8 +57,15 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
     ,   'cms_refresh_license' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_page']['cms_refresh_license']
+            'label' => $GLOBALS['TL_LANG']['tl_page']['cms_refresh_license']
         ,   'input_field_callback'  => ['\numero2\MarketingSuite\DCAHelper\License', 'refresh']
+        ]
+    ,   'cms_exclude_health_check' => [
+            'label'                 => $GLOBALS['TL_LANG']['tl_page']['cms_exclude_health_check']
+        ,   'inputType'             => 'checkbox'
+        ,   'default'               => '0'
+        ,   'eval'                  => ['tl_class'=>'w50']
+        ,   'sql'                   => "char(1) NOT NULL default '0'"
         ]
     ,   'cms_root_key' => [
             'eval'                  => ['doNotShow'=>true, 'doNotCopy'=>true]
@@ -69,13 +79,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
             'eval'                  => ['doNotShow'=>true, 'doNotCopy'=>true]
         ,   'sql'                   => "blob NULL"
         ]
-    ,   'cms_exclude_health_check' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_page']['cms_exclude_health_check']
-        ,   'inputType'             => 'checkbox'
-        ,   'default'               => '0'
-        ,   'eval'                  => ['tl_class'=>'w50']
-        ,   'sql'                   => "char(1) NOT NULL default '0'"
-        ]
     ,   'cms_mi_views' => [
             'sql'               => "int(10) unsigned NOT NULL default '0'"
         ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']
@@ -86,7 +89,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         ]
     ]
 );
-
 
 if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
 
@@ -109,4 +111,5 @@ if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') 
     );
 
     unset($GLOBALS['TL_DCA']['tl_page']['fields']['serp_preview']);
+    unset($GLOBALS['TL_DCA']['tl_page']['fields']['serpPreview']);
 }

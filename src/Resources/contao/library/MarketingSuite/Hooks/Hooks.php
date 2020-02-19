@@ -3,20 +3,19 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite\Hooks;
 
 use Contao\CMSConfig;
-use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\NoContentResponseException;
@@ -27,7 +26,6 @@ use Contao\FilesModel;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\Widget;
-use numero2\MarketingSuite\ContentButton;
 use numero2\MarketingSuite\Widget\ElementStyle;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;

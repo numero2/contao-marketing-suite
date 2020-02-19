@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -481,16 +481,16 @@ class MarketingSuite {
                 RequestOptions::TIMEOUT         => 5
             ,   RequestOptions::CONNECT_TIMEOUT => 5
             ,   RequestOptions::HTTP_ERRORS     => false
+            ,   'idn_conversion'                => false # see https://github.com/guzzle/guzzle/pull/2454
             ]);
 
             try {
 
                 $response = null;
-                if( $aData === null ) {
 
+                if( $aData === null ) {
                     $response = $request->get($url);
                 } else {
-
                     $response = $request->post($url, [RequestOptions::JSON => $aData]);
                 }
 

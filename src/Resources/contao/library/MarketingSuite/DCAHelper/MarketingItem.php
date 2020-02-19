@@ -9,7 +9,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -28,7 +28,6 @@ use Contao\Model\Collection;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\System;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\License as dowcosko;
 use numero2\MarketingSuite\ContentGroupModel;
@@ -51,7 +50,7 @@ class MarketingItem extends CoreBackend {
             ->addField(['cms_mi_label'], 'type', 'after')
         ;
 
-        if( dowcosko::hasFeature('conversion_element') && count($GLOBALS['TL_CTE']['conversion_elements']) ) {
+        if( dowcosko::hasFeature('conversion_element') && !empty($GLOBALS['TL_CTE']['conversion_elements']) ) {
             foreach( $GLOBALS['TL_CTE']['conversion_elements'] as $key => $value ) {
 
                 if( !dowcosko::hasFeature('ce_'.$key) ) {
@@ -67,12 +66,12 @@ class MarketingItem extends CoreBackend {
             unset($GLOBALS['TL_CTE']['marketing_suite']['cms_marketing_item']);
         }
 
-        if( !dowcosko::hasFeature('conversion_element') || !count($GLOBALS['TL_CTE']['conversion_elements']) ) {
+        if( !dowcosko::hasFeature('conversion_element') || empty($GLOBALS['TL_CTE']['conversion_elements']) ) {
             unset($GLOBALS['TL_CTE']['marketing_suite']['cms_conversion_item']);
             unset($GLOBALS['TL_CTE']['conversion_elements']);
         }
 
-        if( !count($GLOBALS['TL_CTE']['marketing_suite']) ) {
+        if( empty($GLOBALS['TL_CTE']['marketing_suite']) ) {
             unset($GLOBALS['TL_CTE']['marketing_suite']);
         }
 
@@ -398,7 +397,7 @@ class MarketingItem extends CoreBackend {
 
         $groups = [];
 
-        if( dowcosko::hasFeature('conversion_element') && count($GLOBALS['TL_CTE']['conversion_elements']) ) {
+        if( dowcosko::hasFeature('conversion_element') && !empty($GLOBALS['TL_CTE']['conversion_elements']) ) {
 
             foreach( $GLOBALS['TL_CTE']['conversion_elements'] as $key => $value ) {
 
@@ -412,12 +411,12 @@ class MarketingItem extends CoreBackend {
             unset($GLOBALS['TL_CTE']['marketing_suite']['cms_marketing_item']);
         }
 
-        if( !dowcosko::hasFeature('conversion_element') || !count($GLOBALS['TL_CTE']['conversion_elements']) ) {
+        if( !dowcosko::hasFeature('conversion_element') || empty($GLOBALS['TL_CTE']['conversion_elements']) ) {
             unset($GLOBALS['TL_CTE']['marketing_suite']['cms_conversion_item']);
             unset($GLOBALS['TL_CTE']['conversion_elements']);
         }
 
-        if( !count($GLOBALS['TL_CTE']['marketing_suite']) ) {
+        if( empty($GLOBALS['TL_CTE']['marketing_suite']) ) {
             unset($GLOBALS['TL_CTE']['marketing_suite']);
         }
 

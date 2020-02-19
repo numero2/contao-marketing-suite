@@ -9,7 +9,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -45,13 +45,13 @@ class TagSettings extends CoreBackend {
 
         $types = [];
 
-        foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'] as $k=>$v ) {
+        foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'] as $k => $v ) {
 
             if( $k == '__selector__' ) {
                 continue;
             }
 
-            if( !dohfa::hasFeature('tag'.substr($k, 3)) && $k != 'default') {
+            if( !dohfa::hasFeature('tag'.substr($k, 3)) && !in_array($k, ['default', 'cms_tag_modules']) ) {
                 continue;
             }
 

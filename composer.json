@@ -2,16 +2,25 @@
     "name": "numero2/contao-marketing-suite",
     "type": "contao-bundle",
     "description": "Contao Marketing Suite - Get the most out of Contao",
+    "keywords": ["seo", "contao", "marketing", "dsgvo", "gdpr", "cookie"],
     "license": "proprietary",
     "homepage": "https://contao-marketingsuite.com/",
     "authors": [{
             "name": "numero2 - Agentur für digitales Marketing",
+            "email": "support@contao-marketingsuite.com",
             "homepage": "https://www.numero2.de"
+        }
+    ],
+    "support": [{
+            "email": "support@contao-marketingsuite.com",
+            "source": "https://github.com/numero2/contao-marketing-suite",
+            "docs": "https://contao-marketingsuite.com/"
         }
     ],
     "require": {
         "contao/core-bundle": "^4.4.0",
         "org_heigl/hyphenator": "^2.3",
+        "guzzlehttp/guzzle": "^6.0",
         "facebook/graph-sdk": "^5.6"
     },
     "suggest": {

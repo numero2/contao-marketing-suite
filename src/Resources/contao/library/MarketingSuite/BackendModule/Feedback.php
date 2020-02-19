@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -17,8 +17,6 @@ namespace numero2\MarketingSuite\BackendModule;
 
 use Contao\BackendModule as CoreBackendModule;
 use numero2\MarketingSuite\Backend\License as bavedmef;
-use numero2\MarketingSuite\ContentGroupModel;
-use numero2\MarketingSuite\MarketingItemModel;
 
 
 class Feedback extends CoreBackendModule {

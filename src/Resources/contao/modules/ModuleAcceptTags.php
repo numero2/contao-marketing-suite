@@ -9,7 +9,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -56,6 +56,10 @@ class ModuleAcceptTags extends Module {
             $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
             return $objTemplate->parse();
+        }
+
+        if( $this->id && CMSConfig::get('cms_tag_type') != 'cms_tag_modules' ) {
+            return '';
         }
 
         if( TL_MODE == 'FE' ) {
@@ -167,12 +171,16 @@ class ModuleAcceptTags extends Module {
         $this->Template->acceptLabel = $this->replaceInsertTags($this->Template->acceptLabel);
         $this->Template->content = $this->replaceInsertTags($this->Template->content);
 
-        $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/cookie-bar.css">';
+        // generate default styling if enabled
+        if( $this->cms_tag_set_style ) {
 
-        $strStyle = $this->generateStyling();
+            $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/cookie-bar.css">';
 
-        if( strlen($strStyle) ) {
-            $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
+            $strStyle = $this->generateStyling();
+
+            if( strlen($strStyle) ) {
+                $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
+            }
         }
 
         $this->Template->cmsID = uniqid('cms');
@@ -237,7 +245,17 @@ class ModuleAcceptTags extends Module {
         }
 
         if( strlen($accept) > 20 ) {
+
             $strStyle .= "." . $strClass . ' button[name="submit"][value="accept"] ' . trim($accept)."\n";
+
+            $acceptStyle = [
+                'background'=>'1'
+            ,   'bgcolor'=>(string)$this->acceptcolor
+            ,   'bgimage' => strlen((string)$this->acceptcolor)?'none':''
+            ];
+            $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
+
+            $strStyle .= "." . $strClass . ' > .tags > div .head input:checked + label ' . trim($accept)."\n";
         }
 
         return $strStyle;

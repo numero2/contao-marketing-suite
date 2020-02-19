@@ -67,6 +67,12 @@
     <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime.1">
         <source>Wählen Sie aus wie lange die Einwilligung des Besuchers in Form eines Cookies gespeichert werden soll.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_set_style.0">
+        <source>Standarddarstellung nutzen / anpassen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_set_style.1">
+        <source>Sie können die Farben einzelner Elemente selbst festlegen. Wählen Sie diese Option ab falls Sie die Darstellung über ein eigenes Stylesheet festlegen möchten.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_font_color.0">
         <source>Schriftfarbe</source>
     </trans-unit>
@@ -116,24 +122,6 @@
         <source>Hier können Sie eine ID und beliebig viele Klassen eingeben.</source>
     </trans-unit>
     <!-- OPTIONS -->
-    <trans-unit id="tl_cms_tag_settings.types.default.0">
-        <source>keine Anzeige</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.types.default.1">
-        <source>Erzegut keine Ausgabe für die Tags.</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.types.cms_cookie_bar.0">
-        <source>Cookie Bar</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.types.cms_cookie_bar.1">
-        <source>Erzeugt eine Cookie Bar mit dem hinterlegten Inhalt</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.types.cms_accept_tags.0">
-        <source>Tracking Opt-In (EU-Privacy)</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.types.cms_accept_tags.1">
-        <source>Erzeugt eine Element in dem verschieden Kategorien des Trackings zugestimmt werden kann.</source>
-    </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime_options.days">
         <source>Tag(e)</source>
     </trans-unit>
@@ -145,6 +133,10 @@
     </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime_options.years">
         <source>Jahr(e)</source>
+    </trans-unit>
+    <!-- MESSAGES -->
+    <trans-unit id="tl_cms_tag_settings.msg.why_disabled">
+        <source><![CDATA[Die „Cookie Bar” bzw. das „Tracking Opt-In” sind aufgrund der aktuellen <a href="contao?do=cms_settings&mod=tags&table=tl_cms_tag_settings" title="Anzeige-Einstellungen bearbeiten">Anzeige-Einstellungen</a> nicht als Frontend-Module verfügbar.]]></source>
     </trans-unit>
 </body>
 </file>

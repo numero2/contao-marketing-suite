@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -95,7 +95,7 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['target']
         ,   'inputType'             => 'text'
         ,   'search'                => true
-        ,   'eval'                  => ['mandatory'=>true, 'rgxp'=>'cms_url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50 wizard']
+        ,   'eval'                  => ['mandatory'=>true, 'rgxp'=>'cms_url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'addWizardClass'=>false, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
     ,   'group_name' => [
@@ -165,7 +165,7 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['fallback']
         ,   'inputType'             => 'text'
         ,   'search'                => true
-        ,   'eval'                  => ['rgxp'=>'cms_url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'clr w50 wizard']
+        ,   'eval'                  => ['rgxp'=>'cms_url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'addWizardClass'=>false, 'tl_class'=>'clr w50']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
     ]

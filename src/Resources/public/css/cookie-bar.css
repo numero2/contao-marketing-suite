@@ -105,12 +105,14 @@
 
 .mod_cms_accept_tags form > .tags > div .head label {
     display: inline-block;
+    flex-shrink: 0;
     position: relative;
     background: #95a5a6;
     width: 40px;
     height: 16px;
     border-radius: 13px;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .mod_cms_accept_tags form > .tags > div .head label:after {
@@ -138,3 +140,5 @@
 .mod_cms_accept_tags form > .tags > div p {
     font-size: 12px;
 }
+
+/*# sourceMappingURL=cookie-bar.css.map */

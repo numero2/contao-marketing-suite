@@ -9,16 +9,16 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite\Backend;
 
-
 use Contao\Input;
-use Contao\System;
 use Contao\SessionModel;
+use Contao\System;
+
 
 class Auth {
 

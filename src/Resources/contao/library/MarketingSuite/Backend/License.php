@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite Administration
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -19,9 +19,9 @@ use Contao\CMSConfig;
 use Contao\Config;
 use Contao\Crypto;
 use Contao\Date;
+use Contao\Environment;
 use Contao\PageModel;
 use Contao\System;
-use Contao\Environment;
 use Doctrine\DBAL\Exception\DriverException;
 use numero2\MarketingSuite\Api\MarketingSuite as API;
 

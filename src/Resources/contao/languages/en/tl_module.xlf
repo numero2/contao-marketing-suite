@@ -6,6 +6,9 @@
     <trans-unit id="tl_module.cms_tag_visibility_legend">
         <source>Opt-In/ EU-Privacy</source>
     </trans-unit>
+    <trans-unit id="tl_module.style_legend">
+        <source>Styling-Einstellungen</source>
+    </trans-unit>
     <!-- FIELDS -->
     <trans-unit id="tl_module.cms_mi_id.0">
         <source>Marketing-Element</source>

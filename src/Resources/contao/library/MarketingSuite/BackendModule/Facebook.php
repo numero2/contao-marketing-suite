@@ -3,19 +3,20 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite\BackendModule;
 
 use Contao\Backend;
+use Contao\BackendUser;
 use Contao\CMSConfig;
 use Contao\Controller;
 use Contao\Database;
@@ -30,7 +31,6 @@ use Contao\NewsModel;
 use Contao\StringUtil;
 use numero2\MarketingSuite\Api\Facebook as FacebookAPI;
 use numero2\MarketingSuite\Encryption;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class Facebook {
@@ -74,11 +74,14 @@ class Facebook {
 
 
     /**
-     * Shows a message if opengraph extension is not available
+     * Adds a message if OpenGraph extension is not available
      */
     public function showOpenGraphHint() {
 
-        if( !class_exists('\numero2\OpenGraph3\OpenGraph3') ) {
+        $oUser = NULL;
+        $oUser = BackendUser::getInstance();
+
+        if( !class_exists('\numero2\OpenGraph3\OpenGraph3') && $oUser->cms_pro_mode_enabled != 1 ) {
             Message::addInfo($GLOBALS['TL_LANG']['tl_cms_facebook']['msg']['opengraph_missing']);
         }
     }

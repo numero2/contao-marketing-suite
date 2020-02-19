@@ -51,7 +51,7 @@
         <source>A/B Test Hilfe</source>
     </trans-unit>
     <trans-unit id="cms_be_help.cms_marketing_a_b_test.description">
-        <source><![CDATA[<strong>A/B-Test fertig stellen</strong><br /><br />Die Inhalte der erstellten Vorlage sind jetzt in die A-Version und B-Version eingefügt worden. Beide Versionen beinhalten das trackbare Element. Durch Anpassung der Inhalte in der A-Version und B-Version kann die Wirkung auf das Conversion Element gemessen werden.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwo5aQBtfYbOq-v1dynRSCWf" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
+        <source><![CDATA[<strong>A/B-Test fertigstellen</strong><br /><br />Die Inhalte der erstellten Vorlage sind jetzt in die A-Version und B-Version eingefügt worden. Beide Versionen beinhalten das trackbare Element. Durch Anpassung der Inhalte in der A-Version und B-Version kann die Wirkung auf das Conversion Element gemessen werden.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwo5aQBtfYbOq-v1dynRSCWf" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
     </trans-unit>
     <trans-unit id="cms_be_help.cms_settings_tags_tl_cms_tag_settings.headline">
         <source>Anzeige-Einstellungen Hilfe</source>

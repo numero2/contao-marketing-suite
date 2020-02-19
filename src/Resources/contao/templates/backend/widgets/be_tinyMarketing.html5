@@ -3,9 +3,10 @@
 namespace Contao;
 
 if( $GLOBALS['TL_CONFIG']['useRTE'] ):
+
+    $GLOBALS['TL_JAVASCRIPT'][] = TL_ASSETS_URL . 'assets/tinymce4/js/tinymce.min.js"';
 ?>
-<script>window.tinymce || document.write('<script src="<?= TL_ASSETS_URL ?>assets/tinymce4/js/tinymce.min.js">\x3C/script>')</script>
-<script><?php // jsmust look like this or this won'T work when tinyMarketing is used inside subplettes ?>
+<script>
     setTimeout(function() {
         window.tinymce && tinymce.init({
             skin: 'contao',

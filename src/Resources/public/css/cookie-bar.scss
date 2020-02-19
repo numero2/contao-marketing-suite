@@ -106,12 +106,14 @@
                     label {
 
                         display: inline-block;
+                        flex-shrink: 0;
                         position: relative;
                         background: $color;
                         width: 40px;
                         height: 16px;
                         border-radius: 13px;
                         cursor: pointer;
+                        margin-left: 10px;
 
                         &:after {
                             content: "";

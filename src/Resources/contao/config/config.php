@@ -9,7 +9,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -119,6 +119,8 @@ if( TL_MODE === 'BE' ) {
 $GLOBALS['FE_MOD']['marketing_suite'] = [
     'cms_marketing_item'    => '\numero2\MarketingSuite\ModuleMarketingItem'
 ,   'cms_conversion_item'   => '\numero2\MarketingSuite\ModuleConversionItem'
+,   'cms_cookie_bar'        => '\numero2\MarketingSuite\ModuleCookieBar'
+,   'cms_accept_tags'       => '\numero2\MarketingSuite\ModuleAcceptTags'
 ];
 
 
@@ -150,7 +152,7 @@ $GLOBALS['TL_HOOKS']['cmsBeHelperParseSimpleTokens']['cms_settings_facebook'][] 
 $GLOBALS['TL_HOOKS']['compileFormFields'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseViewOnForm'];
 $GLOBALS['TL_HOOKS']['executePostActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'postActionHookForDC_CMSFile'];
 $GLOBALS['TL_HOOKS']['executePreActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'executePreActions'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateCookieBar'];
+$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateEUConsent'];
 $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateScripts'];
 $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Tracking\Session', 'storeVisitedPage'];
 $GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = ['\numero2\MarketingSuite\MarketingItem\ABTestPage', 'selectAorBPage'];
@@ -165,6 +167,8 @@ $GLOBALS['TL_HOOKS']['getContentElement'][] = ['\numero2\MarketingSuite\Hooks\Ta
 $GLOBALS['TL_HOOKS']['getFrontendModule'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTags'];
 $GLOBALS['TL_HOOKS']['insertTagFlags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTagFlags'];
+$GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\DCAHelper\Module', 'addSQLDefinitionForTagSettings'];
+
 
 if( TL_MODE === 'BE' ) {
     $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\BackendModule\Module', 'initializeBackendModuleTables'];

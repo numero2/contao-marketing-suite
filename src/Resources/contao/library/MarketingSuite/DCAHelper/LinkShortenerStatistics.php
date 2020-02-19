@@ -9,24 +9,21 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite\DCAHelper;
 
 use Contao\BackendModule as CoreBackendModule;
+use Contao\Config;
 use Contao\Database;
-use Contao\DataContainer;
+use Contao\Date;
 use Contao\Environment;
 use Contao\Image;
-use Contao\Date;
-use Contao\System;
 use Contao\Input;
-use Contao\SelectMenu;
-use Contao\TextField;
 use Contao\StringUtil;
-use numero2\MarketingSuite\Backend\License as safsewzk;
+use Contao\System;
 
 
 class LinkShortenerStatistics extends CoreBackendModule {
@@ -132,7 +129,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
                 if( $aDca['eval']['datePicker'] && $aDca['eval']['rgxp'] && strlen($objWidget->value) ) {
 
-                    $oDate = new Date($objWidget->value, \Config::get($aDca['eval']['rgxp'].'Format'));
+                    $oDate = new Date($objWidget->value, Config::get($aDca['eval']['rgxp'].'Format'));
                     $arrSession[$this->name][$aDca['name']] = $oDate->timestamp;
                 } else {
 
@@ -147,7 +144,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
         if( !empty($aDca['eval']['datePicker']) && $aDca['eval']['datePicker'] ) {
 
             $rgxp = $aDca['eval']['rgxp'];
-            $format = \Date::formatToJs(\Config::get($rgxp.'Format'));
+            $format = Date::formatToJs(Config::get($rgxp.'Format'));
 
             switch( $rgxp ) {
                 case 'datim':
@@ -163,7 +160,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
                     break;
             }
 
-            $strBuffer .= ' ' . \Image::getHtml('assets/datepicker/images/icon.svg', '', 'title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $aDca['name'] . '" style="cursor:pointer"') . '
+            $strBuffer .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', '', 'title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $aDca['name'] . '" style="cursor:pointer"') . '
             <script>
             window.addEvent("domready", function() {
                 new Picker.Date($("ctrl_' . $aDca['name'] . '"), {

@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -17,21 +17,11 @@ namespace numero2\MarketingSuite\MarketingItem;
 
 use Contao\Cache;
 use Contao\Config;
-use Contao\ContentModel;
-use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\Date;
 use Contao\Frontend;
-use Contao\Image;
-use Contao\Input;
-use Contao\LayoutModel;
-use Contao\Message;
 use Contao\PageModel;
-use Contao\PageRegular;
-use Contao\StringUtil;
 use Contao\System;
 use numero2\MarketingSuite\Backend\License as dsgvfsop;
-use numero2\MarketingSuite\Backend\Wizard;
-use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\ConversionItemModel;
 use numero2\MarketingSuite\MarketingItemModel;
 use numero2\MarketingSuite\Tracking\ClickAndViews;
@@ -259,7 +249,7 @@ class ABTestPage extends MarketingItem {
         }
 
         // on health check do not change the current page
-        $headers = \System::getContainer()->get('request_stack')->getCurrentRequest()->headers;
+        $headers = System::getContainer()->get('request_stack')->getCurrentRequest()->headers;
         if( $headers->has('X-Requested-With') ) {
             return $arrFragments;
         }

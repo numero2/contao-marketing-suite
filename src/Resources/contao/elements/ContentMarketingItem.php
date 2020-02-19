@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -21,9 +21,9 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\Environment;
 use Contao\Input;
-use Patchwork\Utf8;
 use numero2\MarketingSuite\Backend\License as tokanugo;
 use numero2\MarketingSuite\MarketingItem\MarketingItem;
+use Patchwork\Utf8;
 
 
 class ContentMarketingItem extends ContentElement {
@@ -168,10 +168,10 @@ class ContentMarketingItem extends ContentElement {
                         $objContent->typePrefix = 'ce_';
 
                         if( $objContent->cta_link ) {
-                            $objContent->cta_link = Environment::get('request').'?follow='.$value;
+                            $objContent->cta_link = Controller::addToUrl('&follow='.$value, false);
                         }
                         if( $objContent->url ) {
-                            $objContent->url = Environment::get('request').'?follow='.$value;
+                            $objContent->url = Controller::addToUrl('&follow='.$value, false);
                         }
 
                         /** @var ContentElement $objElement */

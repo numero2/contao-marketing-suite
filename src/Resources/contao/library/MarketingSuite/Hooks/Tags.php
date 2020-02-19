@@ -9,7 +9,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -171,7 +171,7 @@ class Tags extends Hooks {
      * @param \LayoutModel $objLayout
      * @param \PageRegular $objPageRegular
      */
-    public function generateCookieBar( PageModel $objPage, LayoutModel $objLayout, PageRegular $objPageRegular ) {
+    public function generateEUConsent( PageModel $objPage, LayoutModel $objLayout, PageRegular $objPageRegular ) {
 
         if( !aczolku::hasFeature('tags', $objPage->trail[0]) || !aczolku::hasFeature('tag_settings', $objPage->trail[0]) ) {
             return;
@@ -221,12 +221,14 @@ class Tags extends Hooks {
             }
         }
 
-        $oModule = NULL;
+        $strClass = null;
+        if( !empty($GLOBALS['FE_MOD']['marketing_suite'][$objModel->type]) ) {
+            $strClass = $GLOBALS['FE_MOD']['marketing_suite'][$objModel->type];
+        }
 
-        if( $objModel->type === 'cms_cookie_bar' ) {
-            $oModule = new ModuleCookieBar($objModel);
-        } else if( $objModel->type === 'cms_accept_tags' ) {
-            $oModule = new ModuleAcceptTags($objModel);
+        $oModule = NULL;
+        if( $strClass ) {
+            $oModule = new $strClass($objModel);
         }
 
         if( $oModule ) {
@@ -318,7 +320,7 @@ class Tags extends Hooks {
                     $oTemplate = new \FrontendTemplate($oTag->fallbackTpl?:'ce_optin_fallback');
                     $oTemplate->setData( $oRow->row() );
 
-                    $oTemplate->optinLink = self::generateCookieBarForceLink($cssID); // DEPRECATED
+                    $oTemplate->optinLink = self::generateEUConsentForceLink($cssID); // DEPRECATED
                     $oTemplate->headline = null;
                     $oTemplate->class = 'ce_optin_fallback';
                     $oTemplate->cssID = 'id="'.$cssID.'"';
@@ -377,7 +379,7 @@ class Tags extends Hooks {
      *
      * @return string
      */
-    private function generateCookieBarForceLink( $strElementId="" ) {
+    private function generateEUConsentForceLink( $strElementId="" ) {
 
         $href = Environment::get('request');
 
@@ -503,7 +505,7 @@ class Tags extends Hooks {
             break;
 
             case 'cms_optinlink':
-                return self::generateCookieBarForceLink($elements[1]);
+                return self::generateEUConsentForceLink($elements[1]);
             break;
         }
 

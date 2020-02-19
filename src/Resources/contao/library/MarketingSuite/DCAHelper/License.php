@@ -9,7 +9,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -25,7 +25,6 @@ use Contao\Input;
 use Contao\Message;
 use Contao\PageModel;
 use numero2\MarketingSuite\Api\MarketingSuite as API;
-use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\License as Lic;
 
 

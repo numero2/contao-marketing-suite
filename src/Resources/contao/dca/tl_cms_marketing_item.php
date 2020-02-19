@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2018 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -154,7 +154,7 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
     ,   'stop_auto_winner' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['stop_auto_winner']
         ,   'inputType'             => 'text'
-        ,   'eval'                  => ['mandatory'=>true, 'rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'clr w50 wizard']
+        ,   'eval'                  => ['mandatory'=>true, 'rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'clr w50']
         ,   'sql'                   => "varchar(10) NOT NULL default ''"
         ]
     ,   'page_a' => [

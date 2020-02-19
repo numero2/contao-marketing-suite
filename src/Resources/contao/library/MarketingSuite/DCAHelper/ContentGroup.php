@@ -9,7 +9,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2019 numero2 - Agentur für digitales Marketing
+ * @copyright 2020 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -142,8 +142,7 @@ class ContentGroup extends CoreBackend {
         }
 
         // override back button
-        $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('a.header_back').href = 'contao?do=cms_marketing';</script>";
-
+        $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('a.header_back') && (document.querySelector('a.header_back').href = 'contao?do=cms_marketing');</script>";
 
         return $args;
     }

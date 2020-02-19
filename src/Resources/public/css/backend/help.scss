@@ -74,11 +74,12 @@
         legend {
 
             position: relative;
+            width: 100%;
 
             &:after {
                 content: "";
                 display: block;
-                top: 13px;
+                top: 9px;
                 right: 15px;
                 position: absolute;
                 width: 16px;
