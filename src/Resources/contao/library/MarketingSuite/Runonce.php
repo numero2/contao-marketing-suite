@@ -60,7 +60,7 @@ class Runonce extends Controller {
 
         if( $oDB->tableExists('tl_content') ) {
 
-            if( $oDB->fieldExists('cms_mi_label') ) {
+            if( $oDB->fieldExists('cms_mi_label','tl_content') ) {
                 $oDB->execute("UPDATE tl_content SET type = 'cms_form' WHERE type = 'form' AND cms_mi_label != ''");
             }
 
