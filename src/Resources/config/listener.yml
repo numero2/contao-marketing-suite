@@ -14,7 +14,16 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 249 }
 
+    marketing_suite.listener.menu.backend_sort_menu:
+        class: numero2\MarketingSuiteBundle\EventListener\Menu\BackendSortMenuListener
+        arguments:
+            - '@security.helper'
+            - '@contao.framework'
+        tags:
+            - { name: kernel.event_listener, event: contao.backend_menu_build, priority: -5 }
 
+
+    # Backwards compatibility for contao 4.4
     marketing_suite.listener.legacy_link_shortener:
         class: numero2\MarketingSuiteBundle\EventListener\KernelException\LinkShortenerRedirect
         arguments:

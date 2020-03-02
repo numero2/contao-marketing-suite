@@ -119,7 +119,7 @@ class ClickAndViews {
 
         } else {
 
-            if( irsa::hasFeature('ce_form') ) {
+            if( $objContent->type == 'cms_form' && irsa::hasFeature('ce_cms_form') ) {
                 $objContent->cms_ci_clicks += 1;
                 $objContent->save();
             }
@@ -146,7 +146,7 @@ class ClickAndViews {
 
             } else {
 
-                if( irsa::hasFeature('ce_form') ) {
+                if( $objContent->type == 'cms_form' && irsa::hasFeature('ce_cms_form') ) {
                     $objContent->cms_ci_views += 1;
                     $objContent->save();
                 }

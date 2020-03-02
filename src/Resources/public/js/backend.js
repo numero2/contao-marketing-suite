@@ -125,9 +125,24 @@ document.addEventListener('tinyMCEInitialized', function (e) {
     // cleanup all markings before submitting
     document.querySelector('form.tl_form.tl_edit_form').addEventListener('submit', function(e) {
 
-        if( markInstance ) {
+        if( markInstance && !this.markCleaned ) {
+
             e.preventDefault();
-            markInstance.unmark({ done: this.submit });
+            this.markCleaned = true;
+
+            setTimeout(()=>{
+
+                const button = this.querySelector('button[type="submit"]:focus');
+
+                markInstance.unmark({ done: ()=>{
+
+                    if( button ) {
+                        button.click();
+                        console.log(button);
+                    }
+                } });
+
+            },50);
         }
 
     }, false);

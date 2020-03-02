@@ -16,6 +16,7 @@
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'addLabel'];
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\Widget\ElementStyle', 'addStylingFields'];
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Content', 'addTagVisibilityFields'];
+$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\General', 'excludeFieldsFromMultipleEdit'];
 
 array_insert($GLOBALS['TL_DCA']['tl_content']['list']['operations'], 3, [
     'reset_counter' => [
@@ -89,6 +90,7 @@ $GLOBALS['TL_DCA']['tl_content']['palettes'] = array_merge_recursive(
     ,   'cms_conversion_item' => '{type_legend},type;{marketing_suite_legend},cms_ci_id;{invisible_legend:hide},invisible,start,stop'
     ,   'cms_button' => '{type_legend},type,headline;{link_legend},url,target,linkTitle,titleText;{style_legend},cms_element_style;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop'
     ,   'cms_hyperlink' => '{type_legend},type,headline;{link_legend},url,target,linkTitle,titleText;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop'
+    ,   'cms_form' => $GLOBALS['TL_DCA']['tl_content']['palettes']['form']
     ]
 );
 
@@ -110,9 +112,11 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
 ,   [
         'cms_helper_top' => [
             'input_field_callback'     => [ '\numero2\MarketingSuite\Backend\Wizard', 'generateTopForInputField' ]
+        ,   'excludeMultipleEdit'      => true
         ]
     ,   'cms_helper_bottom' => [
             'input_field_callback'     => [ '\numero2\MarketingSuite\Backend\Wizard', 'generateBottomForInputField' ]
+        ,   'excludeMultipleEdit'      => true
         ]
     ,   'text_cms' => [
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['text']
@@ -126,6 +130,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
         ]
     ,   'text_analysis' => [
             'input_field_callback'  => [ '\numero2\MarketingSuite\DCAHelper\TextCMS', 'generateInputField' ]
+        ,   'excludeMultipleEdit'      => true
         ]
     ,   'text_cms_cta' => [
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['text']

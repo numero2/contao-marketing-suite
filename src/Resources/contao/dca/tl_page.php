@@ -90,6 +90,13 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
     ]
 );
 
+if( version_compare(VERSION, '4.9', '<') ) {
+
+    $GLOBALS['TL_DCA']['tl_page']['fields']['cms_root_license']['label'] = &$GLOBALS['TL_LANG']['tl_page']['cms_root_license'];
+    $GLOBALS['TL_DCA']['tl_page']['fields']['cms_refresh_license']['label'] = &$GLOBALS['TL_LANG']['tl_page']['cms_refresh_license'];
+    $GLOBALS['TL_DCA']['tl_page']['fields']['cms_exclude_health_check']['label'] = &$GLOBALS['TL_LANG']['tl_page']['cms_exclude_health_check'];
+}
+
 if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
 
     $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(

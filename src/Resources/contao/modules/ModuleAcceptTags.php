@@ -58,13 +58,17 @@ class ModuleAcceptTags extends Module {
             return $objTemplate->parse();
         }
 
-        if( $this->id && CMSConfig::get('cms_tag_type') != 'cms_tag_modules' ) {
-            return '';
-        }
-
         if( TL_MODE == 'FE' ) {
 
             if( !baguru::hasFeature('tag_settings', $objPage->trail[0]) || !baguru::hasFeature('tag'.substr($this->type, 3), $objPage->trail[0]) ) {
+                return '';
+            }
+
+            if( $this->id && CMSConfig::get('cms_tag_type') != 'cms_tag_modules' ) {
+                return '';
+            }
+
+            if( !$this->shouldBeShown() ) {
                 return '';
             }
         }

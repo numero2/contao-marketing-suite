@@ -236,8 +236,7 @@ class Tags extends Hooks {
             $sModule = "";
             $sModule = $oModule->generate();
 
-            // check if bar / tags should be shown at all
-            if( $oModule->shouldBeShown() ) {
+            if( $sModule ) {
 
                 $GLOBALS['TL_BODY'][] = Controller::replaceInsertTags($sModule);
                 $objPage->cssClass .= ' cookie-bar-visible';

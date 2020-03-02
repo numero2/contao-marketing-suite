@@ -16,6 +16,7 @@
 namespace numero2\MarketingSuite;
 
 use Contao\Controller;
+use Contao\Database;
 
 
 class Runonce extends Controller {
@@ -34,6 +35,7 @@ class Runonce extends Controller {
      */
     public function run() {
         $this->generateEmptyCMSConfigFile();
+        $this->migrateFormElements();
     }
 
 
@@ -44,6 +46,30 @@ class Runonce extends Controller {
 
         if( !file_exists(TL_ROOT . '/system/config/cmsconfig.php') ) {
             file_put_contents(TL_ROOT . '/system/config/cmsconfig.php', "<?php\n\n### INSTALL SCRIPT START ###\n### INSTALL SCRIPT STOP ###\n");
+        }
+    }
+
+
+    /**
+     * Sets all content elements of type "form" to "cms_form"
+     */
+    protected function migrateFormElements() {
+
+        $oDB = NULL;
+        $oDB = Database::getInstance();
+
+        if( $oDB->tableExists('tl_content') ) {
+
+            if( $oDB->fieldExists('cms_mi_label') ) {
+                $oDB->execute("UPDATE tl_content SET type = 'cms_form' WHERE type = 'form' AND cms_mi_label != ''");
+            }
+
+            $oDB->execute("UPDATE tl_content SET type = 'cms_form' WHERE type = 'form' AND ptable = 'tl_cms_content_group'");
+        }
+
+        if( $oDB->tableExists('tl_cms_marketing_item') ) {
+
+            $oDB->execute("UPDATE tl_cms_marketing_item SET type = 'cms_form' WHERE type = 'form'");
         }
     }
 }

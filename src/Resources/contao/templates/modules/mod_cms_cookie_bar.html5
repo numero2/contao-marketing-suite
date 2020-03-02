@@ -1,5 +1,5 @@
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> data-cms-id="<?= $this->cmsID; ?>">
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> data-cms-id="<?= $this->cmsID; ?>" role="dialog">
 
     <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
         <div class="formbody">
@@ -12,16 +12,31 @@
             </div>
 
             <div class="widget widget-submit">
-                <button type="submit" name="submit" value="accept" class="submit"><?= $this->acceptLabel ?></button>
+                <button type="submit" name="submit" value="accept" class="submit" tabindex="2"><?= $this->acceptLabel ?></button>
                 <?php if( $this->rejectLabel ): ?>
-                    <button type="submit" name="submit" value="reject" class="submit"><?= $this->rejectLabel ?></button>
+                    <button type="submit" name="submit" value="reject" class="submit" tabindex="3"><?= $this->rejectLabel ?></button>
                 <?php endif; ?>
             </div>
 
         </div>
     </form>
 
-    <script>if( !navigator.cookieEnabled ) { document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"]').remove(); }</script>
+    <script>
+
+        if( !navigator.cookieEnabled ) {
+            document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"]').remove();
+        }
+
+        var as = document.querySelectorAll('[data-cms-id="<?= $this->cmsID; ?>"] .info a');
+
+        [].forEach.call(as, function(a){
+
+            if( a && !a.tabIndex ) {
+                a.tabIndex = 1;
+            }
+        });
+
+    </script>
 
 </div>
 <!-- indexer::continue -->

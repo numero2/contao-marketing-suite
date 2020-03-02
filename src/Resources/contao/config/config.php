@@ -140,7 +140,7 @@ $GLOBALS['TL_CTE']['conversion_elements'] = [
     'text_cms_cta'  => '\numero2\MarketingSuite\ContentTextCMSCTA'
 ,   'cms_hyperlink' => '\numero2\MarketingSuite\ContentHyperlink'
 ,   'cms_button'    => '\numero2\MarketingSuite\ContentButton'
-,   'form'          => $GLOBALS['TL_CTE']['includes']['form']
+,   'cms_form'      => $GLOBALS['TL_CTE']['includes']['form']
 ];
 
 

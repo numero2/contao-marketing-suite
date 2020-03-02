@@ -1,5 +1,5 @@
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> data-cms-id="<?= $this->cmsID; ?>">
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> data-cms-id="<?= $this->cmsID; ?>" role="dialog" aria-modal="true">
 
     <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="post">
         <div class="formbody">
@@ -12,27 +12,44 @@
             </div>
 
             <div class="widget widget-submit">
-                <button type="submit" name="submit" value="accept" class="submit"><?= $this->acceptLabel ?></button>
+                <button type="submit" name="submit" value="accept" class="submit" tabindex="<?= count($this->tags)+1; ?>"><?= $this->acceptLabel ?></button>
             </div>
         </div>
 
         <div class="tags">
-            <?php foreach ($this->tags as $key => $tag): ?>
-                <div>
+            <?php foreach( $this->tags as $key => $tag ): ?>
+                <div role="group" aria-labelledby="group_head_<?= $tag['id']; ?> group_desc_<?= $tag['id']; ?>">
                     <div class="head">
-                        <span><?= $tag['name']; ?></span>
+                        <span id="group_head_<?= $tag['id']; ?>"><?= $tag['name']; ?></span>
                         <?php if( !$tag['required'] ): ?>
                             <input id="cookie_<?= $tag['id']; ?>" type="checkbox" name="cookie_<?= $tag['id']; ?>" value="<?= $tag['id']; ?>" <?php if( $tag['accepted'] ): ?>checked<?php endif; ?> />
-                            <label for="cookie_<?= $tag['id']; ?>"></label>
+                            <label for="cookie_<?= $tag['id']; ?>" tabindex="<?= $key+1; ?>" role="checkbox" aria-checked="<?= ($tag['accepted']) ? 'true':'false'; ?>" onKeyPress="var c = document.getElementById('cookie_<?= $tag['id']; ?>'); c.checked = !c.checked; this.setAttribute('aria-checked',c.checked); return false;" onClick="var c = document.getElementById('cookie_<?= $tag['id']; ?>'); this.setAttribute('aria-checked',!c.checked);"></label>
                         <?php endif; ?>
                     </div>
-                    <?= $tag['description']; ?>
+                    <div class="description" id="group_desc_<?= $tag['id']; ?>">
+                        <?= $tag['description']; ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
     </form>
 
-    <script>if( !navigator.cookieEnabled ) { document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"]').remove(); }</script>
+    <script>
+
+        if( !navigator.cookieEnabled ) {
+            document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"]').remove();
+        }
+
+        var as = document.querySelectorAll('[data-cms-id="<?= $this->cmsID; ?>"] .info a');
+
+        [].forEach.call(as, function(a){
+
+            if( a && !a.tabIndex ) {
+                a.tabIndex = 1;
+            }
+        });
+
+    </script>
 
 </div>
 <!-- indexer::continue -->

@@ -220,7 +220,7 @@ class HealthCheck extends CoreBackendModule {
                     ,   'type'  => 'page'
                     ,   'name'  => $oPages->title
                     ,   'href'  => 'contao?do=article&amp;pn='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID()
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                     ,   'attributes' => $aAttributes
                     ];
                 }
@@ -348,7 +348,7 @@ class HealthCheck extends CoreBackendModule {
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
         }
@@ -435,7 +435,7 @@ class HealthCheck extends CoreBackendModule {
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
         }
@@ -579,7 +579,7 @@ class HealthCheck extends CoreBackendModule {
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
         }
@@ -634,7 +634,7 @@ class HealthCheck extends CoreBackendModule {
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
         }
@@ -665,7 +665,7 @@ class HealthCheck extends CoreBackendModule {
                     ,   'type'  => 'page'
                     ,   'name'  => $oNews->headline
                     ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id)
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_news']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id) : sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'],$oNews->id)
                     ];
                 }
             }
@@ -697,7 +697,7 @@ class HealthCheck extends CoreBackendModule {
                     ,   'type'  => 'page'
                     ,   'name'  => $oEvents->title
                     ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id)
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id) : sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'],$oEvents->id)
                     ];
                 }
             }
@@ -753,7 +753,7 @@ class HealthCheck extends CoreBackendModule {
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
         }
@@ -784,7 +784,7 @@ class HealthCheck extends CoreBackendModule {
                     ,   'type'  => 'page'
                     ,   'name'  => $oNews->headline
                     ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id)
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_news']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id) : sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'],$oNews->id)
                     ];
                 }
             }
@@ -816,7 +816,7 @@ class HealthCheck extends CoreBackendModule {
                     ,   'type'  => 'page'
                     ,   'name'  => $oEvents->title
                     ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id)
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id) : sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'],$oEvents->id)
                     ];
                 }
             }
@@ -872,7 +872,7 @@ class HealthCheck extends CoreBackendModule {
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
         }
@@ -903,7 +903,7 @@ class HealthCheck extends CoreBackendModule {
                     ,   'type'  => 'page'
                     ,   'name'  => $oNews->headline
                     ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id)
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_news']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id) : sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'],$oNews->id)
                     ];
                 }
             }
@@ -935,7 +935,7 @@ class HealthCheck extends CoreBackendModule {
                     ,   'type'  => 'page'
                     ,   'name'  => $oEvents->title
                     ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id)
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id) : sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'],$oEvents->id)
                     ];
                 }
             }
@@ -989,7 +989,7 @@ class HealthCheck extends CoreBackendModule {
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id)
+                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
         }
@@ -1013,7 +1013,7 @@ class HealthCheck extends CoreBackendModule {
                     ,   'type'  => 'news'
                     ,   'name'  => $oNews->headline
                     ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_opengraph_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id)
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_news']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id) : sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'],$oNews->id)
                     ];
                 }
             }

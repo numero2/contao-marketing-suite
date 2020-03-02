@@ -57,27 +57,32 @@
 
         <script>
 
-            var checkMissingH1InRenderedPage = function( row, cb ) {
+            const checkMissingH1InRenderedPage = function( row, cb ) {
 
                 if( row ) {
 
-                    var finish = function() {
+                    const finish = function() {
 
                         row.removeAttribute('data-url');
 
                         // update count
-                        var fieldset = document.querySelector('#pal_missing_h1_legend');
-                        var rows = fieldset.querySelectorAll('table tr');
-                        var count = fieldset.querySelector('legend > .count');
+                        const fieldset = document.querySelector('#pal_missing_h1_legend');
+                        const rows = fieldset.querySelectorAll('table tr');
+                        const count = fieldset.querySelector('legend > .count');
 
                         count.innerHTML = rows.length;
+
+                        if( typeof(cb) === "function" ) {
+                            cb();
+                        }
                     };
 
-                    var xhr = new XMLHttpRequest();
+                    const xhr = new XMLHttpRequest();
 
                     xhr.addEventListener("load", function(){
 
                         if( xhr.status == 200 && xhr.responseText ) {
+
                             if( xhr.responseText.test(/<h1[^>]*>(.+)<\/h1>/gs) ) {
                                 row.parentNode.removeChild(row);
                             }
@@ -98,18 +103,18 @@
 
             document.addEventListener('DOMContentLoaded', function(){
 
-                var rows = document.querySelectorAll('#pal_missing_h1_legend tr[data-url]');
-                var pages = [];
+                const rows = document.querySelectorAll('#pal_missing_h1_legend tr[data-url]');
+                const pages = [];
 
-                for( var i=0; i<rows.length; i++ ) {
+                for( let i=0; i<rows.length; i++ ) {
                     pages.push(rows[i]);
                 }
 
                 pages.reverse();
 
-                var processPages = function() {
+                const processPages = function() {
 
-                    var p = pages.pop();
+                    let p = pages.pop();
 
                     if( p ) {
                         checkMissingH1InRenderedPage(p, processPages);
