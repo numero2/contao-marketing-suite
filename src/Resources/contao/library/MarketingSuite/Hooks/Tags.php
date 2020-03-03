@@ -165,7 +165,7 @@ class Tags extends Hooks {
 
 
     /**
-     * Generates cookie bar
+     * Generates the selected EU consent module
      *
      * @param \PageModel $objPage
      * @param \LayoutModel $objLayout
@@ -177,11 +177,7 @@ class Tags extends Hooks {
             return;
         }
 
-        global $objPage;
-
-        $forceShow = false;
-        $forceShow = Input::get('_cmsscb') ? true : $forceShow;
-
+        // initialize model needed for module
         $objModel = NULL;
         $objModel = new ModuleModel();
         $objModel->preventSaving(false);
@@ -189,7 +185,7 @@ class Tags extends Hooks {
         Controller::loadDataContainer('tl_cms_tag_settings');
         aczolku::udifuro();
 
-        // get settings for cokie bar from config
+        // get settings for module from config
         if( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields'] && count($GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields']) ) {
 
             foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['fields'] as $key => $value ) {
@@ -202,44 +198,27 @@ class Tags extends Hooks {
             }
         }
 
-        // check if cookie bar is excluded from current page and not forced
-        // to show up
-        if( $objModel->cms_exclude_pages && !$forceShow ) {
+        // find correct module
+        if( !empty($GLOBALS['FE_MOD']['marketing_suite'][$objModel->type]) ) {
 
-            $excludePages = deserialize($objModel->cms_exclude_pages);
+            $strClass = $GLOBALS['FE_MOD']['marketing_suite'][$objModel->type];
 
-            if( is_array($excludePages) && count($excludePages) ) {
+            // init module
+            if( $strClass ) {
 
-                // page excluded
-                if( in_array($objPage->id, $excludePages) ) {
+                $oModule = NULL;
+                $oModule = new $strClass($objModel);
 
-                    // check if consent form has not been submitted
-                    if( Input::post('FORM_SUBMIT') != $objModel->type ) {
-                        return;
+                if( $oModule ) {
+
+                    $sModule = "";
+                    $sModule = $oModule->generate();
+
+                    // append module to body
+                    if( $sModule ) {
+                        $GLOBALS['TL_BODY'][] = Controller::replaceInsertTags($sModule);
                     }
                 }
-            }
-        }
-
-        $strClass = null;
-        if( !empty($GLOBALS['FE_MOD']['marketing_suite'][$objModel->type]) ) {
-            $strClass = $GLOBALS['FE_MOD']['marketing_suite'][$objModel->type];
-        }
-
-        $oModule = NULL;
-        if( $strClass ) {
-            $oModule = new $strClass($objModel);
-        }
-
-        if( $oModule ) {
-
-            $sModule = "";
-            $sModule = $oModule->generate();
-
-            if( $sModule ) {
-
-                $GLOBALS['TL_BODY'][] = Controller::replaceInsertTags($sModule);
-                $objPage->cssClass .= ' cookie-bar-visible';
             }
         }
     }
@@ -253,21 +232,17 @@ class Tags extends Hooks {
      *
      * @return boolean
      */
-    public static function isAccepted($tagId, $tagPid) {
+    public static function isAccepted( $tagId, $tagPid ) {
 
         $isAccepted = false;
 
-        $moduleType = NULL;
-        $moduleType = CMSConfig::get('cms_tag_type');
-
         // cookie_bar
-        if( $moduleType === 'cms_cookie_bar' ) {
-
+        if( !$isAccepted ) {
             $isAccepted = Input::cookie('cms_cookie') == 'accept';
+        }
 
         // accept_tags
-        } else if( $moduleType === 'cms_accept_tags' ) {
-
+        if( !$isAccepted ) {
             $isAccepted = (Input::cookie('cms_cookies_saved') === "true" && in_array($tagPid, explode('-', Input::cookie('cms_cookies'))));
         }
 
@@ -276,7 +251,7 @@ class Tags extends Hooks {
 
 
     /**
-     * Replace a render content element or frontend module with a fallback
+     * Replace a rendered content element or frontend module with a fallback
      * template if configured to be only visible on cookie accept
      *
      * @param ContentModel|ModuleModel $oRow
@@ -316,7 +291,7 @@ class Tags extends Hooks {
 
                 if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
 
-                    $oTemplate = new \FrontendTemplate($oTag->fallbackTpl?:'ce_optin_fallback');
+                    $oTemplate = new FrontendTemplate($oTag->fallbackTpl?:'ce_optin_fallback');
                     $oTemplate->setData( $oRow->row() );
 
                     $oTemplate->optinLink = self::generateEUConsentForceLink($cssID); // DEPRECATED

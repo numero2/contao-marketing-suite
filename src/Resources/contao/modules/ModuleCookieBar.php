@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
@@ -16,17 +16,15 @@
 namespace numero2\MarketingSuite;
 
 use Contao\BackendTemplate;
-use Contao\CMSConfig;
 use Contao\Environment;
 use Contao\FrontendTemplate;
 use Contao\Input;
-use Contao\Module;
 use Contao\StyleSheets;
 use numero2\MarketingSuite\Backend\License as agoc;
 use Patchwork\Utf8;
 
 
-class ModuleCookieBar extends Module {
+class ModuleCookieBar extends ModuleEUConsent {
 
 
     /**
@@ -58,22 +56,69 @@ class ModuleCookieBar extends Module {
             return $objTemplate->parse();
         }
 
-        if( TL_MODE == 'FE' ) {
+        return parent::generate();
+    }
 
-            if( !agoc::hasFeature('tag_settings', $objPage->trail[0]) || !agoc::hasFeature('tag'.substr($this->type, 3), $objPage->trail[0]) ) {
-                return '';
+
+    /**
+     * Handles the data submitted by the consent form
+     */
+    protected function handleFormData() {
+
+        $action = Environment::get('request');
+        $action = preg_replace('|_cmsscb=[0-9]+[&]?|', '', $action);
+        $action = preg_replace('|_cmselid=[\w]+[&]?|', '', $action);
+        $action = Input::get('_cmselid') ? $action.'#'.Input::get('_cmselid') : $action;
+
+        $this->formAction = $action;
+
+        if( Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $this->type ) {
+
+            $iCookieExpires = strtotime('+7 days');
+
+            // get configured cookie lifetime
+            if( agoc::hasFeature('tags_cookie_lifetime') ) {
+
+                $aCookieConfig = [];
+                $aCookieConfig = $this->cms_tag_cookie_lifetime;
+                $aCookieConfig = !is_array($aCookieConfig)?deserialize($aCookieConfig):$aCookieConfig;
+                $iCookieExpires = strtotime('+'.(int)$aCookieConfig['value'].' '.$aCookieConfig['unit']);
             }
 
-            if( $this->id && CMSConfig::get('cms_tag_type') != 'cms_tag_modules' ) {
-                return '';
+            if( Input::post('submit') == 'accept' ) {
+                $this->setCookie('cms_cookie', 'accept', $iCookieExpires);
+            } else if( Input::post('submit') == 'reject' ) {
+                $this->setCookie('cms_cookie', 'reject', $iCookieExpires);
             }
 
-            if( !$this->shouldBeShown() ) {
-                return '';
+            $this->redirect($this->formAction);
+        }
+    }
+
+
+    /**
+     * Determines if the module should be visible
+     *
+     * @return boolean
+     */
+    protected function shouldBeShown() {
+
+        $show = parent::shouldBeShown();
+
+        // check if cookies not already set
+        if( $show ) {
+
+            if( in_array(Input::cookie('cms_cookie'), ['accept','reject']) ) {
+                $show = false;
             }
         }
 
-        return parent::generate();
+        // check if forced to show up
+        if( !$show ) {
+            $show = Input::get('_cmsscb') ? true : $show;
+        }
+
+        return $show;
     }
 
 
@@ -88,44 +133,13 @@ class ModuleCookieBar extends Module {
             $this->Template = new FrontendTemplate($this->customTpl);
         }
 
-        $action = Environment::get('request');
-        $action = preg_replace('|_cmsscb=[0-9]+[&]?|', '', $action);
-        $action = preg_replace('|_cmselid=[\w]+[&]?|', '', $action);
-        $action = Input::get('_cmselid') ? $action.'#'.Input::get('_cmselid') : $action;
-
-        $this->Template->action = $action;
-
-        $this->Template->formId = 'cms_cookie_bar';
-
-        if( Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $this->Template->formId ) {
-
-            $iCookieExpires = strtotime('+7 days');
-
-            // get configured cookie lifetime
-            if( agoc::hasFeature('tags_cookie_lifetime') ) {
-
-                $aCookieConfig = [];
-                $aCookieConfig = CMSConfig::get('cms_tag_cookie_lifetime');
-                $aCookieConfig = !is_array($aCookieConfig)?deserialize($aCookieConfig):$aCookieConfig;
-                $iCookieExpires = strtotime('+'.(int)$aCookieConfig['value'].' '.$aCookieConfig['unit']);
-            }
-
-            if( Input::post('submit') == 'accept' ) {
-                $this->setCookie('cms_cookie', 'accept', $iCookieExpires);
-            } else if( Input::post('submit') == 'reject' ) {
-                $this->setCookie('cms_cookie', 'reject', $iCookieExpires);
-            }
-
-            $this->redirect($this->Template->action);
-        }
-
-        $this->Template->content = $this->cms_tag_text;
+        $this->Template->action = $this->formAction;
+        $this->Template->formId = $this->type;
 
         $this->Template->acceptLabel = $GLOBALS['TL_LANG']['cms_tag_settings_default']['accept_label'];
         $this->Template->content = $GLOBALS['TL_LANG']['cms_tag_settings_default']['text'];
 
         if( $this->cms_tag_override_label ) {
-
             $this->Template->acceptLabel = $this->cms_tag_accept_label;
             $this->Template->content = $this->cms_tag_text;
         }
@@ -138,48 +152,21 @@ class ModuleCookieBar extends Module {
 
         // generate default styling if enabled
         if( $this->cms_tag_set_style ) {
-
-            $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/cookie-bar.css">';
-
-            $strStyle = $this->generateStyling();
-
-            if( strlen($strStyle) ) {
-                $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
-            }
+            $this->generateStyling();
         }
 
         $this->Template->tags = $aTags;
-        $this->Template->cmsID = uniqid('cms');
+
+        parent::compile();
     }
 
 
     /**
-     * Returns if the current module should be visible in frontend
-     *
-     * @return boolean
-     */
-    public function shouldBeShown() {
-
-        $show = false;
-        $show = Input::get('_cmsscb') ? true : $forceShow;
-
-        if( !$show ) {
-
-            if( !in_array(Input::cookie('cms_cookie'), ['accept','reject']) ) {
-                $show = true;
-            }
-        }
-
-        return $show;
-    }
-
-
-    /**
-     * Generates stylesheet for this element
-     *
-     * @return string
+     * Generates stylesheet for this module
      */
     protected function generateStyling() {
+
+        $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/cookie-bar.css">';
 
         $strStyle = "";
 
@@ -229,6 +216,9 @@ class ModuleCookieBar extends Module {
             $strStyle .= "." . $strClass . ' button[name="submit"][value="reject"] ' . trim($reject) . "\n";
         }
 
-        return $strStyle;
+        if( strlen($strStyle) ) {
+            $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
+        }
     }
+
 }
