@@ -32,6 +32,10 @@ use numero2\MarketingSuite\ConversionItemModel;
 class ConversionItem extends CoreBackend {
 
 
+    /** @var array defines which conversion items can be shown on all pages by the generatePage hook */
+    public static $aGlobalTypes = ['cms_overlay'];
+
+
     /**
      * Generates the labels for the table view
      *
@@ -44,7 +48,7 @@ class ConversionItem extends CoreBackend {
      */
     public function getLabel( $row, $label, DataContainer $dc, $args ) {
 
-        $args[3] = self::generateUsedOverlay($row, "Elemente (%s)");
+        $args[4] = self::generateUsedOverlay($row, "Elemente (%s)");
 
         return $args;
     }
@@ -59,9 +63,12 @@ class ConversionItem extends CoreBackend {
      */
     public static function generateUsedOverlay($aRow, $label) {
 
+        System::loadLanguageFile('tl_cms_tag');
+
         $strView = '';
 
         $count = 0;
+        $canBeMore = false;
         $aElements = [];
 
         $oContent = ContentModel::findBy(['type=? AND cms_ci_id=?'], ['cms_conversion_item', $aRow['id']], ['return'=>'Collection']);
@@ -80,10 +87,25 @@ class ConversionItem extends CoreBackend {
             $aElements[$GLOBALS['TL_LANG']['MOD']['tl_module']] = $oModule;
         }
 
+        if( in_array($aRow['type'], self::$aGlobalTypes) ) {
+
+            $aIds = deserialize($aRow['cms_pages']);
+            if( $aIds && is_array($aIds) ) {
+                if( $aRow['cms_pages_scope'] != '' && $aRow['cms_pages_scope'] != 'none' ) {
+                    $count += count($aIds);
+                    $aElements[$GLOBALS['TL_LANG']['tl_cms_tag']['page_scopes'][$aRow['cms_pages_scope']]] = [['table'=>'tl_page', 'ids'=>$aIds]];
+
+                    if($aRow['cms_pages_scope'] != 'current_page') {
+                        $canBeMore = true;
+                    }
+                }
+            }
+        }
+
         if( count($aElements) ) {
 
             $aOverlay = [
-                'label' => (strpos($label, '%')===false)?$label:sprintf($label, (string)$count)
+                'label' => (strpos($label, '%')===false)?$label:sprintf($label, (string)$count.($canBeMore?'+':''))
             ,   'content' => $aElements
             ,   'position' => 'top_right'
             ];
@@ -165,28 +187,20 @@ class ConversionItem extends CoreBackend {
 
 
     /**
-     * OBSOLETE?
-     * Return all content elements as array
+     * Modify the palettes for conversion items that can be shown on multiple pages
      *
-     * @return array
+     * @param \DataContainer $dc
      */
-    public function getContentElements( $dc ) {
+    public function addPageScopeFields( $dc ) {
 
-        $groups = [];
+        foreach( self::$aGlobalTypes as $palettes ) {
 
-        foreach( $GLOBALS['TL_CTE'] as $k => $v ) {
-
-            foreach( array_keys($v) as $kk ) {
-
-                if( $dc->activeRecord->type == 'a_b_test' && !in_array($kk, ['text_cms_cta', 'hyperlink', 'form']) ) {
-                    continue;
-                }
-
-                $groups[$k][] = $kk;
-            }
+            $GLOBALS['TL_DCA'][$dc->table]['palettes'][$palettes] = str_replace(
+                '{invisible_legend:hide}'
+            ,   '{invisible_legend:hide},cms_pages_scope,cms_pages'
+            ,   $GLOBALS['TL_DCA'][$dc->table]['palettes'][$palettes]
+            );
         }
-
-        return $groups;
     }
 
 

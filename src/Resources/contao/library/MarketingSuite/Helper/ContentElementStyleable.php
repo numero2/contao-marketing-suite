@@ -46,7 +46,7 @@ class ContentElementStyleable {
         } else {
 
             throw new \Exception(
-                sprintf("No matching default stylesheet found for element %s ",$sElementClass)
+                sprintf("No matching default stylesheet found for element %s ", $filename)
             );
         }
     }

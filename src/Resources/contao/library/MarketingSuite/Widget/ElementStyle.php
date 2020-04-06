@@ -17,9 +17,12 @@ namespace numero2\MarketingSuite\Widget;
 
 use Contao\Backend as CoreBackend;
 use Contao\ContentModel;
+use Contao\ContentElement;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
+use Contao\Input;
+use Contao\Model;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Helper\ContentElementStyleable;
 use numero2\MarketingSuite\Helper\styleable;
@@ -123,7 +126,7 @@ class ElementStyle extends CoreBackend {
         $sMarkup = $oElement->generate();
         $sMarkup = Controller::replaceInsertTags($sMarkup);
 
-        $style = $GLOBALS['TL_HEAD'][0];
+        $style = implode('\n',$GLOBALS['TL_HEAD']);
         unset($GLOBALS['TL_HEAD']);
 
         // generate template
@@ -190,9 +193,31 @@ class ElementStyle extends CoreBackend {
      */
     public function addStylingFields( $dc ) {
 
+        if( !$dc->activeRecord ) {
+            if( Input::get('act')=='edit' && Input::get('table') && Input::get('id') ) {
+
+                $strModel = Model::getClassFromTable(Input::get('table'));
+                $oRow = $strModel::findOneById(Input::get('id'));
+
+                $dc->activeRecord = $oRow;
+            }
+        }
+
+        $aFields = [];
+        $strClass = ContentElement::findClass($dc->activeRecord->type);
+        $isStylableClass = $strClass && in_array('numero2\MarketingSuite\Helper\styleable', class_implements($strClass));
+
+        if( $isStylableClass ) {
+            $aFields = $strClass::getStyleFieldsConfig($dc);
+        }
+
         // add palettes and fields to current dca
         $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'][] = 'cms_element_style';
-        $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['cms_element_style'] =  'cms_element_preview,cms_element_style_categories,width,height,margin,padding,bgcolor,borderwidth,borderstyle,bordercolor,borderradius,textalign,fontsize,fontcolor,lineheight,letterspacing,hover_bgcolor,hover_bordercolor,hover_fontcolor,cms_element_style_custom';
+        $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['cms_element_style'] =  '';
+
+        if( count($aFields) ) {
+            $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['cms_element_style'] = 'cms_element_preview,cms_element_style_categories,'.implode(',', array_keys($aFields));
+        }
 
         $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_element_style'] = [
             'label'     => &$GLOBALS['TL_LANG']['tl_content']['cms_element_style']
@@ -214,16 +239,14 @@ class ElementStyle extends CoreBackend {
         ];
 
         // load more needed fields from tl_style
-        if( true ) {
-
-            $fields = explode(',', $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['cms_element_style']);
+        if( $isStylableClass ) {
 
             Controller::loadDataContainer('tl_style');
             Controller::loadLanguageFile('tl_style');
 
             $this->import('BackendUser', 'User');
 
-            foreach( $fields as $field ) {
+            foreach( $aFields as $field => $group ) {
 
                 $styleField = $field;
                 $hoverField = false;
@@ -263,29 +286,10 @@ class ElementStyle extends CoreBackend {
                     unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['eval']['multiple']);
                     unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['eval']['size']);
                 }
+
+                // set tab group
+                $GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['eval']['data-cms-style-group'] = $group;
             }
-
-            // put every field into a specific group
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['width']['eval']['data-cms-style-group'] = "start sizes";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['height']['eval']['data-cms-style-group'] = "start sizes";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['margin']['eval']['data-cms-style-group'] = "sizes";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['padding']['eval']['data-cms-style-group'] = "sizes";
-
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['bgcolor']['eval']['data-cms-style-group'] = "background-border start";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['borderwidth']['eval']['data-cms-style-group'] = "background-border";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['borderstyle']['eval']['data-cms-style-group'] = "background-border";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['bordercolor']['eval']['data-cms-style-group'] = "background-border";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['borderradius']['eval']['data-cms-style-group'] = "background-border";
-
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['textalign']['eval']['data-cms-style-group'] = "text-font";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['fontsize']['eval']['data-cms-style-group'] = "text-font";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['fontcolor']['eval']['data-cms-style-group'] = "text-font start";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['lineheight']['eval']['data-cms-style-group'] = "text-font";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['letterspacing']['eval']['data-cms-style-group'] = "text-font";
-
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['hover_bgcolor']['eval']['data-cms-style-group'] = "hover";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['hover_bordercolor']['eval']['data-cms-style-group'] = "hover";
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['hover_fontcolor']['eval']['data-cms-style-group'] = "hover";
 
             // reduce the options
             $unitFields = ['width', 'height', 'margin', 'padding', 'fontsize', 'borderwidth', 'borderradius', 'lineheight', 'letterspacing'];

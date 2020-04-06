@@ -15,6 +15,7 @@
 
 namespace numero2\MarketingSuite;
 
+use Contao\DataContainer;
 use Contao\StyleSheets;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
 use numero2\MarketingSuite\Helper\styleable;
@@ -165,4 +166,33 @@ class ContentButton extends ContentHyperlink implements styleable {
         $this->isStylePreview = $active;
     }
 
+
+    /**
+    * @inheritdoc
+    */
+    public static function getStyleFieldsConfig( $dc ) {
+
+        return [
+            'width' => "start sizes"
+        ,   'height' => "start sizes"
+        ,   'margin' => "sizes"
+        ,   'padding' => "sizes"
+
+        ,   'bgcolor' => "background-border start"
+        ,   'borderwidth' => "background-border"
+        ,   'borderstyle' => "background-border"
+        ,   'bordercolor' => "background-border"
+        ,   'borderradius' => "background-border"
+
+        ,   'textalign' => "text-font"
+        ,   'fontsize' => "text-font"
+        ,   'fontcolor' => "text-font start"
+        ,   'lineheight' => "text-font"
+        ,   'letterspacing' => "text-font"
+
+        ,   'hover_bgcolor' => "hover"
+        ,   'hover_bordercolor' => "hover"
+        ,   'hover_fontcolor' => "hover"
+        ];
+    }
 }

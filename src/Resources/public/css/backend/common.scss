@@ -50,13 +50,13 @@ body:not(.lw) {
         padding: 0;
         margin-top: 2px;
 
-        > span:not(.tree) {
+        > span:not(.tree):not(.list) {
             display: block;
             font-weight: 600;
             margin-bottom: 5px;
         }
 
-        &:not(:nth-child(1)) > span:not(.tree) {
+        &:not(:nth-child(1)) > span:not(.tree):not(.list) {
             margin-top: 10px;
         }
     }
@@ -92,12 +92,16 @@ body:not(.lw) {
     }
 }
 
-.tree {
+.tree, .list {
 
     span {
         display: block;
         margin-top: 4px;
+    }
+}
 
+.tree {
+    span {
         &:nth-child(2) { margin-left: 14px; }
         &:nth-child(3) { margin-left: 28px; }
         &:nth-child(4) { margin-left: 42px; }

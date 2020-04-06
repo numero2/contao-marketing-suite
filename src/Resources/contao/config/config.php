@@ -141,6 +141,7 @@ $GLOBALS['TL_CTE']['conversion_elements'] = [
 ,   'cms_hyperlink' => '\numero2\MarketingSuite\ContentHyperlink'
 ,   'cms_button'    => '\numero2\MarketingSuite\ContentButton'
 ,   'cms_form'      => $GLOBALS['TL_CTE']['includes']['form']
+,   'cms_overlay'   => '\numero2\MarketingSuite\ContentOverlay'
 ];
 
 
@@ -154,6 +155,7 @@ $GLOBALS['TL_HOOKS']['executePostActions'][] = ['\numero2\MarketingSuite\Hooks\H
 $GLOBALS['TL_HOOKS']['executePreActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'executePreActions'];
 $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateEUConsent'];
 $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateScripts'];
+$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\ConversionItem', 'generateGlobalConversionItems'];
 $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Tracking\Session', 'storeVisitedPage'];
 $GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = ['\numero2\MarketingSuite\MarketingItem\ABTestPage', 'selectAorBPage'];
 $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\License', 'getSystemMessages'];

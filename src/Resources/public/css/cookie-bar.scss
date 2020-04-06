@@ -11,8 +11,11 @@
         border: 0;
         padding: 10px;
 
-        &[value="accept"] { background-color: #27ae60; }
-        &[value="reject"] { background-color: #7f8c8d; }
+        &[value="accept"] {
+            background-color: #27ae60;
+        }
+        &[value="reject"],
+        &[value="accept"].first { background-color: #7f8c8d; }
     }
 }
 

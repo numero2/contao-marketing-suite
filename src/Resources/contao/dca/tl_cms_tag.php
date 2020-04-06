@@ -28,11 +28,17 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
         ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'addDefault']
         ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'setTagFieldLabel']
         ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'unsetEnableOnCookieAcceptForSession']
-    ]
+        ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'changeIdWithRoot']
+       ]
     ,   'sql' => [
             'keys' => [
                 'id' => 'primary'
             ]
+        ]
+    ]
+,   'edit' => [
+        'buttons_callback' => [
+            ['\numero2\MarketingSuite\DCAHelper\Tag', 'alterSaveButtons']
         ]
     ]
 ,   'list' => [
@@ -91,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
 ,   'palettes' => [
         '__selector__'              => ['type']
     ,   'default'                   => '{common_legend},type,name'
-    ,   'group'                     => '{common_legend},type,name;{description_legend},description;{expert_legend:hide},customTpl'
+    ,   'group'                     => '{common_legend},type,root,name;{description_legend},description'
     ,   'session'                   => '{common_legend},type,name;{publish_legend},active'
     ,   'html'                      => '{common_legend},type,name;{tag_legend},html;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'google_analytics'          => '{common_legend},type,name;{tag_legend},tag,alias;{config_legend},anonymize_ip;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
@@ -117,7 +123,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['type']
         ,   'inputType'             => 'select'
         ,   'filter'                => true
-        ,   'options_callback'      => [ '\numero2\MarketingSuite\DCAHelper\Tag', 'getTagTypes' ]
+        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getTagTypes']
         ,   'reference'             => &$GLOBALS['TL_LANG']['tl_cms_tag']['types']
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>32, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(32) NOT NULL default ''"
@@ -129,12 +135,22 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
+    ,   'root' => [
+            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['root']
+        ,   'inputType'             => 'select'
+        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getRootPages']
+        ,   'eval'                  => ['submitOnChange'=>true, 'tl_class'=>'w50']
+        ,   'sql'                   => "int(10) unsigned NOT NULL default '0'"
+        ]
+    ,   'root_pid' => [
+            'sql'                   => "int(10) unsigned NOT NULL default '0'"
+        ]
     ,   'description' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['description']
         ,   'inputType'             => 'textarea'
         ,   'eval'                  => ['rte'=>'tinyMarketing', 'helpwizard'=>true, 'doNotSaveEmpty'=>true]
         ,   'sql'                   => "text NULL"
-    ]
+        ]
     ,   'html' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['html']
         ,   'inputType'             => 'textarea'
@@ -202,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
         ,   'default'               => 'current_and_all_children'
         ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getPageScopes']
         ,   'eval'                  => ['tl_class'=>'clr w50 no-height']
-        ,   'sql'                   => "varchar(64) NOT NULL default ''"
+        ,   'sql'                   => "varchar(64) NOT NULL default 'current_and_all_children'"
         ]
     ,   'pages' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['pages']

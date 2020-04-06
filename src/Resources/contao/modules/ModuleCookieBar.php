@@ -176,41 +176,44 @@ class ModuleCookieBar extends ModuleEUConsent {
 
         $mainStyle = [
             'font' => '1'
-        ,   'fontcolor' => (string)$this->fontcolor
+        ,   'fontcolor' => (string)$this->cms_tag_font_color
         ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->bgcolor
+        ,   'bgcolor' => (string)$this->cms_tag_background_color
         ];
+
         $main = $oStyleSheet->compileDefinition($mainStyle, false, [], [], true);
-
-        $acceptStyle = [
-            'font' => '1'
-        ,   'fontcolor' => (string)$this->acceptfont
-        ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->acceptcolor
-        ,   'bgimage' => strlen((string)$this->acceptcolor)?'none':''
-        ,   'border' => '1'
-        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ];
-        $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
-
-        $rejectStyle = [
-            'font' => '1'
-        ,   'fontcolor' => (string)$this->rejectfont
-        ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->rejectcolor
-        ,   'bgimage' => strlen((string)$this->rejectcolor)?'none':''
-        ,   'border' => '1'
-        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ];
-        $reject = $oStyleSheet->compileDefinition($rejectStyle, false, [], [], true);
 
         if( strlen($main) > 20 ) {
             $strStyle .= "." . $strClass . ' ' . trim($main) . "\n";
         }
 
+        $acceptStyle = [
+            'font' => '1'
+        ,   'fontcolor' => (string)$this->cms_tag_accept_font
+        ,   'background' => '1'
+        ,   'bgcolor' => (string)$this->cms_tag_accept_background
+        ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
+        ,   'border' => '1'
+        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
+        ];
+
+        $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
+
         if( strlen($accept) > 20 ) {
             $strStyle .= "." . $strClass . ' button[name="submit"][value="accept"] ' . trim($accept) . "\n";
         }
+
+        $rejectStyle = [
+            'font' => '1'
+        ,   'fontcolor' => (string)$this->cms_tag_reject_font
+        ,   'background' => '1'
+        ,   'bgcolor' => (string)$this->cms_tag_reject_background
+        ,   'bgimage' => strlen((string)$this->cms_tag_reject_background)?'none':''
+        ,   'border' => '1'
+        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
+        ];
+
+        $reject = $oStyleSheet->compileDefinition($rejectStyle, false, [], [], true);
 
         if( strlen($reject) > 20 ) {
             $strStyle .= "." . $strClass . ' button[name="submit"][value="reject"] ' . trim($reject) . "\n";
@@ -220,5 +223,4 @@ class ModuleCookieBar extends ModuleEUConsent {
             $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
         }
     }
-
 }

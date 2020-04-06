@@ -179,4 +179,48 @@ class Session {
 
         return null;
     }
+
+
+    /**
+     * Stores that the given overlay was closed
+     *
+     * @param integer $contentID
+     * @param integer $changed
+     * @param integer $expires
+     */
+    public function storeOverlayClosed( $contentID, $changed, $expires ) {
+
+        if( TL_MODE != 'FE' || BE_USER_LOGGED_IN ) {
+            return;
+        }
+
+        $aSession = $this->session->get('cms_overlay_closed');
+        if( !is_array($aSession) ) {
+            $aSession = [];
+        }
+
+        $aSession[$contentID] = ['changed'=>$changed, 'expire'=>$expires];
+
+        $this->session->set('cms_overlay_closed', $aSession);
+    }
+
+
+    /**
+     * Returns which page was selected by which marketing_item
+     *
+     * @param integer $contentID
+     * @param integer $changed
+     *
+     * @return integer
+     */
+    public function getOverlayClosed( $contentID, $changed ) {
+
+        $aSession = $this->session->get('cms_overlay_closed');
+
+        if( is_array($aSession) && !empty($aSession[$contentID]) ) {
+            return $changed <= $aSession[$contentID]['changed'] && time() <= $aSession[$contentID]['expire'];
+        }
+
+        return false;
+    }
 }

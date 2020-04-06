@@ -164,7 +164,7 @@ class ClickAndViews {
      */
     protected function isViewable() {
 
-        if( Input::get('follow') ) {
+        if( Input::get('follow') || Input::get('close') ) {
             return false;
         }
 

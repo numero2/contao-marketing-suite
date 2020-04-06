@@ -9,10 +9,21 @@
 
             <div class="info">
                 <?= $this->content; ?>
+                <?php $this->block('info'); ?>
+                <?php $this->endblock(); ?>
             </div>
 
             <div class="widget widget-submit">
-                <button type="submit" name="submit" value="accept" class="submit" tabindex="<?= count($this->tags)+1; ?>"><?= $this->acceptLabel ?></button>
+                <button type="submit" name="submit" value="accept" class="submit <?= ($this->acceptAllLabel)?' first':''; ?>" tabindex="<?= count($this->tags)+1; ?>">
+                    <?= $this->acceptLabel ?>
+                </button>
+                <?php if( $this->acceptAllLabel ): ?>
+                    <button type="submit" name="submit" value="accept" class="submit all" data-all="true" tabindex="<?= count($this->tags)+2; ?>">
+                        <?= $this->acceptAllLabel ?>
+                    </button>
+                <?php endif; ?>
+                <?php $this->block('buttons'); ?>
+                <?php $this->endblock(); ?>
             </div>
         </div>
 
@@ -49,7 +60,40 @@
             }
         });
 
+        <?php if( $this->acceptAllLabel ): ?>
+
+            var buttonAll = document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"] button[data-all]');
+
+            if( buttonAll ) {
+
+                buttonAll.addEventListener('click', function(e){
+
+                    e.preventDefault();
+
+                    var checkboxes = document.querySelectorAll('[data-cms-id="<?= $this->cmsID; ?>"] input[type="checkbox"]');
+
+                    if( checkboxes ) {
+
+                        [].forEach.call(checkboxes, function(c){
+                            c.checked = true;
+                        });
+                    }
+
+                    var form = document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"] form');
+
+                    if( form ) {
+                        document.createElement('form').submit.call(form);
+                    }
+
+                });
+            }
+
+        <?php endif; ?>
+
     </script>
+
+    <?php $this->block('after'); ?>
+    <?php $this->endblock(); ?>
 
 </div>
 <!-- indexer::continue -->

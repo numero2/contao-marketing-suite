@@ -83,6 +83,12 @@
     <trans-unit id="tl_cms_tag.type.1">
         <source>Bitte wählen Sie den Type des Tags.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.root.0">
+        <source>Festlegen für...</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.root.1">
+        <source>Legt fest ob der Name und die Beschreibung für alle Seitenroots gilt oder nur für eine bestimmte Seite.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.description.0">
         <source>Beschreibung</source>
     </trans-unit>
@@ -210,6 +216,9 @@
     <trans-unit id="tl_cms_tag.types.matomo">
         <source>Matomo</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.page_scopes.none">
+        <source>Keine automatische Ausspielung</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.page_scopes.current_page">
         <source>Nur ausgewählte Seiten</source>
     </trans-unit>
@@ -218,6 +227,16 @@
     </trans-unit>
     <trans-unit id="tl_cms_tag.page_scopes.current_and_all_children">
         <source>Ausgewählte Seiten und alle Unterseiten</source>
+    </trans-unit>
+    <!-- OPTIONS -->
+    <trans-unit id="tl_cms_tag.roots.default">
+        <source>alle Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.roots.default_initial">
+        <source>alle Seiten (speichern um weitere Seitenroots auswählen zu können)</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.roots.specific">
+        <source>nur für die Seite „%s”</source>
     </trans-unit>
 </body>
 </file>

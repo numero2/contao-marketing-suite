@@ -44,10 +44,10 @@ if( Input::get('do') == 'cms_conversion' ) {
 
     $GLOBALS['TL_DCA']['tl_content']['config']['closed'] = \numero2\MarketingSuite\DCAHelper\ConversionItem::isClosed();
     $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_cms_conversion_item';
-    $GLOBALS['TL_DCA']['tl_content']['config']['backlink'] = 'foo';
 
     $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'onlyShowConversionItems'];
     $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'modifyDCHeadline'];
+    $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'addPageScopeFields'];
 
     $GLOBALS['TL_DCA']['tl_content']['config']['notSortable'] = true;
     $GLOBALS['TL_DCA']['tl_content']['config']['notCopyable'] = true;
@@ -67,7 +67,7 @@ if( Input::get('do') == 'cms_conversion' ) {
         ]
     ];
     $GLOBALS['TL_DCA']['tl_content']['list']['label'] = [
-            'fields'            => ['cms_mi_label', 'type', 'cms_ci_clicks', 'cms_used']
+            'fields'            => ['cms_mi_label', 'type', 'cms_ci_clicks', 'cms_ci_views', 'cms_used']
         ,   'showColumns'       => true
         ,   'label_callback'    => ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'getLabel']
     ];
@@ -90,7 +90,8 @@ $GLOBALS['TL_DCA']['tl_content']['palettes'] = array_merge_recursive(
     ,   'cms_conversion_item' => '{type_legend},type;{marketing_suite_legend},cms_ci_id;{invisible_legend:hide},invisible,start,stop'
     ,   'cms_button' => '{type_legend},type,headline;{link_legend},url,target,linkTitle,titleText;{style_legend},cms_element_style;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop'
     ,   'cms_hyperlink' => '{type_legend},type,headline;{link_legend},url,target,linkTitle,titleText;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop'
-    ,   'cms_form' => $GLOBALS['TL_DCA']['tl_content']['palettes']['form']
+    ,   'cms_form' => &$GLOBALS['TL_DCA']['tl_content']['palettes']['form']
+    ,   'cms_overlay' => '{type_legend},type,cms_layout_option,headline;{text_legend},text;{style_legend},cms_element_style;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop,cms_lifetime'
     ]
 );
 
@@ -245,6 +246,42 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
         ,   'options_callback'  => ['\numero2\MarketingSuite\DCAHelper\Content', 'getContentElementTags']
         ,   'eval'              => ['mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'clr w50']
         ,   'sql'               => "int(10) unsigned NOT NULL default '0'"
+        ]
+    ,   'cms_layout_option' => [
+            'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_layout_option']
+        ,   'inputType'         => 'select'
+        ,   'options_callback'  => ['\numero2\MarketingSuite\DCAHelper\Content', 'getLayoutOptions']
+        ,   'eval'              => ['mandatory'=>true, 'submitOnChange'=>true, 'includeBlankOption'=>true, 'tl_class'=>'clr w50']
+        ,   'sql'               => "varchar(64) NOT NULL default ''"
+        ]
+    ,   'cms_lifetime' => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_content']['cms_lifetime']
+        ,   'inputType'        => 'inputUnit'
+        ,   'options'          => ['days', 'weeks', 'months', 'years']
+        ,   'reference'        => &$GLOBALS['TL_LANG']['tl_content']['cms_lifetime_options']
+        ,   'eval'             => ['tl_class'=>'w50']
+        ,   'sql'              => "varchar(64) NOT NULL default ''"
+        ]
+    ,   'cms_pages_scope' => [
+            'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_pages_scope']
+        ,   'inputType'         => 'radio'
+        ,   'default'           => 'none'
+        ,   'options_callback'  => ['\numero2\MarketingSuite\DCAHelper\Content', 'getPageScopes']
+        ,   'eval'              => ['tl_class'=>'clr w50 no-height']
+        ,   'sql'               => "varchar(64) NOT NULL default 'none'"
+        ]
+    ,   'cms_pages' => [
+            'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_pages']
+        ,   'inputType'         => 'pageTree'
+        ,   'foreignKey'        => 'tl_page.title'
+        ,   'save_callback'     => [ ['\numero2\MarketingSuite\DCAHelper\Content', 'sanityCheckPageScopeWithPages'] ]
+        ,   'eval'              => ['multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'cms_orderPages', 'tl_class'=>'clr']
+        ,   'relation'          => ['type'=>'hasMany', 'load'=>'lazy']
+        ,   'sql'               => "text NULL"
+        ]
+    ,    'cms_orderPages' => [
+            'eval'              => ['doNotShow'=>true]
+        ,   'sql'               => "text NULL"
         ]
     ]
 );

@@ -37,22 +37,28 @@
         <source>Erzeugt ein Conversion-Element.</source>
     </trans-unit>
     <trans-unit id="CTE.cms_hyperlink.0">
-        <source>Hyperlink (mit Tracking)</source>
+        <source>Hyperlink [mit Tracking]</source>
     </trans-unit>
     <trans-unit id="CTE.cms_hyperlink.1">
         <source>Erzeugt ein Hyperlink-Element.</source>
     </trans-unit>
     <trans-unit id="CTE.cms_button.0">
-        <source>Button (mit Tracking)</source>
+        <source>Button [mit Tracking]</source>
     </trans-unit>
     <trans-unit id="CTE.cms_button.1">
         <source>Erzeugt ein Button-Element.</source>
     </trans-unit>
     <trans-unit id="CTE.cms_form.0">
-        <source>Formular (mit Tracking)</source>
+        <source>Formular [mit Tracking]</source>
     </trans-unit>
     <trans-unit id="CTE.cms_form.1">
         <source>Erzeugt ein Formular-Element.</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_overlay.0">
+        <source>Overlay [mit Tracking]</source>
+    </trans-unit>
+    <trans-unit id="CTE.cms_overlay.1">
+        <source>Erzeugt ein Overlay-Element.</source>
     </trans-unit>
     <!-- PICKER -->
     <trans-unit id="MSC.cmsLinkShortenerPicker">

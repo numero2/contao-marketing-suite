@@ -37,11 +37,11 @@ class Tags extends Hooks {
     /**
      * Generates and adds all script tags to the page
      *
-     * @param \PageModel $objPage
+     * @param \PageModel $objPageOriginal
      * @param \LayoutModel $objLayout
      * @param \PageRegular $objPageRegular
      */
-    public function generateScripts( PageModel $objPage, LayoutModel $objLayout, PageRegular $objPageRegular ) {
+    public function generateScripts( PageModel $objPageOriginal, LayoutModel $objLayout, PageRegular $objPageRegular ) {
 
         global $objPage;
 

@@ -15,6 +15,8 @@
 
 namespace numero2\MarketingSuite\Helper;
 
+use Contao\DataContainer;
+
 
 interface styleable {
 
@@ -34,5 +36,15 @@ interface styleable {
      * @param boolean $active
      */
     public function setStylePreview( $active=true );
+
+
+    /**
+     * Returns which fields are available in which tabs
+     *
+     * @param Contao\DataContainer $dc
+     *
+     * @return array
+     */
+    public static function getStyleFieldsConfig( $dc );
 
 }

@@ -6,7 +6,11 @@
             <li><span><?= $label; ?></span>
                 <ul>
                     <?php foreach( $types as $key => $value ): ?>
-                        <li><span class="tree"><?=\numero2\MarketingSuite\Backend::generateReferencePath($value, 3); ?></span></li>
+                        <?php if( is_array($value) ): ?>
+                            <li><span class="list"><?=\numero2\MarketingSuite\Backend::generateReferencePath($value, 1); ?></span></li>
+                        <?php else: ?>
+                            <li><span class="tree"><?=\numero2\MarketingSuite\Backend::generateReferencePath($value, 3); ?></span></li>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </ul>
             </li>

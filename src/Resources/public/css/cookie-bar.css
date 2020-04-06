@@ -17,8 +17,9 @@
     background-color: #27ae60;
 }
 
-.mod_cms_accept_tags button[value="reject"],
-.mod_cms_cookie_bar button[value="reject"] {
+.mod_cms_accept_tags button[value="reject"], .mod_cms_accept_tags button[value="accept"].first,
+.mod_cms_cookie_bar button[value="reject"],
+.mod_cms_cookie_bar button[value="accept"].first {
     background-color: #7f8c8d;
 }
 
@@ -140,5 +141,3 @@
 .mod_cms_accept_tags form > .tags > div p {
     font-size: 12px;
 }
-
-/*# sourceMappingURL=cookie-bar.css.map */

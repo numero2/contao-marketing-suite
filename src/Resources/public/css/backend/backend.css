@@ -42,13 +42,13 @@
     margin-top: 2px;
 }
 
-.hover-overlay ul > li > span:not(.tree) {
+.hover-overlay ul > li > span:not(.tree):not(.list) {
     display: block;
     font-weight: 600;
     margin-bottom: 5px;
 }
 
-.hover-overlay ul > li:not(:nth-child(1)) > span:not(.tree) {
+.hover-overlay ul > li:not(:nth-child(1)) > span:not(.tree):not(.list) {
     margin-top: 10px;
 }
 
@@ -79,7 +79,7 @@
     }
 }
 
-.tree span {
+.tree span, .list span {
     display: block;
     margin-top: 4px;
 }
@@ -1122,6 +1122,11 @@ input[type="radio"][readonly] + label {
     }
 }
 
+.tl_listing_container .tl_left > img[src*='tags/icon_tag'] ~ span {
+    color: #999999;
+    margin-left: 1ch;
+}
+
 .cms_schedule {
     margin: 15px;
     display: flex;
@@ -2025,5 +2030,3 @@ fieldset > div > .suggest_wizard ul li:hover {
 .widget.styling-categories .widgets .tl_text_trbl {
     width: 18%;
 }
-
-/*# sourceMappingURL=backend.css.map */

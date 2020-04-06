@@ -65,6 +65,46 @@
     <trans-unit id="tl_content.cms_element_style.1">
         <source>Konfigurieren Sie das Aussehen des Inhaltselements.</source>
     </trans-unit>
+    <trans-unit id="tl_content.cms_layout_option.0">
+        <source>Layout Option</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_layout_option.1">
+        <source>Wählen Sie die Art des Overlays aus.</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_lifetime.0">
+        <source>Erneute Anzeige nach</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_lifetime.1">
+        <source>Nach welcher Dauer soll der Nutzer das Element erneut angezeigt bekommen? Leer lassen für einmalige Anzeige.</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_pages_scope.0">
+        <source>Seiten-Anwendungsbereich</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_pages_scope.1">
+        <source>Anwendungsbereich der ausgewählten Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_pages.0">
+        <source>Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_pages.1">
+        <source>Bitte wähle auf welchen Seiten der Seiten-Anwendungsbereich angewendet werden soll.</source>
+    </trans-unit>
+    <!-- OPTIONS -->
+    <trans-unit id="tl_content.layout_options.modal_overlay">
+        <source>Modales Fenster</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_lifetime_options.days">
+        <source>Tag(e)</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_lifetime_options.weeks">
+        <source>Woche(n)</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_lifetime_options.months">
+        <source>Monat(e)</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_lifetime_options.years">
+        <source>Jahr(e)</source>
+    </trans-unit>
     <!-- LABELS -->
     <trans-unit id="tl_content.text_analysis_heading">
         <source>Textanalyse (Bitte speichern zur Aktualisierung)</source>
@@ -187,10 +227,10 @@
         <source>Hier erhalten Sie die Anzahl der Klicks auf das Conversion-Element.</source>
     </trans-unit>
     <trans-unit id="tl_content.cms_ci_views.0">
-        <source>Anzahl der Views</source>
+        <source>Anzahl der Aufrufe</source>
     </trans-unit>
     <trans-unit id="tl_content.cms_ci_views.1">
-        <source>Hier erhalten Sie die Anzahl der Views auf das Conversion-Element.</source>
+        <source>Hier erhalten Sie die Anzahl der Aufrufe des Conversion-Elements.</source>
     </trans-unit>
     <!-- OPTIONS -->
     <trans-unit id="tl_content.cms_mi_pages_criterias.all">

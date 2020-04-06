@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
@@ -16,7 +16,7 @@
 namespace numero2\MarketingSuite\DCAHelper;
 
 use Contao\Backend as CoreBackend;
-use Contao\Config;
+use Contao\CMSConfig;
 use Contao\DataContainer;
 use numero2\MarketingSuite\Backend\License as dohfa;
 
@@ -32,12 +32,12 @@ class TagSettings extends CoreBackend {
      * @return array
      */
     public function getModuleTemplates( DataContainer $dc ) {
-        return $this->getTemplateGroup('mod_' . Config::get('cms_tag_type'));
+        return $this->getTemplateGroup('mod_' . CMSConfig::get('cms_tag_type'));
     }
 
 
     /**
-     * Return all types as array
+     * Return all types as an array
      *
      * @return array
      */

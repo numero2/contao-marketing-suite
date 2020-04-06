@@ -1,7 +1,11 @@
 <div class="item <?=$this->type;?>">
     <div class="name">
         <span>
-            <?= $this->cms_mi_label; ?> (<?= $GLOBALS['TL_LANG']['CTE'][$this->type][0]; ?>)
+            <?php if( $this->cms_mi_label ):  ?>
+                <?= $this->cms_mi_label; ?> (<?= $GLOBALS['TL_LANG']['CTE'][$this->type][0]; ?>)
+            <?php else:  ?>
+                <?= $GLOBALS['TL_LANG']['CTE'][$this->type][0]; ?>
+            <?php endif;  ?>
         </span>
         <?php if( $this->used ): ?>
             <?= $this->used; ?>

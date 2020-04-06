@@ -30,6 +30,9 @@ use numero2\MarketingSuite\TagModel;
 class Tag extends CoreBackend {
 
 
+    private $labelsPageCache;
+
+
     /**
      * Sets the correct label for the "Tag" field of the
      * current tag
@@ -169,16 +172,17 @@ class Tag extends CoreBackend {
         // only support root level and level 1
         if( Input::get('mode') == 'create' && $row['pid'] != 0 ) {
             $disableInto = true;
+
         }
 
         // only support past in same level
         if( Input::get('mode') != 'create' ) {
 
-            $objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
+            $objTag = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
                 ->limit(1)
                 ->execute(Input::get('id'));
 
-            if( $objPage->pid == '0' ) {
+            if( $objTag->pid == '0' ) {
 
                 if( $row['pid'] == '0' ) {
                     $disableInto = true;
@@ -195,6 +199,12 @@ class Tag extends CoreBackend {
                     $disableInto = true;
                 }
             }
+        }
+
+        // prevent interacting with root-specific groups
+        if( $row['root'] ) {
+            $disableAfter = true;
+            $disableInto = true;
         }
 
         $return = '';
@@ -224,6 +234,11 @@ class Tag extends CoreBackend {
      * @return string
      */
     public function cutTag( $row, $href, $label, $title, $icon, $attributes ) {
+
+        if( $row['root'] ) {
+            return ''.Image::getHtml(str_replace('.svg', '_.svg', $icon), $label).' ';
+        }
+
         return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
     }
 
@@ -266,19 +281,46 @@ class Tag extends CoreBackend {
      */
     public function getLabel( $row, $label, DataContainer $dc, $imageAttribute ) {
 
-        $image = 'bundles/marketingsuite/img/backend/icons/';
+        $image = 'bundles/marketingsuite/img/backend/icons/tags/';
         $attributes = $imageAttribute;
 
-        if( $row['pid']==0 ) {
+        // groups and translations
+        if( $row['pid']==0 || $row['root'] ) {
 
-            $count = TagModel::countByPid($row['id']);
+            // translations
+            if( $row['root'] ) {
 
-            $image .= 'icon_tag_group';
+                if( !is_array($this->labelsPageCache) ) {
 
+                    $oPages = PageModel::findByType('root');
+                    $aPages = [];
+
+                    if( $oPages ) {
+
+                        foreach( $oPages as $oPage ) {
+                            $aPages[$oPage->id] = $oPage->title.' ('.$oPage->language.')';
+                        }
+
+                        $this->labelsPageCache = $aPages;
+                    }
+                }
+
+                if( $this->labelsPageCache[$row['root']] ) {
+                    $label .= '<span>'.$this->labelsPageCache[$row['root']].'</span>';
+                }
+
+                $image .= 'icon_tag_group_translation';
+
+            // normal groups
+            } else {
+
+                $image .= 'icon_tag_group';
+            }
+
+        // normal tags
         } else {
 
-            $image .= 'icon_tag';
-            // REVIEW: maybe add specific icons for different tag types
+            $image .= 'icon_tag_'.$row['type'];
         }
 
         $image .= '.svg';
@@ -287,7 +329,7 @@ class Tag extends CoreBackend {
 
         if( $row['type'] != 'group' ) {
 
-            $label .= '<span style="color:#999;padding-left:3px">['.$GLOBALS['TL_LANG']['tl_cms_tag']['types'][$row['type']].']</span>';
+            $label .= '<span>['.$GLOBALS['TL_LANG']['tl_cms_tag']['types'][$row['type']].']</span>';
         }
 
         return Image::getHtml($image, '', $attributes).' '.$label;
@@ -315,8 +357,8 @@ class Tag extends CoreBackend {
 
             // change available types based on pid, pid == 0 means root level
             if( $k == 'default' || $dc == null
-                || ( $pid == '0' && in_array($k, $aRootTypes) )
-                || ( $pid != '0' && !in_array($k, $aRootTypes) )
+                || ( ($pid == '0' || $dc->activeRecord->root) && in_array($k, $aRootTypes) )
+                || ( $pid != '0' && !$dc->activeRecord->root && !in_array($k, $aRootTypes) )
             ) {
 
                 if( !jopumir::hasFeature('tags_'.$k) && !in_array($k, ['default', 'group']) ) {
@@ -452,5 +494,139 @@ class Tag extends CoreBackend {
         }
 
         return $varValue;
+    }
+
+
+    /**
+     * get all page roots with a license
+     *
+     * @return array
+     */
+    public function getRootPages( $dc=NULL ) {
+
+        $aRoots = [];
+        $aRoots[''] = $GLOBALS['TL_LANG']['tl_cms_tag']['roots']['default'];
+
+        $oPages = NULL;
+        $oPages = PageModel::findBy(['type=? AND cms_root_license!=?'], ['root', ''], ['order'=>'sorting ASC']);
+
+        if( $oPages ) {
+
+            foreach( $oPages as $oRoot ) {
+
+                $aRoots[$oRoot->id] = sprintf(
+                    $GLOBALS['TL_LANG']['tl_cms_tag']['roots']['specific']
+                ,   $oRoot->title . ' ('.$oRoot->language.')'
+                );
+            }
+        }
+
+        // we're in editing mode and just creating the fallback case
+        // do no let the user choose any other root page until
+        // the fallback has been saved
+        if( $dc instanceof DataContainer ) {
+
+            if( !$dc->activeRecord->root && !$dc->activeRecord->name ) {
+                $aRoots = [
+                    '' => $GLOBALS['TL_LANG']['tl_cms_tag']['roots']['default_initial']
+                ];
+            }
+        }
+
+        return $aRoots;
+    }
+
+
+    /**
+     * Set filter for root_pid and redirect if this field is changed
+     *
+     * @param \Conto\Datacontainer $dc
+     */
+    public function changeIdWithRoot( Datacontainer $dc ) {
+
+        $db = Database::getInstance();
+
+        // cleanup tag groups for none existing root ids
+        $aRootsWithLicense = array_keys(self::getRootPages());
+        $aRootsWithLicense[0] = 0;
+
+        if( count($aRootsWithLicense) ) {
+            $q = $db->query("DELETE FROM tl_cms_tag WHERE root NOT IN (".implode(',', $aRootsWithLicense).")");
+        }
+
+        // adjust sorting so that groups are above tags and groups are in the same order than tl_page
+        $oPages = PageModel::findMultipleByIds($aRootsWithLicense, ['order' => 'sorting ASC']);
+        if( $oPages ) {
+
+
+            $oTags = TagModel::findBy(['type!=? and sorting<?'], ['group', $oPages->count()]);
+            if( $oTags ) {
+                $oGroupIds = $oTags->fetchEach('pid');
+                $oGroupIds = array_values($oGroupIds);
+
+                $db->query("UPDATE tl_cms_tag SET sorting=sorting+".(2*$oPages->count())." WHERE pid IN (".implode(',', $oGroupIds).")");
+            }
+
+            foreach( array_keys($oPages->fetchEach('sorting')) as $sorting => $pageId ) {
+                $db->query("UPDATE tl_cms_tag SET sorting=$sorting WHERE root=$pageId");
+            }
+        }
+
+        // either switch to entry based on selected root or copy current and redirect there
+        if( Input::post('SUBMIT_TYPE') == 'auto' ) {
+
+            $id = Input::get('id');
+            $oCurrent = TagModel::findOneById($id);
+
+            $rootId = Input::post('root');
+            if( $oCurrent && $oCurrent->type == 'group' ) {
+                if( $rootId ) {
+                    if( $oCurrent->root_pid != 0 ) {
+                        $oGroup = TagModel::findOneBy(['root=? AND root_pid=?'], [$rootId, $oCurrent->root_pid]);
+                    } else {
+                        $oGroup = TagModel::findOneBy(['root=? AND root_pid=?'], [$rootId, $oCurrent->id]);
+                    }
+                } else {
+                    $oGroup = TagModel::findOneBy(['id=?'], [$oCurrent->root_pid]);
+                }
+
+                $redirectId = 0;
+
+                if( $oGroup ) {
+                    $redirectId = $oGroup->id;
+                } else {
+
+                    $oGroup = TagModel::findOneById($oCurrent->id);
+                    $oNewGroup = clone $oGroup;
+
+                    $oNewGroup->pid = $oGroup->root_pid?:$oGroup->id;
+                    $oNewGroup->root_pid = $oGroup->root_pid?:$oGroup->id;
+                    $oNewGroup->root = $rootId;
+                    $oNewGroup->save();
+
+                    $redirectId = $oNewGroup->id;
+                }
+
+                if( $redirectId ) {
+                    $this->redirect($this->addToUrl('id='.$redirectId));
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Alters the save buttons in edit mode
+     * @param array $arrButtons
+     * @param \DataContainer $dc
+     *
+     * @return array
+     */
+    public function alterSaveButtons( $arrButtons=[], DataContainer $dc ) {
+
+        unset($arrButtons['saveNduplicate']);
+        unset($arrButtons['saveNcreate']);
+
+        return $arrButtons;
     }
 }

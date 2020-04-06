@@ -16,6 +16,7 @@
 namespace numero2\MarketingSuite;
 
 use Contao\BackendTemplate;
+use Contao\Database;
 use Contao\Environment;
 use Contao\Input;
 use Contao\StyleSheets;
@@ -153,19 +154,21 @@ class ModuleAcceptTags extends ModuleEUConsent {
         $this->Template->action = $this->formAction;
         $this->Template->formId = $this->type;
 
-        $oTags = NULL;
-        $oTags = TagModel::findBy(['type=?'], ['group'], ['order'=>'sorting ASC']);
+        $oTagGroups = NULL;
+        $oTagGroups = TagModel::findGroupsWithRootInfo($objPage->trail[0]);
 
         $accepted = [];
         if( !empty(Input::cookie('cms_cookies')) ) {
             $accepted = explode('-', Input::cookie('cms_cookies'));
         }
 
+        $this->loadDataContainer('tl_cms_tag');
+
         $aTags = [];
 
-        if( $oTags ) {
+        if( $oTagGroups ) {
 
-            foreach( $oTags as $key => $value ) {
+            foreach( $oTagGroups as $key => $value ) {
 
                 $childTags = TagModel::findBy(['pid=? AND active=?'], [$value->id, '1'], ['order'=>'sorting ASC']);
 
@@ -175,31 +178,58 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
                     $showAllAlways = array_reduce(
                         $aChild
-                        ,   function(&$carry, $value) {
-                                return $carry && $value!=='1';
-                            }
-                        ,   true
+                    ,   function(&$carry, $value) {
+                            return $carry && $value!=='1';
+                        }
+                    ,   true
                     );
 
-                    $aTags[] = $value->row() + [
-                        'accepted' => in_array($value->id, $accepted)?"1":""
-                    ,   'required' => $showAllAlways?"1":""
-                    ];
+                    $showGroup = false;
+                    $aPageIds = [];
+
+                    foreach( $childTags as $childTag ) {
+
+                        if( strpos($GLOBALS['TL_DCA']['tl_cms_tag']['palettes'][$childTag->type], 'enable_on_cookie_accept') === false ) {
+                            $showGroup = true;
+                        }
+
+                        if( !$childTag->enable_on_cookie_accept ) {
+                            continue;
+                        }
+
+                        if( $childTag->pages ) {
+                            $aPageIds = array_merge($aPageIds, deserialize($childTag->pages));
+                        }
+                    }
+
+                    if( !$showGroup && $aPageIds ) {
+                        $showGroup = self::checkRootForPages($objPage->trail[0], $aPageIds);
+                    }
+
+                    if( $showGroup ) {
+                        $aTags[] = $value->row() + [
+                            'accepted' => in_array($value->id, $accepted)?"1":""
+                        ,   'required' => $showAllAlways?"1":""
+                        ];
+                    }
                 }
             }
-
-            $aTagIds = $oTags->fetchEach('id');
         }
 
         $this->Template->tags = $aTags;
 
         $this->Template->acceptLabel = $GLOBALS['TL_LANG']['cms_tag_settings_default']['accept_label'];
+        $this->Template->acceptAllLabel = $GLOBALS['TL_LANG']['cms_tag_settings_default']['accept_all_label'];
         $this->Template->content = $GLOBALS['TL_LANG']['cms_tag_settings_default']['text'];
 
         if( $this->cms_tag_override_label ) {
 
             $this->Template->acceptLabel = $this->cms_tag_accept_label;
             $this->Template->content = $this->cms_tag_text;
+
+            if( !empty($this->cms_tag_accept_all_label) ) {
+                $this->Template->acceptAllLabel = $this->cms_tag_accept_all_label;
+            }
         }
 
         $this->Template->acceptLabel = $this->replaceInsertTags($this->Template->acceptLabel);
@@ -225,43 +255,62 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
         $strClass = "mod_".$this->type." form";
 
+        $oStyleSheet = NULL;
         $oStyleSheet = new StyleSheets();
 
         $mainStyle = [
             'font' => '1'
-        ,   'fontcolor' => (string)$this->fontcolor
+        ,   'fontcolor' => (string)$this->cms_tag_font_color
         ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->bgcolor
+        ,   'bgcolor' => (string)$this->cms_tag_background_color
         ];
         $main = $oStyleSheet->compileDefinition($mainStyle, false, [], [], true);
-
-        $acceptStyle = [
-            'font'=>'1'
-        ,   'fontcolor'=>(string)$this->acceptfont
-        ,   'background'=>'1'
-        ,   'bgcolor'=>(string)$this->acceptcolor
-        ,   'bgimage' => strlen((string)$this->acceptcolor)?'none':''
-        ,   'border'=>'1'
-        ,   'borderwidth'=> ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ];
-        $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
 
         if( strlen($main) > 20 ) {
             $strStyle .= "." . $strClass . ' ' . trim($main)."\n";
         }
 
+        $acceptStyle = [
+            'font'=>'1'
+        ,   'fontcolor'=>(string)$this->cms_tag_accept_font
+        ,   'background'=>'1'
+        ,   'bgcolor'=>(string)$this->cms_tag_accept_background
+        ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
+        ,   'border'=>'1'
+        ,   'borderwidth'=> ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
+        ];
+
+        $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
+
         if( strlen($accept) > 20 ) {
 
-            $strStyle .= "." . $strClass . ' button[name="submit"][value="accept"] ' . trim($accept)."\n";
+            $strStyle .= "." . $strClass . ' button[name="submit"][value="accept"]:not(.first) ' . trim($accept)."\n";
 
+            // additional style for enabled toggle buttons
             $acceptStyle = [
                 'background'=>'1'
-            ,   'bgcolor'=>(string)$this->acceptcolor
-            ,   'bgimage' => strlen((string)$this->acceptcolor)?'none':''
+            ,   'bgcolor'=>(string)$this->cms_tag_accept_background
+            ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
             ];
             $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
 
             $strStyle .= "." . $strClass . ' > .tags > div .head input:checked + label ' . trim($accept)."\n";
+        }
+
+        $rejectStyle = [
+            'font' => '1'
+        ,   'fontcolor' => (string)$this->cms_tag_reject_font
+        ,   'background' => '1'
+        ,   'bgcolor' => (string)$this->cms_tag_reject_background
+        ,   'bgimage' => strlen((string)$this->cms_tag_reject_background)?'none':''
+        ,   'border' => '1'
+        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
+        ];
+
+        $reject = $oStyleSheet->compileDefinition($rejectStyle, false, [], [], true);
+
+        if( strlen($reject) > 20 ) {
+            $strStyle .= "." . $strClass . ' button[name="submit"][value="accept"].first ' . trim($reject) . "\n";
         }
 
         if( strlen($strStyle) ) {
@@ -269,4 +318,59 @@ class ModuleAcceptTags extends ModuleEUConsent {
         }
     }
 
+
+    /**
+     * Check if at least one page is within the given root
+     *
+     * @param integer $root
+     * @param array $aPages
+     *
+     * @return boolean
+     */
+    protected function checkRootForPages( $root, $aPages ) {
+
+        if( in_array($root, $aPages) ) {
+            return true;
+        }
+
+        // build trail for all given page ids upwards up to 5 levels
+        $objResult = Database::getInstance()->query("
+            SELECT CONCAT_WS(',',p.pid,p1.pid,p2.pid,p3.pid,p4.pid) as trail
+            FROM tl_page AS p
+            LEFT JOIN tl_page AS p1 on p1.id = p.pid
+            LEFT JOIN tl_page AS p2 on p2.id = p1.pid
+            LEFT JOIN tl_page AS p3 on p3.id = p2.pid
+            LEFT JOIN tl_page AS p4 on p4.id = p3.pid
+            WHERE p.id in (".implode(',', $aPages).")
+        ");
+
+        $notFinished = [];
+
+        if( $objResult && $objResult->numRows ) {
+
+            $aResult = $objResult->fetchAllAssoc();
+
+            foreach( $aResult as $aRow ) {
+
+                if( $aRow['trail'] ) {
+
+                    $aPages = array_reverse(explode(',', $aRow['trail']));
+
+                    // if root is found retrun true
+                    if( in_array($root, $aPages) ) {
+                        return true;
+                    // if the last entry in trail is not 0 we need to search more
+                    } else if( $aPages[0] != 0 ) {
+                        $notFinished[] = $aPages[0];
+                    }
+                }
+            }
+
+            if( count($notFinished) ) {
+                return self::checkRootForPages($root, $notFinished);
+            }
+        }
+
+        return false;
+    }
 }

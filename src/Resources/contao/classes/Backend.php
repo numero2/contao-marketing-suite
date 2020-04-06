@@ -45,15 +45,31 @@ class Backend extends Controller {
     /**
      * Generates html code that will show the path where the given object is used
      *
-     * @param \Model $obj
+     * @param \Model|array $obj
      * @param integer $limit
      *
      * @return string
      */
     public static function generateReferencePath( $obj, $limit ) {
 
-        if( $limit <= 0 ){
+        if( $limit <= 0 ) {
             return '';
+        }
+
+        if( is_array($obj) && $obj['table'] && $obj['ids'] ) {
+
+            $oTable = Model::getClassFromTable($obj['table']);
+
+            $objs = $oTable::findMultipleByIds($obj['ids']);
+
+            if( $objs ) {
+                $strReturn = '';
+                foreach( $objs as $o ) {
+                    $strReturn .= self::generateReferencePath($o, $limit);
+                }
+                return $strReturn;
+            }
+            return null;
         }
 
         $currentTable = $obj::getTable();

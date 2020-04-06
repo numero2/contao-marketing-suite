@@ -15,8 +15,9 @@
 
     <script>
 
+    <?php if( !\Environment::get('isAjaxRequest') ): ?>
         document.addEventListener('DOMContentLoaded', function() {
-
+    <?php endif; ?>
             const inputs = document.querySelectorAll('[data-cms-style-group]');
             const container = document.querySelector('.widget.styling-categories > .widgets');
             const nav = document.querySelector('.widget.styling-categories > nav');
@@ -63,7 +64,10 @@
                     groups[i].dispatchEvent( new Event('click') );
                 }
             }
+        <?php if( !\Environment::get('isAjaxRequest') ): ?>
         });
+        <?php endif; ?>
+
 
     </script>
 

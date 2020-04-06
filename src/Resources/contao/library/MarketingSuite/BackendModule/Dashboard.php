@@ -199,7 +199,7 @@ class Dashboard extends CoreBackendModule {
         $aElements = array_keys($GLOBALS['TL_CTE']['conversion_elements']);
 
         $oConversionElements = NULL;
-        $oConversionElements = ContentModel::findBy(['type in ("'.implode('","', $aElements).'")'], [], ['order'=>'tstamp DESC']);
+        $oConversionElements = ContentModel::findBy([ContentModel::getTable().'.type in ("'.implode('","', $aElements).'")'], [], ['order'=>'tstamp DESC']);
 
         if( $oConversionElements ) {
 
@@ -229,7 +229,7 @@ class Dashboard extends CoreBackendModule {
                 } else {
 
                     $aElements = [];
-                    $oContent = ContentModel::findBy(['id=?'], [$arrRow['id']], ['return'=>'Collection']);
+                    $oContent = ContentModel::findBy([ContentModel::getTable().'.id=?'], [$arrRow['id']], ['return'=>'Collection']);
 
                     if( $oContent && $oContent->count() ) {
                         $aElements[$GLOBALS['TL_LANG']['MOD']['tl_content']] = $oContent;

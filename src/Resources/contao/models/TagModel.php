@@ -18,6 +18,7 @@ namespace numero2\MarketingSuite;
 use Contao\Database;
 use Contao\Model;
 use Contao\PageModel;
+use Contao\Model\Collection;
 
 
 class TagModel extends Model {
@@ -63,5 +64,53 @@ class TagModel extends Model {
         }
 
         return null;
+    }
+
+
+    /**
+     * Find groups with information from fallback or saved root
+     *
+     * @param integer $root
+     *
+     * @return static|Model\Collection|null A model, model collection or null if the result is empty
+     */
+    public static function findGroupsWithRootInfo($root) {
+
+        $objResult = NULL;
+        $objResult = Database::getInstance()->prepare("
+            SELECT *
+            FROM ".self::$strTable."
+            WHERE type=?
+            ORDER BY root_pid ASC, sorting ASC
+        ")->execute(['group']);
+
+        $colResult = self::createCollectionFromDbResult($objResult, self::$strTable);
+
+        $aReturn = [];
+        if( $colResult ) {
+
+            foreach( $colResult as $oTag ) {
+
+                // load default structur set in be
+                if( $oTag->root_pid == 0 ) {
+                    $aReturn[$oTag->id] = $oTag;
+
+                // override with for this root
+                } else {
+
+                    $otherTag = $aReturn[$oTag->root_pid];
+
+                    $oTag->origin_id = $oTag->id;
+                    $oTag->id = $oTag->root_pid;
+
+                    if( $oTag->root == $root ) {
+
+                        $aReturn[$oTag->root_pid] = $oTag;
+                    }
+                }
+            }
+        }
+
+        return new Collection($aReturn, self::$strTable);
     }
 }

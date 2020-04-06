@@ -43,6 +43,12 @@
     <trans-unit id="tl_cms_tag_settings.cms_tag_accept_label.1">
         <source>Dieser Text wird auf dem Button "Bestätigen" angezeigt.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_all_label.0">
+        <source>Beschriftung "Alle akzeptieren"</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_all_label.1">
+        <source>Wird hier ein Text hinterlegt wird ein zusätzlicher Button angezeigt mit dem es möglich ist alle Gruppen auf einmal zu bestätigen.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_reject_label.0">
         <source>Beschriftung "Ablehnen"</source>
     </trans-unit>

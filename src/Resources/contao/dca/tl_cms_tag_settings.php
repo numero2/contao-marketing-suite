@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2020 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
@@ -31,7 +31,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
     ,   'cms_tag_modules' => "{title_legend},cms_tag_type"
     ]
 ,   'subpalettes' => [
-        'cms_tag_override_label' => 'cms_tag_accept_label,cms_tag_text'
+        'cms_tag_override_label' => 'cms_tag_accept_label,cms_tag_accept_all_label,cms_tag_text'
     ,   'cms_tag_set_style' => 'cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background'
     ]
 ,   'fields' => [
@@ -54,6 +54,12 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_accept_label']
         ,   'inputType'        => 'text'
         ,   'eval'             => [ 'mandatory'=>true, 'tl_class'=>'w50' ]
+        ,   'sql'              => "varchar(255) NOT NULL default ''"
+        ]
+    ,   'cms_tag_accept_all_label' => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_accept_all_label']
+        ,   'inputType'        => 'text'
+        ,   'eval'             => [ 'mandatory'=>false, 'tl_class'=>'w50' ]
         ,   'sql'              => "varchar(255) NOT NULL default ''"
         ]
     ,   'cms_tag_reject_label' => [
@@ -91,42 +97,36 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_font_color']
         ,   'inputType'        => 'text'
         ,   'eval'             => ['maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50']
-        ,   'mapping'          => 'fontcolor'
         ,   'sql'              => "varchar(64) NOT NULL default ''"
         ]
     ,   'cms_tag_background_color' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_background_color']
         ,   'inputType'        => 'text'
         ,   'eval'             => ['maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50']
-        ,   'mapping'          => 'bgcolor'
         ,   'sql'              => "varchar(64) NOT NULL default ''"
         ]
     ,   'cms_tag_accept_font' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_accept_font']
         ,   'inputType'        => 'text'
         ,   'eval'             => ['maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50']
-        ,   'mapping'          => 'acceptfont'
         ,   'sql'              => "varchar(64) NOT NULL default ''"
         ]
     ,   'cms_tag_accept_background' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_accept_background']
         ,   'inputType'        => 'text'
         ,   'eval'             => ['maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50']
-        ,   'mapping'          => 'acceptcolor'
         ,   'sql'              => "varchar(64) NOT NULL default ''"
         ]
     ,   'cms_tag_reject_font' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_reject_font']
         ,   'inputType'        => 'text'
         ,   'eval'             => ['maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50']
-        ,   'mapping'          => 'rejectfont'
         ,   'sql'              => "varchar(64) NOT NULL default ''"
         ]
     ,   'cms_tag_reject_background' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_reject_background']
         ,   'inputType'        => 'text'
         ,   'eval'             => ['maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50']
-        ,   'mapping'          => 'rejectcolor'
         ,   'sql'              => "varchar(64) NOT NULL default ''"
         ]
     ,   'cms_exclude_pages' => [
@@ -135,7 +135,6 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
         ,   'foreignKey'       => 'tl_page.title'
         ,   'eval'             => ['fieldType'=>'checkbox', 'multiple'=>true, 'tl_class'=>'w50']
         ,   'sql'              => "blob NULL"
-
         ]
     ,   'cms_tag_cookie_lifetime' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_cookie_lifetime']

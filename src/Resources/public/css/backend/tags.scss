@@ -1,0 +1,10 @@
+// main: backend.scss
+@import "colors";
+
+.tl_listing_container {
+
+    .tl_left > img[src*='tags/icon_tag'] ~ span {
+        color: $col-gray-3;
+        margin-left: 1ch;
+    }
+}
