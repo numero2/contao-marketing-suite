@@ -5,6 +5,7 @@
 .ce_cms_overlay.modal_overlay {
     position: fixed;
     z-index: 10000;
+    box-sizing: content-box;
     top: 0;
     left: 0;
     width: calc(100vw - 60px);

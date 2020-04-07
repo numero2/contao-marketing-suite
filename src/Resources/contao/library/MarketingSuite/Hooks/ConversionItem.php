@@ -87,7 +87,7 @@ class ConversionItem extends Hooks {
         }
 
         if( strlen($strContents) ) {
-            $GLOBALS['TL_BODY'][] = $strContents;
+            $GLOBALS['TL_BODY'][] = Controller::replaceInsertTags($strContents);
         }
     }
 }
