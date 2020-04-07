@@ -2,6 +2,10 @@ $color: #95a5a6;
 
 .ce_cms_overlay {
 
+    &.hidden {
+        display: none !important;
+    }
+
     &.modal_overlay {
 
         position: fixed;

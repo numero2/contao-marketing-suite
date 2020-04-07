@@ -16,8 +16,10 @@
 namespace numero2\MarketingSuite;
 
 use Contao\ContentElement;
-use Contao\StyleSheets;
+use Contao\FrontendTemplate;
 use Contao\Input;
+use Contao\StringUtil;
+use Contao\StyleSheets;
 use Contao\Controller;
 use numero2\MarketingSuite\Backend\License as jlkshgf;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
@@ -79,10 +81,6 @@ class ContentOverlay extends ContentElement implements styleable {
         $tracking = new ClickAndViews();
         $session = new Session();
 
-        if( TL_MODE == "FE" ) {
-            $tracking->increaseViewOnContentElement($this->objModel);
-        }
-
         // set default values for styling preview
         if( $this->isStylePreview ) {
 
@@ -97,30 +95,41 @@ class ContentOverlay extends ContentElement implements styleable {
 
         $this->Template->unique = Helper::getUniqueID($this);
 
-
         // append choosen layout as class
         if( $this->cms_layout_option ) {
-            $this->cssID = [ $this->cssID[0], $this->cssID[1] . ($this->cssID[1] ? ' ' : '') . $this->cms_layout_option ];
+            $this->cssID = [ $this->cssID[0], $this->cssID[1] . ($this->cssID[1] ? ' ' : '') . $this->cms_layout_option . (TL_MODE=='FE'?' hidden':'')];
         }
+
+        $aLifetime = $this->cms_lifetime;
+        $aLifetime = !is_array($aLifetime)?deserialize($aLifetime):$aLifetime;
+        $iExpires = 0;
+        if( !empty($aLifetime['value']) ) {
+            $iExpires = strtotime('+'.(int)$aLifetime['value'].' '.$aLifetime['unit']);
+        } else {
+            $iExpires = strtotime('+10 years');
+        }
+
+        $this->Template->expires = $iExpires;
 
         if( TL_MODE == "FE" ) {
 
+            $this->Template->close = Controller::addToUrl('&close='.$this->id, false);
+
             if( Input::get('close') && Input::get('close') == $this->id ) {
-                $aLifetime = $this->cms_lifetime;
-                $aLifetime = !is_array($aLifetime)?deserialize($aLifetime):$aLifetime;
-                $iExpires = 0;
-                if( !empty($aLifetime['value']) ) {
-                    $iExpires = strtotime('+'.(int)$aLifetime['value'].' '.$aLifetime['unit']);
-                } else {
-                    $iExpires = strtotime('+10 years');
-                }
 
                 $session->storeOverlayClosed($this->id, $this->tstamp, $iExpires);
 
                 $this->redirect($objPage->getFrontendUrl());
             }
 
-            $this->Template->close = Controller::addToUrl('&close='.$this->id, false);
+            $this->Template->view = StringUtil::decodeEntities(Controller::addToUrl('&view='.$this->id, false));
+            if( Input::get('view') && Input::get('view') == $this->id ) {
+
+                $tracking->increaseViewOnContentElement($this->objModel, true);
+
+                $this->redirect($objPage->getFrontendUrl());
+            }
+
         }
 
         $strStyle = $this->generateStylesheet();
@@ -128,6 +137,12 @@ class ContentOverlay extends ContentElement implements styleable {
         if( strlen($strStyle) ) {
             $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
         }
+
+        // render javascript
+        $oScript = new FrontendTemplate('scripts/script_ce_cms_overlay_modal_overlay');
+        $oScript->setData($this->Template->getData());
+
+        $this->Template->script = $oScript->parse();
     }
 
 

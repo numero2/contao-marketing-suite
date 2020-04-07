@@ -48,10 +48,11 @@ class ClickAndViews {
      * Do not use the model as this is already modified.
      *
      * @param \Model $objContentModel
+     * @param boolean $force
      */
-    public function increaseViewOnContentElement( $objContentModel ) {
+    public function increaseViewOnContentElement( $objContentModel, $force=false ) {
 
-        if( $this->isViewable() && !self::isBot() ) {
+        if( ($force || $this->isViewable()) && !self::isBot() ) {
 
             if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
                 Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_views=cms_ci_views+1 WHERE id=?" )->execute($objContentModel->id);

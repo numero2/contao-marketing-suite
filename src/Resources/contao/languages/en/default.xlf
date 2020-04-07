@@ -107,6 +107,9 @@
     <trans-unit id="MSC.cms_disabled">
         <source>deaktiviert</source>
     </trans-unit>
+    <trans-unit id="MSC.close_overlay">
+        <source>Hinweis schließen</source>
+    </trans-unit>
     <trans-unit id="LABEL.reset_since">
         <source>zurückgesetzt am %s</source>
     </trans-unit>

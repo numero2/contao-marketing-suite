@@ -1,3 +1,7 @@
+.ce_cms_overlay.hidden {
+    display: none !important;
+}
+
 .ce_cms_overlay.modal_overlay {
     position: fixed;
     z-index: 10000;
