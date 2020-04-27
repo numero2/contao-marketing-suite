@@ -38,8 +38,9 @@ class ConversionItem extends Hooks {
 
         global $objPage;
 
+        $t = ContentModel::getTable();
         $oContents = NULL;
-        $oContents = ContentModel::findBy(['type in (\''.implode("','",DCAConversionItem::$aGlobalTypes).'\') AND ptable=? AND invisible=? AND cms_pages_scope!=? AND cms_pages_scope!=?'], ['tl_cms_conversion_item', '', '', 'none']);
+        $oContents = ContentModel::findBy([$t.'.type in (\''.implode("','",DCAConversionItem::$aGlobalTypes).'\') AND '.$t.'.ptable=? AND '.$t.'.invisible=? AND '.$t.'.cms_pages_scope!=? AND '.$t.'.cms_pages_scope!=?'], ['tl_cms_conversion_item', '', '', 'none']);
 
         $strContents = "";
 

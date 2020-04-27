@@ -28,6 +28,10 @@
     <trans-unit id="tl_page.cms_exclude_health_check.1">
         <source>Diese Seite im Health Check nicht berücksichtigen.</source>
     </trans-unit>
+    <!-- MESSAGES -->
+    <trans-unit id="tl_page.MSG.cms_cache_info">
+        <source><![CDATA[Wichtige Information zum Betrieb der Contao Marketing Suite mit dem Contao-Cache. <a href="https://contao-marketingsuite.com/73v2u6" target="_blank">Mehr erfahren</a>.]]></source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

@@ -297,7 +297,7 @@ class Tags extends Hooks {
                     $oTemplate->optinLink = self::generateEUConsentForceLink($cssID); // DEPRECATED
                     $oTemplate->headline = null;
                     $oTemplate->class = 'ce_optin_fallback';
-                    $oTemplate->cssID = 'id="'.$cssID.'"';
+                    $oTemplate->cssID = ' id="'.$cssID.'"';
                     $oTemplate->fallback_text = $oTag->fallback_text;
 
                     $strBuffer = $oTemplate->parse();
@@ -364,7 +364,7 @@ class Tags extends Hooks {
         $href = $href . '?_cmsscb=1';
 
         if( !empty($strElementId) ) {
-            $href .= '&amp_cmselid='.$strElementId;
+            $href .= '&amp;_cmselid='.$strElementId;
         }
 
         return $href;

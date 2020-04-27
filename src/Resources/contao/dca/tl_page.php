@@ -41,9 +41,6 @@ $GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback'] = str_replace(
 /**
  * Add fields to tl_page
  */
-
-// Note for Contao >= 4.9: Do not use references for labels in tl_page as it breaks
-// the default labels for all other fields
 $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
     $GLOBALS['TL_DCA']['tl_page']['fields']
 ,   [
@@ -89,6 +86,8 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         ]
     ]
 );
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['includeCache']['load_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Page', 'addCacheInfo'];
 
 if( version_compare(VERSION, '4.9', '<') ) {
 

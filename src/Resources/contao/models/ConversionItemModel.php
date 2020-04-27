@@ -72,26 +72,29 @@ class ConversionItemModel extends Model {
 
                 $colResult = new Collection( $result, $result[0]->getTable());
                 return self::findAllOn($colResult);
+
             } else {
 
                 return null;
             }
 
-        }
+        } else if( $objModels instanceof PageModel ) {
 
-        if( $objModels instanceof PageModel ) {
+            $t = ArticleModel::getTable();
+            $objChildren = NULL;
+            $objChildren = ArticleModel::findBy([$t.'.pid=? AND '.$t.'.published=?'], [$objModels->id, '1']);
 
-            $objChildren = ArticleModel::findBy(['pid=? AND published=?'], [$objModels->id, '1']);
             return self::findAllOn($objChildren);
-        }
 
-        if( $objModels instanceof ArticleModel ) {
+        } else if( $objModels instanceof ArticleModel ) {
 
             $types = "'".implode("','", array_keys($GLOBALS['TL_CTE']['conversion_elements']))."'";
-            $objChildren = ContentModel::findBy(['ptable=? AND pid=? AND type IN ('.$types.') AND invisible=?'], ['tl_article', $objModels->id, '']);
+
+            $t = ContentModel::getTable();
+            $objChildren = NULL;
+            $objChildren = ContentModel::findBy([$t.'.ptable=? AND '.$t.'.pid=? AND '.$t.'.type IN ('.$types.') AND '.$t.'.invisible=?'], ['tl_article', $objModels->id, '']);
 
             return self::findAllOn($objChildren);
         }
-
     }
 }
