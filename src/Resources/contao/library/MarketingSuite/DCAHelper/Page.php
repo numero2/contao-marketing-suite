@@ -33,8 +33,7 @@ class Page extends CoreBackend {
      */
     public function addCacheInfo( $value, DataContainer $dc ) {
 
-        // display message after 2020-05-01 00:00
-        if( $value && time() >= 1588284000 ) {
+        if( $value ) {
             Message::addInfo($GLOBALS['TL_LANG']['tl_page']['MSG']['cms_cache_info']);
         }
 

@@ -106,7 +106,10 @@ class ModuleAcceptTags extends ModuleEUConsent {
                 $aCookieConfig = [];
                 $aCookieConfig = $this->cms_tag_cookie_lifetime;
                 $aCookieConfig = !is_array($aCookieConfig)?deserialize($aCookieConfig):$aCookieConfig;
-                $iCookieExpires = strtotime('+'.(int)$aCookieConfig['value'].' '.$aCookieConfig['unit']);
+
+                if( (int)$aCookieConfig['value'] ) {
+                    $iCookieExpires = strtotime('+'.(int)$aCookieConfig['value'].' '.$aCookieConfig['unit']);
+                }
             }
 
             $this->setCookie('cms_cookies', implode('-', $accepted), $iCookieExpires);

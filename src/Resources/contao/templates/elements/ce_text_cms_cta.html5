@@ -3,6 +3,9 @@
 <?php $this->block('content'); ?>
 
     <?php $this->parent(); ?>
+
+    <?php if( $this->ctaTitle ): ?>
     <a class="button" data-cms-cta-id="<?= $this->id; ?>" href="<?= $this->cta_link; ?>" onmousedown="this._hr||(this._hr=this.href),this.href='<?= $this->ctaLink; ?>'" onmouseup="this._hr&&setTimeout(function(){this.href=this._hr}.bind(this),1)" title="<?= $this->ctaTitle; ?>"><?= $this->ctaTitle; ?></a>
+    <?php endif; ?>
 
 <?php $this->endblock(); ?>

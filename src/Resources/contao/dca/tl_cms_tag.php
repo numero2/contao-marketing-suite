@@ -27,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             ['\numero2\MarketingSuite\DCAHelper\Tag', 'setRootType']
         ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'addDefault']
         ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'setTagFieldLabel']
-        ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'unsetEnableOnCookieAcceptForSession']
+        ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'cleanDatabase']
         ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'changeIdWithRoot']
        ]
     ,   'sql' => [

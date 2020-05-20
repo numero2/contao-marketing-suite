@@ -18,6 +18,7 @@ namespace numero2\MarketingSuite\DCAHelper;
 use Contao\Backend as CoreBackend;
 use Contao\Controller;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Input;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\License as luh;
@@ -136,21 +137,37 @@ class TextCMS extends CoreBackend {
 
 
     /**
-     * Return all content element templates as array
+     * Make sure we call the original options_callback when modifying the
+     * customTpl field
      *
      * @param DataContainer $dc
-     *
-     * @return array
      */
-    public function getElementTemplates( DataContainer $dc ) {
+    public function rewriteCustomTemplateCallback($dc) {
 
-        $this->loadDatacontainer('tl_content');
+        $ogCallback = NULL;
+        $ogCallback = $GLOBALS['TL_DCA']['tl_content']['fields']['customTpl']['options_callback'];
 
-        // 'text_cms' should behave the same like 'text'
-        if( $dc->activeRecord->type == 'text_cms' ) {
-            $dc->activeRecord->type = 'text';
+        if( !$ogCallback ) {
+            return;
         }
 
-        return Controller::getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
+        $GLOBALS['TL_DCA']['tl_content']['fields']['customTpl']['options_callback'] = function($dc) use ($ogCallback) {
+
+            // 'text_cms' should behave the same like 'text'
+            if( $dc->activeRecord->type == 'text_cms' ) {
+                $dc->activeRecord->type = 'text';
+            }
+
+            // call the original callback function
+            if( \is_array($ogCallback) ) {
+
+                $this->import($ogCallback[0]);
+                return $this->{$ogCallback[0]}->{$ogCallback[1]}($dc);
+
+            } elseif( \is_callable($ogCallback) ) {
+
+                return $ogCallback($dc);
+            }
+        };
     }
 }

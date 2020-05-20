@@ -17,6 +17,7 @@ $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\Mar
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\Widget\ElementStyle', 'addStylingFields'];
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Content', 'addTagVisibilityFields'];
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\General', 'excludeFieldsFromMultipleEdit'];
+$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'rewriteCustomTemplateCallback'];
 
 array_insert($GLOBALS['TL_DCA']['tl_content']['list']['operations'], 3, [
     'reset_counter' => [
@@ -287,4 +288,3 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['text']['save_callback'][] = ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'saveContentToOriginalField'];
-$GLOBALS['TL_DCA']['tl_content']['fields']['customTpl']['options_callback']  = ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'getElementTemplates'];

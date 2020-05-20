@@ -448,22 +448,19 @@ class Tag extends CoreBackend {
 
 
     /**
-     * Unset enable_on_cookie_accept for session tags
+     * Unset enable_on_cookie_accept for session tags and set groups to not activ
      *
      * @param DataContainer $dc
      */
-    public function unsetEnableOnCookieAcceptForSession( $dc ) {
+    public function cleanDatabase( $dc ) {
 
-        $oTags = NULL;
-        $oTags = TagModel::findBy(['type=? AND enable_on_cookie_accept!=?'], ['session','']);
+        $oDB = Database::getInstance();
 
-        if( $oTags ) {
+        // set all session to enable_on_cookie_accept = ''
+        $oDB->query("UPDATE tl_cms_tag SET enable_on_cookie_accept='' WHERE type='session' AND enable_on_cookie_accept!=''");
 
-            foreach( $oTags as $oTag ) {
-                $oTag->enable_on_cookie_accept = '';
-                $oTag->save();
-            }
-        }
+        // set all groups active = ''
+        $oDB->query("UPDATE tl_cms_tag SET active='' WHERE type='group' AND active!=''");
     }
 
 
