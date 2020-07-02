@@ -85,6 +85,14 @@ class SnippetPreview extends Controller {
                 $aData['description'] = substr($aData['description'], 0, $aData['descriptionMaxLength']) . '...';
             }
 
+            if( strlen($aData['url']) ) {
+
+                $aData['url'] = str_replace('https://','',$aData['url']);
+                $aData['url'] = str_replace('http://','',$aData['url']);
+                $aData['url'] = str_replace('/',' › ',$aData['url']);
+                $aData['url'] = urldecode($aData['url']);
+            }
+
             // add explanation for title tag settings
             if( $aData['titleTag'] && $this->User->cms_pro_mode_enabled != 1 ) {
 
@@ -154,6 +162,7 @@ class SnippetPreview extends Controller {
 
         $sURL = "";
         $sURL = $oPage->getAbsoluteUrl();
+        $sURL = urldecode($sURL);
 
         list($baseUrl) = explode($oPage->alias ?: $oPage->id, $sURL);
 
@@ -194,6 +203,7 @@ class SnippetPreview extends Controller {
 
         $sURL = "";
         $sURL = News::generateNewsUrl($oNews, false, true);
+        $sURL = urldecode($sURL);
 
         list($baseUrl) = explode($oNews->alias ?: $oNews->id, $sURL);
 
@@ -241,6 +251,7 @@ class SnippetPreview extends Controller {
 
         $sURL = "";
         $sURL = Events::generateEventUrl($oEvent, true);
+        $sURL = urldecode($sURL);
 
         list($baseUrl) = explode($oEvent->alias ?: $oEvent->id, $sURL);
 

@@ -766,7 +766,7 @@ var CMSBackend = {
                 } else {
 
                     if( title.length > this.options.titleMaxLength ) {
-                        title = title.substr(0,maxLength) + '...';
+                        title = title.substr(0,this.options.titleMaxLength) + '...';
                     }
                 }
 
@@ -811,10 +811,18 @@ var CMSBackend = {
                 if( input.value == 'index' && indexEmpty ) {
                     url = this.options.baseUrl;
                 } else {
-                    url = this.options.baseUrl + (input.value || this.options.id) + this.options.urlSuffix;
+                    //url = this.options.baseUrl + (input.value || this.options.id) + this.options.urlSuffix;
+                    url = this.options.baseUrl + (input.value || this.options.id);
                 }
 
-                preview.querySelector('div.url').textContent = url.trim();
+                url = url.trim();
+                url = decodeURI(url);
+                url = url.replace('https://','');
+                url = url.replace('http://','');
+                url = url.replace('http://','');
+                url = url.replace(/\//g,' › ');
+
+                preview.querySelector('div.url').textContent = url;
             }
         }
     }

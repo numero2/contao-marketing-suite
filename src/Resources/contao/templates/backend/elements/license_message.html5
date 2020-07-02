@@ -3,7 +3,11 @@
     <div class="content ">
 
         <div class="header">
-            <h2>Lizenz-Upgrade notwendig</h2>
+            <?php if( $this->headline ): ?>
+                <h2><?= $this->headline; ?></h2>
+            <?php else: ?>
+                <h2>Mehr Möglichkeiten mit einem Lizenz-Upgrade</h2>
+            <?php endif; ?>
         </div>
 
         <div class="inside">
@@ -12,12 +16,12 @@
 
                 <p>In der aktuellen Lizenz <?= $this->verb; ?> <strong><?= $this->type; ?></strong> nicht enthalten.</p>
 
-                <?php if( $this->existing_entries ): ?>
-                    <p><?= $this->existing_entries; ?></p>
-                <?php endif; ?>
-
                 <?php if( $this->needed_package ): ?>
                     <p><?= $this->type; ?> <?= $this->verb; ?> in folgenden Paketen enthalten: <br /><br /><?= $this->needed_package; ?></p>
+                <?php endif; ?>
+
+                <?php if( $this->more ): ?>
+                    <p><?= $this->more; ?></p>
                 <?php endif; ?>
 
             </div>

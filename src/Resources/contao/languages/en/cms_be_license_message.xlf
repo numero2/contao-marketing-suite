@@ -2,6 +2,9 @@
 <xliff version="1.1">
 <file datatype="php" original="src/Resources/contao/languages/en/cms_be_license_message.php" source-language="en">
 <body>
+    <trans-unit id="cms_be_license_message.cms_dashboard.headline">
+        <source></source>
+    </trans-unit>
     <trans-unit id="cms_be_license_message.cms_dashboard.type">
         <source>Dashboard</source>
     </trans-unit>
@@ -10,6 +13,13 @@
     </trans-unit>
     <trans-unit id="cms_be_license_message.cms_dashboard.needed_package">
         <source><![CDATA[<strong>Basic</strong>]]>, <![CDATA[<strong>Komplett</strong>]]> oder <![CDATA[<strong>Agentur</strong>]]></source>
+    </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_dashboard.more">
+        <source><![CDATA[<a href="https://contao-marketingsuite.com/y5qn11" target="_blank">Das kannst Du mit dem Dashboard machen, schon ab dem Basic-Paket</a>]]></source>
+    </trans-unit>
+
+    <trans-unit id="cms_be_license_message.cms_marketing.headline">
+        <source>Professionelles Marketing benötigt Lizenz-Upgrade</source>
     </trans-unit>
     <trans-unit id="cms_be_license_message.cms_marketing.type">
         <source>Content Marketing Elemente</source>
@@ -20,6 +30,13 @@
     <trans-unit id="cms_be_license_message.cms_marketing.needed_package">
         <source><![CDATA[<strong>Komplett</strong>]]> oder <![CDATA[<strong>Agentur</strong>]]></source>
     </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_marketing.more">
+        <source><![CDATA[<a href="https://contao-marketingsuite.com/73l408" target="_blank">Übersicht professionelle Marketing-Möglichkeiten mit Contao nutzen</a>]]></source>
+    </trans-unit>
+
+    <trans-unit id="cms_be_license_message.cms_conversion.headline">
+        <source>Conversions steigern und messen - mit einem Lizenz-Upgrade</source>
+    </trans-unit>
     <trans-unit id="cms_be_license_message.cms_conversion.type">
         <source>Conversion Elemente</source>
     </trans-unit>
@@ -29,6 +46,10 @@
     <trans-unit id="cms_be_license_message.cms_conversion.needed_package">
         <source><![CDATA[<strong>Basic</strong>]]>, <![CDATA[<strong>Komplett</strong>]]> oder <![CDATA[<strong>Agentur</strong>]]></source>
     </trans-unit>
+    <trans-unit id="cms_be_license_message.cms_conversion.more">
+        <source><![CDATA[<a href="https://contao-marketingsuite.com/73l408" target="_blank">Übersicht professionelle Marketing-Möglichkeiten mit Contao nutzen</a>]]></source>
+    </trans-unit>
+
     <trans-unit id="cms_be_license_message.cms_health_check.type">
         <source>Health Check</source>
     </trans-unit>

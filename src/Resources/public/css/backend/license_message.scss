@@ -47,7 +47,19 @@
                 margin: 15px;
             }
 
-            .text p:last-child { margin-bottom: 0; }
+            .text {
+
+                p:last-child { margin-bottom: 0; }
+
+                a {
+                    color: $col-orange;
+                    text-decoration: underline;
+
+                    &:hover {
+                        color: $col-blue;
+                    }
+                }
+            }
 
             > a {
 

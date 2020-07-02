@@ -69,8 +69,8 @@ class NewsSchedule extends CoreBackendModule {
         $time = strtotime( $year.'-'.$month.'-01' );
 
         // find important days
-        $firstDay = strtotime('first day of this month', $time);
-        $lastDay = strtotime('last day of this month', $time);
+        $firstDay = strtotime('first day of this month 00:00', $time);
+        $lastDay = strtotime('last day of this month 23:59', $time);
 
         // navigation next / previous month
         $this->Template->previous = CoreBackend::addToUrl("month=".Date::parse('m', $firstDay-86400)."&year=".Date::parse('Y', $firstDay-86400));

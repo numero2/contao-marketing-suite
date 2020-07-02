@@ -5,33 +5,52 @@
 
     > div {
 
-        font-family: Arial, Helvetica, Sans-serif;
+        font-family: arial,sans-serif;
         font-size: 20px;
         padding: 15px;
         border: 1px solid $col-gray;
 
         > div {
             width: calc(100% - 15px);
-            max-width: 600px;
+            max-width: 560px;
             overflow: hidden;
         }
 
-        @media screen and (max-width: 600px) {
+        @media screen and (max-width: 560px) {
+
+            font-size: 16px;
+
+            > .url,
             > .title { white-space: normal; }
         }
+    }
 
-        @media screen and (max-width: 566px) {
-            font-size: 16px;
-        }
+    .url {
+
+        position: relative;
+
+        font-size: 14/20*1em;
+        line-height: 1.3;
+        font-weight: 400;
+        color: #3C4043;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
     }
 
     .title {
 
         font-size: 1em;
-        line-height: 26/20*1em;
+        line-height: 1.3;
+        padding-top: 4px;
+        margin-bottom: 3px;
         font-weight: 400;
         color: #1a0dab;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         span {
             font-size: inherit;
@@ -41,20 +60,11 @@
         }
     }
 
-    .url {
-        font-size: 14/20*1em;
-        line-height: 24/20*1em;
-        font-weight: 400;
-        color: #006621;
-
-        word-break: break-all;
-    }
-
     .description {
         font-size: 14/20*1em;
-        line-height: 22/20*1em;
+        line-height: 1.58;
         font-weight: 400;
-        color: #545454;
+        color: #3C4043;
     }
 
     p.explanation {
@@ -110,7 +120,9 @@
     }
 
     > input + div[contenteditable] {
-        white-space: nowrap;
+        @media screen and (min-width: 1500px) {
+            white-space: nowrap;
+        }
         overflow: hidden;
     }
 

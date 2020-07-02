@@ -75,6 +75,9 @@
 
         display: block;
         max-width: 800px;
+        max-height: 60vh;
+        overflow: auto;
+
         margin: 30px;
 
         box-shadow: 0px 0px 10px rgba(0,0,0,0.5);

@@ -378,6 +378,15 @@ input[type="radio"][readonly] + label {
     margin-bottom: 0;
 }
 
+#main .cms_be_license_message .content .inside .text a {
+    color: #f47c00;
+    text-decoration: underline;
+}
+
+#main .cms_be_license_message .content .inside .text a:hover {
+    color: #006494;
+}
+
 #main .cms_be_license_message .content .inside > a {
     display: inline-block;
     white-space: nowrap;
@@ -1758,7 +1767,7 @@ input[type="radio"][readonly] + label {
 }
 
 .widget.snippet-preview > div {
-    font-family: Arial, Helvetica, Sans-serif;
+    font-family: arial,sans-serif;
     font-size: 20px;
     padding: 15px;
     border: 1px solid #e9e9e9;
@@ -1766,28 +1775,42 @@ input[type="radio"][readonly] + label {
 
 .widget.snippet-preview > div > div {
     width: calc(100% - 15px);
-    max-width: 600px;
+    max-width: 560px;
     overflow: hidden;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 560px) {
+    .widget.snippet-preview > div {
+        font-size: 16px;
+    }
+    .widget.snippet-preview > div > .url,
     .widget.snippet-preview > div > .title {
         white-space: normal;
     }
 }
 
-@media screen and (max-width: 566px) {
-    .widget.snippet-preview > div {
-        font-size: 16px;
-    }
+.widget.snippet-preview .url {
+    position: relative;
+    font-size: 0.7em;
+    line-height: 1.3;
+    font-weight: 400;
+    color: #3C4043;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .widget.snippet-preview .title {
     font-size: 1em;
-    line-height: 1.3em;
+    line-height: 1.3;
+    padding-top: 4px;
+    margin-bottom: 3px;
     font-weight: 400;
     color: #1a0dab;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .widget.snippet-preview .title span {
@@ -1797,19 +1820,11 @@ input[type="radio"][readonly] + label {
     color: #f47c00;
 }
 
-.widget.snippet-preview .url {
-    font-size: 0.7em;
-    line-height: 1.2em;
-    font-weight: 400;
-    color: #006621;
-    word-break: break-all;
-}
-
 .widget.snippet-preview .description {
     font-size: 0.7em;
-    line-height: 1.1em;
+    line-height: 1.58;
     font-weight: 400;
-    color: #545454;
+    color: #3C4043;
 }
 
 .widget.snippet-preview p.explanation {
@@ -1864,8 +1879,13 @@ input[type="radio"][readonly] + label {
 }
 
 .widget.snippet > input + div[contenteditable] {
-    white-space: nowrap;
     overflow: hidden;
+}
+
+@media screen and (min-width: 1500px) {
+    .widget.snippet > input + div[contenteditable] {
+        white-space: nowrap;
+    }
 }
 
 .widget.snippet > textarea + div[contenteditable] {

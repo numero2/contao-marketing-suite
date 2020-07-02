@@ -31,7 +31,7 @@ if( !empty($GLOBALS['TL_DCA']['tl_news_archive']) ) {
     if( \numero2\MarketingSuite\Backend\License::hasFeature('news_schedule') && \numero2\MarketingSuite\Backend\License::hasFeature('news_schedule_multiple') ) {
         array_insert($GLOBALS['TL_DCA']['tl_news_archive']['list']['global_operations'], 1, [
             'cms_schedule' => [
-                'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['cms_schedule']
+                    'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['cms_schedule']
                 ,   'href'      => 'key=cms_schedule'
                 ,   'icon'      => 'bundles/marketingsuite/img/backend/icons/icon_news_schedule.svg'
             ]

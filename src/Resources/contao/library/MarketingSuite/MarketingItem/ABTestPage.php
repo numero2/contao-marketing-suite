@@ -249,9 +249,12 @@ class ABTestPage extends MarketingItem {
         }
 
         // on health check do not change the current page
-        $headers = System::getContainer()->get('request_stack')->getCurrentRequest()->headers;
-        if( $headers->has('X-Requested-With') ) {
-            return $arrFragments;
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        if( $request && $request->headers ) {
+            $headers = $request->headers;
+            if( $headers && $headers->has('X-Requested-With') == 'CMS-HealthCheck' ) {
+                return $arrFragments;
+            }
         }
 
         $objMI = MarketingItemModel::findOneBy(['type=? AND page_a=? AND active=? AND init_step=?'], ['a_b_test_page', $objPage->id, '1', '']);
@@ -266,11 +269,9 @@ class ABTestPage extends MarketingItem {
             $selected = $this->selectContentId(null, $objMI, null, [$objPage, $objPageB]);
 
             if( $selected == $objPageB->id ) {
-                $objPage = $objPageB;
+                $arrFragments[0] = $objPageB->alias;
             }
         }
-
-        $arrFragments[0] = $objPage->alias;
 
         return $arrFragments;
     }

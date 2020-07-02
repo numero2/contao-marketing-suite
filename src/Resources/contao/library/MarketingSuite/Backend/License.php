@@ -494,12 +494,12 @@ class License {
             // send usage
             if( CMSConfig::get('send_anonymized_data') == '1' ) {
 
+                $oAPI = NULL;
                 $oAPI = new API();
-                try {
 
+                try {
                     $oAPI->sendUsageData();
                 } catch( \Exception $e ) {
-
                 }
             }
 

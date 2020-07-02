@@ -147,7 +147,7 @@ class TextCMS extends CoreBackend {
         $ogCallback = NULL;
         $ogCallback = $GLOBALS['TL_DCA']['tl_content']['fields']['customTpl']['options_callback'];
 
-        if( !$ogCallback ) {
+        if( !$ogCallback || !luh::hasFeature('text_cms') ) {
             return;
         }
 

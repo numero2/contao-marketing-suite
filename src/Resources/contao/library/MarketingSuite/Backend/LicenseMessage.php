@@ -68,6 +68,7 @@ class LicenseMessage extends BackendModule {
 
         $this->aLabels = $GLOBALS['TL_LANG']['cms_be_license_message'][$sLabelIndex];
 
+
         if( empty($this->aLabels) || count($this->aLabels) == 0 ) {
             return '';
         }
