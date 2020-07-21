@@ -25,7 +25,7 @@
     },
     "suggest": {
         "numero2/contao-opengraph3": "For OpenGraph integration",
-        "numero2/contao-avalex": "For use of avalex privacy policy"
+        "avalexgmbh/contao": "For use of avalex privacy policy"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0"

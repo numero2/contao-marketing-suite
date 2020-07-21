@@ -160,6 +160,11 @@ class Tags extends Hooks {
 
         $objTemplate->tags = $aTags;
 
+        // make sure we don't index the page if we force showing the consent
+        if( Input::get('_cmsscb') ) {
+            $objPage->robots = 'noindex,nofollow';
+        }
+
         $GLOBALS['TL_BODY'][] = $objTemplate->parse();
     }
 
