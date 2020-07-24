@@ -84,7 +84,13 @@
                     var form = document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"] form');
 
                     if( form ) {
-                        document.createElement('form').submit.call(form);
+
+                        var submitEvent = new CustomEvent('submit', {
+                            'bubbles':true,
+                            'cancelable': true
+                        });
+
+                        form.dispatchEvent(submitEvent);
                     }
 
                 });

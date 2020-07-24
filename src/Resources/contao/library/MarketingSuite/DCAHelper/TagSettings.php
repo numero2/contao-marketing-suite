@@ -60,4 +60,43 @@ class TagSettings extends CoreBackend {
 
         return $types;
     }
+
+
+    /**
+     * Modifies the palettes
+     *
+     * @param \DataContainer $dc
+     *
+     * @return array
+     */
+    public function modifyPalettes( DataContainer $dc ) {
+
+        if( is_array($GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes']) ) {
+
+            foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'] as $type => $palette ) {
+
+                if( !is_array($palette) ) {
+
+                    // remove fields that are not included in the current license
+                    $aRemoveFields = [];
+
+                    if( !dohfa::hasFeature('tags_cookie_lifetime') ) {
+                        $aRemoveFields[] = 'cms_tag_cookie_lifetime';
+                    }
+
+                    if( !dohfa::hasFeature('tags_accept_subdomains') ) {
+                        $aRemoveFields[] = 'cms_tag_accept_subdomains';
+                    }
+
+                    if( !empty($aRemoveFields) ) {
+                        $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'][$type] = str_replace(
+                            $aRemoveFields
+                        ,   ''
+                        ,    $palette
+                        );
+                    }
+                }
+            }
+        }
+    }
 }

@@ -19,8 +19,10 @@ use Contao\BackendTemplate;
 use Contao\Environment;
 use Contao\FrontendTemplate;
 use Contao\Input;
+use Contao\PageModel;
 use Contao\StyleSheets;
 use numero2\MarketingSuite\Backend\License as agoc;
+use numero2\MarketingSuite\Helper\Domain;
 use Patchwork\Utf8;
 
 
@@ -88,10 +90,24 @@ class ModuleCookieBar extends ModuleEUConsent {
                 }
             }
 
-            if( Input::post('submit') == 'accept' ) {
-                $this->setCookie('cms_cookie', 'accept', $iCookieExpires);
-            } else if( Input::post('submit') == 'reject' ) {
-                $this->setCookie('cms_cookie', 'reject', $iCookieExpires);
+            // store decision in cookie
+            if( in_array(Input::post('submit'), ['accept','reject']) ) {
+
+                $sDomain = NULL;
+
+                // set cookies for all subdomains
+                if( $this->cms_tag_accept_subdomains ) {
+
+                    global $objPage;
+
+                    $objRootPage = NULL;
+                    $objRootPage = PageModel::findById($objPage->rootId);
+
+                    $sDomain = $oRootPage->dns?:Environment::get('host');
+                    $sDomain= Domain::getRegisterableDomain($sDomain);
+                }
+
+                $this->setCookie('cms_cookie', Input::post('submit'), $iCookieExpires, '', $sDomain);
             }
 
             $this->redirect($this->formAction);

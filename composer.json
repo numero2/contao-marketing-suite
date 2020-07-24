@@ -21,7 +21,8 @@
         "contao/core-bundle": "^4.4.0",
         "org_heigl/hyphenator": "^2.3",
         "guzzlehttp/guzzle": "^6.0",
-        "facebook/graph-sdk": "^5.6"
+        "facebook/graph-sdk": "^5.6",
+        "jeremykendall/php-domain-parser": "^5.6 || ^3.0"
     },
     "suggest": {
         "numero2/contao-opengraph3": "For OpenGraph integration",

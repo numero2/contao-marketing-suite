@@ -23,6 +23,7 @@ use Contao\StyleSheets;
 use Contao\System;
 use Contao\Validator;
 use numero2\MarketingSuite\Backend\License as baguru;
+use numero2\MarketingSuite\Helper\Domain;
 use Patchwork\Utf8;
 
 
@@ -112,8 +113,23 @@ class ModuleAcceptTags extends ModuleEUConsent {
                 }
             }
 
-            $this->setCookie('cms_cookies', implode('-', $accepted), $iCookieExpires);
-            $this->setCookie('cms_cookies_saved', "true", $iCookieExpires);
+            $sDomain = NULL;
+
+            // set cookies for all subdomains
+            if( $this->cms_tag_accept_subdomains ) {
+
+                global $objPage;
+
+                $objRootPage = NULL;
+                $objRootPage = PageModel::findById($objPage->rootId);
+
+                $sDomain = $oRootPage->dns?:Environment::get('host');
+                $sDomain= Domain::getRegisterableDomain($sDomain);
+            }
+
+            // store decision in cookie
+            $this->setCookie('cms_cookies', implode('-', $accepted), $iCookieExpires, '', $sDomain);
+            $this->setCookie('cms_cookies_saved', "true", $iCookieExpires, '', $sDomain);
             $this->redirect($action);
         }
     }

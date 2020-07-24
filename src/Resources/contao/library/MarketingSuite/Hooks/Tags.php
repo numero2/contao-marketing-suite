@@ -53,63 +53,12 @@ class Tags extends Hooks {
         $objTemplate = new FrontendTemplate('mod_cms_tags');
         aczolku::ezahew();
 
-        $objTags = NULL;
-        $objTags = TagModel::findAllActiveByPage($objPage->id);
-
         $aTags = [];
 
-        if( $objTags && count($objTags) ) {
+        $aTagTypes = [];
+        $aTagTypes = self::getAllowedTags();
 
-            $aTagTypes = [];
-
-            // prepare which page is allowed on which scope
-            $allowed = [
-                'current_page' => []
-            ,   'current_and_direct_children' => []
-            ,   'current_and_all_children' => []
-            ];
-
-            foreach( array_reverse($objPage->trail) as $value ) {
-
-                if( $value == $objPage->id ) {
-                    $allowed['current_page'][] = $value;
-                }
-                if( count($allowed['current_page']) && count($allowed['current_and_direct_children'] ) < 2 ) {
-                    $allowed['current_and_direct_children'][] = $value;
-                }
-                if( count($allowed['current_page']) ) {
-                    $allowed['current_and_all_children'][] = $value;
-                }
-            }
-
-            foreach( $objTags as $key => $tag ) {
-
-                // skip on not enough data
-                if( empty($tag->pages) || empty($allowed[$tag->pages_scope]) ) {
-                    continue;
-                }
-
-                if( !aczolku::hasFeature('tags_'.$tag->type, $objPage->trail[0]) ) {
-                    continue;
-                }
-
-                // skip if cookie needed but not cookie_accepted
-                if( $tag->enable_on_cookie_accept && !self::isAccepted($tag->id, $tag->pid) ) {
-                    continue;
-                }
-
-                $tagPages = deserialize($tag->pages);
-
-                // check all pages if one is allowed
-                foreach( $allowed[$tag->pages_scope] as $key => $value ) {
-
-                    if( in_array($value, $tagPages) ) {
-
-                        $aTagTypes[$tag->type][] = $tag;
-                        break;
-                    }
-                }
-            }
+        if( $aTagTypes && count($aTagTypes) ) {
 
             foreach( $aTagTypes as $type => $tags ) {
 
@@ -166,6 +115,80 @@ class Tags extends Hooks {
         }
 
         $GLOBALS['TL_BODY'][] = $objTemplate->parse();
+    }
+
+
+    /**
+     * get all allowed tags for the global objPage grouped by type
+     *
+     * @return array
+     */
+    public static function getAllowedTags() {
+
+        global $objPage;
+
+        if( !aczolku::hasFeature('tags', $objPage->trail[0]) ) {
+            return;
+        }
+
+        $aTagTypes = [];
+
+        $objTags = NULL;
+        $objTags = TagModel::findAllActiveByPage($objPage->id);
+
+        if( $objTags && count($objTags) ) {
+
+            // prepare which page is allowed on which scope
+            $allowed = [
+                'current_page' => []
+            ,   'current_and_direct_children' => []
+            ,   'current_and_all_children' => []
+            ];
+
+            foreach( array_reverse($objPage->trail) as $value ) {
+
+                if( $value == $objPage->id ) {
+                    $allowed['current_page'][] = $value;
+                }
+                if( count($allowed['current_page']) && count($allowed['current_and_direct_children'] ) < 2 ) {
+                    $allowed['current_and_direct_children'][] = $value;
+                }
+                if( count($allowed['current_page']) ) {
+                    $allowed['current_and_all_children'][] = $value;
+                }
+            }
+
+            foreach( $objTags as $key => $tag ) {
+
+                // skip on not enough data
+                if( empty($tag->pages) || empty($allowed[$tag->pages_scope]) ) {
+                    continue;
+                }
+
+                if( !aczolku::hasFeature('tags_'.$tag->type, $objPage->trail[0]) ) {
+                    continue;
+                }
+
+                // skip if cookie needed but not cookie_accepted
+                if( $tag->enable_on_cookie_accept && !self::isAccepted($tag->id, $tag->pid) ) {
+                    continue;
+                }
+
+                $tagPages = deserialize($tag->pages);
+
+                // check all pages if one is allowed
+                foreach( $allowed[$tag->pages_scope] as $key => $value ) {
+
+                    if( in_array($value, $tagPages) ) {
+
+                        $aTagTypes[$tag->type][] = $tag;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $aTagTypes;
     }
 
 

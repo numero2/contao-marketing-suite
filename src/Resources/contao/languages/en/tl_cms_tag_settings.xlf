@@ -73,6 +73,12 @@
     <trans-unit id="tl_cms_tag_settings.cms_tag_cookie_lifetime.1">
         <source>Wählen Sie aus wie lange die Einwilligung des Besuchers in Form eines Cookies gespeichert werden soll.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_subdomains.0">
+        <source>Einwilligung auf Subdomains übernehmen</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_subdomains.1">
+        <source>Falls aktiviert wird die getroffene Auswahl automatisch für alle Subdomains übernommen.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_set_style.0">
         <source>Standarddarstellung nutzen / anpassen</source>
     </trans-unit>
