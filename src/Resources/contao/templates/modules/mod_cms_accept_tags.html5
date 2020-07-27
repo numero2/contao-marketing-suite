@@ -14,11 +14,11 @@
             </div>
 
             <div class="widget widget-submit">
-                <button type="submit" name="submit" value="accept" class="submit<?= ($this->acceptAllLabel)?' first':''; ?>" tabindex="<?= count($this->tags)+1; ?>">
+                <button type="submit" name="choice" value="accept" class="submit<?= ($this->acceptAllLabel)?' first':''; ?>" tabindex="<?= count($this->tags)+1; ?>">
                     <?= $this->acceptLabel ?>
                 </button>
                 <?php if( $this->acceptAllLabel ): ?>
-                    <button type="submit" name="submit" value="accept" class="submit all" data-all="true" tabindex="<?= count($this->tags)+2; ?>">
+                    <button type="submit" name="choice" value="accept" class="submit all" data-all="true" tabindex="<?= count($this->tags)+2; ?>">
                         <?= $this->acceptAllLabel ?>
                     </button>
                 <?php endif; ?>
@@ -84,13 +84,7 @@
                     var form = document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"] form');
 
                     if( form ) {
-
-                        var submitEvent = new CustomEvent('submit', {
-                            'bubbles':true,
-                            'cancelable': true
-                        });
-
-                        form.dispatchEvent(submitEvent);
+                        form.submit();
                     }
 
                 });

@@ -12,9 +12,9 @@
             </div>
 
             <div class="widget widget-submit">
-                <button type="submit" name="submit" value="accept" class="submit" tabindex="2"><?= $this->acceptLabel ?></button>
+                <button type="submit" name="choice" value="accept" class="submit" tabindex="2"><?= $this->acceptLabel ?></button>
                 <?php if( $this->rejectLabel ): ?>
-                    <button type="submit" name="submit" value="reject" class="submit" tabindex="3"><?= $this->rejectLabel ?></button>
+                    <button type="submit" name="choice" value="reject" class="submit" tabindex="3"><?= $this->rejectLabel ?></button>
                 <?php endif; ?>
             </div>
 

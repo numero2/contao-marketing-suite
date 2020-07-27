@@ -90,8 +90,14 @@ class ModuleCookieBar extends ModuleEUConsent {
                 }
             }
 
+            // deprecated as of 1.0.21
+            if( Input::post('submit') ) {
+                Input::setPost('choice', Input::post('submit'));
+                \System::log('The use of the field name "submit" in your '.$this->strTemplate.' template is deprecated. Please create a new copy using the current version.', __METHOD__, TL_ERROR);
+            }
+
             // store decision in cookie
-            if( in_array(Input::post('submit'), ['accept','reject']) ) {
+            if( in_array(Input::post('choice'), ['accept','reject']) ) {
 
                 $sDomain = NULL;
 
@@ -107,7 +113,7 @@ class ModuleCookieBar extends ModuleEUConsent {
                     $sDomain= Domain::getRegisterableDomain($sDomain);
                 }
 
-                $this->setCookie('cms_cookie', Input::post('submit'), $iCookieExpires, '', $sDomain);
+                $this->setCookie('cms_cookie', Input::post('choice'), $iCookieExpires, '', $sDomain);
             }
 
             $this->redirect($this->formAction);

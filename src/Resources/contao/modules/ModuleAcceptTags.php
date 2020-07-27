@@ -19,6 +19,7 @@ use Contao\BackendTemplate;
 use Contao\Database;
 use Contao\Environment;
 use Contao\Input;
+use Contao\PageModel;
 use Contao\StyleSheets;
 use Contao\System;
 use Contao\Validator;
