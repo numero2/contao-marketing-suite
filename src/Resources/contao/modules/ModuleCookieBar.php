@@ -225,7 +225,7 @@ class ModuleCookieBar extends ModuleEUConsent {
         $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
 
         if( strlen($accept) > 20 ) {
-            $strStyle .= "." . $strClass . ' button[name="submit"][value="accept"] ' . trim($accept) . "\n";
+            $strStyle .= "." . $strClass . ' button[type="submit"][value="accept"] ' . trim($accept) . "\n";
         }
 
         $rejectStyle = [
@@ -241,7 +241,7 @@ class ModuleCookieBar extends ModuleEUConsent {
         $reject = $oStyleSheet->compileDefinition($rejectStyle, false, [], [], true);
 
         if( strlen($reject) > 20 ) {
-            $strStyle .= "." . $strClass . ' button[name="submit"][value="reject"] ' . trim($reject) . "\n";
+            $strStyle .= "." . $strClass . ' button[type="submit"][value="reject"] ' . trim($reject) . "\n";
         }
 
         if( strlen($strStyle) ) {

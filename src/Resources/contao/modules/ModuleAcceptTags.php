@@ -304,7 +304,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
         if( strlen($accept) > 20 ) {
 
-            $strStyle .= "." . $strClass . ' button[name="submit"][value="accept"]:not(.first) ' . trim($accept)."\n";
+            $strStyle .= "." . $strClass . ' button[type="submit"][value="accept"]:not(.first) ' . trim($accept)."\n";
 
             // additional style for enabled toggle buttons
             $acceptStyle = [
@@ -330,7 +330,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
         $reject = $oStyleSheet->compileDefinition($rejectStyle, false, [], [], true);
 
         if( strlen($reject) > 20 ) {
-            $strStyle .= "." . $strClass . ' button[name="submit"][value="accept"].first ' . trim($reject) . "\n";
+            $strStyle .= "." . $strClass . ' button[type="submit"][value="accept"].first ' . trim($reject) . "\n";
         }
 
         if( strlen($strStyle) ) {
