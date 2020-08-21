@@ -70,7 +70,10 @@ class LinkShortenerRouteProvider implements RouteProviderInterface {
                 $route->setDefault(RouteObjectInterface::CONTENT_OBJECT, $oLink);
                 $route->setHost($oLink->domain);
 
-                $collection->add("link_shortener.".$oLink->$field.".".$oLink->id, $route);
+                // only add route if target is set
+                if( $oLink->getTarget() ) {
+                    $collection->add("link_shortener.".$oLink->$field.".".$oLink->id, $route);
+                }
             }
         }
 

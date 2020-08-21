@@ -148,37 +148,38 @@ $GLOBALS['TL_CTE']['conversion_elements'] = [
 /**
  * REGISTER HOOKS
  */
-$GLOBALS['TL_HOOKS']['addCustomRegexp'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'validateRgxp'];
-$GLOBALS['TL_HOOKS']['cmsBeHelperParseSimpleTokens']['cms_settings_facebook'][] = ['\numero2\MarketingSuite\BackendModule\Facebook', 'parseSimpleTokens'];
-$GLOBALS['TL_HOOKS']['compileFormFields'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseViewOnForm'];
-$GLOBALS['TL_HOOKS']['executePostActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'postActionHookForDC_CMSFile'];
-$GLOBALS['TL_HOOKS']['executePreActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'executePreActions'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateEUConsent'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateScripts'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\ConversionItem', 'generateGlobalConversionItems'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Tracking\Session', 'storeVisitedPage'];
-$GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = ['\numero2\MarketingSuite\MarketingItem\ABTestPage', 'selectAorBPage'];
-$GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\License', 'getSystemMessages'];
-$GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\Messages', 'testModeCheck'];
-$GLOBALS['TL_HOOKS']['getUserNavigation'][] = ['\numero2\MarketingSuite\BackendModule\Feedback', 'setNavigationLink'];
-$GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'initializeSystem'];
-$GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\Hooks\DCA', 'addStylingFields'];
-$GLOBALS['TL_HOOKS']['processFormData'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseClickOnForm'];
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagInsertTags'];
-$GLOBALS['TL_HOOKS']['getContentElement'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
-$GLOBALS['TL_HOOKS']['getFrontendModule'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTags'];
-$GLOBALS['TL_HOOKS']['insertTagFlags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTagFlags'];
-$GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\DCAHelper\Module', 'addSQLDefinitionForTagSettings'];
+if( \Config::getInstance()->isComplete() ) {
 
+    $GLOBALS['TL_HOOKS']['addCustomRegexp'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'validateRgxp'];
+    $GLOBALS['TL_HOOKS']['cmsBeHelperParseSimpleTokens']['cms_settings_facebook'][] = ['\numero2\MarketingSuite\BackendModule\Facebook', 'parseSimpleTokens'];
+    $GLOBALS['TL_HOOKS']['compileFormFields'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseViewOnForm'];
+    $GLOBALS['TL_HOOKS']['executePostActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'postActionHookForDC_CMSFile'];
+    $GLOBALS['TL_HOOKS']['executePreActions'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'executePreActions'];
+    $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateEUConsent'];
+    $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateScripts'];
+    $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\ConversionItem', 'generateGlobalConversionItems'];
+    $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Tracking\Session', 'storeVisitedPage'];
+    $GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = ['\numero2\MarketingSuite\MarketingItem\ABTestPage', 'selectAorBPage'];
+    $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\License', 'getSystemMessages'];
+    $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\Messages', 'testModeCheck'];
+    $GLOBALS['TL_HOOKS']['getUserNavigation'][] = ['\numero2\MarketingSuite\BackendModule\Feedback', 'setNavigationLink'];
+    $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'initializeSystem'];
+    $GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\Hooks\DCA', 'addStylingFields'];
+    $GLOBALS['TL_HOOKS']['processFormData'][] = ['\numero2\MarketingSuite\Tracking\ClickAndViews', 'increaseClickOnForm'];
+    $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagInsertTags'];
+    $GLOBALS['TL_HOOKS']['getContentElement'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
+    $GLOBALS['TL_HOOKS']['getFrontendModule'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'replaceTagContentModuleElement'];
+    $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTags'];
+    $GLOBALS['TL_HOOKS']['insertTagFlags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTagFlags'];
+    $GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\DCAHelper\Module', 'addSQLDefinitionForTagSettings'];
 
-if( TL_MODE === 'BE' ) {
-    $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\BackendModule\Module', 'initializeBackendModuleTables'];
+    if( TL_MODE === 'BE' ) {
+        $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\BackendModule\Module', 'initializeBackendModuleTables'];
+    }
+
+    /**
+    * CUSTOM CRONJOBS
+    */
+    $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Backend\License', 'dailyCron'];
+    $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Backend\License', 'weeklyCron'];
 }
-
-
-/**
- * CRONJOBS
- */
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Backend\License', 'dailyCron'];
-$GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Backend\License', 'weeklyCron'];

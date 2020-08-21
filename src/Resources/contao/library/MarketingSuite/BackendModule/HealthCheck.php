@@ -107,6 +107,7 @@ class HealthCheck extends CoreBackendModule {
         ,   $this->checkOpenGraphMissing()
         ];
 
+        // used to drop empty check categories
         $aCategories = array_filter($aCategories);
 
         // initialize help
@@ -196,15 +197,15 @@ class HealthCheck extends CoreBackendModule {
 
             while( $oPages->next() ) {
 
-                $objPage = NULL;
-                $objPage = PageModel::findWithDetails( $oPages->id );
-
-                if( !varzegju::hasFeature('health_check_h1_missing', $objPage->trail[0]) ) {
-                    continue;
-                }
-
                 // check if we find any h1 by statically looking at the content
                 if( !$this->checkForH1InContentElements($oPages->id) ) {
+
+                    $objPage = NULL;
+                    $objPage = $oPages->current()->loadDetails();
+
+                    if( !varzegju::hasFeature('health_check_h1_missing', $objPage->trail[0]) ) {
+                        continue;
+                    }
 
                     $aAttributes = [];
                     varzegju::wcyt();
@@ -493,8 +494,13 @@ class HealthCheck extends CoreBackendModule {
 
                 varzegju::puwbeaf();
 
+                $aDomains = [
+                    [ 'host'=>$sBaseDomain, 'id'=>null ]
+                ,   [ 'host'=>$sWWWDomain, 'id'=>null ]
+                ];
+
                 // send requests to both domains (with and without www)
-                foreach( [$sBaseDomain,$sWWWDomain] as $domain ) {
+                foreach( $aDomains as $i => $data ) {
 
                     $oClient = NULL;
                     $oClient = new Client([
@@ -512,75 +518,46 @@ class HealthCheck extends CoreBackendModule {
                     try {
 
                         $oResponse = NULL;
-                        $oResponse = $oClient->head('http://'.$domain);
+                        $oResponse = $oClient->head('http://'.$data['host']);
 
                         if( $oResponse->getStatusCode() === 200 ) {
 
                             $aHeaders = [];
                             $aHeaders = $oResponse->getHeaders();
 
-                            $currHost = NULL;
-
-                            // save current hostname
+                            // save redirected hostname
                             if( array_key_exists('X-Guzzle-Redirect-History', $aHeaders) ) {
 
                                 $currHost = array_pop($aHeaders['X-Guzzle-Redirect-History']);
                                 $currHost = parse_url($currHost, PHP_URL_HOST);
+
+                                $aDomains[$i]['host'] = $currHost;
                             }
 
-                            // check if we already know the destination page id from the last request
-                            if( $lastPageID && array_key_exists('X-CMS-HealthCheck', $aHeaders) ) {
-
-                                $currPageID = Encryption::decrypt($aHeaders['X-CMS-HealthCheck'][0]);
-
-                                // different page? no problem, everything's fine
-                                if( $currPageID != $lastPageID ) {
-
-                                    varzegju::figgi();
-                                    continue 2;
-
-                                // same page? check if we've been redirected
-                                } else {
-
-                                    // seems like we've been redirected
-                                    if( array_key_exists('X-Guzzle-Redirect-History', $aHeaders) ) {
-
-                                        // different host - we're good
-                                        if( $currHost != $lastRedirectHost ) {
-                                            continue 2;
-                                        }
-                                    }
-                                }
-
-                            // first try?
-                            } else {
-
-                                // store the id of the destination page
-                                if( array_key_exists('X-CMS-HealthCheck', $aHeaders) ) {
-                                    $lastPageID = Encryption::decrypt($aHeaders['X-CMS-HealthCheck'][0]);
-                                }
-
-                                // store the destination host name if it differs
-                                if( !$lastRedirectHost && $currHost != $domain ) {
-                                    $lastRedirectHost = $currHost;
-                                }
+                            // save page id
+                            if( array_key_exists('X-CMS-HealthCheck', $aHeaders) ) {
+                                $aDomains[$i]['id'] = Encryption::decrypt($aHeaders['X-CMS-HealthCheck'][0]);
                             }
                         }
 
+                    // may occur if subdomain does not exist at all - thats fine
                     } catch( \Exception $e ) {
 
-                        // may occur if subdomain does not exist at all - thats fine
                         continue 2;
                     }
                 }
 
-                $oCategory->items[] = (object) [
-                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
-                ,   'type'  => 'page'
-                ,   'name'  => $oPages->title
-                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
-                ];
+                // different hosts point to same site - duplicate content
+                if( $aDomains[0]['host'] != $aDomains[1]['host'] && $aDomains[0]['id'] == $aDomains[1]['id'] ) {
+
+                    $oCategory->items[] = (object) [
+                        'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
+                    ,   'type'  => 'page'
+                    ,   'name'  => $oPages->title
+                    ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
+                    ];
+                }
             }
         }
 

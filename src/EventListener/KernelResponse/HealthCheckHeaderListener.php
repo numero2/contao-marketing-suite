@@ -16,6 +16,7 @@
 namespace numero2\MarketingSuiteBundle\EventListener\KernelResponse;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Frontend;
 use numero2\MarketingSuite\Encryption;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
@@ -41,9 +42,8 @@ class HealthCheckHeaderListener {
 
 
     /**
-     * Adds an encryptet header containing the id of the root page
-     * and adds the "Access-Control-Allow-Origin" header
-     * for the current request
+     * Adds an encrypted header containing the id of the root page
+     * to the current request
      *
      * @param FilterResponseEvent $event
      */
@@ -55,21 +55,24 @@ class HealthCheckHeaderListener {
 
         $request = $event->getRequest();
 
-        $response = $event->getResponse();
-
-        // only check on HEAD request with certain header
-        if( $request->getMethod() != 'HEAD' && !$request->headers->has('X-Requested-With') ) {
+        // only check on special header
+        if( !$request->headers->has('X-Requested-With') || $request->headers->get('X-Requested-With') != 'CMS-HealthCheck' ) {
             return;
         }
 
         $page = NULL;
-        $page = \Frontend::getRootPageFromUrl();
+
+        try {
+            $page = Frontend::getRootPageFromUrl();
+        } catch( \Exception $e ) {
+        }
 
         if( $page ) {
 
             $pageID = NULL;
             $pageID = Encryption::encrypt($page->id);
 
+            $response = $event->getResponse();
             $response->headers->set('X-CMS-HealthCheck', $pageID);
         }
     }
