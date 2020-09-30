@@ -11,6 +11,23 @@
     <?php endif; ?>
 
     fbq('init', '<?= $this->tag; ?>');
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var fbpxevt;
+
+        if( typeof(Event) === 'function' ) {
+            fbpxevt = new Event('fbPixelInit');
+        } else {
+            fbpxevt = document.createEvent('Event');
+            fbpxevt.initEvent('fbPixelInit', true, true);
+        }
+
+        fbpxevt.pixelId = '<?= $this->tag; ?>';
+        document.dispatchEvent(fbpxevt);
+
+    }, false);
+
     <?php if( $this->typeLast ): ?>fbq('track', 'PageView');<?php endif; ?>
 </script>
 

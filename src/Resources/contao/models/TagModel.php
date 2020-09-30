@@ -57,7 +57,7 @@ class TagModel extends Model {
                     *
                 FROM ".self::$strTable."
                 ".($where?"WHERE ".implode(" AND ", $where):'')."
-                ORDER BY type ASC, id ASC
+                ORDER BY sorting ASC
             ")->execute($values);
 
             return self::createCollectionFromDbResult($objResult, self::$strTable);

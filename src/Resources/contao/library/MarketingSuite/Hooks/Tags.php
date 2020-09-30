@@ -60,10 +60,19 @@ class Tags extends Hooks {
 
         if( $aTagTypes && count($aTagTypes) ) {
 
-            foreach( $aTagTypes as $type => $tags ) {
+            $aTypeTotal = [];
 
-                // as base tracking code should only be printed once per page
-                $i = 1;
+            // count how often a tag type is used
+            foreach( $aTagTypes as $type => $tags ) {
+                foreach( $tags as $key => $tag ) {
+                    $aTypeTotal[$tag->type] += 1;
+                }
+            }
+
+            $aTypeCount = [];
+
+            // render script tags
+            foreach( $aTagTypes as $type => $tags ) {
 
                 foreach( $tags as $key => $tag ) {
 
@@ -86,13 +95,16 @@ class Tags extends Hooks {
 
                     $tagTemplate->setData($aTag);
 
+                    // add marker for the first of it's type
                     $tagTemplate->typeFirst = false;
-                    if( $i == 1 ) {
+                    if( empty($aTypeCount[$tag->type]) ) {
                         $tagTemplate->typeFirst = true;
                     }
+                    $aTypeCount[$tag->type] += 1;
 
+                    // add marker for the last of it's type
                     $tagTemplate->typeLast = false;
-                    if( $i == count($tags) ) {
+                    if( $aTypeCount[$tag->type] == $aTypeTotal[$tag->type] ) {
                         $tagTemplate->typeLast = true;
                     }
 
@@ -101,8 +113,6 @@ class Tags extends Hooks {
                     } else {
                         $aTags[$tag->type.'_'.$tag->id] = $tagTemplate->parse();
                     }
-
-                    $i += 1;
                 }
             }
         }
@@ -181,7 +191,7 @@ class Tags extends Hooks {
 
                     if( in_array($value, $tagPages) ) {
 
-                        $aTagTypes[$tag->type][] = $tag;
+                        $aTagTypes[$tag->pid][] = $tag;
                         break;
                     }
                 }
@@ -324,7 +334,7 @@ class Tags extends Hooks {
 
                     $oTemplate->optinLink = self::generateEUConsentForceLink($cssID); // DEPRECATED
                     $oTemplate->headline = null;
-                    $oTemplate->class = 'ce_optin_fallback';
+                    $oTemplate->class = 'ce_optin_fallback '.$oElement->cssID[1];
                     $oTemplate->cssID = ' id="'.$cssID.'"';
                     $oTemplate->fallback_text = $oTag->fallback_text;
 

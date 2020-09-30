@@ -126,6 +126,8 @@ class Module extends CoreBackendModule {
      */
     protected function getModule( $module ) {
 
+        $this->loadLanguageFile('default');
+
         $arrModule = [];
         $arrModule = $this->arrModules[$module];
         $dc = $this->objDc;
