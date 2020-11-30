@@ -104,6 +104,11 @@ class SnippetPreview extends Controller {
                 );
             }
 
+            // add explanation for noindex
+            if( $dc && $dc->activeRecord && strpos($dc->activeRecord->robots,'noindex') !== FALSE ) {
+                $aData['noIndexExplanation'] = $GLOBALS['TL_LANG']['MSC']['snippet_noindex_explanation'];
+            }
+
             return Backend::parseWithTemplate('backend/widgets/snippet_preview', $aData);
 
         } else {

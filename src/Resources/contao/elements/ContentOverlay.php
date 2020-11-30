@@ -16,11 +16,11 @@
 namespace numero2\MarketingSuite;
 
 use Contao\ContentElement;
+use Contao\Controller;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\StyleSheets;
-use Contao\Controller;
 use numero2\MarketingSuite\Backend\License as jlkshgf;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
 use numero2\MarketingSuite\Helper\styleable;
@@ -118,13 +118,15 @@ class ContentOverlay extends ContentElement implements styleable {
             if( Input::get('close') && Input::get('close') == $this->id ) {
 
                 $session->storeOverlayClosed($this->id, $this->tstamp, $iExpires);
-
                 $this->redirect($objPage->getFrontendUrl());
             }
 
+            // "view" will be triggered via ajax since we store in localstorage if the overlay
+            // was already shown or not
             $this->Template->view = StringUtil::decodeEntities(Controller::addToUrl('&view='.$this->id, false));
             if( Input::get('view') && Input::get('view') == $this->id ) {
 
+                // make sure to force the view, otherwise our xhr request would not be counted
                 $tracking->increaseViewOnContentElement($this->objModel, true);
 
                 $this->redirect($objPage->getFrontendUrl());
@@ -233,25 +235,5 @@ class ContentOverlay extends ContentElement implements styleable {
         }
 
         return [];
-        /*
-        return [
-            'width' => "start sizes"
-        ,   'height' => "start sizes"
-        ,   'margin' => "sizes"
-        ,   'padding' => "sizes"
-
-        ,   'bgcolor' => "background-border start"
-        ,   'borderwidth' => "background-border"
-        ,   'borderstyle' => "background-border"
-        ,   'bordercolor' => "background-border"
-        ,   'borderradius' => "background-border"
-
-        ,   'textalign' => "text-font"
-        ,   'fontsize' => "text-font"
-        ,   'fontcolor' => "text-font start"
-        ,   'lineheight' => "text-font"
-        ,   'letterspacing' => "text-font"
-        ];
-         */
     }
 }

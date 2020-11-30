@@ -138,7 +138,6 @@ document.addEventListener('tinyMCEInitialized', function (e) {
 
                     if( button ) {
                         button.click();
-                        console.log(button);
                     }
                 } });
 

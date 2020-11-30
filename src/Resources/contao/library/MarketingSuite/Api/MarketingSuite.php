@@ -64,16 +64,20 @@ class MarketingSuite {
 
                 // set temporarily
                 CMSConfig::set('latest_version', $response->latest_version);
-                CMSConfig::set('last_version_check', time());
 
                 // save permanently
                 CMSConfig::persist('latest_version', $response->latest_version);
-                CMSConfig::persist('last_version_check', time());
             }
 
         } catch( \Exception $e ) {
 
         }
+
+        // set temporarily
+        CMSConfig::set('last_version_check', time());
+
+        // save permanently
+        CMSConfig::persist('last_version_check', time());
     }
 
 

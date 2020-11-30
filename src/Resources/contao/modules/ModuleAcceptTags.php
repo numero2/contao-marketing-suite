@@ -209,16 +209,35 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
                     foreach( $childTags as $childTag ) {
 
-                        if( strpos($GLOBALS['TL_DCA']['tl_cms_tag']['palettes'][$childTag->type], 'enable_on_cookie_accept') === false ) {
-                            $showGroup = true;
+                        // special handling for content_module_element
+                        if( $childTag->type !== 'content_module_element' ) {
+                            if( strpos($GLOBALS['TL_DCA']['tl_cms_tag']['palettes'][$childTag->type], 'enable_on_cookie_accept') === false ) {
+                                $showGroup = true;
+                            }
                         }
 
+                        // skip any tags that need no consent anyway
                         if( !$childTag->enable_on_cookie_accept ) {
                             continue;
                         }
 
-                        if( $childTag->pages ) {
-                            $aPageIds = array_merge($aPageIds, deserialize($childTag->pages));
+                        // generate list of allowed pages
+                        if( strpos($GLOBALS['TL_DCA']['tl_cms_tag']['palettes'][$childTag->type], ',pages,') !== false ) {
+                            if( $childTag->pages ) {
+                                $aPageIds = array_merge($aPageIds, deserialize($childTag->pages));
+                            }
+                        }
+
+                        if( strpos($GLOBALS['TL_DCA']['tl_cms_tag']['palettes'][$childTag->type], 'pages_root') !== false ) {
+
+                            $pagesRoot = [];
+                            $pagesRoot = deserialize($childTag->pages_root);
+
+                            if( !empty($pagesRoot) ) {
+                                $aPageIds = array_merge($aPageIds, $pagesRoot);
+                            } else {
+                                $aPageIds = array_merge($aPageIds, [$objPage->trail[0]]);
+                            }
                         }
                     }
 

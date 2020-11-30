@@ -261,13 +261,37 @@ class MarketingItem extends CoreBackend {
                 if( $row['type'] == 'a_b_test' ) {
 
                     Database::getInstance()->prepare( "UPDATE tl_cms_content_group SET views=0, clicks=0, reset=? WHERE pid=? AND type=?" )->execute(time(), $id, 'a_b_test');
+
                 } else if( $row['type'] == 'a_b_test_page' ) {
 
-                    Database::getInstance()->prepare( "UPDATE tl_page SET cms_mi_views=0, cms_mi_reset=? WHERE id=? or id=?" )->execute(time(), $row['page_a'], $row['page_b']);
+                    $reset = time();
+                    Database::getInstance()->prepare( "UPDATE tl_page SET cms_mi_views=0, cms_mi_reset=? WHERE id=? or id=?" )->execute($reset, $row['page_a'], $row['page_b']);
+
+                    // also reset counters for all conversion items on this page
+                    $oPagesUsed = NULL;
+                    $oPagesUsed = PageModel::findBy(['id=? OR id=?'], [$row['page_b'], $row['page_a']], ['return'=>'Collection']);
+
+                    if( $oPagesUsed ) {
+
+                        $objCI = NULL;
+                        $objCI = ConversionItemModel::findAllOn($oPagesUsed);
+
+                        if( $objCI ) {
+
+                            foreach( $objCI as $oContent ) {
+
+                                $oContent->cms_ci_clicks = 0;
+                                $oContent->cms_ci_views = 0;
+                                $oContent->cms_ci_reset = $reset;
+
+                                $oContent->save();
+                            }
+                        }
+                    }
                 }
+
                 $this->redirect($this->getReferer());
             }
-
         }
 
         $href .= '&amp;rid='.$row['id'];

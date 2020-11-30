@@ -94,5 +94,4 @@ class LinkShortener extends Hooks {
 
         return false;
     }
-
 }

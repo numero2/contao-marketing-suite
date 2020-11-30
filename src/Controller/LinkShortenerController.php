@@ -27,7 +27,7 @@ class LinkShortenerController {
 
 
     /**
-     * Will be called when a matching route was found und will redirect to the target
+     * Will be called when a matching route was found and will redirect to the target
      *
      * @param  LinkShortenerModel $_content
      * @param  Request $request
@@ -36,33 +36,36 @@ class LinkShortenerController {
      */
     public function __invoke($_content, Request $request) {
 
-        // log request for statistics
+        $oAgent = NULL;
         $oAgent = Environment::get('agent');
 
-        $oStats = new LinkShortenerStatisticsModel();
+        // save stats for bots but not for backend users (if tracking disabled)
+        if( !ClickAndViews::doNotTrack() || ClickAndViews::isBot() ) {
 
-        $oStats->tstamp = time();
-        $oStats->pid = $_content->id;
-        $oStats->referer = $request->headers->get('referer');
-        $oStats->unique_id = md5($request->getClientIp().$oAgent->string);
-        $oStats->user_agent = $oAgent->string;
-        $oStats->os = $oAgent->os;
-        $oStats->browser = $oAgent->browser;
-        $oStats->is_mobile = ($oAgent->mobile?'1':'');
-        $oStats->is_bot = '';
+            $oStats = NULL;
+            $oStats = new LinkShortenerStatisticsModel();
 
-        if( ClickAndViews::isBot() ) {
-            $oStats->is_bot = '1';
+            $oStats->tstamp = time();
+            $oStats->pid = $_content->id;
+            $oStats->referer = $request->headers->get('referer');
+            $oStats->unique_id = md5($request->getClientIp().$oAgent->string);
+            $oStats->user_agent = $oAgent->string;
+            $oStats->os = $oAgent->os;
+            $oStats->browser = $oAgent->browser;
+            $oStats->is_mobile = ($oAgent->mobile?'1':'');
+            $oStats->is_bot = '';
+
+            if( ClickAndViews::isBot() ) {
+                $oStats->is_bot = '1';
+            }
+
+            $oStats->save();
         }
-
-        $oStats->save();
 
         return new RedirectResponse(
             $_content->getTarget(),
             Response::HTTP_FOUND,
-            [
-                'Cache-Control' => 'no-cache',
-            ]
+            ['Cache-Control' => 'no-cache']
         );
     }
 }

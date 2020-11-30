@@ -176,6 +176,12 @@
     <trans-unit id="tl_cms_tag.pages.1">
         <source>Bitte wähle auf welchen Seiten der Seiten-Anwendungsbereich angewendet werden soll.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.pages_root.0">
+        <source>Seiten</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.pages_root.1">
+        <source>Bitte wähle auf welchen Seitenroots dieses Element als zustimmungspflichtig angezeigt werden soll. Falls nichts ausgewählt ist wird davon ausgegangen das dieses Element auf mehreren Seitenroots verwendet wird.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.active.0">
         <source>Aktiv?</source>
     </trans-unit>

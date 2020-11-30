@@ -361,36 +361,33 @@ class LinkShortener extends CoreBackend {
     }
 
 
-        /**
-         * Return the "reset_counter" button
-         *
-         * @param array  $row
-         * @param string $href
-         * @param string $label
-         * @param string $title
-         * @param string $icon
-         * @param string $attributes
-         *
-         * @return string
-         */
-        public function resetCounter( $row, $href, $label, $title, $icon, $attributes ) {
+    /**
+     * Return the "reset_counter" button
+     *
+     * @param array  $row
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $icon
+     * @param string $attributes
+     *
+     * @return string
+     */
+    public function resetCounter( $row, $href, $label, $title, $icon, $attributes ) {
 
-            if( strlen(Input::get('rid')) ) {
+        if( strlen(Input::get('rid')) ) {
 
-                $id = Input::get('rid');
+            $id = Input::get('rid');
 
-                if( $id == $row['id'] ) {
+            if( $id == $row['id'] ) {
 
-                    Database::getInstance()->prepare( "DELETE FROM tl_cms_link_shortener_statistics WHERE pid=?")->execute($id);
-
-                    $this->redirect($this->getReferer());
-                }
-
+                Database::getInstance()->prepare( "DELETE FROM tl_cms_link_shortener_statistics WHERE pid=?")->execute($id);
+                $this->redirect($this->getReferer());
             }
-
-            $href .= '&amp;rid='.$row['id'];
-
-            return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, '').'</a> ';
         }
 
+        $href .= '&amp;rid='.$row['id'];
+
+        return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, '').'</a> ';
+    }
 }

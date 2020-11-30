@@ -459,6 +459,9 @@ class Tag extends CoreBackend {
         // set all session to enable_on_cookie_accept = ''
         $oDB->query("UPDATE tl_cms_tag SET enable_on_cookie_accept='' WHERE type='session' AND enable_on_cookie_accept!=''");
 
+        // set all content elements to enable_on_cookie_accept = '1'
+        $oDB->query("UPDATE tl_cms_tag SET enable_on_cookie_accept='1' WHERE type='content_module_element' AND enable_on_cookie_accept!='1'");
+
         // set all groups active = ''
         $oDB->query("UPDATE tl_cms_tag SET active='' WHERE type='group' AND active!=''");
     }
@@ -499,7 +502,7 @@ class Tag extends CoreBackend {
      *
      * @return array
      */
-    public function getRootPages( $dc=NULL ) {
+    public function getRootPagesForLanguage( $dc=NULL ) {
 
         $aRoots = [];
         $aRoots[''] = $GLOBALS['TL_LANG']['tl_cms_tag']['roots']['default'];
@@ -527,6 +530,28 @@ class Tag extends CoreBackend {
                 $aRoots = [
                     '' => $GLOBALS['TL_LANG']['tl_cms_tag']['roots']['default_initial']
                 ];
+            }
+        }
+
+        return $aRoots;
+    }
+
+
+    /**
+     * get all page roots with a license
+     *
+     * @return array
+     */
+    public function getRootPages() {
+
+        $aRoots = [];
+
+        $oPages = NULL;
+        $oPages = PageModel::findBy(['type=? AND cms_root_license!=?'], ['root', ''], ['order'=>'sorting ASC']);
+
+        if( $oPages ) {
+            foreach( $oPages as $oRoot ) {
+                $aRoots[$oRoot->id] = $oRoot->title . ' ('.$oRoot->language.')';
             }
         }
 

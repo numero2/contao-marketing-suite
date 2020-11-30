@@ -19,9 +19,11 @@ use Contao\Database;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
+use Contao\CMSConfig;
 use numero2\MarketingSuite\Backend\License as irsa;
 use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\MarketingItemModel;
+use numero2\MarketingSuite\Backend\Auth;
 
 
 class ClickAndViews {
@@ -35,10 +37,12 @@ class ClickAndViews {
      */
     public function increaseClickOnContentElement( $objContentModel ) {
 
-        if( !self::isBot() ) {
-            if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
-                Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_clicks=cms_ci_clicks+1 WHERE id=?" )->execute($objContentModel->id);
-            }
+        if( self::doNotTrack() ) {
+            return;
+        }
+
+        if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
+            Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_clicks=cms_ci_clicks+1 WHERE id=?" )->execute($objContentModel->id);
         }
     }
 
@@ -52,7 +56,7 @@ class ClickAndViews {
      */
     public function increaseViewOnContentElement( $objContentModel, $force=false ) {
 
-        if( ($force || $this->isViewable()) && !self::isBot() ) {
+        if( $force || $this->isViewable() ) {
 
             if( irsa::hasFeature('conversion_element') && irsa::hasFeature('ce_'.$objContentModel->type) ) {
                 Database::getInstance()->prepare( "UPDATE ".$objContentModel->getTable()." SET cms_ci_views=cms_ci_views+1 WHERE id=?" )->execute($objContentModel->id);
@@ -69,7 +73,7 @@ class ClickAndViews {
      */
     public function increaseViewOnMarketingElement( $objContentCount ) {
 
-        if( $this->isViewable() && !self::isBot() ) {
+        if( $this->isViewable() ) {
 
             if( irsa::hasFeature('marketing_element') ) {
 
@@ -95,7 +99,7 @@ class ClickAndViews {
      */
     public function increaseClickOnForm( $arrSubmitted, $arrData, $arrFiles, $arrLabels, $objForm ) {
 
-        if( self::isBot() ) {
+        if( self::doNotTrack() ) {
             return;
         }
 
@@ -139,11 +143,11 @@ class ClickAndViews {
 
         $objContent = $objForm->getParent();
 
-        if( $this->isViewable() && !self::isBot() ) {
+        if( $this->isViewable() ) {
 
             if( $objContent->ptable === 'tl_cms_content_group' ) {
 
-                // for all marketing items: views will be count in the marketing item child class.
+                // for all marketing items: views will be counted in the marketing item child class
 
             } else {
 
@@ -180,6 +184,10 @@ class ClickAndViews {
             return false;
         }
 
+        if( self::doNotTrack() ) {
+            return false;
+        }
+
         return true;
     }
 
@@ -202,6 +210,27 @@ class ClickAndViews {
                     return true;
                 }
             }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Checks if the current request should not be tracked
+     *
+     * @return boolean
+     */
+    public static function doNotTrack() {
+
+        // prevent tracking for all bots
+        if( self::isBot() ) {
+            return true;
+        }
+
+        // prevent tracking of actively logged in backend users if configured in settings
+        if( CMSConfig::get('dnt_backend_users') && Auth::isBackendUserLoggedIn() ) {
+            return true;
         }
 
         return false;

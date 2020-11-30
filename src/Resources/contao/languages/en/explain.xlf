@@ -2,7 +2,7 @@
 <xliff version="1.1">
 <file datatype="php" original="src/Resources/contao/languages/en/explain.php" source-language="en">
 <body>
-    <!-- CONTENT ELEMENTS -->
+    <!-- MATOMO FIELDS -->
     <trans-unit id="XPL.matomoFields.0.0">
         <source>Hinweis:</source>
     </trans-unit>
@@ -50,6 +50,20 @@
 &lt;/script&gt;
 &lt;!-- End Matomo Code --&gt;
 </pre>]]></source>
+    </trans-unit>
+
+    <!-- OPTIN FALLBACK -->
+    <trans-unit id="XPL.optinFallback.0.0">
+        <source>Hinweis:</source>
+    </trans-unit>
+    <trans-unit id="XPL.optinFallback.0.1">
+        <source>Hat der Nutzer der Gruppe, in dem sich des Inhaltselement/Frontend-Modul befindet, nicht zugestimmt, bekommt er den „Fallback Text” zu sehen. In diesem Text sollte ein Link enthalten sein welcher ihm den Cookie-Consent-Dialog erneut anzeigt. Mit dem nachfolgenden Insert-Tag kann der Link erzeugt werden (z.B. auch in der Datenschutzerklärung).</source>
+    </trans-unit>
+    <trans-unit id="XPL.optinFallback.1.0">
+        <source><![CDATA[{{cms_optinlink}}]]></source>
+    </trans-unit>
+    <trans-unit id="XPL.optinFallback.1.1">
+        <source>Erzeugt einen Link der den Cookie-Consent-Dialog erneut anzeigt damit der Nutzer der Verwendung der notwendigen Gruppe zustimmen kann. Nach Zustimmung wird das Browserfenster automatisch zum ursprünglichen Element scrollen.</source>
     </trans-unit>
 </body>
 </file>
