@@ -570,7 +570,7 @@ class Tag extends CoreBackend {
 
         // cleanup tag groups for none existing root ids
         $aRootsWithLicense = array_keys(self::getRootPages());
-        $aRootsWithLicense[0] = 0;
+        $aRootsWithLicense[] = 0;
 
         if( count($aRootsWithLicense) ) {
             $q = $db->query("DELETE FROM tl_cms_tag WHERE root NOT IN (".implode(',', $aRootsWithLicense).")");

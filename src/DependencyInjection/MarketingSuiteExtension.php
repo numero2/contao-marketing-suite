@@ -37,5 +37,6 @@ class MarketingSuiteExtension extends Extension {
         $loader->load('listener.yml');
         $loader->load('parameters.yml');
         $loader->load('services.yml');
+        $loader->load('migrations.yml');
     }
 }

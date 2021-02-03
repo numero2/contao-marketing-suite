@@ -34,8 +34,12 @@ class Runonce extends Controller {
      * Run the controller
      */
     public function run() {
-        $this->generateEmptyCMSConfigFile();
-        $this->migrateFormElements();
+
+        // newer versions will be handeled by classes in numero2\MarketingSuiteBundle\Migration
+        if( version_compare(VERSION, '4.9', '<') ) {
+            $this->generateEmptyCMSConfigFile();
+            $this->migrateFormElements();
+        }
     }
 
 
