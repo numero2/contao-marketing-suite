@@ -109,23 +109,9 @@ class ContentMarketingItem extends ContentElement {
                 $objContentGroup = ContentGroupModel::findById($objContent->pid);
 
                 if( $objContentGroup && $objContentGroup->pid === $objMI->id ) {
-
-                    if( $objContent->cta_link ) {
-
-                        if( !$objContentGroup->always_use_this ) {
-                            $objContentGroup->clicks +=1;
-                            $objContentGroup->save();
-                        }
-                        $this->redirect(\Controller::replaceInsertTags($objContent->cta_link));
-                    }
-
-                    if( $objContent->url ) {
-
-                        if( !$objContentGroup->always_use_this ) {
-                            $objContentGroup->clicks +=1;
-                            $objContentGroup->save();
-                        }
-                        $this->redirect(\Controller::replaceInsertTags($objContent->url));
+                    if( !$objContentGroup->always_use_this ) {
+                        $objContentGroup->clicks +=1;
+                        $objContentGroup->save();
                     }
                 }
             }
@@ -159,7 +145,7 @@ class ContentMarketingItem extends ContentElement {
 
                 $objContent = ContentModel::findById($value);
 
-                if($objMI->type === 'a_b_test' && $objContent->cms_mi_isMainTracker == '1' ){
+                if( $objMI->type === 'a_b_test' && $objContent->cms_mi_isMainTracker == '1' ) {
 
                     if( Controller::getContentElement($value, $this->strColumn) !== '' ) {
 
