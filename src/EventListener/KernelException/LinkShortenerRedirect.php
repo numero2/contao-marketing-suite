@@ -60,7 +60,7 @@ class LinkShortenerRedirect {
      *
      * @param GetResponseForExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event) {
+    public function onKernelException( $event ) {
 
         if( !$event->isMasterRequest() ) {
             return;
@@ -75,7 +75,7 @@ class LinkShortenerRedirect {
             return;
         }
 
-        if( $event->getException() instanceof PageNotFoundException ) {
+        if( $event instanceof GetResponseForExceptionEvent && $event->getException() instanceof PageNotFoundException) {
 
             $path = $request->getPathInfo();
             $path = urldecode(substr($path, 1));

@@ -18,7 +18,6 @@ namespace numero2\MarketingSuiteBundle\EventListener\KernelResponse;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Frontend;
 use numero2\MarketingSuite\Encryption;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 
 class HealthCheckHeaderListener {
@@ -47,7 +46,7 @@ class HealthCheckHeaderListener {
      *
      * @param FilterResponseEvent $event
      */
-    public function onKernelResponse( FilterResponseEvent $event ) {
+    public function onKernelResponse( $event ) {
 
         if( !$this->framework->isInitialized() ) {
             return;

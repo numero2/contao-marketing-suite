@@ -50,6 +50,7 @@ class BackendWizardPopup extends Backend {
         System::loadLanguageFile('default');
     }
 
+
     /**
      * Run the controller and parse the template
      *

@@ -317,7 +317,7 @@ class HealthCheck extends CoreBackendModule {
      */
     private function checkSitemapDisabled() {
 
-        if( !varzegju::hasFeature('health_check_sitemap_disabled') ) {
+        if( !varzegju::hasFeature('health_check_sitemap_disabled') || version_compare(VERSION, '4.11', '>=') ) {
             return null;
         }
 

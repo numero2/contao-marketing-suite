@@ -96,6 +96,10 @@ $GLOBALS['CMS_MOD'] = [
     ]
 ];
 
+if( !class_exists('Facebook\Facebook') ) {
+    unset($GLOBALS['CMS_MOD']['settings']['facebook']);
+}
+
 
 /**
  * BACK END STYLESHEET

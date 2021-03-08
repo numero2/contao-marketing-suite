@@ -45,8 +45,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
     $GLOBALS['TL_DCA']['tl_page']['fields']
 ,   [
         'cms_root_license' => [
-            'label'                 => $GLOBALS['TL_LANG']['tl_page']['cms_root_license']
-        ,   'inputType'             => 'text'
+            'inputType'             => 'text'
         ,   'exclude'               => true
         ,   'save_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\License', 'save'] ]
         ,   'load_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\License', 'check'] ]
@@ -58,8 +57,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         ,   'input_field_callback'  => ['\numero2\MarketingSuite\DCAHelper\License', 'refresh']
         ]
     ,   'cms_exclude_health_check' => [
-            'label'                 => $GLOBALS['TL_LANG']['tl_page']['cms_exclude_health_check']
-        ,   'inputType'             => 'checkbox'
+            'inputType'             => 'checkbox'
         ,   'default'               => '0'
         ,   'eval'                  => ['tl_class'=>'w50']
         ,   'sql'                   => "char(1) NOT NULL default '0'"
