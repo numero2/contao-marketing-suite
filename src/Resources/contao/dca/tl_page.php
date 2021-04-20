@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -53,8 +53,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
     ,   'cms_refresh_license' => [
-            'label' => $GLOBALS['TL_LANG']['tl_page']['cms_refresh_license']
-        ,   'input_field_callback'  => ['\numero2\MarketingSuite\DCAHelper\License', 'refresh']
+            'input_field_callback'  => ['\numero2\MarketingSuite\DCAHelper\License', 'refresh']
         ]
     ,   'cms_exclude_health_check' => [
             'inputType'             => 'checkbox'

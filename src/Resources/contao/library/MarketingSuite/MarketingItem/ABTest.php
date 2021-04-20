@@ -76,12 +76,16 @@ class ABTest extends MarketingItem {
         unset($args[$keys[0]]);
         unset($args[$keys[1]]);
 
+        System::loadLanguageFile('tl_cms_content_group');
+
         if( $objContentGroup->name ) {
             array_insert($args, 0, [$GLOBALS['TL_LANG']['tl_cms_content_group']['name'][0] => $objContentGroup->name]);
         }
 
         // only display this button if we have one group
+        $groups = null;
         $groups = ContentGroupModel::countByPid($objMarketingItem->id);
+
         if( $groups == 1 ) {
 
             $GLOBALS['TL_MOOTOOLS'][] = "<script>CMSBackend.override('.tl_header .tl_content_right .edit','');</script>";
@@ -194,6 +198,7 @@ class ABTest extends MarketingItem {
      */
     public function submitMarketingItem( $dc, $objMarketingItem ) {
 
+        $groups = null;
         $groups = ContentGroupModel::findBy(['pid=?'],[$objMarketingItem->id]);
 
         // create default content group and redirect to edit
@@ -388,7 +393,10 @@ class ABTest extends MarketingItem {
             return;
         }
 
+        $groups = null;
         $groups = ContentGroupModel::countByPid($dc->activeRecord->pid);
+        
+        $objMI = null;
         $objMI = MarketingItemModel::findById($dc->activeRecord->pid);
 
         // copy first case and redirect to second case

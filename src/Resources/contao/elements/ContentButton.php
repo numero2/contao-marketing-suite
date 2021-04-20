@@ -129,6 +129,7 @@ class ContentButton extends ContentHyperlink implements styleable {
                     'background' => 1,
                     'border' => 1,
                     'font' => 1,
+                    'comment' => '',
                 ];
 
                 $styleDef = $oStyleSheet->compileDefinition($aStyle, false, [], [], true);
@@ -142,6 +143,7 @@ class ContentButton extends ContentHyperlink implements styleable {
                     'background' => 1,
                     'border' => 1,
                     'font' => 1,
+                    'comment' => '',
                 ];
 
                 $styleHoverDef = $oStyleSheet->compileDefinition($aStyleHover, false, [], [], true);

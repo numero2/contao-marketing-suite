@@ -188,23 +188,26 @@ class ElementStyle extends CoreBackend {
      * Add styling related fields to the given DataContainer
      *
      * @param \DataContainer $dc
-     *
-     * @return string
      */
     public function addStylingFields( $dc ) {
 
-        if( !$dc->activeRecord ) {
-            if( Input::get('act')=='edit' && Input::get('table') && Input::get('id') ) {
+        if( !property_exists($dc,'activeRecord') || !$dc->activeRecord ) {
+            
+            if( Input::get('act') == 'edit' && Input::get('table') && Input::get('id') ) {
 
                 $strModel = Model::getClassFromTable(Input::get('table'));
+                
+                $oRow = NULL;
                 $oRow = $strModel::findOneById(Input::get('id'));
 
-                $dc->activeRecord = $oRow;
+                if( $oRow ) {
+                    $dc->activeRecord = $oRow;
+                }
             }
         }
 
         $aFields = [];
-        $strClass = ContentElement::findClass($dc->activeRecord->type);
+        $strClass = ContentElement::findClass($dc->activeRecord->type??null);
         $isStylableClass = $strClass && in_array('numero2\MarketingSuite\Helper\styleable', class_implements($strClass));
 
         if( $isStylableClass ) {

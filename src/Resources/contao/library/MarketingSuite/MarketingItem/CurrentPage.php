@@ -194,7 +194,6 @@ class CurrentPage extends MarketingItem {
     public function submitMarketingItem( $dc, $objMarketingItem ) {
 
         $aPages = deserialize($objMarketingItem->pages);
-        $aPagesOrder = deserialize($objMarketingItem->orderPages);
 
         $group = ContentGroupModel::findOneByPid($objMarketingItem->id);
 
@@ -270,7 +269,7 @@ class CurrentPage extends MarketingItem {
 
                     if( in_array($page, $same) ){
 
-                        $oContent->sorting = self::getSorting($page, $aPagesOrder);
+                        $oContent->sorting = self::getSorting($page, $aPages);
                         $oContent->save();
                         continue;
                     }
@@ -280,7 +279,7 @@ class CurrentPage extends MarketingItem {
 
                     $oContent = clone $contents->current();
                     $oContent->cms_mi_pages = serialize([$value]);
-                    $oContent->sorting = self::getSorting($value, $aPagesOrder);
+                    $oContent->sorting = self::getSorting($value, $aPages);
                     $oContent->invisible = '1';
                     $oContent->save();
 
@@ -306,7 +305,6 @@ class CurrentPage extends MarketingItem {
 
         $objMarketingItem = MarketingItemModel::findById($group->pid);
         $aPages = deserialize($objMarketingItem->pages);
-        $aPagesOrder = deserialize($objMarketingItem->orderPages);
 
         $default = ContentModel::findById($dc->activeRecord->id);
         $default->refresh();
@@ -314,7 +312,7 @@ class CurrentPage extends MarketingItem {
         // only do something if it's not the default element
         if( empty($default->cms_mi_pages) ) {
 
-            foreach( $aPagesOrder as $key => $value) {
+            foreach( $aPages as $key => $value) {
 
                 if( $key == 0 ) {
                     $objContent = $default;
@@ -323,7 +321,7 @@ class CurrentPage extends MarketingItem {
                 }
 
                 $objContent->cms_mi_pages = serialize([$value]);
-                $objContent->sorting = self::getSorting($value,$aPagesOrder);
+                $objContent->sorting = self::getSorting($value,$aPages);
                 $objContent->save();
             }
         }

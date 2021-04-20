@@ -46,7 +46,7 @@ class TagModel extends Model {
         if( $oPage && !empty($oPage->id) ) {
 
             $values = array_map(function($n) { return '%"'.$n.'"%'; }, $oPage->trail);
-            $where[] = '('. implode(" OR ", array_pad([], count($values), 'orderPages like ?')) .')';
+            $where[] = '('. implode(" OR ", array_pad([], count($values), 'pages like ?')) .')';
 
             $where[] = 'active=?';
             $values[] = '1';

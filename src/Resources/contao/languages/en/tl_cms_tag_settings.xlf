@@ -25,10 +25,10 @@
     <trans-unit id="tl_cms_tag_settings.headline.1">
         <source>Hier können Sie dem Modul eine Überschrift hinzufügen.</source>
     </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.type.0">
+    <trans-unit id="tl_cms_tag_settings.cms_tag_type.0">
         <source>Anzeige-Typ</source>
     </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.type.1">
+    <trans-unit id="tl_cms_tag_settings.cms_tag_type.1">
         <source>In welcher Form wird im Frontend nach der Erlaubnis gefragt.</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_override_label.0">

@@ -163,16 +163,15 @@ class Tag extends CoreBackend {
         $disableAfter = false;
         $disableInto = false;
 
-        // Disable all buttons if there is a circular reference
+        // disable all buttons if there is a circular reference
         if( $arrClipboard !== false && ($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id']) || $arrClipboard['mode'] == 'cutAll' && ($cr == 1 || \in_array($row['id'], $arrClipboard['id']))) ) {
             $disableAfter = true;
             $disableInto = true;
         }
 
         // only support root level and level 1
-        if( Input::get('mode') == 'create' && $row['pid'] != 0 ) {
+        if( Input::get('mode') == 'create' && !empty($row['pid']) ) {
             $disableInto = true;
-
         }
 
         // only support past in same level
@@ -184,8 +183,15 @@ class Tag extends CoreBackend {
 
             if( $objTag->pid == '0' ) {
 
-                if( $row['pid'] == '0' ) {
+                if( !array_key_exists('pid',$row) ) {
+
+                    $disableInto = false;
+                    $disableAfter = true;
+
+                } else if( array_key_exists('pid',$row) && $row['pid'] == '0' ) {
+
                     $disableInto = true;
+
                 } else {
                     $disableInto = true;
                     $disableAfter = true;
@@ -193,7 +199,7 @@ class Tag extends CoreBackend {
 
             } else {
 
-                if( $row['pid'] == '0' ) {
+                if( array_key_exists('pid',$row) && $row['pid'] == '0' ) {
                     $disableAfter = true;
                 } else {
                     $disableInto = true;
@@ -202,18 +208,18 @@ class Tag extends CoreBackend {
         }
 
         // prevent interacting with root-specific groups
-        if( $row['root'] ) {
+        if( !empty($row['root']) ) {
             $disableAfter = true;
             $disableInto = true;
         }
 
         $return = '';
 
-        // Return the buttons
+        // return the buttons
         $imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id']));
         $imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id']));
 
-        if( $row['id'] > 0 ) {
+        if( !empty($row['id']) && $row['id'] > 0 ) {
             $return = $disableAfter ? Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
         }
 
@@ -392,8 +398,6 @@ class Tag extends CoreBackend {
 
     /**
      * Add our default data to this table, if this is fresh
-     *
-     * @return array
      */
     public function addDefault() {
 
@@ -419,7 +423,7 @@ class Tag extends CoreBackend {
 
             foreach( $defaultData as $dataKey => $data ) {
 
-                $current =  clone $oTag;
+                $current = clone $oTag;
 
                 foreach( $data as $key => $value ) {
                     $current->{$key}  = $value;
@@ -429,7 +433,7 @@ class Tag extends CoreBackend {
 
                 if( $dataKey == 0 ) {
 
-                    $sessionCookie =  clone $oTag;
+                    $sessionCookie = clone $oTag;
 
                     $sessionCookie->name = 'Session-Cookie';
                     $sessionCookie->enable_on_cookie_accept = '';
@@ -442,8 +446,6 @@ class Tag extends CoreBackend {
                 $oTag->sorting *= 2;
             }
         }
-
-        return $types;
     }
 
 

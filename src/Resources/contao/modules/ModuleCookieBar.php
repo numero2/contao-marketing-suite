@@ -204,6 +204,7 @@ class ModuleCookieBar extends ModuleEUConsent {
         ,   'fontcolor' => (string)$this->cms_tag_font_color
         ,   'background' => '1'
         ,   'bgcolor' => (string)$this->cms_tag_background_color
+        ,   'comment' => ''
         ];
 
         $main = $oStyleSheet->compileDefinition($mainStyle, false, [], [], true);
@@ -220,6 +221,7 @@ class ModuleCookieBar extends ModuleEUConsent {
         ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
         ,   'border' => '1'
         ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
+        ,   'comment' => ''
         ];
 
         $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
@@ -236,6 +238,7 @@ class ModuleCookieBar extends ModuleEUConsent {
         ,   'bgimage' => strlen((string)$this->cms_tag_reject_background)?'none':''
         ,   'border' => '1'
         ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
+        ,   'comment' => ''
         ];
 
         $reject = $oStyleSheet->compileDefinition($rejectStyle, false, [], [], true);

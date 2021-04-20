@@ -34,6 +34,13 @@ if( Input::get('do') == 'cms_marketing' ) {
     $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_cms_content_group';
     $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['headerFields'] = ['name', 'type'];
 
+    // HACK for >= 4.11 to make DC_Table choose the correct ptable in do=cms_marketing&table=tl_content
+    if( version_compare(VERSION, '4.11', '>=') ) {
+        if( Input::get('table') == 'tl_content' ) {
+            unset($GLOBALS['BE_MOD']['marketing_suite']['cms_marketing']['tables'][0]);
+        }
+    }
+
     // change infos of header field and child record
     $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['header_callback'] = ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'addHeader'];
     array_unshift($GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'],  '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'addType');
@@ -182,12 +189,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_mi_pages']
         ,   'inputType'         => 'pageTree'
         ,   'foreignKey'        => 'tl_page.title'
-        ,   'eval'              => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'cms_mi_orderPages', 'tl_class'=>'clr']
+        ,   'eval'              => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'tl_class'=>'clr']
         ,   'relation'          => ['type'=>'hasMany', 'load'=>'lazy']
-        ,   'sql'               => "text NULL"
-        ]
-    ,   'cms_mi_orderPages' => [
-            'eval'              => ['doNotShow'=>true]
         ,   'sql'               => "text NULL"
         ]
     ,   'cms_mi_label' => [
@@ -276,12 +279,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
         ,   'inputType'         => 'pageTree'
         ,   'foreignKey'        => 'tl_page.title'
         ,   'save_callback'     => [ ['\numero2\MarketingSuite\DCAHelper\Content', 'sanityCheckPageScopeWithPages'] ]
-        ,   'eval'              => ['multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'cms_orderPages', 'tl_class'=>'clr']
+        ,   'eval'              => ['multiple'=>true, 'fieldType'=>'checkbox', 'tl_class'=>'clr']
         ,   'relation'          => ['type'=>'hasMany', 'load'=>'lazy']
-        ,   'sql'               => "text NULL"
-        ]
-    ,    'cms_orderPages' => [
-            'eval'              => ['doNotShow'=>true]
         ,   'sql'               => "text NULL"
         ]
     ]

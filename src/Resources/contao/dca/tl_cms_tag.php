@@ -58,6 +58,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_tag']['frontend']
             ,   'href'              => 'table=tl_cms_tag_settings'
             ,   'icon'              => 'modules.svg'
+            ,   'class'             => ''
             ,   'attributes'        => 'onclick="Backend.getScrollOffset()"'
             ]
         ,   'all' => [
@@ -226,12 +227,8 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
         ,   'inputType'             => 'pageTree'
         ,   'foreignKey'            => 'tl_page.title'
         ,   'save_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\Tag', 'sanityCheckPageScopeWithPages'] ]
-        ,   'eval'                  => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderPages', 'tl_class'=>'clr']
+        ,   'eval'                  => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'tl_class'=>'clr']
         ,   'relation'              => ['type'=>'hasMany', 'load'=>'lazy']
-        ,   'sql'                   => "text NULL"
-        ]
-    ,    'orderPages' => [
-            'eval'                  => ['doNotShow'=>true]
         ,   'sql'                   => "text NULL"
         ]
     ,   'pages_root' => [

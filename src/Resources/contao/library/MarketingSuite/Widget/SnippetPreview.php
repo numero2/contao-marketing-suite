@@ -129,12 +129,15 @@ class SnippetPreview extends Controller {
 
         global $objPage;
 
-        $strTag = $objRefPage->getRelated('layout')->titleTag;
+        $oLayout = NULL;
+        $oLayout = $objRefPage->getRelated('layout');
+
+        $strTag = $oLayout?$oLayout->titleTag:NULL;
         $strTag = $strTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}';
         $strTag = str_replace('{{page::pageTitle}}', '##TITLE##', $strTag);
 
         // overwrite global $objPage temporarily for insert tags resolving
-        $objOrigPage = $objpage;
+        $objOrigPage = $objPage;
         $objPage = $objRefPage;
 
         // parse insert tags...
@@ -171,6 +174,9 @@ class SnippetPreview extends Controller {
 
         list($baseUrl) = explode($oPage->alias ?: $oPage->id, $sURL);
 
+        $oLayout = NULL;
+        $oLayout = $oPage->getRelated('layout');
+
         $aData += [
             'title' => $dc->activeRecord->pageTitle ?: $dc->activeRecord->title
         ,   'url' => $sURL
@@ -181,7 +187,7 @@ class SnippetPreview extends Controller {
         ,   'aliasField' => 'ctrl_alias'.$aData['fieldSuffix']
         ,   'descriptionField' => 'ctrl_description'.$aData['fieldSuffix']
         ,   'titleTag' => $this->parseTitleTag($oPage)
-        ,   'layoutId' => $oPage->getRelated('layout')->id
+        ,   'layoutId' => $oLayout?$oPage->getRelated('layout')->id:NULL
         ];
     }
 

@@ -77,7 +77,12 @@ class Module extends CoreBackend {
      */
     public function addTagModules( $dc ) {
 
-        $aTypes = TagSettings::getFrontendTypes($dc);
+        $oTS = NULL;
+        $oTS = new TagSettings();
+        
+        $aTypes = [];
+        $aTypes = $oTS->getFrontendTypes($dc);
+
         $this->loadLanguageFile('tl_cms_tag_settings');
 
         if( CMSConfig::get('cms_tag_type') == "cms_tag_modules" ) {

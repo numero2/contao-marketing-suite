@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -135,7 +135,7 @@ class Module extends CoreBackendModule {
 
         // Redirect with table parameter
         $strTable = Input::get('table');
-        if( $strTable == '' && $arrModule['callback'] == '' ) {
+        if( $strTable == '' && empty($arrModule['callback']) ) {
             Controller::redirect(Backend::addToUrl('table=' . $arrModule['tables'][0]));
         }
 
@@ -154,7 +154,7 @@ class Module extends CoreBackendModule {
         }
 
         // Call module callback
-        if( class_exists($arrModule['callback']) ) {
+        if( !empty($arrModule['callback']) && class_exists($arrModule['callback']) ) {
 
             $objCallback = new $arrModule['callback']($dc, $arrModule);
             return $objCallback->generate();
@@ -202,7 +202,7 @@ class Module extends CoreBackendModule {
 
             // gives the chance to add some content between the helper and the form itself
             // not a core functionality!
-            if( $arrModule['pre_form_callback'] ) {
+            if( !empty($arrModule['pre_form_callback']) ) {
 
                 $objCallback = NULL;
                 $objCallback = new $arrModule['pre_form_callback'][0]($dc, $arrModule);

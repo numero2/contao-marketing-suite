@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
     ]
 ,   'fields' => [
         'cms_tag_type' => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['type']
+            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_type']
         ,   'default'          => 'default'
         ,   'inputType'        => 'select'
         ,   'options_callback' => [ '\numero2\MarketingSuite\DCAHelper\TagSettings', 'getFrontendTypes']

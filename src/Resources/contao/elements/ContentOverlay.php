@@ -180,6 +180,7 @@ class ContentOverlay extends ContentElement implements styleable {
                 ,   'background' => 1
                 ,   'font' => 1
                 ,   'alignment' => 1
+                ,   'comment' => ''
                 ]+$aStyle, false, [], [], true);
 
                 // "close" button
@@ -189,6 +190,7 @@ class ContentOverlay extends ContentElement implements styleable {
                         'selector' => '.ce_cms_overlay > div[data-cms-unique="'.$uniqueID.'"] .close > span'
                     ,   'background' => 1
                     ,   'bgcolor' => $aStyle['bordercolor']
+                    ,   'comment' => ''
                     ], false, [], [], true);
                 }
             }

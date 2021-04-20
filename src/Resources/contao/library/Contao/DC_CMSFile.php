@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -43,7 +43,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
         $this->strTable = $strTable;
 
         // Call onload_callback (e.g. to check permissions)
-        if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback']) ) {
+        if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] ?? null)) {
 
             foreach( $GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] as $callback ) {
 
@@ -137,7 +137,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
                         $legends[$k] = substr($vv, 1, -1);
                         unset($boxes[$k][$kk]);
 
-                    } else if( $GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'] || !\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) ) {
+                    } else if( !empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude']) || !\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) ) {
 
                         unset($boxes[$k][$kk]);
                     }
@@ -165,7 +165,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
                 $cls = '';
                 $legend = '';
 
-                if( isset($legends[$k]) ) {
+                if( !empty($legends[$k]) && strpos($legends[$k],':') !== false ) {
 
                     list($key, $cls) = explode(':', $legends[$k]);
                     $legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this, \'' . $key . '\', \'' . $this->strTable . '\')">' . (isset($GLOBALS['TL_LANG'][$this->strTable][$key]) ? $GLOBALS['TL_LANG'][$this->strTable][$key] : $key) . '</legend>';
@@ -214,7 +214,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
                     // Handle entities
                     if( $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'text' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'textarea' ) {
 
-                        if( $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ) {
+                        if( isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple']) ) {
 
                             $this->varValue = \StringUtil::deserialize($this->varValue);
                         }
@@ -233,7 +233,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
                     }
 
                     // Call load_callback
-                    if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback']) ) {
+                    if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null) ) {
 
                         foreach( $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback ) {
 
@@ -271,7 +271,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
         $arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
 
         // Call the buttons_callback (see #4691)
-        if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback']) ) {
+        if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null) ) {
 
             foreach( $GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback ) {
 
@@ -497,7 +497,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
 
                 if( $trigger != '' ) {
 
-                    if( $GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ) {
+                    if( $GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple']) ) {
 
                         $sValues[] = $name;
 
@@ -538,7 +538,7 @@ class DC_CMSFile extends \DataContainer implements \editable {
             // Get an existing palette
             foreach( $names as $paletteName ) {
 
-                if( \strlen($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]) ) {
+                if( !empty($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]) && \strlen($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]) ) {
 
                     $strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName];
                     break;

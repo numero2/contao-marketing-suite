@@ -47,7 +47,7 @@ class Avalex extends CoreBackendModule {
 
             $oModule = NULL;
             $oModule = ModuleModel::findOneByType('avalex_privacy_policy');
-
+            
             if( $oModule ) {
 
                 $refererID = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');

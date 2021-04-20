@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
     'config' => [
         'dataContainer'             => 'Table'
     ,   'closed'                    => \numero2\MarketingSuite\DCAHelper\MarketingItem::isClosed()
-    ,   'ctable'                    => ['tl_cms_content_group', 'tl_content']
+    ,   'ctable'                    => ['tl_content','tl_cms_content_group']
     ,   'onsubmit_callback'         => [['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'submitMarketingItem']]
     ,   'onload_callback'           => [['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'loadMarketingItem']]
     ,   'switchToEdit'              => true
@@ -137,12 +137,8 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['pages']
         ,   'inputType'             => 'pageTree'
         ,   'foreignKey'            => 'tl_page.title'
-        ,   'eval'                  => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderPages', 'tl_class'=>'clr']
+        ,   'eval'                  => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'tl_class'=>'clr']
         ,   'relation'              => ['type'=>'hasMany', 'load'=>'lazy']
-        ,   'sql'                   => "text NULL"
-        ]
-    ,   'orderPages' => [
-            'eval'                  => ['doNotShow'=>true]
         ,   'sql'                   => "text NULL"
         ]
     ,   'auto_winner_after' => [

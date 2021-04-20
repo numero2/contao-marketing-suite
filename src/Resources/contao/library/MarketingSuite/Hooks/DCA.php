@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -34,7 +34,7 @@ class DCA extends Hooks {
             foreach( $GLOBALS['TL_DCA'][$strTable]['palettes'] as $palette ) {
 
                 // check palette for styling field
-                if( strpos((string)$palette, 'cms_element_style') !== false ) {
+                if( !is_array($palette) && strpos($palette, 'cms_element_style') !== false ) {
 
                     $oES = NULL;
                     $oES = new ElementStyle();

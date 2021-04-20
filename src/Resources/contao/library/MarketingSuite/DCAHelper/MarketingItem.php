@@ -463,17 +463,17 @@ class MarketingItem extends CoreBackend {
      * Change palette during onload
      *
      * @param \DataContainer $dc
-     * @param  object $objMI
+     * @param object $objMI
      */
     public function loadMarketingItem( $dc ) {
 
+        $objMI = null;
         $objMI = MarketingItemModel::findById($dc->id);
-
-        $groups = ContentGroupModel::countByPid($objMI->id);
-
+        
         if( $objMI ) {
-
-            $oMarketingItem = MarketingInstance::getChildInstance($objMI->type);
+            
+            $groups = 0;
+            $groups = ContentGroupModel::countByPid($objMI->id);
 
             if( !($groups || ($objMI->page_a && $objMI->page_b && $objMI->init_step=='')) ) {
 
@@ -503,7 +503,10 @@ class MarketingItem extends CoreBackend {
                 $objMI->save();
             }
 
-            if( method_exists($oMarketingItem, 'loadMarketingItem') ) {
+            $oMarketingItem = null;
+            $oMarketingItem = MarketingInstance::getChildInstance($objMI->type);
+
+            if( $oMarketingItem && method_exists($oMarketingItem, 'loadMarketingItem') ) {
                 $oMarketingItem->loadMarketingItem($dc, $objMI);
             }
         }
@@ -700,7 +703,7 @@ class MarketingItem extends CoreBackend {
 
 
     /**
-     * Alter dca configuration of tl_content
+     * Alter DCA configuration of tl_content
      *
      * @param \DataContainer $dc
      */
@@ -708,12 +711,14 @@ class MarketingItem extends CoreBackend {
 
         $objContent = null;
         $objMI = null;
+        $objContentParent = null;
 
         if( Input::get('act') == 'edit' ) {
 
             $objContent = ContentModel::findById($dc->id);
 
             if( $objContent ) {
+
                 $parent_class = Model::getClassFromTable($objContent->ptable);
                 $objContentParent = $parent_class::findById($objContent->pid);
 
@@ -723,9 +728,12 @@ class MarketingItem extends CoreBackend {
                     $objMI = MarketingItemModel::findById($objContentParent->pid);
                 }
             }
+
         } else {
 
+            $oContentGroup = null;
             $oContentGroup = ContentGroupModel::findById($dc->id);
+
             if( $oContentGroup ) {
                 $objMI = MarketingItemModel::findById($oContentGroup->pid);
             }
@@ -733,6 +741,7 @@ class MarketingItem extends CoreBackend {
 
         if( !empty($objMI) ) {
 
+            $instance = null;
             $instance = MarketingInstance::getChildInstance($objMI->type);
 
             if( $instance ) {
@@ -743,7 +752,7 @@ class MarketingItem extends CoreBackend {
 
 
     /**
-     * handles what happens after a user submits the form
+     * Handles what happens after a user submits the form
      *
      * @param \DataCotainer $dc
      */
@@ -753,11 +762,14 @@ class MarketingItem extends CoreBackend {
             return;
         }
 
+        $objMI = null;
         $objMI = MarketingItemModel::findById($dc->id);
 
         if( $objMI ) {
+
             $objMI->refresh();
 
+            $instance = null;
             $instance = MarketingInstance::getChildInstance($objMI->type);
 
             if( $instance ) {
@@ -780,6 +792,7 @@ class MarketingItem extends CoreBackend {
             return '';
         }
 
+        $oMI = null;
         $oMI = MarketingItemModel::findOneById($dc->activeRecord->cms_mi_id);
 
         if( !$oMI || !array_key_exists($oMI->type, self::getMarketingItemTypes()) ) {
@@ -799,12 +812,13 @@ class MarketingItem extends CoreBackend {
      */
     public function getAvailableOptions( DataContainer $dc ) {
 
-        $objItems = NULL;
+        $objItems = null;
         $objItems = MarketingItemModel::findBy(["init_step=?"], ['']);
 
         if( $objItems ) {
 
             Controller::loadLanguageFile('tl_cms_marketing_item');
+            
             $aOptions = [];
 
             while( $objItems->next() ) {
@@ -848,11 +862,9 @@ class MarketingItem extends CoreBackend {
                 continue;
             }
 
-            if( empty($GLOBALS['TL_LANG']['tl_cms_marketing_item']['types'][$k]) ){
-
+            if( empty($GLOBALS['TL_LANG']['tl_cms_marketing_item']['types'][$k]) ) {
                 $types[$k] = $k;
             } else {
-
                 $types[$k] = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['types'][$k];
             }
         }
@@ -871,14 +883,14 @@ class MarketingItem extends CoreBackend {
      */
     public function addToggleAlwaysUseThis($value, DataContainer $dc) {
 
+        $MI = null;
         $MI = MarketingItemModel::findOneById(Input::get('id'));
+        
         $strAlways = "";
 
         if( $MI && $MI->always_page_a ) {
-
             $strAlways = "page_a";
         } else if( $MI && $MI->always_page_b ) {
-
             $strAlways = "page_b";
         }
 
@@ -890,8 +902,6 @@ class MarketingItem extends CoreBackend {
             $strToggle = Input::get('tid');
             Input::setGet('act', 'toggle');
             $active = Input::get('state') == 1 ? '1' : '';
-
-            $time = time();
 
             // check that only one can be active
             if( $strAlways ) {
@@ -906,7 +916,7 @@ class MarketingItem extends CoreBackend {
             if( in_array($strToggle, ['page_a', 'page_b']) ) {
 
                 $this->Database->prepare("UPDATE tl_cms_marketing_item SET tstamp=?, always_$strToggle=? WHERE id=?")
-                   ->execute($time, $active? '' : '1', Input::get('id'));
+                   ->execute(time(), $active? '' : '1', Input::get('id'));
 
             }
 
@@ -915,15 +925,12 @@ class MarketingItem extends CoreBackend {
 
         $href = 'tid='.$dc->field.'&amp;state='.$active;
 
-        $icon = 'bundles/marketingsuite/img/backend/icons/icon_always_use_this.svg';
-        $icond = 'bundles/marketingsuite/img/backend/icons/icon_always_use_this_.svg';
-
         if( !$active ) {
-            $path = $icond;
+            $path = 'bundles/marketingsuite/img/backend/icons/icon_always_use_this_.svg';
             $title = sprintf($GLOBALS['TL_LANG']['tl_cms_marketing_item']['toggle_always_use_this_tooltip'][0], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0] );
             $label = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['toggle_always_use_this'][0];
         } else {
-            $path = $icon;
+            $path = 'bundles/marketingsuite/img/backend/icons/icon_always_use_this.svg';
             $title = sprintf($GLOBALS['TL_LANG']['tl_cms_marketing_item']['toggle_always_use_this_tooltip'][1], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0] );
             $label = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['toggle_always_use_this'][1];
         }
