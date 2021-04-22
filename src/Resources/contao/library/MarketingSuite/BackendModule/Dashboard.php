@@ -171,7 +171,7 @@ class Dashboard extends CoreBackendModule {
                     continue;
                 }
 
-                $arrRow['used'] = MarketingItem::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBAL['TL_LANG']['tl_cms_marketing_item']['used']['0']));
+                $arrRow['used'] = MarketingItem::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBALS['TL_LANG']['tl_cms_marketing_item']['used']['0']));
 
                 $objTemplate->setData( $arrRow );
 
@@ -225,7 +225,7 @@ class Dashboard extends CoreBackendModule {
                     $arrRow['href'] = 'contao?do='.$do.'&amp;table=tl_content&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
                 }
                 if( $do == 'cms_conversion' ) {
-                    $arrRow['used'] = ConversionItem::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBAL['TL_LANG']['tl_content']['cms_used']['0']));
+                    $arrRow['used'] = ConversionItem::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBALS['TL_LANG']['tl_content']['cms_used']['0']));
                 } else {
 
                     $aElements = [];
@@ -238,7 +238,7 @@ class Dashboard extends CoreBackendModule {
                     if( count($aElements) ) {
 
                         $aOverlay = [
-                            'label' => Image::getHtml('monitor', $GLOBAL['TL_LANG']['tl_content']['cms_used']['0'])
+                            'label' => Image::getHtml('monitor', $GLOBALS['TL_LANG']['tl_content']['cms_used']['0'])
                         ,   'content' => $aElements
                         ,   'position' => 'top_right'
                         ];
@@ -305,9 +305,6 @@ class Dashboard extends CoreBackendModule {
                     ")->execute($arrRow['id']);
 
                     $arrRow['stats']['unique_requests'] = $objResult->numRows;
-
-                    $aBotCondition = $aCondition['value'];
-                    $aBotCondition[] = 1;
 
                     // count bot requests
                     $objResult = $db->prepare("

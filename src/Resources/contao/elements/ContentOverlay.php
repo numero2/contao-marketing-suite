@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -20,10 +20,10 @@ use Contao\Controller;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\StringUtil;
-use Contao\StyleSheets;
 use numero2\MarketingSuite\Backend\License as jlkshgf;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
 use numero2\MarketingSuite\Helper\styleable;
+use numero2\MarketingSuite\Helper\StyleSheet;
 use numero2\MarketingSuite\Tracking\ClickAndViews;
 use numero2\MarketingSuite\Tracking\Session;
 
@@ -167,31 +167,29 @@ class ContentOverlay extends ContentElement implements styleable {
             if( count($aStyle) ) {
 
                 $oStyleSheet = NULL;
-                $oStyleSheet = new StyleSheets();
+                $oStyleSheet = new StyleSheet();
 
                 $uniqueID = Helper::getUniqueID($this);
 
                 $strStyle = "";
 
                 // common styles
-                $strStyle .= $oStyleSheet->compileDefinition([
+                $strStyle .= $oStyleSheet->generateDefinition([
                     'selector' => '.ce_cms_overlay > div[data-cms-unique="'.$uniqueID.'"]'
                 ,   'border' => 1
                 ,   'background' => 1
                 ,   'font' => 1
                 ,   'alignment' => 1
-                ,   'comment' => ''
-                ]+$aStyle, false, [], [], true);
+                ]+$aStyle);
 
                 // "close" button
                 if( !empty($aStyle['bordercolor']) ) {
 
-                    $strStyle .= $oStyleSheet->compileDefinition([
+                    $strStyle .= $oStyleSheet->generateDefinition([
                         'selector' => '.ce_cms_overlay > div[data-cms-unique="'.$uniqueID.'"] .close > span'
                     ,   'background' => 1
                     ,   'bgcolor' => $aStyle['bordercolor']
-                    ,   'comment' => ''
-                    ], false, [], [], true);
+                    ]);
                 }
             }
 

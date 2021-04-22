@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -51,7 +51,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
             'name'      => 'period'
         ,   'label'     => $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['filter']['period']
         ,   'inputType' => 'select'
-        ,   'value'     => (string) $arrSession[$this->name]['period']
+        ,   'value'     => ''
         ,   'options'   => [
                 'hour'  => &$GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['periods']['hour']
             ,   'day'   => &$GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['periods']['day']
@@ -68,7 +68,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
             'name'      => 'start'
         ,   'label'     => $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['filter']['start']
         ,   'inputType' => 'text'
-        ,   'value'     => (string) $arrSession[$this->name]['start']
+        ,   'value'     => ''
         ,   'eval'      => [ 'datePicker'=> true, 'rgxp'=>'datim' ]
         ];
 
@@ -78,7 +78,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
             'name'      => 'stop'
         ,   'label'     => $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['filter']['stop']
         ,   'inputType' => 'text'
-        ,   'value'     => (string) $arrSession[$this->name]['stop']
+        ,   'value'     => ''
         ,   'eval'      => [ 'datePicker'=> true, 'rgxp'=>'datim' ]
         ];
 
@@ -110,9 +110,9 @@ class LinkShortenerStatistics extends CoreBackendModule {
         $strBuffer .= '<strong>'.$aDca['label'].':</strong>';
 
         $objWidget = new $strClass($strClass::getAttributesFromDca($aDca, $aDca['name']));
-        $objWidget->value = (string) $arrSession[$this->name][$aDca['name']];
+        $objWidget->value = (string) ($arrSession[$this->name][$aDca['name']]??'');
 
-        if( $aDca['eval']['datePicker'] && $aDca['eval']['rgxp'] && strlen($objWidget->value) ) {
+        if( !empty($aDca['eval']['datePicker']) && !empty($aDca['eval']['rgxp']) && strlen($objWidget->value) ) {
             $objWidget->value = Date::parse(\Config::get($aDca['eval']['rgxp'].'Format'), $objWidget->value);
         }
 
@@ -229,7 +229,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
         $aTemplateData['numbers'][$label] = $objResult->bot_count;
 
         $aGroupBy = [];
-        $period = $arrSession[$this->name]['period']?:'hour';
+        $period = ($arrSession[$this->name]['period']??'')?:'hour';
         switch( $period ) {
 
             case 'hour':

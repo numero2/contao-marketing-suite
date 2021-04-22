@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -36,7 +36,7 @@ class TagModel extends Model {
      *
      * @param int $pageId ID of the page
      *
-     * @return \Model\Collection|false
+     * @return \Model\Collection|null
      */
     public static function findAllActiveByPage( $pageId ) {
 
@@ -45,22 +45,24 @@ class TagModel extends Model {
 
         if( $oPage && !empty($oPage->id) ) {
 
-            $values = array_map(function($n) { return '%"'.$n.'"%'; }, $oPage->trail);
-            $where[] = '('. implode(" OR ", array_pad([], count($values), 'pages like ?')) .')';
+            $oTags = null;
+            $oTags = self::findBy(['pages IS NOT NULL AND active=?'], ['1'], ['order'=>'sorting ASC']);
 
-            $where[] = 'active=?';
-            $values[] = '1';
+            if( $oTags ) {
 
-            $objResult = NULL;
-            $objResult = Database::getInstance()->prepare("
-                SELECT
-                    *
-                FROM ".self::$strTable."
-                ".($where?"WHERE ".implode(" AND ", $where):'')."
-                ORDER BY sorting ASC
-            ")->execute($values);
+                $aTags = [];
 
-            return self::createCollectionFromDbResult($objResult, self::$strTable);
+                foreach( $oTags as $oTag ) {
+
+                    $aPages = deserialize($oTag->pages);
+
+                    if( is_array($aPages) && count(array_intersect($oPage->trail, $aPages)) ){
+                        $aTags[] = $oTag;
+                    }
+                }
+
+                return new Collection($aTags, self::$strTable);
+            }
         }
 
         return null;

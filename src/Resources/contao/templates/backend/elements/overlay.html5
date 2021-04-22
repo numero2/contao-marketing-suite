@@ -4,7 +4,9 @@
     <?php $this->endblock(); ?>
     <span class="hover-overlay">
         <?php $this->block('content'); ?>
-        <?= $this->content; ?>
+        <?php if( is_string($this->content) ): ?>
+            <?= $this->content; ?>
+        <?php endif; ?>
         <?php $this->endblock(); ?>
     </span>
 </a>

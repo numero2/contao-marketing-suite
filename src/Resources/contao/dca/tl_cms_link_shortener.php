@@ -34,6 +34,7 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
 ,   'list' => [
         'sorting' => [
             'mode'                  => 1
+        ,   'flag'                  => 1
         ,   'fields'                => ['group_name']
         ,   'panelLayout'           => 'search,limit;filter'
         ]

@@ -3,22 +3,22 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite;
 
 use Contao\DataContainer;
-use Contao\StyleSheets;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
 use numero2\MarketingSuite\Helper\styleable;
+use numero2\MarketingSuite\Helper\StyleSheet;
 
 
 class ContentButton extends ContentHyperlink implements styleable {
@@ -85,7 +85,7 @@ class ContentButton extends ContentHyperlink implements styleable {
             $aStyle = deserialize($this->cms_style);
 
             $oStyleSheet = NULL;
-            $oStyleSheet = new StyleSheets();
+            $oStyleSheet = new StyleSheet();
 
             $uniqueID = Helper::getUniqueID($this);
 
@@ -129,10 +129,9 @@ class ContentButton extends ContentHyperlink implements styleable {
                     'background' => 1,
                     'border' => 1,
                     'font' => 1,
-                    'comment' => '',
                 ];
 
-                $styleDef = $oStyleSheet->compileDefinition($aStyle, false, [], [], true);
+                $styleDef = $oStyleSheet->generateDefinition($aStyle);
 
                 $strStyle .= '[data-cms-unique="'.$uniqueID.'"]'. $styleDef;
             }
@@ -143,10 +142,9 @@ class ContentButton extends ContentHyperlink implements styleable {
                     'background' => 1,
                     'border' => 1,
                     'font' => 1,
-                    'comment' => '',
                 ];
 
-                $styleHoverDef = $oStyleSheet->compileDefinition($aStyleHover, false, [], [], true);
+                $styleHoverDef = $oStyleSheet->generateDefinition($aStyleHover);
 
                 $strStyle .= '[data-cms-unique="'.$uniqueID.'"]:hover'. $styleHoverDef;
             }

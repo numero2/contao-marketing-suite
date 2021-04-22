@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -146,7 +146,7 @@ class HealthCheck extends CoreBackendModule {
 
         $oCategory = (object) [
             'type' => 'missing_h1'
-        ,   'collapsed' => $this->fsStates['missing_h1_legend']?0:1
+        ,   'collapsed' => empty($this->fsStates['missing_h1_legend'])
         ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['missing_h1'][0]
         ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['missing_h1'][1]
         ,   'items' => []
@@ -323,7 +323,7 @@ class HealthCheck extends CoreBackendModule {
 
         $oCategory = (object) [
             'type' => 'sitemap_disabled'
-        ,   'collapsed' => $this->fsStates['sitemap_disabled_legend']?0:1
+        ,   'collapsed' => empty($this->fsStates['sitemap_disabled_legend'])
         ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['sitemap_disabled'][0]
         ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['sitemap_disabled'][1]
         ,   'items' => []
@@ -373,7 +373,7 @@ class HealthCheck extends CoreBackendModule {
 
         $oCategory = (object) [
             'type' => 'https'
-        ,   'collapsed' => $this->fsStates['https_legend']?0:1
+        ,   'collapsed' => empty($this->fsStates['https_legend'])
         ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['https'][0]
         ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['https'][1]
         ,   'items' => []
@@ -460,7 +460,7 @@ class HealthCheck extends CoreBackendModule {
 
         $oCategory = (object) [
             'type' => 'www'
-        ,   'collapsed' => $this->fsStates['www_legend']?0:1
+        ,   'collapsed' => empty($this->fsStates['www_legend'])
         ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['www'][0]
         ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['www'][1]
         ,   'items' => []
@@ -582,7 +582,7 @@ class HealthCheck extends CoreBackendModule {
 
         $oCategory = (object) [
             'type' => 'missing_meta'
-        ,   'collapsed' => $this->fsStates['missing_meta_legend']?0:1
+        ,   'collapsed' => empty($this->fsStates['missing_meta_legend'])
         ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['missing_meta'][0]
         ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['missing_meta'][1]
         ,   'items' => []
@@ -701,7 +701,7 @@ class HealthCheck extends CoreBackendModule {
 
         $oCategory = (object) [
             'type' => 'short_meta'
-        ,   'collapsed' => $this->fsStates['short_meta_legend']?0:1
+        ,   'collapsed' => empty($this->fsStates['short_meta_legend'])
         ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['short_meta'][0]
         ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['short_meta'][1]
         ,   'items' => []
@@ -820,7 +820,7 @@ class HealthCheck extends CoreBackendModule {
 
         $oCategory = (object) [
             'type' => 'long_meta'
-        ,   'collapsed' => $this->fsStates['long_meta_legend']?0:1
+        ,   'collapsed' => empty($this->fsStates['long_meta_legend'])
         ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['long_meta'][0]
         ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['long_meta'][1]
         ,   'items' => []
@@ -937,7 +937,7 @@ class HealthCheck extends CoreBackendModule {
 
         $oCategory = (object) [
             'type' => 'missing_opengraph'
-        ,   'collapsed' => $this->fsStates['missing_opengraph_legend']?0:1
+        ,   'collapsed' => empty($this->fsStates['missing_opengraph_legend'])
         ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['missing_opengraph'][0]
         ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['missing_opengraph'][1]
         ,   'items' => []

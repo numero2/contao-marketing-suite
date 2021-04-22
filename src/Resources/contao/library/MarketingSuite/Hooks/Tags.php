@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -64,7 +64,13 @@ class Tags extends Hooks {
 
             // count how often a tag type is used
             foreach( $aTagTypes as $type => $tags ) {
+
                 foreach( $tags as $key => $tag ) {
+
+                    if( empty($aTypeTotal[$tag->type]) ) {
+                        $aTypeTotal[$tag->type] = 0;
+                    }
+
                     $aTypeTotal[$tag->type] += 1;
                 }
             }
@@ -99,6 +105,7 @@ class Tags extends Hooks {
                     $tagTemplate->typeFirst = false;
                     if( empty($aTypeCount[$tag->type]) ) {
                         $tagTemplate->typeFirst = true;
+                        $aTypeCount[$tag->type] = 0;
                     }
                     $aTypeCount[$tag->type] += 1;
 
@@ -517,7 +524,7 @@ class Tags extends Hooks {
             break;
 
             case 'cms_optinlink':
-                return self::generateEUConsentForceLink($elements[1]);
+                return self::generateEUConsentForceLink($elements[1] ?? '');
             break;
         }
 

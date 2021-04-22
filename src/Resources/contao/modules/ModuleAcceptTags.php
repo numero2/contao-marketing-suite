@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -20,11 +20,11 @@ use Contao\Database;
 use Contao\Environment;
 use Contao\Input;
 use Contao\PageModel;
-use Contao\StyleSheets;
 use Contao\System;
 use Contao\Validator;
 use numero2\MarketingSuite\Backend\License as baguru;
 use numero2\MarketingSuite\Helper\Domain;
+use numero2\MarketingSuite\Helper\StyleSheet;
 use Patchwork\Utf8;
 
 
@@ -121,8 +121,8 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
                 global $objPage;
 
-                $objRootPage = NULL;
-                $objRootPage = PageModel::findById($objPage->rootId);
+                $oRootPage = NULL;
+                $oRootPage = PageModel::findById($objPage->rootId);
 
                 $sDomain = $oRootPage->dns?:Environment::get('host');
                 $sDomain= Domain::getRegisterableDomain($sDomain);
@@ -198,7 +198,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
                     $showAllAlways = array_reduce(
                         $aChild
-                    ,   function(&$carry, $value) {
+                    ,   function( $carry, $value ) {
                             return $carry && $value!=='1';
                         }
                     ,   true
@@ -258,7 +258,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
         $this->Template->tags = $aTags;
 
         $this->Template->acceptLabel = $GLOBALS['TL_LANG']['cms_tag_settings_default']['accept_label'];
-        $this->Template->acceptAllLabel = $GLOBALS['TL_LANG']['cms_tag_settings_default']['accept_all_label'];
+        $this->Template->acceptAllLabel = $GLOBALS['TL_LANG']['cms_tag_settings_default']['accept_all_label'] ?? '';
         $this->Template->content = $GLOBALS['TL_LANG']['cms_tag_settings_default']['text'];
 
         if( $this->cms_tag_override_label ) {
@@ -294,34 +294,32 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
         $strClass = "mod_".$this->type." form";
 
-        $oStyleSheet = NULL;
-        $oStyleSheet = new StyleSheets();
+        $oStyleSheet = null;
+        $oStyleSheet = new StyleSheet();
 
         $mainStyle = [
             'font' => '1'
         ,   'fontcolor' => (string)$this->cms_tag_font_color
         ,   'background' => '1'
         ,   'bgcolor' => (string)$this->cms_tag_background_color
-        ,   'comment' => ''
         ];
-        $main = $oStyleSheet->compileDefinition($mainStyle, false, [], [], true);
+        $main = $oStyleSheet->generateDefinition($mainStyle);
 
         if( strlen($main) > 20 ) {
             $strStyle .= "." . $strClass . ' ' . trim($main)."\n";
         }
 
         $acceptStyle = [
-            'font'=>'1'
-        ,   'fontcolor'=>(string)$this->cms_tag_accept_font
-        ,   'background'=>'1'
-        ,   'bgcolor'=>(string)$this->cms_tag_accept_background
+            'font' => '1'
+        ,   'fontcolor' => (string)$this->cms_tag_accept_font
+        ,   'background' => '1'
+        ,   'bgcolor' => (string)$this->cms_tag_accept_background
         ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
-        ,   'border'=>'1'
-        ,   'borderwidth'=> ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ,   'comment' => ''
+        ,   'border' => '1'
+        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
         ];
 
-        $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
+        $accept = $oStyleSheet->generateDefinition($acceptStyle);
 
         if( strlen($accept) > 20 ) {
 
@@ -329,12 +327,11 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
             // additional style for enabled toggle buttons
             $acceptStyle = [
-                'background'=>'1'
-            ,   'bgcolor'=>(string)$this->cms_tag_accept_background
+                'background' => '1'
+            ,   'bgcolor' => (string)$this->cms_tag_accept_background
             ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
-            ,   'comment' => ''
             ];
-            $accept = $oStyleSheet->compileDefinition($acceptStyle, false, [], [], true);
+            $accept = $oStyleSheet->generateDefinition($acceptStyle);
 
             $strStyle .= "." . $strClass . ' > .tags > div .head input:checked + label ' . trim($accept)."\n";
         }
@@ -347,10 +344,9 @@ class ModuleAcceptTags extends ModuleEUConsent {
         ,   'bgimage' => strlen((string)$this->cms_tag_reject_background)?'none':''
         ,   'border' => '1'
         ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ,   'comment' => ''
         ];
 
-        $reject = $oStyleSheet->compileDefinition($rejectStyle, false, [], [], true);
+        $reject = $oStyleSheet->generateDefinition($rejectStyle);
 
         if( strlen($reject) > 20 ) {
             $strStyle .= "." . $strClass . ' button[type="submit"][value="accept"].first ' . trim($reject) . "\n";

@@ -79,7 +79,7 @@ class Module extends CoreBackend {
 
         $oTS = NULL;
         $oTS = new TagSettings();
-        
+
         $aTypes = [];
         $aTypes = $oTS->getFrontendTypes($dc);
 
@@ -166,8 +166,11 @@ class Module extends CoreBackend {
 
         if( CMSConfig::get('cms_tag_type') != 'cms_tag_modules' ) {
 
+            $oTS = NULL;
+            $oTS = new TagSettings();
+
             $aTypes = [];
-            $aTypes = TagSettings::getFrontendTypes($dc);
+            $aTypes = $oTS->getFrontendTypes($dc);
 
             if( !empty($aTypes) && in_array($varValue, $aTypes) ) {
                 Message::addError($GLOBALS['TL_LANG']['tl_cms_tag_settings']['msg']['why_disabled']);
