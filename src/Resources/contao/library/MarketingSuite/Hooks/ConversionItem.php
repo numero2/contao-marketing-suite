@@ -15,11 +15,12 @@
 
 namespace numero2\MarketingSuite\Hooks;
 
+use Contao\ContentModel;
+use Contao\Controller;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
-use Contao\ContentModel;
-use Contao\Controller;
+use Contao\StringUtil;
 use numero2\MarketingSuite\Backend\License as askfho;
 use numero2\MarketingSuite\DCAHelper\ConversionItem as DCAConversionItem;
 
@@ -73,7 +74,7 @@ class ConversionItem extends Hooks {
                     continue;
                 }
 
-                $oContentPages = deserialize($oContent->cms_pages);
+                $oContentPages = StringUtil::deserialize($oContent->cms_pages);
 
                 // check all pages if one is allowed
                 foreach( $allowed[$oContent->cms_pages_scope] as $key => $value ) {

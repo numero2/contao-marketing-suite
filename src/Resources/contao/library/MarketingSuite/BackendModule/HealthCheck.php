@@ -24,9 +24,11 @@ use Contao\Controller;
 use Contao\Database;
 use Contao\Environment;
 use Contao\Image;
+use Contao\Message;
 use Contao\ModuleModel;
 use Contao\NewsModel;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -84,6 +86,11 @@ class HealthCheck extends CoreBackendModule {
         }
         varzegju::buk();
 
+        // add testmode info
+        if( CMSConfig::get('testmode') ) {
+            Message::addInfo($GLOBALS['TL_LANG']['cms_be_health_check']['testmode_enabled']);
+        }
+
         // get fieldset states
         $objSessionBag = NULL;
         $objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
@@ -116,6 +123,11 @@ class HealthCheck extends CoreBackendModule {
 
         $this->Template->be_help = $objBEHelp->generate();
         $this->Template->categories = $aCategories;
+
+        // add messages
+        if( Message::hasMessages() ) {
+            $this->Template->message = Message::generate();
+        }
 
         if( empty($aCategories) ) {
             $this->Template->nothingTodo = $GLOBALS['TL_LANG']['cms_be_health_check']['nothing_to_do'];
@@ -216,6 +228,10 @@ class HealthCheck extends CoreBackendModule {
                         $aAttributes['url'] = $objPage->getAbsoluteUrl();
                     }
 
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
+
                     $oCategory->items[] = (object) [
                         'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                     ,   'type'  => 'page'
@@ -254,6 +270,10 @@ class HealthCheck extends CoreBackendModule {
 
             while( $oArticles->next() ) {
 
+                if( !$oArticles->published ) {
+                    continue;
+                }
+
                 $oContentElements = NULL;
                 $oContentElements = ContentModel::findByPid( $oArticles->id );
 
@@ -263,6 +283,10 @@ class HealthCheck extends CoreBackendModule {
 
                         $oElement = $oContentElements;
                         $sElementPalette = $GLOBALS['TL_DCA']['tl_content']['palettes'][ $oElement->type ];
+
+                        if( $oElement->invisible ) {
+                            continue;
+                        }
 
                         // special handling for module elements
                         if( $oElement->type == 'module' ) {
@@ -277,7 +301,7 @@ class HealthCheck extends CoreBackendModule {
                         // check headline element
                         if( $oElement->headline && preg_match("/(,|)headline(,|;)/", $sElementPalette) ) {
 
-                            $headline = deserialize($oElement->headline);
+                            $headline = StringUtil::deserialize($oElement->headline);
 
                             if( $headline['unit'] == 'h1' && !empty($headline['value']) ) {
                                 return true;
@@ -287,7 +311,7 @@ class HealthCheck extends CoreBackendModule {
                         // check text element
                         if( $oElement->text && preg_match("/(,|)text(,|;)/", $sElementPalette) ) {
 
-                            if( preg_match('|<h1>.*</h1>|', $oElement->text) ) {
+                            if( preg_match_all('/<h1[^>]*>(.+)<\/h1>/s', $oElement->text) ) {
                                 return true;
                             }
                         }
@@ -295,7 +319,7 @@ class HealthCheck extends CoreBackendModule {
                         // check html element
                         if( $oElement->html && preg_match("/(,|)html(,|;)/", $sElementPalette) ) {
 
-                            if( preg_match('|<h1>.*</h1>|', $oElement->html) ) {
+                            if( preg_match_all('/<h1[^>]*>(.+)<\/h1>/s', $oElement->html) ) {
                                 return true;
                             }
                         }
@@ -342,6 +366,10 @@ class HealthCheck extends CoreBackendModule {
 
                 if( !varzegju::hasFeature('health_check_sitemap_disabled', $oPages->id) ) {
                     continue;
+                }
+
+                if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                    break;
                 }
 
                 $oCategory->items[] = (object) [
@@ -429,6 +457,10 @@ class HealthCheck extends CoreBackendModule {
 
                         // Exception indicates no successfull SSL connection
                     }
+                }
+
+                if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                    break;
                 }
 
                 $oCategory->items[] = (object) [
@@ -550,6 +582,10 @@ class HealthCheck extends CoreBackendModule {
                 // different hosts point to same site - duplicate content
                 if( $aDomains[0]['host'] != $aDomains[1]['host'] && $aDomains[0]['id'] == $aDomains[1]['id'] ) {
 
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
+
                     $oCategory->items[] = (object) [
                         'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                     ,   'type'  => 'page'
@@ -606,6 +642,10 @@ class HealthCheck extends CoreBackendModule {
                     continue;
                 }
 
+                if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                    break;
+                }
+
                 $oCategory->items[] = (object) [
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
@@ -636,6 +676,10 @@ class HealthCheck extends CoreBackendModule {
             if( $oNews ) {
 
                 while( $oNews->next() ) {
+
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
 
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaonews/news.svg'
@@ -668,6 +712,10 @@ class HealthCheck extends CoreBackendModule {
             if( $oEvents ) {
 
                 while( $oEvents->next() ) {
+
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
 
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaocalendar/calendar.svg'
@@ -725,6 +773,10 @@ class HealthCheck extends CoreBackendModule {
                     continue;
                 }
 
+                if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                    break;
+                }
+
                 $oCategory->items[] = (object) [
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
@@ -755,6 +807,10 @@ class HealthCheck extends CoreBackendModule {
             if( $oNews ) {
 
                 while( $oNews->next() ) {
+
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
 
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaonews/news.svg'
@@ -787,6 +843,10 @@ class HealthCheck extends CoreBackendModule {
             if( $oEvents ) {
 
                 while( $oEvents->next() ) {
+
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
 
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaocalendar/calendar.svg'
@@ -844,6 +904,10 @@ class HealthCheck extends CoreBackendModule {
                     continue;
                 }
 
+                if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                    break;
+                }
+
                 $oCategory->items[] = (object) [
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
@@ -874,6 +938,10 @@ class HealthCheck extends CoreBackendModule {
             if( $oNews ) {
 
                 while( $oNews->next() ) {
+
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
 
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaonews/news.svg'
@@ -906,6 +974,10 @@ class HealthCheck extends CoreBackendModule {
             if( $oEvents ) {
 
                 while( $oEvents->next() ) {
+
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
 
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaocalendar/calendar.svg'
@@ -961,6 +1033,10 @@ class HealthCheck extends CoreBackendModule {
                     continue;
                 }
 
+                if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                    break;
+                }
+
                 $oCategory->items[] = (object) [
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
@@ -984,6 +1060,10 @@ class HealthCheck extends CoreBackendModule {
                 $this->loadLanguageFile('tl_news');
 
                 while( $oNews->next() ) {
+
+                    if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
+                        break;
+                    }
 
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaonews/news.svg'

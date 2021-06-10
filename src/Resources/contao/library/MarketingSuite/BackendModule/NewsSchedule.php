@@ -149,7 +149,8 @@ class NewsSchedule extends CoreBackendModule {
                     $data['facebook'] = true;
                 }
 
-                $data['title'] = sprintf($GLOBALS['TL_LANG']['tl_news']['edit'][1], $data['id']);
+                $editLabel = is_array($GLOBALS['TL_LANG']['tl_news']['edit'])?$GLOBALS['TL_LANG']['tl_news']['edit'][1]:$GLOBALS['TL_LANG']['tl_news']['edit'];
+                $data['title'] = sprintf($editLabel, $data['id']);
                 $data['facebookTitle'] = $GLOBALS['TL_LANG']['tl_news']['cms_publish_facebook'][1];
 
                 if( !mepdohi::hasFeature('news_schedule_show_'.$data['class']) ) {

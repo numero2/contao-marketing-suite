@@ -25,7 +25,9 @@ use Contao\LayoutModel;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\PageRegular;
+use Contao\StringUtil;
 use numero2\MarketingSuite\Backend\License as aczolku;
+use numero2\MarketingSuite\Helper\Tag;
 use numero2\MarketingSuite\ModuleAcceptTags;
 use numero2\MarketingSuite\ModuleCookieBar;
 use numero2\MarketingSuite\TagModel;
@@ -187,11 +189,11 @@ class Tags extends Hooks {
                 }
 
                 // skip if cookie needed but not cookie_accepted
-                if( $tag->enable_on_cookie_accept && !self::isAccepted($tag->id, $tag->pid) ) {
+                if( $tag->enable_on_cookie_accept && !Tag::isAccepted($tag->id) ) {
                     continue;
                 }
 
-                $tagPages = deserialize($tag->pages);
+                $tagPages = StringUtil::deserialize($tag->pages);
 
                 // check all pages if one is allowed
                 foreach( $allowed[$tag->pages_scope] as $key => $value ) {
@@ -270,32 +272,6 @@ class Tags extends Hooks {
 
 
     /**
-     * Checks if the given tag is accepted by the user
-     *
-     * @param integer $tagId
-     * @param integer $tagPid
-     *
-     * @return boolean
-     */
-    public static function isAccepted( $tagId, $tagPid ) {
-
-        $isAccepted = false;
-
-        // cookie_bar
-        if( !$isAccepted ) {
-            $isAccepted = Input::cookie('cms_cookie') == 'accept';
-        }
-
-        // accept_tags
-        if( !$isAccepted ) {
-            $isAccepted = (Input::cookie('cms_cookies_saved') === "true" && in_array($tagPid, explode('-', Input::cookie('cms_cookies'))));
-        }
-
-        return $isAccepted;
-    }
-
-
-    /**
      * Replace a rendered content element or frontend module with a fallback
      * template if configured to be only visible on cookie accept
      *
@@ -314,7 +290,7 @@ class Tags extends Hooks {
             // we may have a frontend module referenced by a content element
             // in this case make sure to check the settings of the module itself
             if( !$oRow->cms_tag_visibility && $oElement->type === "module" ) {
-                $oRow = ModuleModel::findOneById( $oRow->module );
+                $oRow = ModuleModel::findOneById($oRow->module);
             }
 
             // replace buffer if cms_tag_visibility is set and selected tag is accepted
@@ -324,7 +300,7 @@ class Tags extends Hooks {
                     return '';
                 }
 
-                $oTag = NULL;
+                $oTag = null;
                 $oTag = TagModel::findOneById($oRow->cms_tag);
 
                 if( !$oTag || !aczolku::hasFeature('tags_'.$oTag->type, $objPage->trail[0]) ) {
@@ -334,16 +310,20 @@ class Tags extends Hooks {
                 $cssID = '';
                 $cssID = $this->_addIdAttribute($strBuffer, $oElement);
 
-                if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
+                if( !Tag::isAccepted($oRow->cms_tag) ) {
 
                     $oTemplate = new FrontendTemplate($oTag->fallbackTpl?:'ce_optin_fallback');
                     $oTemplate->setData( $oRow->row() );
 
-                    $oTemplate->optinLink = self::generateEUConsentForceLink($cssID); // DEPRECATED
+                    // DEPRECATED
+                    $oTemplate->optinLink = self::generateEUConsentForceLink($cssID);
+                    @trigger_error('Using $this->optinLink in fallback template has been deprecated and will no longer work in Marketing Suite 2.0', E_USER_DEPRECATED);
+
                     $oTemplate->headline = null;
-                    $oTemplate->class = 'ce_optin_fallback '.$oElement->cssID[1];
+                    $oTemplate->class = 'ce_optin_fallback '.$oRow->cms_tag_fallback_css_class;
                     $oTemplate->cssID = ' id="'.$cssID.'"';
                     $oTemplate->fallback_text = $oTag->fallback_text;
+                    $oTemplate->origin = $oElement;
 
                     $strBuffer = $oTemplate->parse();
                     $strBuffer = str_replace('{{cms_optinlink}}', '{{cms_optinlink::'.$cssID.'}}', $strBuffer);
@@ -432,8 +412,9 @@ class Tags extends Hooks {
      */
     public function replaceTagInsertTags($tag, $blnCache, $strCached, $flags, &$tags, $arrCache, $_rit, $_cnt) {
 
+        global $objPage;
+
         $elements = explode('::', $tag);
-        $strTag = $tags[$_rit+1];
 
         switch( strtolower($elements[0]) ) {
 
@@ -449,13 +430,7 @@ class Tags extends Hooks {
                     return '';
                 }
 
-                $oTag = TagModel::findOneById($elements[1]);
-
-                if( !$oTag || !aczolku::hasFeature('tags_'.$oTag->type, $objPage->trail[0]) ) {
-                    $show = false;
-                }
-
-                if( !self::isAccepted($oTag->id, $oTag->pid) || !$oTag->active ) {
+                if( !Tag::isAccepted($elements[1]) ) {
                     $show = false;
                 }
 
@@ -463,11 +438,21 @@ class Tags extends Hooks {
                     $open = true;
                     for( $i = $_rit; $i<$_cnt; $i+=2 ) {
 
+                        if( !array_key_exists($i+1, $tags) ) {
+                            break;
+                        }
+
                         if( $open ) {
                             $tags[$i+1] = ''; // also empty tag else nested would be replaced
+                            if( !array_key_exists($i+2, $tags) ) {
+                                break;
+                            }
                             $tags[$i+2] = '';
                         }
 
+                        if( !array_key_exists($i+3, $tags) ) {
+                            break;
+                        }
                         if( $tags[$i+3] == 'ifoptin' || stripos($tags[$i+3] , 'ifoptin::') ) {
                             $open = false;
 
@@ -492,13 +477,8 @@ class Tags extends Hooks {
                     return '';
                 }
 
-                $oTag = TagModel::findOneById($elements[1]);
-
-                if( !$oTag || !aczolku::hasFeature('tags_'.$oTag->type, $objPage->trail[0]) ) {
-                    $show = false;
-                }
-
-                if( self::isAccepted($oTag->id, $oTag->pid) && $oTag->active ) {
+                $aTag = [];
+                if( !Tag::isNotAccepted($elements[1]) ) {
                     $show = false;
                 }
 
@@ -506,9 +486,21 @@ class Tags extends Hooks {
                     $open = true;
                     for( $i = $_rit; $i<$_cnt; $i+=2 ) {
 
+                        if( !array_key_exists($i+1, $tags) ) {
+                            break;
+                        }
+
                         if( $open ) {
                             $tags[$i+1] = ''; // also empty tag else nested would be replaced
+
+                            if( !array_key_exists($i+2, $tags) ) {
+                                break;
+                            }
                             $tags[$i+2] = '';
+                        }
+
+                        if( !array_key_exists($i+3, $tags) ) {
+                            break;
                         }
 
                         if( $tags[$i+3] == 'ifnoptin' || stripos($tags[$i+3] , 'ifnoptin::') ) {

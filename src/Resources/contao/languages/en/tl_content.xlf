@@ -56,6 +56,12 @@
     <trans-unit id="tl_content.cms_tag.1">
         <source>Wählen Sie aus welchem Tag zugestimmt werden muss um das Element anzuzeigen.</source>
     </trans-unit>
+    <trans-unit id="tl_content.cms_tag_fallback_css_class.0">
+        <source>Fallback CSS-Klasse</source>
+    </trans-unit>
+    <trans-unit id="tl_content.cms_tag_fallback_css_class.1">
+        <source>Geben Sie CSS-Klassen ein, die für das Fallback-Element verwendet werden sollen (z.B. Größenangaben für Grid-Systeme).</source>
+    </trans-unit>
     <trans-unit id="tl_content.cms_used.0">
         <source>Verwendung</source>
     </trans-unit>

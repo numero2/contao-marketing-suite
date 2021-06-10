@@ -23,6 +23,7 @@ use Contao\Image;
 use Contao\Input;
 use Contao\Message;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use numero2\MarketingSuite\Backend\Wizard;
 use numero2\MarketingSuite\ContentGroupModel;
@@ -47,7 +48,7 @@ class CurrentPage extends MarketingItem {
 
         $buffer = explode('</div>', $buffer );
 
-        $pages = PageModel::findMultipleByIds(deserialize($arrRow['cms_mi_pages']));
+        $pages = PageModel::findMultipleByIds(StringUtil::deserialize($arrRow['cms_mi_pages']));
 
         // remove content type
         $buffer[0] = substr($buffer[0], 0, strpos($buffer[0], '>')+1);
@@ -193,7 +194,7 @@ class CurrentPage extends MarketingItem {
      */
     public function submitMarketingItem( $dc, $objMarketingItem ) {
 
-        $aPages = deserialize($objMarketingItem->pages);
+        $aPages = StringUtil::deserialize($objMarketingItem->pages);
 
         $group = ContentGroupModel::findOneByPid($objMarketingItem->id);
 
@@ -231,7 +232,7 @@ class CurrentPage extends MarketingItem {
         } else {
 
             // only do something if default was saved
-            if( !empty(deserialize($contents->cms_mi_pages)[0]) ){
+            if( !empty(StringUtil::deserialize($contents->cms_mi_pages)[0]) ){
 
                 // changed content_type
                 if( $objMarketingItem->content_type != $contents->type ){
@@ -249,7 +250,7 @@ class CurrentPage extends MarketingItem {
                 // changed pages
                 $availableCEPages = [];
                 foreach( $contents as $key => $value) {
-                    $availableCEPages[] = deserialize($value->cms_mi_pages)[0];
+                    $availableCEPages[] = StringUtil::deserialize($value->cms_mi_pages)[0];
                 }
 
                 $remove = array_diff($availableCEPages, $aPages);
@@ -257,7 +258,7 @@ class CurrentPage extends MarketingItem {
                 $same = array_intersect($aPages, $availableCEPages);
 
                 foreach( $contents as $oContent ) {
-                    $page = deserialize($oContent->cms_mi_pages)[0];
+                    $page = StringUtil::deserialize($oContent->cms_mi_pages)[0];
 
                     if( in_array($page, $remove) ){
 
@@ -304,7 +305,7 @@ class CurrentPage extends MarketingItem {
         $group = ContentGroupModel::findOneById($dc->activeRecord->pid);
 
         $objMarketingItem = MarketingItemModel::findById($group->pid);
-        $aPages = deserialize($objMarketingItem->pages);
+        $aPages = StringUtil::deserialize($objMarketingItem->pages);
 
         $default = ContentModel::findById($dc->activeRecord->id);
         $default->refresh();
@@ -357,7 +358,7 @@ class CurrentPage extends MarketingItem {
 
         foreach( $objContents as $key => $value) {
 
-            $page = deserialize($value->cms_mi_pages)[0];
+            $page = StringUtil::deserialize($value->cms_mi_pages)[0];
 
             if( $page == $objPage->id ) {
                 $views->increaseViewOnMarketingElement($value);

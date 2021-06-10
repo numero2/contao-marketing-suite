@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -21,7 +21,6 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
     'config' => [
         'dataContainer'             => 'Table'
     ,   'ctable'                    => ['tl_cms_link_shortener_statistics']
-    ,   'backlink'                  => 'do=cms_tools'
     ,   'isAvailable'               => \numero2\MarketingSuite\Backend\License::hasFeature('link_shortener')
     ,   'sql' => [
             'keys' => [

@@ -91,7 +91,7 @@ class Facebook {
      * Removes the option to publish to facebook if the parent archive has
      * no pages enabled at all
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function checkNewsArchiveHasPages( DataContainer $dc ) {
 
@@ -276,7 +276,7 @@ class Facebook {
         if( $fromConfig === true ) {
 
             $aPages = [];
-            $aPages = CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : [];
+            $aPages = CMSConfig::get('cms_fb_pages_available') ? StringUtil::deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : [];
 
         // get pages via API
         } else {
@@ -312,7 +312,7 @@ class Facebook {
     /**
      * Generates array of pages for use in checkbox wizard
      *
-     * @param \DataContainer|integer $dc
+     * @param Contao\DataContainer|integer $dc
      *
      * @return array
      */
@@ -329,7 +329,7 @@ class Facebook {
         if( $aPages && $oArchive ) {
 
             $aEnabled = [];
-            $aEnabled = deserialize($oArchive->cms_facebook_pages);
+            $aEnabled = StringUtil::deserialize($oArchive->cms_facebook_pages);
 
             foreach( $aPages as $id => $page ) {
 
@@ -359,7 +359,7 @@ class Facebook {
         }
 
         $value = Encryption::decrypt($value);
-        $value = deserialize($value);
+        $value = StringUtil::deserialize($value);
 
         return array_keys($value);
     }
@@ -383,7 +383,7 @@ class Facebook {
 
         if( $aPages && $value ) {
 
-            $aSelectedPages = deserialize($value);
+            $aSelectedPages = StringUtil::deserialize($value);
             $aParsedPages = [];
 
             foreach( $aPages as $id => $page ) {
@@ -442,7 +442,7 @@ class Facebook {
      * checkbox's value
      *
      * @param string $value
-     * @param \DC_Table $dc
+     * @param Contao\DC_Table $dc
      *
      * @return string
      */
@@ -462,7 +462,7 @@ class Facebook {
      * Publishes / Updates the post(s) on the selected page(s)
      *
      * @param string $value
-     * @param \DC_Table $dc
+     * @param Contao\DC_Table $dc
      *
      * @return string
      * @throws \Exception if publishing failed
@@ -474,7 +474,7 @@ class Facebook {
         }
 
         $aPagesSelected = [];
-        $aPagesSelected = $dc->activeRecord->cms_facebook_pages ? deserialize($dc->activeRecord->cms_facebook_pages) : NULL;
+        $aPagesSelected = $dc->activeRecord->cms_facebook_pages ? StringUtil::deserialize($dc->activeRecord->cms_facebook_pages) : NULL;
 
         if( !$aPagesSelected || !count($aPagesSelected) ) {
             return $value;
@@ -484,10 +484,10 @@ class Facebook {
         $oFB = new FacebookAPI();
 
         $aPages = [];
-        $aPages = CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : [];
+        $aPages = CMSConfig::get('cms_fb_pages_available') ? StringUtil::deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : [];
 
         $aPosts = [];
-        $aPosts = $dc->activeRecord->cms_facebook_posts ? deserialize($dc->activeRecord->cms_facebook_posts) : NULL;
+        $aPosts = $dc->activeRecord->cms_facebook_posts ? StringUtil::deserialize($dc->activeRecord->cms_facebook_posts) : NULL;
 
         // delete previous posts because they can't be updated
         if( !empty($aPosts) ) {

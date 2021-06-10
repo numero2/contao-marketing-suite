@@ -16,6 +16,7 @@
 namespace numero2\MarketingSuite;
 
 use Contao\DataContainer;
+use Contao\StringUtil;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
 use numero2\MarketingSuite\Helper\styleable;
 use numero2\MarketingSuite\Helper\StyleSheet;
@@ -82,7 +83,7 @@ class ContentButton extends ContentHyperlink implements styleable {
         if( $this->cms_style ) {
 
             $aStyle = [];
-            $aStyle = deserialize($this->cms_style);
+            $aStyle = StringUtil::deserialize($this->cms_style);
 
             $oStyleSheet = NULL;
             $oStyleSheet = new StyleSheet();

@@ -17,8 +17,9 @@ namespace numero2\MarketingSuite;
 
 use Contao\Database;
 use Contao\Model;
-use Contao\PageModel;
 use Contao\Model\Collection;
+use Contao\PageModel;
+use Contao\StringUtil;
 
 
 class TagModel extends Model {
@@ -54,7 +55,7 @@ class TagModel extends Model {
 
                 foreach( $oTags as $oTag ) {
 
-                    $aPages = deserialize($oTag->pages);
+                    $aPages = StringUtil::deserialize($oTag->pages);
 
                     if( is_array($aPages) && count(array_intersect($oPage->trail, $aPages)) ){
                         $aTags[] = $oTag;

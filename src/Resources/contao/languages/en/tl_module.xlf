@@ -26,13 +26,19 @@
         <source>Nur mit expliziter Zustimmung anzeigen</source>
     </trans-unit>
     <trans-unit id="tl_module.cms_tag_visibility.1">
-        <source>Das Frontend-Module nur anzeigen wenn der Nutzer explizit seine Zustimmung für das entsprechende "Inhaltselement / Frontend-Modul-Tag" gegeben hat.</source>
+        <source>Das Frontend-Modul nur anzeigen wenn der Nutzer explizit seine Zustimmung für das entsprechende "Inhaltselement / Frontend-Modul-Tag" gegeben hat.</source>
     </trans-unit>
     <trans-unit id="tl_module.cms_tag.0">
         <source>Inhaltselement / Frontend-Modul-Tag</source>
     </trans-unit>
     <trans-unit id="tl_module.cms_tag.1">
-        <source>Wählen Sie aus welchem Tag zugestimmt werden muss um das Frontend-Module anzuzeigen.</source>
+        <source>Wählen Sie aus welchem Tag zugestimmt werden muss um das Frontend-Modul anzuzeigen.</source>
+    </trans-unit>
+    <trans-unit id="tl_module.cms_tag_fallback_css_class.0">
+        <source>Fallback CSS-Klasse</source>
+    </trans-unit>
+    <trans-unit id="tl_module.cms_tag_fallback_css_class.1">
+        <source>Geben Sie CSS-Klassen ein, die für das Fallback-Element verwendet werden sollen (z.B. Größenangaben für Grid-Systeme).</source>
     </trans-unit>
 </body>
 </file>

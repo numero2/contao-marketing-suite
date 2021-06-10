@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -21,7 +21,6 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
     'config' => [
         'label'                     => Config::get('websiteTitle')
     ,   'dataContainer'             => 'Table'
-    ,   'backlink'                  => 'do=cms_settings'
     ,   'isAvailable'               => \numero2\MarketingSuite\Backend\License::hasFeature('tags')
     ,   'onload_callback'           => [
             ['\numero2\MarketingSuite\DCAHelper\Tag', 'setRootType']
@@ -149,7 +148,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
     ,   'description' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['description']
         ,   'inputType'             => 'textarea'
-        ,   'eval'                  => ['rte'=>'tinyMarketing', 'helpwizard'=>true, 'doNotSaveEmpty'=>true]
+        ,   'eval'                  => ['rte'=>'tinyMarketing', 'doNotSaveEmpty'=>true]
         ,   'sql'                   => "text NULL"
         ]
     ,   'html' => [

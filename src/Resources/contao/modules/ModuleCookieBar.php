@@ -20,6 +20,7 @@ use Contao\Environment;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use numero2\MarketingSuite\Backend\License as agoc;
 use numero2\MarketingSuite\Helper\Domain;
@@ -84,17 +85,17 @@ class ModuleCookieBar extends ModuleEUConsent {
 
                 $aCookieConfig = [];
                 $aCookieConfig = $this->cms_tag_cookie_lifetime;
-                $aCookieConfig = !is_array($aCookieConfig)?deserialize($aCookieConfig):$aCookieConfig;
+                $aCookieConfig = !is_array($aCookieConfig)?StringUtil::deserialize($aCookieConfig):$aCookieConfig;
 
                 if( (int)$aCookieConfig['value'] ) {
                     $iCookieExpires = strtotime('+'.(int)$aCookieConfig['value'].' '.$aCookieConfig['unit']);
                 }
             }
 
-            // deprecated as of 1.0.21
+            // DEPRECATED as of 1.0.21
             if( Input::post('submit') ) {
                 Input::setPost('choice', Input::post('submit'));
-                System::log('The use of the field name "submit" in your '.$this->strTemplate.' template is deprecated. Please create a new copy using the current version.', __METHOD__, TL_ERROR);
+                @trigger_error('The use of the field name "submit" in your '.$this->strTemplate.' template has been deprecated and will no longer work in Marketing Suite 2.0. Please create a new copy using the current version.', E_USER_DEPRECATED);
             }
 
             // store decision in cookie

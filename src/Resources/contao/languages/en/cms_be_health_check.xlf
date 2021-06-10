@@ -56,6 +56,9 @@
     <trans-unit id="cms_be_health_check.nothing_to_do.1">
         <source>Aktuell sind alle Seiten bestens bestückt.</source>
     </trans-unit>
+    <trans-unit id="cms_be_health_check.testmode_enabled">
+        <source>Hinweis: Bei aktiviertem Testmodus steht maximal ein Ergebnis pro Kategorie zur Verfügung.</source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

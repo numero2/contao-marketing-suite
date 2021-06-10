@@ -91,6 +91,8 @@ class Module extends CoreBackendModule {
             throw new InvalidArgumentException('Back end module "' . $groupName . '" is not defined in the CMS_MOD array');
         }
 
+        $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+
         foreach( $GLOBALS['CMS_MOD'][$groupName] as $moduleName => $moduleConfig ) {
 
             if( !empty($moduleConfig['callback']) ) {
@@ -109,7 +111,7 @@ class Module extends CoreBackendModule {
                 'label'         => $GLOBALS['TL_LANG']['CMS'][$moduleName][0]
             ,   'description'   => $GLOBALS['TL_LANG']['CMS'][$moduleName][1]
             ,   'class'         => StringUtil::standardize($moduleName)
-            ,   'href'          => TL_SCRIPT . '?do=' . $moduleGroup . '&mod=' . $moduleName
+            ,   'href'          => TL_SCRIPT . '?do=' . $moduleGroup . '&mod=' . $moduleName.'&ref='.$refererId
             ];
         }
 
@@ -150,6 +152,53 @@ class Module extends CoreBackendModule {
         if( isset($arrModule['javascript']) ) {
             foreach( (array)$arrModule['javascript'] as $javascript ) {
                 $GLOBALS['TL_JAVASCRIPT'][] = $javascript;
+            }
+        }
+
+        // generate headline
+        if( Input::get('do') ) {
+
+            $aHeadline = [];
+            $aHeadline[] = $GLOBALS['TL_LANG']['MOD'][Input::get('do')][0]??null;
+
+            if( Input::get('mod') ) {
+                $aHeadline[] = $GLOBALS['TL_LANG']['CMS'][Input::get('mod')][0]??null;
+            }
+
+            if( !empty($strTable) ) {
+
+                $label = $GLOBALS['TL_LANG'][$strTable][Input::get('act')][1]??null;
+
+                if( !empty($label) && strpos($label, '%') !== false ) {
+                    $aHeadline[] = sprintf($label,Input::get('id'));
+                }
+            }
+
+            if( Input::get('key') ) {
+
+                $label = $GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]??null;
+
+                if( !empty($label) && strpos($label, '%') !== false ) {
+                    $aHeadline[] = sprintf($label,Input::get('id'));
+                }
+            }
+
+            // cleanup
+            $aHeadline = array_filter($aHeadline, function($value) {
+                return !empty($value);
+            });
+
+            if( !empty($aHeadline) ) {
+
+                // add markup
+                $aHeadline = array_map(function($value) {
+                    return '<span>'.$value.'</span>';
+                }, $aHeadline);
+
+                $attributes = null;
+                $attributes = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes;
+
+                $attributes->set('_cms_module_headline', implode((version_compare(VERSION, '4.11.2', '<')?' › ':' '),$aHeadline));
             }
         }
 
@@ -196,6 +245,11 @@ class Module extends CoreBackendModule {
                         trigger_error('The current data container is not editable', E_USER_ERROR);
                     }
                     break;
+            }
+
+            // set automatic backlink in DCA
+            if( empty($GLOBALS['TL_DCA'][$strTable]['config']['backlink']) && Input::get('do') ) {
+                $GLOBALS['TL_DCA'][$strTable]['config']['backlink'] = $this->getReferer(true);
             }
 
             $strContent = "";

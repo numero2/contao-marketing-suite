@@ -89,7 +89,7 @@ class ConversionItem extends CoreBackend {
 
         if( in_array($aRow['type'], self::$aGlobalTypes) ) {
 
-            $aIds = deserialize($aRow['cms_pages']);
+            $aIds = StringUtil::deserialize($aRow['cms_pages']);
             if( $aIds && is_array($aIds) ) {
                 if( $aRow['cms_pages_scope'] != '' && $aRow['cms_pages_scope'] != 'none' ) {
                     $count += count($aIds);

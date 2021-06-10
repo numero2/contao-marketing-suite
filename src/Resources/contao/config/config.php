@@ -164,8 +164,8 @@ if( \Config::getInstance()->isComplete() ) {
     $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\ConversionItem', 'generateGlobalConversionItems'];
     $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Tracking\Session', 'storeVisitedPage'];
     $GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = ['\numero2\MarketingSuite\MarketingItem\ABTestPage', 'selectAorBPage'];
-    $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\License', 'getSystemMessages'];
     $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\Messages', 'testModeCheck'];
+    $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\License', 'getSystemMessages'];
     $GLOBALS['TL_HOOKS']['getUserNavigation'][] = ['\numero2\MarketingSuite\BackendModule\Feedback', 'setNavigationLink'];
     $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'initializeSystem'];
     $GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\Hooks\DCA', 'addStylingFields'];

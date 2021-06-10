@@ -9,3 +9,7 @@ services:
     numero2\MarketingSuiteBundle\Migration\CMSFormMigration:
         arguments:
             - '@contao.framework'
+
+    numero2\MarketingSuiteBundle\Migration\CMSTestmodeMigration:
+        arguments:
+            - '@contao.framework'

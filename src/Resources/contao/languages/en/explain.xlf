@@ -51,7 +51,6 @@
 &lt;!-- End Matomo Code --&gt;
 </pre>]]></source>
     </trans-unit>
-
     <!-- OPTIN FALLBACK -->
     <trans-unit id="XPL.optinFallback.0.0">
         <source>Hinweis:</source>
@@ -64,6 +63,31 @@
     </trans-unit>
     <trans-unit id="XPL.optinFallback.1.1">
         <source>Erzeugt einen Link der den Cookie-Consent-Dialog erneut anzeigt damit der Nutzer der Verwendung der notwendigen Gruppe zustimmen kann. Nach Zustimmung wird das Browserfenster automatisch zum ursprünglichen Element scrollen.</source>
+    </trans-unit>
+    <!-- COOKIE BAR / OPTIN DESCRIPTION -->
+    <trans-unit id="XPL.tagDescription.0.0">
+        <source>Hinweis:</source>
+    </trans-unit>
+    <trans-unit id="XPL.tagDescription.0.1">
+        <source><![CDATA[Die Cookie Bar / das Tracking Opt-In bringt einige Insert-Tags mit sich die innerhalb der Seite genutzt werden können um die Ausspielung von Inhalten zu steuern. <a href="https://contao-marketingsuite.com/xar4ry" target="_blank">Weitere Informationen zum Thema Insert-Tags</a>]]></source>
+    </trans-unit>
+    <trans-unit id="XPL.tagDescription.1.0">
+        <source><![CDATA[{{cms_optinlink}}]]></source>
+    </trans-unit>
+    <trans-unit id="XPL.tagDescription.1.1">
+        <source>Erzeugt einen Link der den Cookie-Consent-Dialog erneut anzeigt damit der Nutzer der Verwendung der notwendigen Gruppe zustimmen kann. Nach Zustimmung wird das Browserfenster automatisch zum ursprünglichen Element scrollen.</source>
+    </trans-unit>
+    <trans-unit id="XPL.tagDescription.2.0">
+        <source><![CDATA[{{ifoptin::*}}]]></source>
+    </trans-unit>
+    <trans-unit id="XPL.tagDescription.2.1">
+        <source><![CDATA[Dieser Tag wird komplett entfernt wenn wenn dem entsprechenden Element nicht zugestimmt wurde. Der Parameter ist hierbei die ID des Tags (z.B. Google Analytics). So können Inhalte in Templates abhängig davon ausgespielt werden ob der Nutzer der Verwendung eines bestimmten Tags zugestimmt hat. <code>{{ifoptin::1}}&lt;h1&gt;Hat zugestimmt&lt;/h1&gt;{{ifoptin}}</code>]]></source>
+    </trans-unit>
+    <trans-unit id="XPL.tagDescription.3.0">
+        <source><![CDATA[{{ifnoptin::*}}]]></source>
+    </trans-unit>
+    <trans-unit id="XPL.tagDescription.3.1">
+        <source><![CDATA[Dieser Tag wird komplett entfernt wenn wenn dem entsprechenden Element zugestimmt wurde. Der Parameter ist hierbei die ID des Tags (z.B. Google Analytics). So können Inhalte in Templates abhängig davon ausgespielt werden ob der Nutzer der Verwendung eines bestimmten Tags nicht zugestimmt hat. <code>{{ifnoptin::1}}&lt;h1&gt;Hat nicht zugestimmt&lt;/h1&gt;{{ifnoptin}}</code>]]></source>
     </trans-unit>
 </body>
 </file>

@@ -23,6 +23,7 @@ use Contao\Image;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
+use Contao\StringUtil;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\Wizard;
 use numero2\MarketingSuite\ContentGroupModel;
@@ -52,7 +53,7 @@ class VisitedPages extends MarketingItem {
             $strType = $GLOBALS['TL_LANG']['tl_content']['cms_mi_pages_criterias'][$strType];
         }
 
-        $pages = PageModel::findMultipleByIds(deserialize($arrRow['cms_mi_pages']));
+        $pages = PageModel::findMultipleByIds(StringUtil::deserialize($arrRow['cms_mi_pages']));
 
         if( $arrRow['cms_mi_pages_criteria'] == 'always' ){
 
@@ -267,7 +268,7 @@ class VisitedPages extends MarketingItem {
 
         foreach( $objContents as $key => $value ) {
 
-            $pages = deserialize($value->cms_mi_pages);
+            $pages = StringUtil::deserialize($value->cms_mi_pages);
             if( !is_array($pages) ){
                 $pages = [];
             }

@@ -20,6 +20,7 @@ use Contao\Database;
 use Contao\Environment;
 use Contao\Input;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use numero2\MarketingSuite\Backend\License as baguru;
@@ -107,7 +108,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
                 $aCookieConfig = [];
                 $aCookieConfig = $this->cms_tag_cookie_lifetime;
-                $aCookieConfig = !is_array($aCookieConfig)?deserialize($aCookieConfig):$aCookieConfig;
+                $aCookieConfig = !is_array($aCookieConfig)?StringUtil::deserialize($aCookieConfig):$aCookieConfig;
 
                 if( (int)$aCookieConfig['value'] ) {
                     $iCookieExpires = strtotime('+'.(int)$aCookieConfig['value'].' '.$aCookieConfig['unit']);
@@ -224,14 +225,14 @@ class ModuleAcceptTags extends ModuleEUConsent {
                         // generate list of allowed pages
                         if( strpos($GLOBALS['TL_DCA']['tl_cms_tag']['palettes'][$childTag->type], ',pages,') !== false ) {
                             if( $childTag->pages ) {
-                                $aPageIds = array_merge($aPageIds, deserialize($childTag->pages));
+                                $aPageIds = array_merge($aPageIds, StringUtil::deserialize($childTag->pages));
                             }
                         }
 
                         if( strpos($GLOBALS['TL_DCA']['tl_cms_tag']['palettes'][$childTag->type], 'pages_root') !== false ) {
 
                             $pagesRoot = [];
-                            $pagesRoot = deserialize($childTag->pages_root);
+                            $pagesRoot = StringUtil::deserialize($childTag->pages_root);
 
                             if( !empty($pagesRoot) ) {
                                 $aPageIds = array_merge($aPageIds, $pagesRoot);

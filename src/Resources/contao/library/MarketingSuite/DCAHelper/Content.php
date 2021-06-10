@@ -144,7 +144,7 @@ class Content extends CoreBackend {
 
         if( Input::post('cms_pages_scope') == "current_page" ) {
 
-            $oPages = PageModel::findMultipleByIds(deserialize($varValue));
+            $oPages = PageModel::findMultipleByIds(StringUtil::deserialize($varValue));
 
             if( $oPages ) {
                 foreach( $oPages as $oPage ) {

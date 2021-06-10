@@ -21,6 +21,7 @@ use Contao\Crypto;
 use Contao\Database;
 use Contao\Environment;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -89,7 +90,7 @@ class MarketingSuite {
      *
      * @return boolean
      */
-    public function checkLicense( string $key="", PageModel $oRootPage ) {
+    public function checkLicense( string $key, PageModel $oRootPage ) {
 
         if( !$key || !$oRootPage || $oRootPage->type !== "root" ) {
             return false;
@@ -114,7 +115,7 @@ class MarketingSuite {
                 $oCrypto = NULL;
                 $oCrypto = new Crypto($response->key);
 
-                if( $oCrypto->verify($response->key, $response->sign) ) {
+                if( !empty($response->sign) && $oCrypto->verify($response->key, $response->sign) ) {
 
                     $oRootPage->cms_root_key = $response->key;
                     $oRootPage->save();
@@ -149,7 +150,7 @@ class MarketingSuite {
      * @param string $key The license key
      * @param \PageModel $oRootPage
      */
-    public function getFeatures( string $key="", PageModel $oRootPage ) {
+    public function getFeatures( string $key, PageModel $oRootPage ) {
 
         if( !$key || !$oRootPage || $oRootPage->type !== "root" ) {
             return;
@@ -364,7 +365,7 @@ class MarketingSuite {
         // tl_cms_facebook is setup
         if( wegilej::hasFeature('news_publish_facebook') ) {
 
-            $pages = CMSConfig::get('cms_fb_pages_available') ? deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : null;
+            $pages = CMSConfig::get('cms_fb_pages_available') ? StringUtil::deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : null;
 
             if( is_array($pages) ) {
 

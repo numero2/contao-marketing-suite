@@ -1,4 +1,20 @@
 services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+            calls:
+                - [setFramework, ['@contao.framework']]
+
+        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+        Symfony\Component\DependencyInjection\ContainerAwareInterface:
+            calls:
+                - [setContainer, ['@service_container']]
+
     marketing_suite.picker.link_shortener_provider:
         class: numero2\MarketingSuiteBundle\Picker\LinkShortenerPickerProvider
         arguments:
@@ -54,3 +70,5 @@ services:
         arguments:
             - '@marketing_suite.routing.route_provider'
             - '@logger'
+
+    numero2\MarketingSuiteBundle\Controller\BackendController: ~

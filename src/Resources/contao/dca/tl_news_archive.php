@@ -33,6 +33,7 @@ if( !empty($GLOBALS['TL_DCA']['tl_news_archive']) ) {
             'cms_schedule' => [
                     'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['cms_schedule']
                 ,   'href'      => 'key=cms_schedule'
+                ,   'class'     => ''
                 ,   'icon'      => 'bundles/marketingsuite/img/backend/icons/icon_news_schedule.svg'
             ]
         ]);

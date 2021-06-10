@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite Administration
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -21,6 +21,7 @@ use Contao\Crypto;
 use Contao\Date;
 use Contao\Environment;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Exception\DriverException;
 use numero2\MarketingSuite\Api\MarketingSuite as API;
@@ -44,34 +45,38 @@ class License {
 
 
     /**
-     * Check if the license data is valid
+     * Checks if the license data is valid
      */
     public static function checkRootData() {
 
         $objPages = null;
 
         try {
+
             $objPages = PageModel::findByType('root');
+
         } catch( DriverException $e ) {
-            // exception in install tool
+            // exception in install tool is to be expected
         }
 
         if( $objPages ) {
+
             foreach( $objPages as $value ) {
 
                 if( empty($value->cms_root_license) || empty($value->cms_root_key) || empty($value->cms_root_data) || empty($value->cms_root_sign) ) {
                     continue;
                 }
 
-                $crypt = new Crypto($value->cms_root_key);
+                $oCrypto = null;
+                $oCrypto = new Crypto($value->cms_root_key);
 
                 $msg = '';
-                if( !$crypt->verify($value->cms_root_data, $value->cms_root_sign) ) {
+                if( !$oCrypto->verify($value->cms_root_data, $value->cms_root_sign) ) {
                     $msg = 'verify';
                 }
 
-                $data = $crypt->decryptPublic($value->cms_root_data);
-                $data = deserialize($data);
+                $data = $oCrypto->decryptPublic($value->cms_root_data);
+                $data = StringUtil::deserialize($data);
 
                 if( !is_array($data) || empty($data['features']) || empty($data['expires']) ) {
 
@@ -99,7 +104,6 @@ class License {
                         $oAPI->checkLicense($oPage->cms_root_license, $oPage);
 
                     } catch( \Exception $e ) {
-
                     }
                 }
             }
@@ -126,27 +130,36 @@ class License {
 
                 $objPages = PageModel::findByType('root');
 
+                if( CMSConfig::get('testmode') && !self::hasNoLicense() && Auth::isBackendUserLoggedIn() ) {
+                    return true;
+                }
+
             // frontend handling
             } else {
+
                 $objPage = PageModel::findById($rootPageId);
 
                 if( $objPage && $objPage->type == 'root' ) {
                     $objPages[] = $objPage;
                 }
 
-                if( self::isTestDomain($rootPageId) && !CMSConfig::get('testmode') ) {
+                if( !CMSConfig::get('testmode') && self::isTestDomain($rootPageId) ) {
                     return false;
                 }
                 if( CMSConfig::get('testmode') && !Auth::isBackendUserLoggedIn() ) {
                     return false;
                 }
+                if( CMSConfig::get('testmode') && self::hasLicense($rootPageId) && Auth::isBackendUserLoggedIn() ) {
+                    return true;
+                }
             }
+
 
         } catch( DriverException $e ) {
             // expected in install tool
         }
 
-        $features = [];
+        $aFeatures = [];
 
         if( $objPages ) {
 
@@ -156,14 +169,15 @@ class License {
                     continue;
                 }
 
-                $crypt = new Crypto($value->cms_root_key);
+                $oCrypto = null;
+                $oCrypto = new Crypto($value->cms_root_key);
 
-                if( !$crypt->verify($value->cms_root_data, $value->cms_root_sign) ) {
+                if( !$oCrypto->verify($value->cms_root_data, $value->cms_root_sign) ) {
                     continue;
                 }
 
-                $data = $crypt->decryptPublic($value->cms_root_data);
-                $data = deserialize($data);
+                $data = $oCrypto->decryptPublic($value->cms_root_data);
+                $data = StringUtil::deserialize($data);
 
                 if( !is_array($data) || empty($data['features']) || empty($data['expires']) ) {
                     continue;
@@ -173,14 +187,14 @@ class License {
                     continue;
                 }
 
-                $features += $data['features'];
+                $aFeatures += $data['features'];
 
             }
         }
 
-        if( $features && count($features) ) {
+        if( $aFeatures && count($aFeatures) ) {
 
-            if( in_array($strAlias, $features) ) {
+            if( in_array($strAlias, $aFeatures) ) {
                 return true;
             }
         }
@@ -190,26 +204,29 @@ class License {
 
 
     /**
-     * test if the given domain is a valid test domain for the given root page
+     * Tests if the given domain is a valid test domain for the given root page
      *
-     * @param  integer $rootPageId
-     * @param  string  $domain
+     * @param integer $rootPageId
+     * @param string  $domain
      *
      * @return boolean
      */
     public static function isTestDomain( $rootPageId ) {
 
+        $objPage = null;
         $objPage = PageModel::findById($rootPageId);
+
         $domain = $objPage->dns?:Environment::get('host');
 
         if( $objPage && $objPage->type == 'root' ) {
 
-            $crypt = new Crypto($objPage->cms_root_key);
+            $oCrypto = null;
+            $oCrypto = new Crypto($objPage->cms_root_key);
 
-            if( $crypt->verify($objPage->cms_root_data, $objPage->cms_root_sign) ) {
+            if( $oCrypto->verify($objPage->cms_root_data, $objPage->cms_root_sign) ) {
 
-                $data = $crypt->decryptPublic($objPage->cms_root_data);
-                $data = deserialize($data);
+                $data = $oCrypto->decryptPublic($objPage->cms_root_data);
+                $data = StringUtil::deserialize($data);
 
                 if( !empty($data['test_domains']) ) {
                     $domain = strrev($domain);
@@ -233,6 +250,7 @@ class License {
      */
     public static function expires() {
 
+        $objPages = null;
         $objPages = PageModel::findByType('root');
 
         $expires = [];
@@ -258,7 +276,7 @@ class License {
                 }
 
                 $data = $crypt->decryptPublic($value->cms_root_data);
-                $data = deserialize($data);
+                $data = StringUtil::deserialize($data);
 
                 if( !is_array($data) || empty($data['features']) || empty($data['expires']) || empty($data['expires_package']) ) {
                     continue;
@@ -279,7 +297,7 @@ class License {
 
     /**
      * Checks for new version of the Marketing Suite bundle. Displays licenses
-     * without data, licenses that will expire in the 7 days or are expired.
+     * without data, licenses that will expire within 7 days or are already expired.
      *
      * @return string
      */
@@ -394,7 +412,6 @@ class License {
             $oAPI = new API();
             $oAPI->getLatestVersion();
             $latestVersion = CMSConfig::get('latest_version');
-            // $lastCheck = CMSConfig::get('last_version_check');
         }
 
         if( CMS_VERSION && $latestVersion ) {
@@ -426,14 +443,29 @@ class License {
 
 
     /**
-     * Performs daily actions
+     * Checks if the given root page id has a license
      *
      * @return boolean
+     */
+    public static function hasLicense( $pageId ) {
+
+        $numLicense = PageModel::countBy(['cms_root_license!=? AND id=?'], ['', $pageId]);
+
+        if( $numLicense ) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Performs daily actions
      */
     public static function dailyCron() {
 
         $objPages = PageModel::findByType('root');
-        $lastChecks = deserialize(CMSConfig::get('last_checks'));
+        $lastChecks = StringUtil::deserialize(CMSConfig::get('last_checks'));
         $lastChecksUp=[];
 
         if( $objPages ) {
@@ -452,7 +484,7 @@ class License {
 
                 if( $lastCheck < time()-86000 ) {
 
-                    $oAPI = NULL;
+                    $oAPI = null;
                     $oAPI = new API();
 
                     try {
@@ -462,7 +494,6 @@ class License {
                         }
 
                     } catch( \Exception $e ) {
-
                     }
 
                     $lastChecksUp[$value->cms_root_license] = time();
@@ -482,8 +513,6 @@ class License {
 
     /**
      * Performs weekly actions
-     *
-     * @return boolean
      */
     public static function weeklyCron() {
 

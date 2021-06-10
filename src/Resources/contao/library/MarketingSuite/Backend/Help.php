@@ -18,6 +18,7 @@ namespace numero2\MarketingSuite\Backend;
 use Contao\BackendModule;
 use Contao\Input;
 use Contao\StringUtil;
+use Contao\System;
 
 
 class Help extends BackendModule {
@@ -137,7 +138,7 @@ class Help extends BackendModule {
 
         // get fieldset state
         $objSessionBag = NULL;
-        $objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+        $objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
         $fs = NULL;
         $fs = $objSessionBag->get('fieldset_states');

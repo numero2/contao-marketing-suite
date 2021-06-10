@@ -153,7 +153,6 @@ input[type="radio"][readonly] + label {
 
 .main_headline.conversion_item.edit > *:nth-child(4), #main_headline.conversion_item.edit > *:nth-child(4) {
     margin-left: -28px;
-    font-weight: 700;
 }
 
 .main_headline.conversion_item.edit > *:nth-child(4):before, #main_headline.conversion_item.edit > *:nth-child(4):before {
@@ -216,6 +215,16 @@ input[type="radio"][readonly] + label {
 .widget p.tl_help a,
 .widget p.tl_tip a {
     text-decoration: underline;
+}
+
+#tl_messages .tl_error.cms_testmode {
+    background: #006494;
+    color: #ffffff;
+    padding: 10px;
+}
+
+#tl_messages .tl_error.cms_testmode a {
+    color: inherit;
 }
 
 #pal_cms_helper_top_legend, #pal_cms_helper_bottom_legend {

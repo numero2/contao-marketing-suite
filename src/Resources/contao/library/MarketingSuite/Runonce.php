@@ -15,8 +15,10 @@
 
 namespace numero2\MarketingSuite;
 
+use Contao\CMSConfig;
 use Contao\Controller;
 use Contao\Database;
+use numero2\MarketingSuite\Backend\License;
 
 
 class Runonce extends Controller {
@@ -39,6 +41,7 @@ class Runonce extends Controller {
         if( version_compare(VERSION, '4.9', '<') ) {
             $this->generateEmptyCMSConfigFile();
             $this->migrateFormElements();
+            // $this->migrateTestmode();
         }
     }
 
@@ -55,7 +58,7 @@ class Runonce extends Controller {
 
 
     /**
-     * Sets all content elements of type "form" to "cms_form"
+     * Sets all content elements of type "form" to "cms_form" with marketing item label
      */
     protected function migrateFormElements() {
 
@@ -64,7 +67,7 @@ class Runonce extends Controller {
 
         if( $oDB->tableExists('tl_content') ) {
 
-            if( $oDB->fieldExists('cms_mi_label','tl_content') ) {
+            if( $oDB->fieldExists('cms_mi_label', 'tl_content') ) {
                 $oDB->execute("UPDATE tl_content SET type = 'cms_form' WHERE type = 'form' AND cms_mi_label != ''");
             }
 
@@ -74,6 +77,20 @@ class Runonce extends Controller {
         if( $oDB->tableExists('tl_cms_marketing_item') ) {
 
             $oDB->execute("UPDATE tl_cms_marketing_item SET type = 'cms_form' WHERE type = 'form'");
+        }
+    }
+
+
+    /**
+     * Sets testmode active if no root has a cms license
+     */
+    protected function migrateTestmode() {
+
+        $oDB = NULL;
+        $oDB = Database::getInstance();
+
+        if( !CMSConfig::get('testmode') && (!$oDB->tableExists('tl_page') || !$oDB->fieldExists('cms_root_license', 'tl_page') || License::hasNoLicense()) ) {
+            CMSConfig::persist('testmode', '1');
         }
     }
 }

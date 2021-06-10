@@ -61,7 +61,7 @@ class LicenseMessage extends BackendModule {
         $sLabelIndex = array_reduce(
             $aLabelIndixes
         ,   function( $carry, $item ) {
-                $labels = $GLOBALS['TL_LANG']['cms_be_license_message'][$item];
+                $labels = $GLOBALS['TL_LANG']['cms_be_license_message'][$item] ?? null;
                 return (!$carry && $labels)?$item:$carry;
             }
         );

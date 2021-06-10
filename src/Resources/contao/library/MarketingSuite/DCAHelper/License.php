@@ -152,7 +152,7 @@ class License extends CoreBackend {
 
             default:
 
-                $msg = $GLOBALS['TL_LANG']['cms_api_messages']['errors'][$e->getCode()]?:$GLOBALS['TL_LANG']['cms_api_messages']['errors']['unknown_error'];
+                $msg = ($GLOBALS['TL_LANG']['cms_api_messages']['errors'][$e->getCode()]??'')?:$GLOBALS['TL_LANG']['cms_api_messages']['errors']['unknown_error'];
 
                 if( $throw ) {
 

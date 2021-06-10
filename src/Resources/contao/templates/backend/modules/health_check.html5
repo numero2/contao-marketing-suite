@@ -2,6 +2,12 @@
     <?= $this->be_help; ?>
 <?php endif; ?>
 
+<?php if ($this->message): ?>
+  <div class="tl_message">
+    <?= $this->message ?>
+  </div>
+<?php endif; ?>
+
 <div class="tl_health_check">
 
     <?php if( $this->categories ): ?>
@@ -83,7 +89,7 @@
 
                         if( xhr.status == 200 && xhr.responseText ) {
 
-                            if( xhr.responseText.test(/<h1[^>]*>(.+)<\/h1>/gs) ) {
+                            if( /<h1[^>]*>(.+)<\/h1>/gs.test(xhr.responseText) ) {
                                 row.parentNode.removeChild(row);
                             }
                         }

@@ -39,6 +39,12 @@
     <trans-unit id="tl_cms_link_shortener.toggle.1">
         <source>Kurz-Link ID %s aktivieren / deaktivieren</source>
     </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.link_shortener_statistics.0">
+        <source>Statistik</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.link_shortener_statistics.1">
+        <source>Statistik für Kurz-Link ID %s anzeigen</source>
+    </trans-unit>
     <!-- LEGENDS -->
     <trans-unit id="tl_cms_link_shortener.common_legend">
         <source>Allgemein</source>

@@ -17,6 +17,7 @@ namespace numero2\MarketingSuite;
 
 use Contao\CMSConfig;
 use Contao\Module;
+use Contao\StringUtil;
 use numero2\MarketingSuite\Backend\License as djeuvnxger;
 
 
@@ -77,7 +78,7 @@ abstract class ModuleEUConsent extends Module {
         // check if cookie bar is excluded from current page
         if( $this->cms_exclude_pages ) {
 
-            $excludePages = deserialize($this->cms_exclude_pages);
+            $excludePages = StringUtil::deserialize($this->cms_exclude_pages);
 
             if( is_array($excludePages) && count($excludePages) ) {
 

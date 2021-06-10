@@ -12,6 +12,9 @@
     <trans-unit id="cms_api_messages.errors.connection_error">
         <source>Beim Verbinden mit dem Marketing Suite Lizenzserver ist ein Problem aufgetreten. Versuchen Sie es später noch einmal.</source>
     </trans-unit>
+    <trans-unit id="cms_api_messages.errors.unknown_error">
+        <source>Beim Verbinden mit dem Marketing Suite Lizenzserver ist ein unbekannter Fehler aufgetreten.</source>
+    </trans-unit>
     <trans-unit id="cms_api_messages.errors.410">
         <source>Ungültiger Lizenzschlüssel.</source>
     </trans-unit>

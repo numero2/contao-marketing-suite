@@ -66,7 +66,7 @@ class Session {
         }
 
         // stored pages if it's a new page id
-        if( $aSession[0] != $pageId ) {
+        if( empty($aSession[0]) || $aSession[0] != $pageId ) {
             array_unshift($aSession, $pageId);
 
             // cut stored pages to MAX_ENTRIES length, leave last in as it is used in first page criteria

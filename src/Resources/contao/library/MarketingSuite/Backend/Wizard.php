@@ -39,7 +39,7 @@ class Wizard extends Controller {
     /**
      * Generates the top helper for use in input_field_callbacks
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      *
      * @return string
      */
@@ -123,7 +123,7 @@ class Wizard extends Controller {
     /**
      * Generates the bottom helper for use in input_field_callbacks
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      *
      * @return string
      */

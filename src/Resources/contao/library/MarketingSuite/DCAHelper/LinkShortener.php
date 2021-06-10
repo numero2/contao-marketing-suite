@@ -80,11 +80,15 @@ class LinkShortener extends CoreBackend {
         }
 
         if( empty($aPages) && Input::get('id') ) {
-            Message::addError($GLOBALS['TL_LANG']['ERR']['link_shortener_no_https_domains']);
+
+            if( version_compare(VERSION, '4.11', '<') ) {
+                Message::addError($GLOBALS['TL_LANG']['ERR']['link_shortener_no_https_domains']);
+            } else {
+                Message::addError($GLOBALS['TL_LANG']['ERR']['link_shortener_no_https_domains_411']);
+            }
         }
 
         return $aPages;
-
     }
 
 

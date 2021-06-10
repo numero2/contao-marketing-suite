@@ -1,5 +1,5 @@
 <div id="tl_buttons">
-    <a href="<?= \Backend::addToUrl('', true, ['mod']); ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']); ?>" accesskey="b" onclick="Backend.getScrollOffset()">
+    <a href="<?= $this->getReferer(true); ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']); ?>" accesskey="b" onclick="Backend.getScrollOffset()">
         <?=$GLOBALS['TL_LANG']['MSC']['backBT']; ?>
     </a>
 </div>

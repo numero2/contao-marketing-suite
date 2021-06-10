@@ -16,6 +16,7 @@
 namespace numero2\MarketingSuite;
 
 use Contao\BackendTemplate;
+use Contao\Config;
 use Contao\Controller;
 use Contao\Image;
 use Contao\Model;
@@ -45,7 +46,7 @@ class Backend extends Controller {
     /**
      * Generates html code that will show the path where the given object is used
      *
-     * @param \Model|array $obj
+     * @param Contao\Model|array $obj
      * @param integer $limit
      *
      * @return string
@@ -108,7 +109,7 @@ class Backend extends Controller {
     /**
      * Generates html for one item in the referene path
      *
-     * @param \Model $obj
+     * @param Contao\Model $obj
      *
      * @return string
      */
@@ -133,7 +134,7 @@ class Backend extends Controller {
 
             case 'tl_page':
                 $icon = Controller::getPageStatusIcon($obj);
-                $text = $obj->title . ' (' . $obj->alias . \Config::get('urlSuffix') . ')';
+                $text = $obj->title . ' (' . $obj->alias . Config::get('urlSuffix') . ')';
                 break;
 
             case 'tl_news':

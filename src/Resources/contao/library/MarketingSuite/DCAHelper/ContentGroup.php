@@ -83,7 +83,7 @@ class ContentGroup extends CoreBackend {
 
         if( $objMI->ranking ) {
 
-            $intervall = deserialize($objMI->intervall);
+            $intervall = StringUtil::deserialize($objMI->intervall);
 
             $start = $objMI->start_ranking;
             $change = strtotime('+'.$intervall['value'].' '.$intervall['unit'], $objMI->start_ranking);

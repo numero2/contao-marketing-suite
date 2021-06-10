@@ -31,11 +31,13 @@ $GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace(
 ,   ';{cms_legend:hide},cms_root_license,cms_refresh_license;{protected_legend'
 ,   $GLOBALS['TL_DCA']['tl_page']['palettes']['root']
 );
-$GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback'] = str_replace(
-    ';{protected_legend'
-,   ';{cms_legend:hide},cms_root_license,cms_refresh_license;{protected_legend'
-,   $GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback']
-);
+if( !empty($GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback']) ) {
+    $GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback'] = str_replace(
+        ';{protected_legend'
+    ,   ';{cms_legend:hide},cms_root_license,cms_refresh_license;{protected_legend'
+    ,   $GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback']
+    );
+}
 
 
 /**

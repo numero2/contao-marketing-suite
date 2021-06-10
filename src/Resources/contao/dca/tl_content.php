@@ -110,7 +110,7 @@ $GLOBALS['TL_DCA']['tl_content']['list']['operations']['edit']['button_callback'
  * Add subpalettes to tl_content
  */
 $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'cms_tag_visibility';
-$GLOBALS['TL_DCA']['tl_content']['subpalettes']['cms_tag_visibility']= 'cms_tag';
+$GLOBALS['TL_DCA']['tl_content']['subpalettes']['cms_tag_visibility']= 'cms_tag,cms_tag_fallback_css_class';
 
 
 /**
@@ -130,7 +130,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
     ,   'text_cms' => [
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['text']
         ,   'exclude'           => true
-        ,   'search'            => true
         ,   'inputType'         => 'textarea'
         ,   'eval'              => ['mandatory'=>true, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'doNotSaveEmpty'=>true, 'tl_class'=>'text-cms']
         ,   'explanation'       => 'insertTags'
@@ -144,7 +143,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
     ,   'text_cms_cta' => [
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['text']
         ,   'exclude'           => true
-        ,   'search'            => true
         ,   'inputType'         => 'textarea'
         ,   'eval'              => ['mandatory'=>true, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'doNotSaveEmpty'=>true]
         ,   'explanation'       => 'insertTags'
@@ -243,6 +241,13 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
         ,   'inputType'         => 'checkbox'
         ,   'eval'              => ['submitOnChange'=>true]
         ,   'sql'               => "char(1) NOT NULL default ''"
+        ]
+    ,   'cms_tag_fallback_css_class' => [
+            'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_tag_fallback_css_class']
+        ,   'exclude'           => true
+        ,   'inputType'         => 'text'
+        ,   'eval'              => ['maxlength'=>255, 'tl_class'=>'w50']
+        ,   'sql'               => "varchar(255) NOT NULL default ''"
         ]
     ,   'cms_tag' => [
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_tag']

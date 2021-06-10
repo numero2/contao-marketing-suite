@@ -16,13 +16,14 @@
 namespace numero2\MarketingSuite\Widget;
 
 use Contao\Backend as CoreBackend;
-use Contao\ContentModel;
 use Contao\ContentElement;
+use Contao\ContentModel;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\Model;
+use Contao\StringUtil;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Helper\ContentElementStyleable;
 use numero2\MarketingSuite\Helper\styleable;
@@ -82,7 +83,7 @@ class ElementStyle extends CoreBackend {
                 }
 
                 // prepare the value
-                $varValue = deserialize($aData[$name]);
+                $varValue = StringUtil::deserialize($aData[$name]);
 
                 // values related to styling are stored seperately
                 if( $arrData['eval']['isStylingRelated'] ) {
@@ -192,11 +193,11 @@ class ElementStyle extends CoreBackend {
     public function addStylingFields( $dc ) {
 
         if( !property_exists($dc,'activeRecord') || !$dc->activeRecord ) {
-            
+
             if( Input::get('act') == 'edit' && Input::get('table') && Input::get('id') ) {
 
                 $strModel = Model::getClassFromTable(Input::get('table'));
-                
+
                 $oRow = NULL;
                 $oRow = $strModel::findOneById(Input::get('id'));
 
@@ -359,7 +360,7 @@ class ElementStyle extends CoreBackend {
         if( $sStyle ) {
 
             $aStyle = [];
-            $aStyle = deserialize($sStyle);
+            $aStyle = StringUtil::deserialize($sStyle);
 
             if( is_array($aStyle) && array_key_exists($dc->field, $aStyle) && $aStyle[$dc->field] ) {
 
@@ -396,7 +397,7 @@ class ElementStyle extends CoreBackend {
             $aStyle = $dc->cms_style;
         }
 
-        $aStyle[$dc->field] = deserialize($value);
+        $aStyle[$dc->field] = StringUtil::deserialize($value);
 
         $dc->cms_style = $aStyle;
 

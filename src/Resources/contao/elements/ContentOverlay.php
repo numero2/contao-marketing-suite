@@ -101,7 +101,7 @@ class ContentOverlay extends ContentElement implements styleable {
         }
 
         $aLifetime = $this->cms_lifetime;
-        $aLifetime = !is_array($aLifetime)?deserialize($aLifetime):$aLifetime;
+        $aLifetime = !is_array($aLifetime)?StringUtil::deserialize($aLifetime):$aLifetime;
         $iExpires = 0;
         if( !empty($aLifetime['value']) ) {
             $iExpires = strtotime('+'.(int)$aLifetime['value'].' '.$aLifetime['unit']);
@@ -162,7 +162,7 @@ class ContentOverlay extends ContentElement implements styleable {
         if( $this->cms_style ) {
 
             $aStyle = [];
-            $aStyle = deserialize($this->cms_style);
+            $aStyle = StringUtil::deserialize($this->cms_style);
 
             if( count($aStyle) ) {
 

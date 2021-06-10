@@ -22,6 +22,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, priority: -5 }
 
+    marketing_suite.listener.menu.backend_custom_route:
+        class: numero2\MarketingSuiteBundle\EventListener\Menu\BackendCustomRouteMenuListener
+        arguments:
+            - '@security.helper'
+            - '@contao.framework'
+        tags:
+            - { name: kernel.event_listener, event: contao.backend_menu_build, priority: -5 }
+
 
     # Backwards compatibility for contao 4.4
     marketing_suite.listener.legacy_link_shortener:

@@ -84,7 +84,7 @@
                                     <span><?= \Date::parse('D', $day['date']); ?></span>
                                 </span>
 
-                                <?php if( $day['elements'] ): ?>
+                                <?php if( !empty($day['elements']) && is_array($day['elements']) ): ?>
                                 <div class="elements">
                                     <?= implode(' ', $day['elements']); ?>
                                 </div>

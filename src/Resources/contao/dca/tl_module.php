@@ -29,7 +29,7 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['cms_accept_tags'] = '{title_legend}
 /**
  * Add subpalettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['subpalettes']['cms_tag_visibility'] = 'cms_tag';
+$GLOBALS['TL_DCA']['tl_module']['subpalettes']['cms_tag_visibility'] = 'cms_tag,cms_tag_fallback_css_class';
 
 
 /**
@@ -69,4 +69,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cms_tag'] = [
 ,   'options_callback'  => ['\numero2\MarketingSuite\DCAHelper\Content', 'getContentElementTags']
 ,   'eval'              => ['mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'clr w50']
 ,   'sql'               => "int(10) unsigned NOT NULL default '0'"
+];
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['cms_tag_fallback_css_class'] = [
+    'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_tag_fallback_css_class']
+,   'exclude'           => true
+,   'inputType'         => 'text'
+,   'eval'              => ['maxlength'=>255, 'tl_class'=>'w50']
+,   'sql'               => "varchar(255) NOT NULL default ''"
 ];
