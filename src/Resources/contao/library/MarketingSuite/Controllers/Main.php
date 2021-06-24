@@ -37,7 +37,10 @@ class Main extends BackendMain {
             $this->Template->headline = $headline;
         }
 
-        return $this->output();
+        # fix duplicate css / js (see #63)
+        $GLOBALS['TL_CSS'] = [];
+        $GLOBALS['TL_JAVASCRIPT'] = [];
 
+        return $this->output();
     }
 }
