@@ -363,7 +363,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
                 $entry = [
                     "count" => $objResult->count,
-                    "label" => $objResult->referer
+                    "label" => StringUtil::specialchars($objResult->referer, true, true)
                 ];
 
                 if( !strlen($objResult->referer) ) {
@@ -478,7 +478,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
                 $entry = [
                     "count" => $objResult->count,
-                    "label" => $objResult->browser
+                    "label" => StringUtil::specialchars($objResult->browser, true, true)
                 ];
 
                 if( !empty($GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['browser_names'][$objResult->browser]) ) {
@@ -509,7 +509,7 @@ class LinkShortenerStatistics extends CoreBackendModule {
 
                 $entry = [
                     "count" => $objResult->count,
-                    "label" => $objResult->os
+                    "label" => StringUtil::specialchars($objResult->os, true, true)
                 ];
 
                 if( !empty($GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['os_names'][$objResult->os]) ) {

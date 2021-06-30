@@ -16,7 +16,9 @@
 namespace numero2\MarketingSuite\Tracking;
 
 use Contao\Cache;
+use Contao\Database;
 use Contao\Session as CoreSession;
+use numero2\MarketingSuite\Backend\License as koqfklea;
 
 
 class Session {
@@ -50,16 +52,35 @@ class Session {
 
         global $objPage;
 
-        if( TL_MODE != 'FE' || BE_USER_LOGGED_IN ) {
+        if( TL_MODE != 'FE' || BE_USER_LOGGED_IN || !koqfklea::hasFeature('me_visited_pages', $objPage->trail[0]) ) {
+            return;
+        }
+
+        // check if `visited_pages` is used at all
+        $oInUse = null;
+        $oInUse = Database::getInstance()->query("
+            SELECT
+                COUNT(1) AS count
+            FROM tl_cms_marketing_item as mi
+            WHERE
+                    mi.type='visited_pages'
+                AND mi.init_step = ''
+                AND mi.active = 1
+        ");
+
+        if( $oInUse && !$oInUse->count ) {
             return;
         }
 
         $aSession = $this->session->get('cms_visitedPages');
+
         if( !is_array($aSession) ) {
             $aSession = [];
         }
 
+        $pageId = 0;
         $pageId = $objPage->id;
+
         // get requested page maybe changed by a_b_test_page
         if( Cache::has('cms_page_id') ) {
             $pageId = Cache::get('cms_page_id');
@@ -67,6 +88,7 @@ class Session {
 
         // stored pages if it's a new page id
         if( empty($aSession[0]) || $aSession[0] != $pageId ) {
+
             array_unshift($aSession, $pageId);
 
             // cut stored pages to MAX_ENTRIES length, leave last in as it is used in first page criteria

@@ -383,18 +383,24 @@ class MarketingItem extends CoreBackend {
             ,   'content' => $aElements
             ,   'position' => 'top_right'
             ];
-            $strView = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay );
+            $strView = Backend::parseWithTemplate('backend/elements/overlay_tree', $aOverlay);
 
         } else {
 
             if( !empty($aRow['page_a']) ) {
-                $count +=1;
-                $aElements[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['page_a'][0]] = new Collection([PageModel::findOneById($aRow['page_a'])], 'tl_page');
+                $page = PageModel::findOneById($aRow['page_a']);
+                if( $page ) {
+                    $count +=1;
+                    $aElements[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['page_a'][0]] = new Collection([$page], 'tl_page');
+                }
             }
 
             if( !empty($aRow['page_b']) ) {
-                $count +=1;
-                $aElements[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['page_b'][0]] = new Collection([PageModel::findOneById($aRow['page_b'])], 'tl_page');
+                $page = PageModel::findOneById($aRow['page_b']);
+                if( $page ) {
+                    $count +=1;
+                    $aElements[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['page_b'][0]] = new Collection([$page], 'tl_page');
+                }
             }
 
             if( count($aElements) ) {
@@ -469,9 +475,9 @@ class MarketingItem extends CoreBackend {
 
         $objMI = null;
         $objMI = MarketingItemModel::findById($dc->id);
-        
+
         if( $objMI ) {
-            
+
             $groups = 0;
             $groups = ContentGroupModel::countByPid($objMI->id);
 
@@ -818,7 +824,7 @@ class MarketingItem extends CoreBackend {
         if( $objItems ) {
 
             Controller::loadLanguageFile('tl_cms_marketing_item');
-            
+
             $aOptions = [];
 
             while( $objItems->next() ) {
@@ -885,7 +891,7 @@ class MarketingItem extends CoreBackend {
 
         $MI = null;
         $MI = MarketingItemModel::findOneById(Input::get('id'));
-        
+
         $strAlways = "";
 
         if( $MI && $MI->always_page_a ) {
