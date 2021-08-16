@@ -114,6 +114,7 @@ class ContentOverlay extends ContentElement implements styleable {
         if( TL_MODE == "FE" ) {
 
             $this->Template->close = Controller::addToUrl('&close='.$this->id, false);
+            $this->Template->close = version_compare(VERSION, '4.10', '<') ? ampersand($this->Template->close,false) : StringUtil::ampersand($this->Template->close,false);
 
             if( Input::get('close') && Input::get('close') == $this->id ) {
 
@@ -124,6 +125,8 @@ class ContentOverlay extends ContentElement implements styleable {
             // "view" will be triggered via ajax since we store in localstorage if the overlay
             // was already shown or not
             $this->Template->view = StringUtil::decodeEntities(Controller::addToUrl('&view='.$this->id, false));
+            $this->Template->view = version_compare(VERSION, '4.10', '<') ? ampersand($this->Template->view,false) : StringUtil::ampersand($this->Template->view,false);
+
             if( Input::get('view') && Input::get('view') == $this->id ) {
 
                 // make sure to force the view, otherwise our xhr request would not be counted
@@ -141,7 +144,7 @@ class ContentOverlay extends ContentElement implements styleable {
         }
 
         // render javascript
-        $oScript = new FrontendTemplate('scripts/script_ce_cms_overlay_modal_overlay');
+        $oScript = new FrontendTemplate('scripts/script_ce_cms_overlay_'.$this->cms_layout_option);
         $oScript->setData($this->Template->getData());
 
         $this->Template->script = $oScript->parse();
@@ -221,6 +224,21 @@ class ContentOverlay extends ContentElement implements styleable {
             case 'modal_overlay':
                 return [
                     'bgcolor' => 'start background-border'
+                ,   'borderwidth' => 'background-border'
+                ,   'borderstyle' => 'background-border'
+                ,   'bordercolor' => 'start background-border'
+                ,   'borderradius' => 'background-border'
+
+                ,   'textalign' => 'text-font'
+                ,   'fontsize' => 'text-font'
+                ,   'fontcolor' => 'text-font start'
+                ,   'lineheight' => 'text-font'
+                ];
+                break;
+            case 'toast':
+                return [
+                    'bgcolor' => 'start background-border'
+                ,   'bgimage' => 'background-border'
                 ,   'borderwidth' => 'background-border'
                 ,   'borderstyle' => 'background-border'
                 ,   'bordercolor' => 'start background-border'

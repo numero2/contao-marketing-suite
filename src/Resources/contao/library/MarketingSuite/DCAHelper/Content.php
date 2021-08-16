@@ -175,6 +175,7 @@ class Content extends CoreBackend {
             case 'cms_overlay':
                 return [
                     'modal_overlay' => $GLOBALS['TL_LANG']['tl_content']['layout_options']['modal_overlay']
+                ,   'toast' => $GLOBALS['TL_LANG']['tl_content']['layout_options']['toast']
                 ];
                 break;
         }

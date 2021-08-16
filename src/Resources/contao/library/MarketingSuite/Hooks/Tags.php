@@ -453,7 +453,8 @@ class Tags extends Hooks {
                         if( !array_key_exists($i+3, $tags) ) {
                             break;
                         }
-                        if( $tags[$i+3] == 'ifoptin' || stripos($tags[$i+3] , 'ifoptin::') ) {
+
+                        if( substr($tags[$i+3], 0, 7) == 'ifoptin' || stripos($tags[$i+3] , 'ifoptin::') !== false ) {
                             $open = false;
 
                         }
@@ -503,10 +504,10 @@ class Tags extends Hooks {
                             break;
                         }
 
-                        if( $tags[$i+3] == 'ifnoptin' || stripos($tags[$i+3] , 'ifnoptin::') ) {
+                        if( substr($tags[$i+3], 0, 8) == 'ifnoptin' || stripos($tags[$i+3] , 'ifnoptin::') !== false ) {
                             $open = false;
-
                         }
+
                         if( $tags[$i+3] == $tag ) {
                             $open = true;
                         }

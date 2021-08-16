@@ -1,0 +1,83 @@
+<script>
+
+    (function(){
+
+        var overlay = document.querySelector('[data-cms-unique="<?= $this->unique; ?>"]');
+
+        if( !overlay ) {
+            return;
+        }
+        overlay = overlay.parentNode;
+
+        if( typeof(window.localStorage) !== "undefined" ) {
+
+            var show = true;
+            var itemName = 'cms_overlay-<?= $this->unique; ?>';
+
+            var tCurrentChange = <?= $this->tstamp; ?>;
+            var tExpires = <?= $this->Template->expires; ?>;
+            var dismissed = window.localStorage.getItem(itemName);
+
+            if( dismissed ) {
+
+                var tCurrent = Math.round(new Date().getTime()/1000);
+                var aSaved = dismissed.split(',');
+                var tLastChanged = aSaved[0];
+                var tShouldExpire = aSaved[1];
+
+                if( tCurrent > tShouldExpire || tCurrentChange != tLastChanged ) {
+                    window.localStorage.removeItem(itemName);
+                    dismissed = null;
+                } else {
+                    show = false;
+                }
+            }
+
+            var handleDismiss = function(e) {
+
+                if( e ) {
+                    e.preventDefault();
+                }
+
+                if( !dismissed ) {
+                    window.localStorage.setItem(itemName, tCurrentChange+','+tExpires);
+                }
+
+                var oReq = new XMLHttpRequest();
+
+                oReq.withCredentials = true;
+                oReq.open("GET", "<?= $this->close; ?>");
+                oReq.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                oReq.send();
+
+                overlay.classList.add('dismissed');
+            };
+
+            var ajaxViewed = function() {
+
+                var oReq = new XMLHttpRequest();
+
+                oReq.withCredentials = true;
+                oReq.open("GET", "<?= $this->view; ?>");
+                oReq.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                oReq.send();
+            }
+
+            if( show ) {
+
+                overlay.classList.remove('hidden');
+                overlay.querySelector('a.close').addEventListener('click', handleDismiss);
+                ajaxViewed();
+
+            } else {
+                handleDismiss();
+            }
+
+        } else {
+
+            overlay.parentNode.removeChild(overlay);
+        }
+
+    })();
+
+</script>

@@ -99,6 +99,9 @@
     <trans-unit id="tl_content.layout_options.modal_overlay">
         <source>Modales Fenster</source>
     </trans-unit>
+    <trans-unit id="tl_content.layout_options.toast">
+        <source>Toast</source>
+    </trans-unit>
     <trans-unit id="tl_content.cms_lifetime_options.days">
         <source>Tag(e)</source>
     </trans-unit>

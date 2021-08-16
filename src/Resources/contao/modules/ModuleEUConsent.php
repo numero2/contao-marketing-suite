@@ -75,6 +75,11 @@ abstract class ModuleEUConsent extends Module {
 
         $show = true;
 
+        // check for page type
+        if( in_array($objPage->type, ['error_401', 'error_403', 'error_404']) ) {
+            $show = false;
+        }
+
         // check if cookie bar is excluded from current page
         if( $this->cms_exclude_pages ) {
 

@@ -1,0 +1,29 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('headline'); ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('content'); ?>
+
+    <div data-cms-unique="<?= $this->unique; ?>">
+
+        <a href="<?= $this->close; ?>" class="close" title="<?= $GLOBALS['TL_LANG']['MSC']['close_overlay']; ?>">
+            <span></span>
+            <span></span>
+        </a>
+
+        <div class="inside">
+
+            <?php if( $this->headline ): ?>
+                <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+            <?php endif; ?>
+
+            <?= $this->text; ?>
+
+        </div>
+
+    </div>
+
+    <?= $this->script; ?>
+
+<?php $this->endblock(); ?>

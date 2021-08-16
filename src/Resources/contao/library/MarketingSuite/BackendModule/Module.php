@@ -52,6 +52,34 @@ class Module extends CoreBackendModule {
         $this->arrModules = [];
         $this->arrModules = $this->getModules();
 
+        $table = Input::get('table');
+        foreach( $GLOBALS['CMS_MOD'] as $groupName => $cmsConfig ) {
+            foreach( $cmsConfig as $mod => $modConfig ) {
+
+                if( !array_key_exists('tables', $modConfig) || !is_array($modConfig['tables']) ) {
+                    continue;
+                }
+
+                if( in_array($table, $modConfig['tables']) ) {
+                    Input::setGet('mod', $mod);
+                    break;
+                }
+            }
+        }
+
+        /** @var Session $objSession */
+        $objSession = System::getContainer()->get('session');
+        $id = Input::get('id') ?: $objSession->get('CURRENT_ID');
+
+        // Store the current ID in the current session
+        if( $id != $objSession->get('CURRENT_ID') ) {
+            $objSession->set('CURRENT_ID', $id);
+        }
+
+        if( $id ) {
+            \define('CURRENT_ID', $id);
+        }
+
         // Open module
         if( Input::get('mod') != '' ) {
 
@@ -133,6 +161,7 @@ class Module extends CoreBackendModule {
         $arrModule = [];
         $arrModule = $this->arrModules[$module];
         $dc = $this->objDc;
+
         tabizni::riz();
 
         // Redirect with table parameter
@@ -170,7 +199,7 @@ class Module extends CoreBackendModule {
                 $label = $GLOBALS['TL_LANG'][$strTable][Input::get('act')][1]??null;
 
                 if( !empty($label) && strpos($label, '%') !== false ) {
-                    $aHeadline[] = sprintf($label,Input::get('id'));
+                    $aHeadline[] = sprintf($label, Input::get('id'));
                 }
             }
 
@@ -179,7 +208,7 @@ class Module extends CoreBackendModule {
                 $label = $GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]??null;
 
                 if( !empty($label) && strpos($label, '%') !== false ) {
-                    $aHeadline[] = sprintf($label,Input::get('id'));
+                    $aHeadline[] = sprintf($label, Input::get('id'));
                 }
             }
 
@@ -198,7 +227,7 @@ class Module extends CoreBackendModule {
                 $attributes = null;
                 $attributes = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes;
 
-                $attributes->set('_cms_module_headline', implode((version_compare(VERSION, '4.11.2', '<')?' › ':' '),$aHeadline));
+                $attributes->set('_cms_module_headline', implode((version_compare(VERSION.'.'.BUILD, '4.9.15', '<')?' › ':' '),$aHeadline));
             }
         }
 
@@ -277,14 +306,15 @@ class Module extends CoreBackendModule {
      */
     public function initializeBackendModuleTables() {
 
-        foreach( $GLOBALS['CMS_MOD'] as $groupName => $cmsConfig) {
+        foreach( $GLOBALS['CMS_MOD'] as $groupName => $cmsConfig ) {
+
             $moduleGroup = 'cms_'.$groupName;
 
             if( !array_key_exists($moduleGroup, $GLOBALS['BE_MOD']['marketing_suite']) ) {
                 continue;
             }
 
-            foreach( $GLOBALS['CMS_MOD'][$groupName] as $moduleName => $moduleConfig ) {
+            foreach( $cmsConfig as $moduleName => $moduleConfig ) {
 
                 if( !array_key_exists('tables', $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]) ) {
                     $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'] = [];
@@ -292,20 +322,17 @@ class Module extends CoreBackendModule {
 
                 if( array_key_exists('tables', $moduleConfig) ) {
 
-                    if( count($GLOBALS['CMS_MOD'][$groupName]) ) {
+                    foreach( $moduleConfig['tables'] as $moduleTable ) {
 
-                        foreach( $moduleConfig['tables'] as $moduleTable ) {
+                        if( !in_array($moduleTable, $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
 
-                            if( !in_array($moduleTable, $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
+                            $this->loadDataContainer($moduleTable);
 
-                                $this->loadDataContainer($moduleTable);
-
-                                if( !$GLOBALS['TL_DCA'][$moduleTable]['config']['isAvailable'] ) {
-                                    continue;
-                                }
-
-                                $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'][] = $moduleTable;
+                            if( !$GLOBALS['TL_DCA'][$moduleTable]['config']['isAvailable'] ) {
+                                continue;
                             }
+
+                            $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'][] = $moduleTable;
                         }
                     }
                 }
