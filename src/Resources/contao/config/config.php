@@ -163,9 +163,9 @@ if( \Config::getInstance()->isComplete() ) {
     $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\Tags', 'generateScripts'];
     $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Hooks\ConversionItem', 'generateGlobalConversionItems'];
     $GLOBALS['TL_HOOKS']['generatePage'][] = ['\numero2\MarketingSuite\Tracking\Session', 'storeVisitedPage'];
-    $GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = ['\numero2\MarketingSuite\MarketingItem\ABTestPage', 'selectAorBPage'];
     $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\Messages', 'testModeCheck'];
     $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\License', 'getSystemMessages'];
+    $GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\MarketingSuite\Backend\Messages', 'legacyRoutingCheck'];
     $GLOBALS['TL_HOOKS']['getUserNavigation'][] = ['\numero2\MarketingSuite\BackendModule\Feedback', 'setNavigationLink'];
     $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\Hooks\Hooks', 'initializeSystem'];
     $GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\Hooks\DCA', 'addStylingFields'];
@@ -176,6 +176,10 @@ if( \Config::getInstance()->isComplete() ) {
     $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTags'];
     $GLOBALS['TL_HOOKS']['insertTagFlags'][] = ['\numero2\MarketingSuite\Hooks\LinkShortener', 'replaceLinkShortenerInsertTagFlags'];
     $GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['\numero2\MarketingSuite\DCAHelper\Module', 'addSQLDefinitionForTagSettings'];
+
+    if( version_compare(VERSION, '4.10', '<') || \System::getContainer()->getParameter('contao.legacy_routing') ) {
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = ['\numero2\MarketingSuite\MarketingItem\ABTestPage', 'selectAorBPage'];
+    }
 
     if( TL_MODE === 'BE' ) {
         $GLOBALS['TL_HOOKS']['initializeSystem'][] = ['\numero2\MarketingSuite\BackendModule\Module', 'initializeBackendModuleTables'];

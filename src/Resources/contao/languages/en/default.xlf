@@ -107,6 +107,9 @@
     <trans-unit id="MSC.testmode_enabled">
         <source><![CDATA[Der Testmodus der Contao Marketing Suite ist aktiv. Bei aktiviertem Testmodus können alle Funktionen uneingeschränkt getestet werden. <!--<a href="%s" target="_blank">Mehr erfahren</a>-->]]></source>
     </trans-unit>
+    <trans-unit id="MSC.legacy_routing_needed">
+        <source><![CDATA[Zur Nutzung von A/B-Tests für komplette Seiten muss <code>legacy_routing</code> aktiviert sein. <a href="%s" target="_blank">Mehr erfahren</a>]]></source>
+    </trans-unit>
     <trans-unit id="MSC.cms_disabled">
         <source>deaktiviert</source>
     </trans-unit>

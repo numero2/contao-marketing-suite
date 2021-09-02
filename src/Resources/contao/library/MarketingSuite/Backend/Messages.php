@@ -16,7 +16,9 @@
 namespace numero2\MarketingSuite\Backend;
 
 use Contao\CMSConfig;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License;
+use numero2\MarketingSuite\MarketingItemModel;
 
 
 class Messages {
@@ -34,6 +36,29 @@ class Messages {
                 $GLOBALS['TL_LANG']['MSC']['testmode_enabled']
             ,   'https://contao-marketingsuite.com/sy5xkh'
             ) . '</p>';
+        }
+
+        return '';
+    }
+
+
+    /**
+     * Check if legacy routing is needed and disabled
+     *
+     * @return string
+     */
+    public static function legacyRoutingCheck() {
+
+        if( version_compare(VERSION, '4.10', '>=') && !System::getContainer()->getParameter('contao.legacy_routing') ) {
+
+            // check if a/b test in use
+            if( MarketingItemModel::countByType('a_b_test_page') ) {
+
+                return '<p class="tl_error">' . sprintf(
+                    $GLOBALS['TL_LANG']['MSC']['legacy_routing_needed']
+                ,   'https://contao-marketingsuite.com/2drmx4'
+                ) . '</p>';
+            }
         }
 
         return '';
