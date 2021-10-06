@@ -148,7 +148,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
     ,   'description' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['description']
         ,   'inputType'             => 'textarea'
-        ,   'eval'                  => ['rte'=>'tinyMarketing', 'doNotSaveEmpty'=>true]
+        ,   'eval'                  => ['rte'=>'tinyMarketing', 'doNotSaveEmpty'=>true, 'allowHtml'=>true]
         ,   'sql'                   => "text NULL"
         ]
     ,   'html' => [
@@ -203,7 +203,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['fallback_text']
         ,   'inputType'             => 'textarea'
         ,   'explanation'           => 'optinFallback'
-        ,   'eval'                  => ['mandatory'=>false, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'tl_class'=>'clr']
+        ,   'eval'                  => ['mandatory'=>false, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'tl_class'=>'clr', 'allowHtml'=>true]
         ,   'sql'                   => "text NULL"
         ]
     ,   'customTpl' => [

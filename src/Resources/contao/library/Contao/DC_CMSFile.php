@@ -460,11 +460,11 @@ class DC_CMSFile extends DataContainer implements \editable
             {
                 if (($arrData['inputType'] ?? null) == 'password' || ($arrData['inputType'] ?? null) == 'textStore')
                 {
-                    $this->log('The global configuration variable "' . $this->strField . '" has been changed', __METHOD__, TL_CONFIGURATION);
+                    //$this->log('The global configuration variable "' . $this->strField . '" has been changed', __METHOD__, TL_CONFIGURATION);
                 }
                 else
                 {
-                    $this->log('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"', __METHOD__, TL_CONFIGURATION);
+                    //$this->log('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"', __METHOD__, TL_CONFIGURATION);
                 }
             }
 

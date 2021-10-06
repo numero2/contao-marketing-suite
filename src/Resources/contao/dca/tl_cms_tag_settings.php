@@ -74,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
     ,   'cms_tag_text' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_text']
         ,   'inputType'        => 'textarea'
-        ,   'eval'             => [ 'mandatory'=>true, 'rte'=>'tinyMarketing', 'tl_class'=>'clr', 'helpwizard'=>true]
+        ,   'eval'             => [ 'mandatory'=>true, 'rte'=>'tinyMarketing', 'tl_class'=>'clr', 'helpwizard'=>true, 'allowHtml'=>true]
         ,   'explanation'      => 'tagDescription'
         ,   'sql'              => "mediumtext NULL"
         ]

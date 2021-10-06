@@ -131,7 +131,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['text']
         ,   'exclude'           => true
         ,   'inputType'         => 'textarea'
-        ,   'eval'              => ['mandatory'=>true, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'doNotSaveEmpty'=>true, 'tl_class'=>'text-cms']
+        ,   'eval'              => ['mandatory'=>true, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'doNotSaveEmpty'=>true, 'tl_class'=>'text-cms', 'allowHtml'=>true]
         ,   'explanation'       => 'insertTags'
         ,   'load_callback'     => [ ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'loadContentFromOriginalField'] ]
         ,   'save_callback'     => [ ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'preventSavingToDB'] ]
@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['text']
         ,   'exclude'           => true
         ,   'inputType'         => 'textarea'
-        ,   'eval'              => ['mandatory'=>true, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'doNotSaveEmpty'=>true]
+        ,   'eval'              => ['mandatory'=>true, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'doNotSaveEmpty'=>true, 'allowHtml'=>true]
         ,   'explanation'       => 'insertTags'
         ,   'load_callback'     => [ ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'loadContentFromOriginalField'] ]
         ,   'save_callback'     => [ ['\numero2\MarketingSuite\DCAHelper\TextCMS', 'preventSavingToDB'] ]
