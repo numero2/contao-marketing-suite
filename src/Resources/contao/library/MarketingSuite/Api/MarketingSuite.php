@@ -478,7 +478,7 @@ class MarketingSuite {
      */
     private function send( $uri=NULL, $aData=NULL ) {
 
-        $url  = $this->baseUrl . $uri;
+        $url = $this->baseUrl . $uri;
 
         try {
 
@@ -500,6 +500,15 @@ class MarketingSuite {
                 }
 
             } catch( \Exception $e ) {
+
+                // if SSL connection fails retry using HTTP
+                if( stripos($e->getMessage(), 'ssl') !== false && stripos($this->baseUrl,'https://') !== false ) {
+
+                    System::log('SSL Exception while retrieving data from Marketing Suite Server, retrying with HTTP (' . $e->getMessage() . ')', __METHOD__, TL_ERROR);
+
+                    $this->baseUrl = str_replace('https://', 'http://', $this->baseUrl);
+                    return $this->send($uri,$aData);
+                }
 
                 throw new \Exception(
                     $e->getMessage()
