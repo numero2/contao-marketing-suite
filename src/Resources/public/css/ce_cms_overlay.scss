@@ -1,0 +1,359 @@
+// main: elements.scss
+@import "backend/colors";
+
+cms-modal-overlay {
+
+    --main-bg-overlay-color: #{rgba($col-white,0.5)};
+    --main-bg-color: #{$col-white};
+    --main-shadow-color: #{rgba($col-black,0.5)};
+    --main-text-color: inherit;
+    --main-border-color: #{$coolGray-400};
+    --main-close-btn-color: #{$coolGray-400};
+    --main-close-btn-color-hover: #{$coolGray-500};
+    --main-link-color-hover: #{$orange-500};
+
+    &[data-layout="dark"] {
+
+        --main-bg-overlay-color: #{rgba($trueGray-800,0.5)};
+        --main-bg-color: #{$coolGray-800};
+        --main-shadow-color: #{rgba($col-black,0.5)};
+        --main-text-color: #{$blueGray-100};
+        --main-border-color: #{$coolGray-800};
+        --main-close-btn-color: #{$coolGray-400};
+        --main-close-btn-color-hover: #{$coolGray-100};
+        --main-link-color-hover: #{$orange-500};
+    }
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    background: var(--main-bg-overlay-color);
+    color: var(--main-text-color);
+
+    > cms-container {
+
+        position: relative;
+
+        display: block;
+        max-width: 750px;
+        max-height: 60vh;
+
+        padding: 2em;
+        overflow: auto;
+        margin: 2em;
+
+        font-family: Arial, Helvetica, Sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+
+        box-shadow: 0px 0px 10px var(--main-shadow-color);
+        background: var(--main-bg-color);
+        border: 6px solid var(--main-border-color);
+
+        > cms-button {
+
+            font-size: 1.75em;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 1.5em;
+            height: 1.5em;
+
+            position: absolute;
+            top: 0.3em;
+            right: 0.3em;
+
+            cursor: pointer;
+
+            &:before, &:after {
+
+                content: "";
+                background: var(--main-close-btn-color);
+
+                display: block;
+                width: 1em;
+                height: 0.15em;
+
+                position: absolute;
+                transition: background .2s;
+            }
+
+            &:before { transform: rotate(45deg); }
+            &:after { transform: rotate(-45deg); }
+
+            &:hover {
+
+                &:before, &:after {
+                    background: var(--main-close-btn-color-hover);
+                }
+            }
+        }
+
+        a {
+            color: var(--main-text-color);
+            text-decoration: underline;
+
+            &:hover {
+                color: var(--main-link-color-hover);
+            }
+        }
+    }
+}
+
+body.cms-element-preview {
+
+    cms-modal-overlay {
+
+        position: relative;
+        //width: auto;
+        height: auto;
+        top: initial;
+        right: initial;
+        left: initial;
+        bottom: initial;
+
+        //pointer-events: none;
+        animation: none;
+        transform: none;
+
+        > cms-container {
+            max-height: none;
+        }
+    }
+}
+
+
+/*
+$color: #95a5a6;
+.ce_cms_overlay {
+
+    &.hidden {
+        display: none !important;
+    }
+
+    &.modal_overlay {
+
+        position: fixed;
+        z-index: 10000;
+        box-sizing: content-box;
+
+        top: 0;
+        left: 0;
+
+        width: calc(100vw - 60px);
+        height: 100vh;
+        padding: 30px;
+
+        @media screen and (max-width: 450px) {
+            width: calc(100vw - 30px);
+            padding: 15px;
+        }
+
+        background: rgba(255, 255, 255, 0.5);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > div {
+
+            font-family: Arial, Helvetica, Sans-serif;
+            font-size: 14px;
+            line-height: 1.33;
+
+            position: relative;
+            width: calc(100% - 60px);
+            max-width: 800px;
+            max-height: 75vh;
+
+            overflow: auto;
+            padding: 30px;
+
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+
+            border: 10px solid $color;
+            background: #ffffff;
+
+            > .inside {
+
+                > *:not(:last-child) {
+                    margin-bottom: 15px;
+                }
+
+                h1 { font-size: 2em; }
+                h2 { font-size: 1.5em; }
+                h3 { font-size: 1.25em; }
+            }
+
+            > .close {
+
+                display: block;
+
+                $width: 30;
+
+                width: $width/14*1em;
+                height: $width/14*1em;
+
+                position: absolute;
+                right: ($width/2)/14*1em;
+                top: ($width/2)/14*1em;
+
+                cursor: pointer;
+
+                > span {
+
+                    display: block;
+                    width: 100%;
+                    height: 4/14*1em;
+
+                    background: $color;
+
+                    position: absolute;
+                    top: calc(50% - 0.5em);
+
+                    &:nth-child(1) { transform: rotate(45deg); }
+                    &:nth-child(2) { transform: rotate(-45deg); }
+                }
+            }
+        }
+    }
+
+    &.toast {
+
+        position: fixed;
+        z-index: 10000;
+        box-sizing: content-box;
+
+        top: 2rem;
+        right: 2rem;
+        max-width: 90vw;
+
+        @media screen and (max-width: 450px) {
+            right: 0;
+        }
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > div {
+
+            font-family: Arial, Helvetica, Sans-serif;
+            font-size: 14px;
+            line-height: 1.33;
+
+            position: relative;
+            max-width: 350px;
+
+            overflow: auto;
+            padding: 30px;
+
+            border: 10px solid $color;
+            background: #ffffff;
+
+            background-size: cover;
+            background-position: 50% 50%;
+
+            > .inside {
+
+                > * {
+                    margin: 0;
+
+                    &:not(:last-child) {
+                        margin-bottom: 15px;
+                    }
+                }
+
+                h1 { font-size: 2em; }
+                h2 { font-size: 1.5em; }
+                h3 { font-size: 1.25em; }
+            }
+
+            > .close {
+
+                display: block;
+
+                $width: 15;
+
+                width: $width/14*1em;
+                height: $width/14*1em;
+
+                position: absolute;
+                right: ($width/2)/14*1em;
+                top: ($width/2)/14*1em;
+
+                cursor: pointer;
+
+                > span {
+
+                    display: block;
+                    width: 100%;
+                    height: 2/14*1em;
+
+                    background: $color;
+
+                    position: absolute;
+                    top: calc(50%);
+
+                    &:nth-child(1) { transform: rotate(45deg); }
+                    &:nth-child(2) { transform: rotate(-45deg); }
+                }
+            }
+        }
+
+        @keyframes CMSToastSlideIn {
+            0% { transform: translateX(120%); }
+          100% { transform: translateX(0%); }
+        }
+        @keyframes CMSToastSlideOut {
+            0% { transform: translateX(0%); }
+          100% { transform: translateX(120%); }
+        }
+
+        transform: translateX(120%);
+
+        animation-name: CMSToastSlideIn;
+        animation-duration: 0.5s;
+        animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+
+        &.dismissed {
+            animation-name: CMSToastSlideOut;
+            animation-delay: 0s;
+        }
+    }
+}
+
+body.cms-element-preview {
+
+    .ce_cms_overlay {
+
+        &.block {
+
+            position: relative;
+            width: auto;
+            height: auto;
+            top: initial;
+            right: initial;
+            left: initial;
+            bottom: initial;
+
+            pointer-events: none;
+            animation: none;
+            transform: none;
+        }
+    }
+}
+*/

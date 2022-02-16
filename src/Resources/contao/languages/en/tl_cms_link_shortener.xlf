@@ -107,6 +107,12 @@
     <trans-unit id="tl_cms_link_shortener.active.1">
         <source>Diesen Kurz-Link aktivieren?</source>
     </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.stop.0">
+        <source>Aktiv bis</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_link_shortener.stop.1">
+        <source>Wenn dieser Kurz-Link nur bis zu einem bestimmten Zeitpunkt aktiv sein soll, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_link_shortener.fallback.0">
         <source>Umleitung wenn deaktiviert</source>
     </trans-unit>

@@ -89,6 +89,13 @@
     <trans-unit id="XPL.tagDescription.3.1">
         <source><![CDATA[Dieser Tag wird komplett entfernt wenn wenn dem entsprechenden Element zugestimmt wurde. Der Parameter ist hierbei die ID des Tags (z.B. Google Analytics). So können Inhalte in Templates abhängig davon ausgespielt werden ob der Nutzer der Verwendung eines bestimmten Tags nicht zugestimmt hat. <code>{{ifnoptin::1}}&lt;h1&gt;Hat nicht zugestimmt&lt;/h1&gt;{{ifnoptin}}</code>]]></source>
     </trans-unit>
+    <!-- ELEMENTS LAYOUT SELECTOR -->
+    <trans-unit id="XPL.layoutSelector.0.0">
+        <source>Hinweis:</source>
+    </trans-unit>
+    <trans-unit id="XPL.layoutSelector.0.1">
+        <source><![CDATA[Die Farben des ausgewählten Layouts können jederzeit durch einige Zeilen CSS individualisiert werden. <a href="https://contao-marketingsuite.com/xoips4" target="_blank">Weitere Informationen zum Thema Individualisierung</a>]]></source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

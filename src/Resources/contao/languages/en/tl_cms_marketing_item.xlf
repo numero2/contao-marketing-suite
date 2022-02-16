@@ -93,7 +93,7 @@
         <source>Zu einem festgelegtem Datum wird der besser Inhalt ausgewählt und zukünftig immer verwendet.</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.stop_auto_winner.0">
-        <source>Enddatum des Testes</source>
+        <source>Enddatum des Tests</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.stop_auto_winner.1">
         <source>Bitte wählen Sie zu welchem Zeitpunk der besser Inhalt ermittelt werden soll.</source>

@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -18,33 +18,31 @@ namespace numero2\MarketingSuite\Helper;
 use Contao\DataContainer;
 
 
-interface styleable {
+interface InterfaceStyleable {
 
 
     /**
-     * Generates the Stylsheet based on the settings in cms_style
-     *
-     * @return string
-     */
-    public function generateStylesheet();
-
-
-    /**
-     * Enables a preview mode where the element should be rendered containing
-     * some default values
-     *
-     * @param boolean $active
-     */
-    public function setStylePreview( $active=true );
-
-
-    /**
-     * Returns which fields are available in which tabs
-     *
-     * @param Contao\DataContainer $dc
+     * Returns a list layout options to choose from
      *
      * @return array
      */
-    public static function getStyleFieldsConfig( $dc );
+    public static function getLayoutOptions(): array;
 
+
+    /**
+     * Returns the path to an SVG containing a sprite of all layouts for a preview
+     *
+     * @param string $type The type of the element
+     *
+     * @return string
+     */
+    public static function getLayoutSprite( string $type="" ): string;
+
+
+    /**
+     * Returns the path to a stylesheet which will be injected into TL_HEAD
+     *
+     * @return string
+     */
+    public static function getStylesheetPath(): string;
 }

@@ -18,6 +18,7 @@ namespace numero2\MarketingSuite\DCAHelper;
 use Contao\Backend as CoreBackend;
 use Contao\CMSConfig;
 use Contao\DataContainer;
+use Contao\ModuleModel;
 use numero2\MarketingSuite\Backend\License as dohfa;
 
 
@@ -45,7 +46,7 @@ class TagSettings extends CoreBackend {
 
         $types = [];
 
-        foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'] as $k => $v ) {
+        foreach( $GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v ) {
 
             if( $k == '__selector__' ) {
                 continue;
@@ -71,9 +72,9 @@ class TagSettings extends CoreBackend {
      */
     public function modifyPalettes( DataContainer $dc ) {
 
-        if( is_array($GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes']) ) {
+        if( is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']) ) {
 
-            foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'] as $type => $palette ) {
+            foreach( $GLOBALS['TL_DCA'][$dc->table]['palettes'] as $type => $palette ) {
 
                 if( !is_array($palette) ) {
 
@@ -89,12 +90,52 @@ class TagSettings extends CoreBackend {
                     }
 
                     if( !empty($aRemoveFields) ) {
-                        $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'][$type] = str_replace(
+                        $GLOBALS['TL_DCA'][$dc->table]['palettes'][$type] = str_replace(
                             $aRemoveFields
                         ,   ''
                         ,    $palette
                         );
                     }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Sets the available layout options based on the type of consent
+     *
+     * @param \DataContainer $dc
+     *
+     * @return array
+     */
+    public function setLayoutSelectorOptions( DataContainer $dc ) {
+
+        $type = CMSConfig::get('cms_tag_type');
+
+        if( $type === "cms_tag_modules" && $dc->table === "tl_module" ) {
+
+            $oModule = null;
+            $oModule = ModuleModel::findById($dc->id);
+
+            if( $oModule ) {
+                $type = $oModule->type;
+            }
+        }
+
+        if( $type ) {
+
+            $class = null;
+            $class = !empty($GLOBALS['FE_MOD']['marketing_suite'][$type]) ? $GLOBALS['FE_MOD']['marketing_suite'][$type] : null;
+
+            if( $class ) {
+
+                if( method_exists($class, 'getLayoutOptions') ) {
+                    $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_layout_selector']['options'] = $class::getLayoutOptions();
+                }
+
+                if( method_exists($class, 'getLayoutSprite') ) {
+                    $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_layout_selector']['eval']['sprite'] = $class::getLayoutSprite($type);
                 }
             }
         }

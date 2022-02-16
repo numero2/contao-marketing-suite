@@ -1,7 +1,5 @@
-<?php $this->extend('block_searchable'); ?>
+<cms-button class="<?= $this->class ?> block"<?= $this->cssID ?> data-cms-id="<?= $this->cmsID; ?>" role="button"<?=$this->layout?' data-layout="'.$this->layout.'"':''?>>
 
-<?php $this->block('content'); ?>
+    <a href="<?= $this->url; ?>" <?php if ($this->linkTitle): ?> title="<?= $this->linkTitle ?>"<?php endif; ?> onmousedown="this._hr||(this._hr=this.href),this.href='<?= $this->href; ?>'" onmouseup="this._hr&&setTimeout(function(){this.href=this._hr}.bind(this),1)" <?= $this->target ?>><?= $this->link; ?></a>
 
-    <a href="<?= $this->url; ?>" onmousedown="this._hr||(this._hr=this.href),this.href='<?= $this->href; ?>'" onmouseup="this._hr&&setTimeout(function(){this.href=this._hr}.bind(this),1)" data-cms-unique="<?= $this->unique; ?>"<?= $this->target ?>><?= $this->link; ?></a>
-
-<?php $this->endblock(); ?>
+</cms-button>

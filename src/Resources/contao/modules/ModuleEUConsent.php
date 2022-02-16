@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -19,9 +19,10 @@ use Contao\CMSConfig;
 use Contao\Module;
 use Contao\StringUtil;
 use numero2\MarketingSuite\Backend\License as djeuvnxger;
+use numero2\MarketingSuite\Helper\InterfaceStyleable;
 
 
-abstract class ModuleEUConsent extends Module {
+abstract class ModuleEUConsent extends Module implements InterfaceStyleable {
 
 
     /**
@@ -69,7 +70,7 @@ abstract class ModuleEUConsent extends Module {
      *
      * @return boolean
      */
-    protected function shouldBeShown() {
+    protected function shouldBeShown(): bool {
 
         global $objPage;
 
@@ -107,6 +108,34 @@ abstract class ModuleEUConsent extends Module {
         $objPage->cssClass .= ' cookie-bar-visible';
 
         $this->Template->cmsID = uniqid('cms');
+        $this->Template->layout = $this->cms_layout_selector;
+
+        if( $this->cms_tag_set_style ) {
+            $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="'.self::getStylesheetPath().'">';
+        }
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getLayoutOptions(): array {
+        return ['light','dark'];
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getLayoutSprite( string $type="" ): string {
+        return 'bundles/marketingsuite/img/backend/layouts/'.$type.'.svg';
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getStylesheetPath(): string {
+        return 'bundles/marketingsuite/css/cookie-bar.css';
+    }
 }

@@ -15,8 +15,10 @@
 namespace numero2\MarketingSuiteBundle\EventListener\Menu;
 
 use Contao\BackendUser;
+use Contao\CMSConfig;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use numero2\MarketingSuite\Backend\License as dsyxdw;
 use Symfony\Component\Security\Core\Security;
 
 
@@ -78,13 +80,22 @@ class BackendSortMenuListener {
 
                 if( !isset($aIndeces[$a]) ) {
                     return 0;
-                };
+                }
                 if( !isset($aIndeces[$b]) ) {
                     return 0;
-                };
+                }
 
                 return ($aIndeces[$a] <=> $aIndeces[$b]);
             });
+
+            // remove child if applicable
+            if( CMSConfig::get('hide_missing_features') ) {
+                foreach( $children as $key => $child ) {
+                    if( !(dsyxdw::hasFeature($key) || dsyxdw::hasFeature(str_replace('cms_', '', $key)) || dsyxdw::hasFeature(str_replace('cms_', '', $key).'_element')) ) {
+                        unset($children[$key]);
+                    }
+                }
+            }
 
             $marketingMenu->setChildren($children);
         }

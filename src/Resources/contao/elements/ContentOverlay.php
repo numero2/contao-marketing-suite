@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -22,13 +22,16 @@ use Contao\Input;
 use Contao\StringUtil;
 use numero2\MarketingSuite\Backend\License as jlkshgf;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
-use numero2\MarketingSuite\Helper\styleable;
-use numero2\MarketingSuite\Helper\StyleSheet;
+use numero2\MarketingSuite\Helper\InterfaceStyleable;
+use numero2\MarketingSuite\Helper\TraitContentElementStyleable;
 use numero2\MarketingSuite\Tracking\ClickAndViews;
 use numero2\MarketingSuite\Tracking\Session;
 
 
-class ContentOverlay extends ContentElement implements styleable {
+class ContentOverlay extends ContentElement implements InterfaceStyleable {
+
+
+    use TraitContentElementStyleable;
 
 
     /**
@@ -41,7 +44,7 @@ class ContentOverlay extends ContentElement implements styleable {
      * Marker if style preview is enabled
      * @var boolean
      */
-    protected $isStylePreview;
+    public $isStylePreview = false;
 
 
     /**
@@ -81,20 +84,6 @@ class ContentOverlay extends ContentElement implements styleable {
         $tracking = new ClickAndViews();
         $session = new Session();
 
-        // set default values for styling preview
-        if( $this->isStylePreview ) {
-
-            if( !$this->url && !$this->linkTitle ) {
-
-                $this->url = '#';
-                $this->linkTitle = 'Button';
-            }
-
-            $this->titleText = $this->titleText?:'Tooltip';
-        }
-
-        $this->Template->unique = Helper::getUniqueID($this);
-
         // append choosen layout as class
         if( $this->cms_layout_option ) {
             $this->cssID = [ $this->cssID[0], $this->cssID[1] . ($this->cssID[1] ? ' ' : '') . $this->cms_layout_option . (TL_MODE=='FE'?' hidden':'')];
@@ -110,6 +99,8 @@ class ContentOverlay extends ContentElement implements styleable {
         }
 
         $this->Template->expires = $iExpires;
+        $this->Template->layout = $this->cms_layout_selector;
+        $this->Template->isPreview = $this->isStylePreview;
 
         if( TL_MODE == "FE" ) {
 
@@ -134,124 +125,19 @@ class ContentOverlay extends ContentElement implements styleable {
 
                 $this->redirect($objPage->getFrontendUrl());
             }
-
         }
 
-        $strStyle = $this->generateStylesheet();
+        if( !$this->isStylePreview ) {
 
-        if( strlen($strStyle) ) {
-            $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
+            $this->Template->cmsID = Helper::getUniqueID($this);
+
+            $this->injectStylesheet();
+
+            // render javascript
+            $oScript = new FrontendTemplate('scripts/script_ce_cms_overlay_'.$this->cms_layout_option);
+            $oScript->setData($this->Template->getData());
+
+            $this->Template->script = $oScript->parse();
         }
-
-        // render javascript
-        $oScript = new FrontendTemplate('scripts/script_ce_cms_overlay_'.$this->cms_layout_option);
-        $oScript->setData($this->Template->getData());
-
-        $this->Template->script = $oScript->parse();
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function generateStylesheet() {
-
-        if( !$this->cms_element_style ) {
-            return;
-        }
-
-        $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/ce_overlay.css">';
-
-        if( $this->cms_style ) {
-
-            $aStyle = [];
-            $aStyle = StringUtil::deserialize($this->cms_style);
-
-            if( count($aStyle) ) {
-
-                $oStyleSheet = NULL;
-                $oStyleSheet = new StyleSheet();
-
-                $uniqueID = Helper::getUniqueID($this);
-
-                $strStyle = "";
-
-                // common styles
-                $strStyle .= $oStyleSheet->generateDefinition([
-                    'selector' => '.ce_cms_overlay > div[data-cms-unique="'.$uniqueID.'"]'
-                ,   'border' => 1
-                ,   'background' => 1
-                ,   'font' => 1
-                ,   'alignment' => 1
-                ]+$aStyle);
-
-                // "close" button
-                if( !empty($aStyle['bordercolor']) ) {
-
-                    $strStyle .= $oStyleSheet->generateDefinition([
-                        'selector' => '.ce_cms_overlay > div[data-cms-unique="'.$uniqueID.'"] .close > span'
-                    ,   'background' => 1
-                    ,   'bgcolor' => $aStyle['bordercolor']
-                    ]);
-                }
-            }
-
-            if( !empty($aStyle['cms_element_style_custom']) ) {
-                $strStyle .= $aStyle['cms_element_style_custom'];
-            }
-        }
-
-        return $strStyle;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function setStylePreview( $active=true ) {
-
-        $this->isStylePreview = $active;
-    }
-
-
-    /**
-    * @inheritdoc
-    */
-    public static function getStyleFieldsConfig( $dc ) {
-
-        switch( $dc->activeRecord->cms_layout_option ) {
-
-            case 'modal_overlay':
-                return [
-                    'bgcolor' => 'start background-border'
-                ,   'borderwidth' => 'background-border'
-                ,   'borderstyle' => 'background-border'
-                ,   'bordercolor' => 'start background-border'
-                ,   'borderradius' => 'background-border'
-
-                ,   'textalign' => 'text-font'
-                ,   'fontsize' => 'text-font'
-                ,   'fontcolor' => 'text-font start'
-                ,   'lineheight' => 'text-font'
-                ];
-                break;
-            case 'toast':
-                return [
-                    'bgcolor' => 'start background-border'
-                ,   'bgimage' => 'background-border'
-                ,   'borderwidth' => 'background-border'
-                ,   'borderstyle' => 'background-border'
-                ,   'bordercolor' => 'start background-border'
-                ,   'borderradius' => 'background-border'
-
-                ,   'textalign' => 'text-font'
-                ,   'fontsize' => 'text-font'
-                ,   'fontcolor' => 'text-font start'
-                ,   'lineheight' => 'text-font'
-                ];
-                break;
-        }
-
-        return [];
     }
 }

@@ -14,7 +14,14 @@
 
 
 /**
- * Add palettes to tl_page
+ * Modify config of tl_page
+ */
+$GLOBALS['TL_DCA']['tl_page']['config']['onundo_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Page', 'refreshLicenseOnUndo'];
+$GLOBALS['TL_DCA']['tl_page']['config']['onrestore_version_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Page', 'refreshLicenseOnRestoreVersion'];
+
+
+/**
+ * Modify palettes of tl_page
  */
 $GLOBALS['TL_DCA']['tl_page']['palettes']['regular'] = str_replace(
     ',description'
@@ -49,8 +56,8 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         'cms_root_license' => [
             'inputType'             => 'text'
         ,   'exclude'               => true
-        ,   'save_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\License', 'save'] ]
-        ,   'load_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\License', 'check'] ]
+        ,   'save_callback'         => [['\numero2\MarketingSuite\DCAHelper\License', 'save']]
+        ,   'load_callback'         => [['\numero2\MarketingSuite\DCAHelper\License', 'check']]
         ,   'eval'                  => ['maxlength'=>255, 'doNotCopy'=>true, 'tl_class'=>'w50 clr']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
@@ -87,13 +94,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['includeCache']['load_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Page', 'addCacheInfo'];
-
-if( version_compare(VERSION, '4.9', '<') ) {
-
-    $GLOBALS['TL_DCA']['tl_page']['fields']['cms_root_license']['label'] = &$GLOBALS['TL_LANG']['tl_page']['cms_root_license'];
-    $GLOBALS['TL_DCA']['tl_page']['fields']['cms_refresh_license']['label'] = &$GLOBALS['TL_LANG']['tl_page']['cms_refresh_license'];
-    $GLOBALS['TL_DCA']['tl_page']['fields']['cms_exclude_health_check']['label'] = &$GLOBALS['TL_LANG']['tl_page']['cms_exclude_health_check'];
-}
 
 if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
 

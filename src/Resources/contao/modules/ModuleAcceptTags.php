@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -25,8 +25,6 @@ use Contao\System;
 use Contao\Validator;
 use numero2\MarketingSuite\Backend\License as baguru;
 use numero2\MarketingSuite\Helper\Domain;
-use numero2\MarketingSuite\Helper\StyleSheet;
-use Patchwork\Utf8;
 
 
 class ModuleAcceptTags extends ModuleEUConsent {
@@ -52,7 +50,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
 
             $objTemplate = new BackendTemplate('be_wildcard');
 
-            $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['cms_accept_tags'][0]).' ###';
+            $objTemplate->wildcard = '### '.$GLOBALS['TL_LANG']['FMD']['cms_accept_tags'][0].' ###';
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
@@ -142,7 +140,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
      *
      * @return boolean
      */
-    public function shouldBeShown() {
+    public function shouldBeShown(): bool {
 
         $show = parent::shouldBeShown();
 
@@ -175,7 +173,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
         $this->Template->action = $this->formAction;
         $this->Template->formId = $this->type;
 
-        $oTagGroups = NULL;
+        $oTagGroups = null;
         $oTagGroups = TagModel::findGroupsWithRootInfo($objPage->trail[0]);
 
         $accepted = [];
@@ -275,87 +273,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
         $this->Template->acceptLabel = $this->replaceInsertTags($this->Template->acceptLabel);
         $this->Template->content = $this->replaceInsertTags($this->Template->content);
 
-        // generate default styling if enabled
-        if( $this->cms_tag_set_style ) {
-            $this->generateStyling();
-        }
-
         parent::compile();
-    }
-
-
-    /**
-     * Generates stylesheet for this module
-     */
-    protected function generateStyling() {
-
-        $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/cookie-bar.css">';
-
-        $strStyle = "";
-
-        $strClass = "mod_".$this->type." form";
-
-        $oStyleSheet = null;
-        $oStyleSheet = new StyleSheet();
-
-        $mainStyle = [
-            'font' => '1'
-        ,   'fontcolor' => (string)$this->cms_tag_font_color
-        ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->cms_tag_background_color
-        ];
-        $main = $oStyleSheet->generateDefinition($mainStyle);
-
-        if( strlen($main) > 20 ) {
-            $strStyle .= "." . $strClass . ' ' . trim($main)."\n";
-        }
-
-        $acceptStyle = [
-            'font' => '1'
-        ,   'fontcolor' => (string)$this->cms_tag_accept_font
-        ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->cms_tag_accept_background
-        ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
-        ,   'border' => '1'
-        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ];
-
-        $accept = $oStyleSheet->generateDefinition($acceptStyle);
-
-        if( strlen($accept) > 20 ) {
-
-            $strStyle .= "." . $strClass . ' button[type="submit"][value="accept"]:not(.first) ' . trim($accept)."\n";
-
-            // additional style for enabled toggle buttons
-            $acceptStyle = [
-                'background' => '1'
-            ,   'bgcolor' => (string)$this->cms_tag_accept_background
-            ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
-            ];
-            $accept = $oStyleSheet->generateDefinition($acceptStyle);
-
-            $strStyle .= "." . $strClass . ' > .tags > div .head input:checked + label ' . trim($accept)."\n";
-        }
-
-        $rejectStyle = [
-            'font' => '1'
-        ,   'fontcolor' => (string)$this->cms_tag_reject_font
-        ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->cms_tag_reject_background
-        ,   'bgimage' => strlen((string)$this->cms_tag_reject_background)?'none':''
-        ,   'border' => '1'
-        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ];
-
-        $reject = $oStyleSheet->generateDefinition($rejectStyle);
-
-        if( strlen($reject) > 20 ) {
-            $strStyle .= "." . $strClass . ' button[type="submit"][value="accept"].first ' . trim($reject) . "\n";
-        }
-
-        if( strlen($strStyle) ) {
-            $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
-        }
     }
 
 
@@ -377,10 +295,10 @@ class ModuleAcceptTags extends ModuleEUConsent {
         $objResult = Database::getInstance()->query("
             SELECT CONCAT_WS(',',p.pid,p1.pid,p2.pid,p3.pid,p4.pid) as trail
             FROM tl_page AS p
-            LEFT JOIN tl_page AS p1 on p1.id = p.pid
-            LEFT JOIN tl_page AS p2 on p2.id = p1.pid
-            LEFT JOIN tl_page AS p3 on p3.id = p2.pid
-            LEFT JOIN tl_page AS p4 on p4.id = p3.pid
+                LEFT JOIN tl_page AS p1 on p1.id = p.pid
+                LEFT JOIN tl_page AS p2 on p2.id = p1.pid
+                LEFT JOIN tl_page AS p3 on p3.id = p2.pid
+                LEFT JOIN tl_page AS p4 on p4.id = p3.pid
             WHERE p.id in (".implode(',', $aPages).")
         ");
 

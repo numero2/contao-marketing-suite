@@ -1,55 +1,171 @@
-.mod_cms_accept_tags,
-.mod_cms_cookie_bar {
+@import "backend/colors";
 
-    font-family: Arial, Helvetica, Sans-serif;
-    font-size: 14px;
-    line-height: 1.33;
+cms-cookie-bar,
+cms-accept-tags {
 
-    button {
+    --main-bg-color: #{$col-white};
+    --main-shadow-color: #{rgba($col-black,0.5)};
+    --main-text-color: inherit;
 
-        color: #ffffff;
-        border: 0;
-        padding: 10px;
-
-        &[value="accept"] {
-            background-color: #27ae60;
-        }
-        &[value="reject"],
-        &[value="accept"].first { background-color: #7f8c8d; }
-    }
-}
-
-.mod_cms_cookie_bar {
+    --btn-accept-text-color: #{$col-white};
+    --btn-accept-bg-color: #{$lime-500};
+    --btn-reject-text-color: var(--btn-accept-text-color);
+    --btn-reject-bg-color: #{$trueGray-400};
 
     position: fixed;
-    bottom: 0;
-    left: 0;
     z-index: 1000;
-    width: 100vw;
 
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-    background: #ffffff;
+    display: block;
+    width: 100%;
+    color: var(--main-text-color);
 
-    form {
+    > cms-container {
 
         display: block;
-        max-width: 800px;
-        margin: 0 auto;
+        max-width: 750px;
+        max-height: 60vh;
 
-        .formbody {
+        padding: 2em;
+        overflow: auto;
 
-            margin: 30px;
+        font-family: Arial, Helvetica, Sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
 
-            .info {
-                font-size: 12px;
+        background: var(--main-bg-color);
+
+        cms-container.disclaimer {
+
+            > *:nth-child(1) {
+                margin-top: 0;
+            }
+        }
+
+        form {
+
+            display: block;
+
+            > * {
+                display: block;
+                width: 100%;
             }
 
-            .widget-submit { text-align: right; }
+            cms-buttons {
+
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                align-items: center;
+
+                width: calc(100% + 1em);
+                margin-left: -0.5em;
+                margin-right: -0.5em;
+
+                cms-button {
+
+                    position: relative;
+                    margin: 0.5em;
+
+                    cursor: pointer;
+                    background: transparent;
+
+                    > span {
+
+                        position: relative;
+                        z-index: 1;
+
+                        display: block;
+                        padding: 0.929em 1.5em;
+
+                        text-align: center;
+                        line-height: 1;
+                        color: inherit;
+
+                        &:before {
+
+                            content: "";
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+
+                            position: absolute;
+                            z-index: -1;
+                            top: 0;
+                            left: 0;
+
+                            transition: filter .2s;
+                        }
+                    }
+
+                    &[value="reject"],
+                    &[value="accept"]:nth-of-type(1) {
+
+                        color: var(--btn-reject-text-color);
+
+                        > span:before {
+                            background: var(--btn-reject-bg-color);
+                        }
+                    }
+
+                    &[value="accept"]:nth-last-of-type(1) {
+
+                        color: var(--btn-accept-text-color);
+
+                        > span:before {
+                            background: var(--btn-accept-bg-color);
+                        }
+                    }
+
+                    &:hover >span:before {
+                        filter: brightness(85%);
+                    }
+                }
+
+                @media (max-width: 430px) {
+
+                    justify-content: center;
+
+                    cms-button {
+                        flex-basis: 100%;
+                    }
+                }
+            }
         }
+    }
+
+    &[data-layout="dark"] {
+
+        --main-bg-color: #{$coolGray-800};
+        --main-shadow-color: #{rgba($col-black,0.5)};
+        --main-text-color: #{$blueGray-100};
+
+        --btn-accept-text-color: #{$blueGray-100};
+        --btn-accept-bg-color: #{$green-700};
+        --btn-reject-text-color: var(--btn-accept-text-color);
+        --btn-reject-bg-color: #{$coolGray-700};
     }
 }
 
-.mod_cms_accept_tags {
+cms-cookie-bar {
+
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    background: var(--main-bg-color);
+    box-shadow: 0px 0px 10px var(--main-shadow-color);
+
+    > cms-container {
+        margin: auto;
+    }
+}
+
+cms-accept-tags {
+
+    --main-bg-overlay-color: #{rgba($col-white,0.5)};
+
+    --toggle-switch-bg-color: #{$col-white};
+    --toggle-active-bg-color: var(--btn-accept-bg-color);
+    --toggle-inactive-bg-color: #{$trueGray-300};
 
     position: fixed;
     top: 0;
@@ -59,97 +175,120 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
 
-    width: 100vw;
-    height: 100vh;
-    overflow: auto;
+    background: var(--main-bg-overlay-color);
 
-    background: rgba(#ffffff,0.5);
-    color: #222;
+    > cms-container {
 
-    .formbody {
-        .widget-submit { text-align: right; }
-    }
+        margin: 2em;
+        box-shadow: 0px 0px 10px var(--main-shadow-color);
 
-    form {
+        form {
 
-        display: block;
-        max-width: 800px;
-        max-height: 60vh;
-        overflow: auto;
+            cms-taglist {
 
-        margin: 30px;
+                display: flex;
+                flex-wrap: wrap;
 
-        box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-        background: #ffffff;
+                width: calc(100% + 2em);
+                margin-left: -1em;
+                margin-right: -1em;
+                margin-top: 1em;
 
-        > .formbody, > .tags > div {
-            padding: 15px;
-        }
+                cms-taggroup {
 
-        > .tags {
+                    flex-basis: 0;
+                    flex-grow: 1;
+                    min-width: 160px;
+                    padding: 1em;
 
-            display: flex;
-            flex-wrap: wrap;
+                    cms-taggroup-header {
 
-            > div {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
 
-                flex-basis: 0;
-                flex-grow: 1;
+                        font-weight: 700;
+                        margin-bottom: 0.75em;
 
-                .head {
+                        input {
+                            display: none;
+                        }
 
-                    display: flex;
-                    justify-content: space-between;
-                    font-weight: 700;
-                    margin-top: 0;
-                    margin-bottom: 15px;
+                        label {
 
-                    input { display: none; }
+                            display: inline-block;
+                            flex-shrink: 0;
+                            margin-left: 10px;
 
-                    $color: #95a5a6;
+                            position: relative;
+                            width: 44/14*1em;
+                            height: 24/14*1em;
 
-                    label {
+                            cursor: pointer;
 
-                        display: inline-block;
-                        flex-shrink: 0;
-                        position: relative;
-                        background: $color;
-                        width: 40px;
-                        height: 16px;
-                        border-radius: 13px;
-                        cursor: pointer;
-                        margin-left: 10px;
+                            border-radius: 1em;
+                            background: var(--toggle-inactive-bg-color);
 
-                        &:after {
-                            content: "";
-                            display: block;
-                            position: absolute;
-                            top: -2px;
-                            left: 0;
-                            width: 20px;
-                            height: 20px;
-                            background: darken($color,10%);
-                            border-radius: 50%;
                             transition: all .3s;
+
+                            &:after {
+
+                                content: "";
+
+                                position: absolute;
+                                top: 50%;
+                                left: 0;
+
+                                display: block;
+                                width: 20/14*1em;
+                                height: 20/14*1em;
+
+                                background: var(--toggle-switch-bg-color);
+                                border-radius: 50%;
+
+                                transform: translateY(-50%) translateX(2px);
+
+                                transition: all .3s;
+                            }
+                        }
+
+                        input:checked + label {
+
+                            background: var(--toggle-active-bg-color);
+
+                            &:after {
+                                left: 100%;
+                                transform: translateY(-50%) translateX(-100%) translateX(-2px);
+                            }
                         }
                     }
 
-                    input:checked + label {
-
-                        background: lighten(#2ecc71,20%);
-
-                        &:after {
-                            left: 100%;
-                            transform: translateX(-100%);
-                        }
+                    cms-taggroup-description {
+                        font-size: 12/14*1em;
                     }
-                }
-
-                p {
-                    font-size: 12px;
                 }
             }
         }
+    }
+
+    &[data-layout="dark"] {
+
+        --main-bg-overlay-color: #{rgba($trueGray-800,0.5)};
+
+        --toggle-active-bg-color: #{$green-700};
+        --toggle-inactive-bg-color: #{$coolGray-700};
+
+
+                /*
+                --main-bg-overlay-color: #{rgba($col-dark,0.5)};
+                --main-bg-color: #{$coolGray-800};
+                --main-shadow-color: #{rgba($col-black,0.5)};
+                --main-text-color: #{$blueGray-100};
+                --main-border-color: #{$coolGray-800};
+                --main-close-btn-color: #{$coolGray-400};
+                --main-close-btn-color-hover: #{$coolGray-100};
+                 */
     }
 }

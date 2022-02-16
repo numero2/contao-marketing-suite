@@ -29,13 +29,3 @@ services:
             - '@contao.framework'
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, priority: -5 }
-
-
-    # Backwards compatibility for contao 4.4
-    marketing_suite.listener.legacy_link_shortener:
-        class: numero2\MarketingSuiteBundle\EventListener\KernelException\LinkShortenerRedirect
-        arguments:
-            - "@contao.routing.scope_matcher"
-            - "@contao.framework"
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 256 }

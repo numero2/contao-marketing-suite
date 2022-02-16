@@ -1,101 +1,74 @@
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> data-cms-id="<?= $this->cmsID; ?>" role="dialog" aria-modal="true">
+<cms-accept-tags class="<?= $this->class ?> block"<?= $this->cssID ?> data-cms-id="<?= $this->cmsID; ?>" role="dialog" aria-modal="true"<?=$this->layout?' data-layout="'.$this->layout.'"':''?> style="display:none;">
+    <cms-container>
 
-    <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="post">
-        <div class="formbody">
+        <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="post">
+            <cms-container>
 
-            <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
-            <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />
+                <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
+                <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />
 
-            <div class="info">
-                <?= $this->content; ?>
-                <?php $this->block('info'); ?>
+                <?php $this->block('beforeDisclaimer'); ?>
                 <?php $this->endblock(); ?>
-            </div>
 
-            <div class="widget widget-submit">
-                <button type="submit" name="choice" value="accept" class="submit<?= ($this->acceptAllLabel)?' first':''; ?>" tabindex="<?= count($this->tags)+1; ?>">
-                    <?= $this->acceptLabel ?>
-                </button>
-                <?php if( $this->acceptAllLabel ): ?>
-                    <button type="submit" name="choice" value="accept" class="submit all" data-all="true" tabindex="<?= count($this->tags)+2; ?>">
-                        <?= $this->acceptAllLabel ?>
-                    </button>
-                <?php endif; ?>
-                <?php $this->block('buttons'); ?>
+                <?php $this->block('disclaimer'); ?>
+                <cms-container class="disclaimer">
+                    <?= $this->content; ?>
+                </cms-container>
                 <?php $this->endblock(); ?>
-            </div>
-        </div>
 
-        <div class="tags">
-            <?php foreach( $this->tags as $key => $tag ): ?>
-                <div role="group" aria-labelledby="group_head_<?= $tag['id']; ?> group_desc_<?= $tag['id']; ?>">
-                    <div class="head">
-                        <span id="group_head_<?= $tag['id']; ?>"><?= $tag['name']; ?></span>
-                        <?php if( !$tag['required'] ): ?>
-                            <input id="cookie_<?= $tag['id']; ?>" type="checkbox" name="cookie_<?= $tag['id']; ?>" value="<?= $tag['id']; ?>" <?php if( $tag['accepted'] ): ?>checked<?php endif; ?> />
-                            <label for="cookie_<?= $tag['id']; ?>" tabindex="<?= $key+1; ?>" onKeyPress="var c = document.getElementById('cookie_<?= $tag['id']; ?>'); c.checked = !c.checked; this.setAttribute('aria-checked',c.checked); return false;" onClick="var c = document.getElementById('cookie_<?= $tag['id']; ?>'); this.setAttribute('aria-checked',!c.checked);">
-                                <span role="checkbox" aria-label="<?= $tag['name']; ?>" aria-checked="<?= ($tag['accepted']) ? 'true':'false'; ?>"></span>
-                            </label>
-                        <?php endif; ?>
-                    </div>
-                    <div class="description" id="group_desc_<?= $tag['id']; ?>">
-                        <?= $tag['description']; ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </form>
+                <?php $this->block('afterDisclaimer'); ?>
+                <?php $this->endblock(); ?>
 
-    <script>
+                <cms-buttons>
+                    <cms-button role="button" type="submit" name="choice" value="accept" tabindex="<?= count($this->tags)+1; ?>">
+                        <span><?= $this->acceptLabel ?></span>
+                    </cms-button>
+                    <?php if( $this->acceptAllLabel ): ?>
+                        <cms-button role="button" type="submit" name="choice" value="accept" data-all="true" tabindex="<?= count($this->tags)+2; ?>">
+                            <span><?= $this->acceptAllLabel ?></span>
+                        </cms-button>
+                    <?php endif; ?>
+                    <?php $this->block('buttons'); ?>
+                    <?php $this->endblock(); ?>
+                </cms-buttons>
 
-        if( !navigator.cookieEnabled ) {
-            document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"]').remove();
-        }
+            </cms-container>
 
-        var as = document.querySelectorAll('[data-cms-id="<?= $this->cmsID; ?>"] .info a');
+            <?php $this->block('beforeTags'); ?>
+            <?php $this->endblock(); ?>
 
-        [].forEach.call(as, function(a){
+            <?php $this->block('tags'); ?>
+            <cms-taglist>
+                <?php foreach( $this->tags as $key => $tag ): ?>
+                    <cms-taggroup role="group" aria-labelledby="group_head_<?= $tag['id']; ?> group_desc_<?= $tag['id']; ?>">
+                        <cms-taggroup-header>
+                            <span id="group_head_<?= $tag['id']; ?>"><?= $tag['name']; ?></span>
+                            <?php if( !$tag['required'] ): ?>
+                                <input id="cookie_<?= $tag['id']; ?>" type="checkbox" name="cookie_<?= $tag['id']; ?>" value="<?= $tag['id']; ?>" <?php if( $tag['accepted'] ): ?>checked<?php endif; ?> />
+                                <label for="cookie_<?= $tag['id']; ?>" tabindex="<?= $key+1; ?>" onKeyPress="var c = document.getElementById('cookie_<?= $tag['id']; ?>'); c.checked = !c.checked; this.setAttribute('aria-checked',c.checked); return false;" onClick="var c = document.getElementById('cookie_<?= $tag['id']; ?>'); this.setAttribute('aria-checked',!c.checked);">
+                                    <span role="checkbox" aria-label="<?= $tag['name']; ?>" aria-checked="<?= ($tag['accepted']) ? 'true':'false'; ?>"></span>
+                                </label>
+                            <?php endif; ?>
+                        </cms-taggroup-header>
+                        <cms-taggroup-description id="group_desc_<?= $tag['id']; ?>">
+                            <?= $tag['description']; ?>
+                        </cms-taggroup-description>
+                    </cms-taggroup>
+                <?php endforeach; ?>
+            </cms-taglist>
+            <?php $this->endblock(); ?>
 
-            if( a && !a.tabIndex ) {
-                a.tabIndex = 1;
-            }
-        });
+            <?php $this->block('afterTags'); ?>
+            <?php $this->endblock(); ?>
 
-        <?php if( $this->acceptAllLabel ): ?>
+        </form>
 
-            var buttonAll = document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"] button[data-all]');
+        <?= $this->insert('script_mod_cms_accept_tags', ['id'=>$this->cmsID]); ?>
 
-            if( buttonAll ) {
+        <?php $this->block('after'); ?>
+        <?php $this->endblock(); ?>
 
-                buttonAll.addEventListener('click', function(e){
-
-                    e.preventDefault();
-
-                    var checkboxes = document.querySelectorAll('[data-cms-id="<?= $this->cmsID; ?>"] input[type="checkbox"]');
-
-                    if( checkboxes ) {
-
-                        [].forEach.call(checkboxes, function(c){
-                            c.checked = true;
-                        });
-                    }
-
-                    var form = document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"] form');
-
-                    if( form ) {
-                        form.submit();
-                    }
-
-                });
-            }
-
-        <?php endif; ?>
-
-    </script>
-
-    <?php $this->block('after'); ?>
-    <?php $this->endblock(); ?>
-
-</div>
+    </cms-container>
+</cms-accept-tags>
 <!-- indexer::continue -->

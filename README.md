@@ -34,7 +34,7 @@ These functions will check if the tag, given by its id, has been accepted by the
 System requirements
 --
 
-* [Contao 4](https://github.com/contao/contao)
+* [Contao 4.9](https://github.com/contao/contao)
 
 
 Installation

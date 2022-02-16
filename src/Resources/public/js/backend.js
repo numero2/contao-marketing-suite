@@ -352,6 +352,8 @@ var CMSBackend = {
         }
     },
 
+    /*
+    // TODO: Remove after ensuring that this is not needed anymore
     toggleField: function(el, id, table) {
 
         el.blur();
@@ -394,6 +396,7 @@ var CMSBackend = {
 
         return false;
     },
+    */
 
     toggleFieldReload: function(el, id, table) {
 
@@ -401,16 +404,12 @@ var CMSBackend = {
 
         var image = $(el).getFirst('img'),
             active = (image.get('data-state') == 1);
-        // Backwards compatibility
-        if( image.get('data-state') === null ) {
-            console.warn('Using a field toggle without a "data-state" attribute is deprecated.');
-        }
 
         var request = new Request.Contao({'url':window.location.href, 'followRedirects':false}).get({'tid':id, 'state':!active ? 1 : 0, 'rt':Contao.request_token});
 
         request.xhr.addEventListener('load', function(e) {
 
-            if( request.status == 302 ) {
+            if( request.status == 303 ) {
                 location.reload(true);
             }
         });

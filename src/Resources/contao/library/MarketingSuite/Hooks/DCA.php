@@ -36,7 +36,7 @@ class DCA extends Hooks {
                 // check palette for styling field
                 if( !is_array($palette) && strpos($palette, 'cms_element_style') !== false ) {
 
-                    $oES = NULL;
+                    $oES = null;
                     $oES = new ElementStyle();
 
                     $oES->addStylingFields((object)['table' => $strTable]);

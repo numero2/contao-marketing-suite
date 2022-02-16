@@ -58,10 +58,9 @@ if( Input::get('do') == 'cms_conversion' ) {
     $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'addPageScopeFields'];
 
     $GLOBALS['TL_DCA']['tl_content']['config']['notSortable'] = true;
-    $GLOBALS['TL_DCA']['tl_content']['config']['notCopyable'] = true;
-
     unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['cut']);
-    unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']);
+
+    $GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']['href'] = 'act=copy';
 
     // change view to table
     $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = [
@@ -213,11 +212,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
         ,   'options_callback'  => ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'getConversionElements']
         ,   'eval'              => ['mandatory'=>true, 'chosen'=>'true', 'inlcudeBlankOption'=>true, 'tl_class'=>'clr w50 wizard']
         ,   'wizard'            => [['\numero2\MarketingSuite\DCAHelper\ConversionItem','conversionItemWizard']]
-        ,   'sql'               => "int(10) unsigned NOT NULL default '0'"
-        ]
-    ,   'cms_ci_clicks' => [
-            'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_ci_clicks']
-        ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']
         ,   'sql'               => "int(10) unsigned NOT NULL default '0'"
         ]
     ,   'cms_ci_clicks' => [

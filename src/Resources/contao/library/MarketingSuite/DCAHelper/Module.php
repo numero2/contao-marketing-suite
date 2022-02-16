@@ -77,7 +77,7 @@ class Module extends CoreBackend {
      */
     public function addTagModules( $dc ) {
 
-        $oTS = NULL;
+        $oTS = null;
         $oTS = new TagSettings();
 
         $aTypes = [];
@@ -93,17 +93,20 @@ class Module extends CoreBackend {
             $aCoreFields =  self::$aCoreFields;
             $aSettingsFields = array_map(function($value) { return 'cms_tag_'.$value; }, $aCoreFields);
 
+            // add fields in "main" palettes
             foreach( $aTypes as $k => $v ) {
+
                 if( in_array($k, ['default', 'cms_tag_modules']) ) {
                     continue;
                 }
 
                 $strPalette = str_replace($aSettingsFields, $aCoreFields, $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'][$k]);
                 $GLOBALS['TL_DCA']['tl_module']['palettes'][$k] = str_replace('{title_legend},cms_tag_type', $GLOBALS['TL_DCA']['tl_module']['palettes'][$k], $strPalette);
-
             }
 
+            // add fields in "subpalettes"
             foreach( $GLOBALS['TL_DCA']['tl_cms_tag_settings']['subpalettes'] as $k => $v ) {
+
                 if( in_array($k, $aIgnoreFields) || in_array($k, $aSettingsFields) ) {
                     continue;
                 }
@@ -114,17 +117,32 @@ class Module extends CoreBackend {
 
             self::addSQLDefinitionForTagSettings('tl_module');
 
+            // add onload_callback
+            $onLoadCallbacks = $GLOBALS['TL_DCA']['tl_cms_tag_settings']['config']['onload_callback'];
+
+            if( !empty($onLoadCallbacks) ) {
+
+                foreach( $onLoadCallbacks as $callback ) {
+
+                    if( \is_array($callback) ) {
+                        $this->import($callback[0]);
+                        $this->{$callback[0]}->{$callback[1]}($dc);
+                    } elseif( \is_callable($callback) ){
+                        $callback($dc);
+                    }
+                }
+            }
+
         } else {
 
             foreach( $aTypes as $k => $v ) {
+
                 if( in_array($k, ['default', 'cms_tag_modules']) ) {
                     continue;
                 }
 
                 if( Input::get('act') == 'edit' ) {
-
                     $GLOBALS['TL_LANG']['FMD'][$k][0] .= '['.$GLOBALS['TL_LANG']['MSC']['cms_disabled'].']';
-
                 } else {
                     $GLOBALS['TL_LANG']['FMD'][$k][0] .= '] ['.$GLOBALS['TL_LANG']['MSC']['cms_disabled'];
                 }

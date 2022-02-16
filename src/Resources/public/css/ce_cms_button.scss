@@ -1,0 +1,43 @@
+// main: elements.scss
+@import "backend/colors";
+
+cms-button {
+
+    display: block;
+
+    --bg-color: #{$trueGray-200};
+    --text-color: #{$coolGray-800};
+
+    --hover-bg-color: #{$trueGray-300};
+    --hover-text-color: #{$coolGray-800};
+
+    a, cms-anchor {
+        display: inline-block;
+        padding: 1em;
+
+        font-family: inherit;
+        font-size: inherit;
+        text-align: center;
+        line-height: 1.2;
+        text-decoration: none;
+
+        color: var(--text-color);
+        background: var(--bg-color);
+        border-radius: 0.25em;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--hover-text-color) !important;
+            background: var(--hover-bg-color) !important;
+        }
+    }
+
+    &[data-layout="dark"] {
+
+        --bg-color: #{$coolGray-800};
+        --text-color: #{$col-white};
+
+        --hover-bg-color: #{$coolGray-700};
+        --hover-text-color: #{$col-white};
+    }
+}

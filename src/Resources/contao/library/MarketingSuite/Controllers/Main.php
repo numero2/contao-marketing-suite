@@ -35,6 +35,7 @@ class Main extends BackendMain {
 
         if( $headline ) {
             $this->Template->headline = $headline;
+            $this->Template->title = $headline;
         }
 
         # fix duplicate css / js (see #63)

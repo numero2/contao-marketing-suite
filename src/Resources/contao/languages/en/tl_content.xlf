@@ -66,10 +66,10 @@
         <source>Verwendung</source>
     </trans-unit>
     <trans-unit id="tl_content.cms_element_style.0">
-        <source>Aussehen anpassen</source>
+        <source>Standarddarstellung nutzen / anpassen</source>
     </trans-unit>
     <trans-unit id="tl_content.cms_element_style.1">
-        <source>Konfigurieren Sie das Aussehen des Inhaltselements.</source>
+        <source>Sie können zwischen verschiedenen Layouts wählen. Diese Option deaktivieren falls die Darstellung über ein eigenes Stylesheet erfolgen soll.</source>
     </trans-unit>
     <trans-unit id="tl_content.cms_layout_option.0">
         <source>Layout Option</source>

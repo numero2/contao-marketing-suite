@@ -140,7 +140,7 @@ input[type="radio"][readonly] + label {
 }
 
 .main_headline.conversion_item:not(.edit) > *:nth-child(1), #main_headline.conversion_item:not(.edit) > *:nth-child(1) {
-    color: #0F1C26;
+    color: #21262d;
 }
 
 .main_headline.conversion_item:not(.edit) > *:nth-child(n+2), #main_headline.conversion_item:not(.edit) > *:nth-child(n+2) {
@@ -148,7 +148,7 @@ input[type="radio"][readonly] + label {
 }
 
 .main_headline.conversion_item.edit > *:nth-child(1), .main_headline.conversion_item.edit > *:nth-child(4), #main_headline.conversion_item.edit > *:nth-child(1), #main_headline.conversion_item.edit > *:nth-child(4) {
-    color: #0F1C26;
+    color: #21262d;
 }
 
 .main_headline.conversion_item.edit > *:nth-child(4), #main_headline.conversion_item.edit > *:nth-child(4) {
@@ -2058,4 +2058,154 @@ fieldset > div > .suggest_wizard ul li:hover {
 
 .widget.styling-categories .widgets .tl_text_trbl {
     width: 18%;
+}
+
+.widget > .cms_layout_selector {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1rem;
+    margin-top: 0.5em;
+    margin-left: -0.5em;
+}
+
+.widget > .cms_layout_selector > input {
+    display: none;
+}
+
+.widget > .cms_layout_selector > input:checked + label {
+    border-color: #f47c00;
+    box-shadow: 0 0 0 1px #f47c00;
+}
+
+.widget > .cms_layout_selector > input:checked + label > div .label {
+    color: #f47c00;
+}
+
+.widget > .cms_layout_selector > label {
+    display: flex;
+    align-items: center;
+    margin: 0.5em;
+    padding: 0.25em;
+    border: 1px solid #999999;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.widget > .cms_layout_selector > label > div figure {
+    width: 100px;
+    height: 58.33333px;
+    background-size: auto 100%;
+}
+
+.widget > .cms_layout_selector > label > div .label {
+    color: #808080;
+    font-size: .75rem;
+    line-height: 1.5;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(1) > div > figure {
+    background-position: 0% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(2) > div > figure {
+    background-position: 100% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(3) > div > figure {
+    background-position: 200% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(4) > div > figure {
+    background-position: 300% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(5) > div > figure {
+    background-position: 400% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(6) > div > figure {
+    background-position: 500% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(7) > div > figure {
+    background-position: 600% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(8) > div > figure {
+    background-position: 700% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(9) > div > figure {
+    background-position: 800% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(10) > div > figure {
+    background-position: 900% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(11) > div > figure {
+    background-position: 1000% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(12) > div > figure {
+    background-position: 1100% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(13) > div > figure {
+    background-position: 1200% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(14) > div > figure {
+    background-position: 1300% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(15) > div > figure {
+    background-position: 1400% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(16) > div > figure {
+    background-position: 1500% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(17) > div > figure {
+    background-position: 1600% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(18) > div > figure {
+    background-position: 1700% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(19) > div > figure {
+    background-position: 1800% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(20) > div > figure {
+    background-position: 1900% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(21) > div > figure {
+    background-position: 2000% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(22) > div > figure {
+    background-position: 2100% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(23) > div > figure {
+    background-position: 2200% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(24) > div > figure {
+    background-position: 2300% 0;
+}
+
+.widget > .cms_layout_selector > label:nth-of-type(25) > div > figure {
+    background-position: 2400% 0;
+}
+
+.widget > .cms_layout_selector + p {
+    margin-top: 0.5em;
 }

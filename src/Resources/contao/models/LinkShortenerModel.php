@@ -53,24 +53,6 @@ class LinkShortenerModel extends Model {
 
 
     /**
-     * Finds all active entries
-     *
-     * @param string $path
-     *
-     * @return null|LinkShortenerModel
-     */
-    public static function findAllActive() {
-
-        if( lskgn::hasFeature('link_shortener') ) {
-
-            return self::findOneBy(['active=? OR (active=? AND fallback!=?)'], [1,'','']);
-        }
-
-        return null;
-    }
-
-
-    /**
      * returns the resolved target url for the current entity
      *
      * @return string
@@ -78,7 +60,8 @@ class LinkShortenerModel extends Model {
     public function getTarget() {
 
         $strTarget = $this->target;
-        if( $this->active !== '1' ) {
+
+        if( $this->active !== '1' || ($this->stop !== '' && $this->stop <= time()) ) {
 
             if( !empty($this->fallback) ) {
 
@@ -94,7 +77,7 @@ class LinkShortenerModel extends Model {
 
         if( !parse_url($strTarget, PHP_URL_HOST) ) {
 
-            $strTarget = \Environment::get('httpHost').'/'.$strTarget;
+            $strTarget = Environment::get('httpHost').'/'.$strTarget;
         }
         if( !parse_url($strTarget, PHP_URL_SCHEME) ) {
 

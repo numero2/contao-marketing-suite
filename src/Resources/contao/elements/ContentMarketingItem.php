@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -23,7 +23,6 @@ use Contao\Environment;
 use Contao\Input;
 use numero2\MarketingSuite\Backend\License as tokanugo;
 use numero2\MarketingSuite\MarketingItem\MarketingItem;
-use Patchwork\Utf8;
 
 
 class ContentMarketingItem extends ContentElement {
@@ -53,7 +52,7 @@ class ContentMarketingItem extends ContentElement {
 
                 $this->loadLanguageFile('tl_cms_marketing_item');
 
-                $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_marketing_item'][0] .' ('. $GLOBALS['TL_LANG']['tl_cms_marketing_item']['types'][$oMarketingItem->type] .')').' ###';
+                $objTemplate->wildcard = '### '.$GLOBALS['TL_LANG']['CTE']['cms_marketing_item'][0] .' ('. $GLOBALS['TL_LANG']['tl_cms_marketing_item']['types'][$oMarketingItem->type] .')'.' ###';
                 $objTemplate->id = $oMarketingItem->id;
                 $objTemplate->link = $oMarketingItem->name;
 
@@ -69,7 +68,7 @@ class ContentMarketingItem extends ContentElement {
 
             } else {
 
-                $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_marketing_item'][0]).' ###';
+                $objTemplate->wildcard = '### '.$GLOBALS['TL_LANG']['CTE']['cms_marketing_item'][0].' ###';
             }
 
             return $objTemplate->parse();

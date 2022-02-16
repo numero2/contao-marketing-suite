@@ -315,10 +315,6 @@ class Tags extends Hooks {
                     $oTemplate = new FrontendTemplate($oTag->fallbackTpl?:'ce_optin_fallback');
                     $oTemplate->setData( $oRow->row() );
 
-                    // DEPRECATED
-                    $oTemplate->optinLink = self::generateEUConsentForceLink($cssID);
-                    @trigger_error('Using $this->optinLink in fallback template has been deprecated and will no longer work in Marketing Suite 2.0', E_USER_DEPRECATED);
-
                     $oTemplate->headline = null;
                     $oTemplate->class = 'ce_optin_fallback '.$oRow->cms_tag_fallback_css_class;
                     $oTemplate->cssID = ' id="'.$cssID.'"';

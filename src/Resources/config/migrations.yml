@@ -2,11 +2,19 @@ services:
     _defaults:
         autoconfigure: true
 
+    numero2\MarketingSuiteBundle\Migration\CMSBotDefinitionMigration:
+        arguments:
+            - '@contao.framework'
+
     numero2\MarketingSuiteBundle\Migration\CMSConfigCreation:
         arguments:
             - '%kernel.project_dir%'
 
     numero2\MarketingSuiteBundle\Migration\CMSFormMigration:
+        arguments:
+            - '@contao.framework'
+
+    numero2\MarketingSuiteBundle\Migration\CMSLicenseMigration:
         arguments:
             - '@contao.framework'
 

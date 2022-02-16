@@ -61,8 +61,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             ,   'attributes'        => 'onclick="Backend.getScrollOffset()"'
             ]
         ,   'all' => [
-                'label'             => &$GLOBALS['TL_LANG']['MSC']['all']
-            ,   'href'              => 'act=select'
+                'href'              => 'act=select'
             ,   'class'             => 'header_edit_all'
             ,   'attributes'        => 'onclick="Backend.getScrollOffset()" accesskey="e"'
             ]
@@ -101,6 +100,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
     ,   'session'                   => '{common_legend},type,name;{publish_legend},active'
     ,   'html'                      => '{common_legend},type,name;{tag_legend},html;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'google_analytics'          => '{common_legend},type,name;{tag_legend},tag,alias;{config_legend},anonymize_ip;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
+    ,   'google_analytics4'         => '{common_legend},type,name;{tag_legend},tag,alias;{config_legend},anonymize_ip;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'google_tag_manager'        => '{common_legend},type,name;{tag_legend},tag;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'facebook_pixel'            => '{common_legend},type,name;{tag_legend},tag;{expert_legend:hide},customTpl;{publish_legend},pages_scope,pages,active,enable_on_cookie_accept'
     ,   'content_module_element'    => '{common_legend},type,name;{tag_legend},fallbackTpl,fallback_text;{publish_legend},pages_root,active'

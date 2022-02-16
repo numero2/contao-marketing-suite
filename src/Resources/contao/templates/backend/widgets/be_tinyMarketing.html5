@@ -10,7 +10,7 @@ if( $GLOBALS['TL_CONFIG']['useRTE'] ):
 
             (function(){
 
-                var src = "<?= version_compare(VERSION, '4.5', '<') ? TL_ASSETS_URL . 'assets/tinymce4/js/tinymce.min.js' : $this->asset('js/tinymce.min.js', 'contao-components/tinymce4'); ?>";
+                var src = "<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4'); ?>";
                 var prevScript = document.querySelector('script[src="'+src+'"]');
 
                 var initTiny = function() {

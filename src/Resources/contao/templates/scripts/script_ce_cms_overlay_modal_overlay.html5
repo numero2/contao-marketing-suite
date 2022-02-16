@@ -1,29 +1,28 @@
 <script>
 
-    (function(){
+    (()=>{
 
-        var overlay = document.querySelector('[data-cms-unique="<?= $this->unique; ?>"]');
+        const overlay = document.querySelector('cms-modal-overlay[data-cms-id="<?= $this->cmsID; ?>"]');
 
         if( !overlay ) {
             return;
         }
-        overlay = overlay.parentNode;
 
         if( typeof(window.localStorage) !== "undefined" ) {
 
-            var show = true;
-            var itemName = 'cms_overlay-<?= $this->unique; ?>';
+            let show = true;
+            let itemName = 'cms-modal-overlay-'+overlay.dataset.cmsId;
 
-            var tCurrentChange = <?= $this->tstamp; ?>;
-            var tExpires = <?= $this->Template->expires; ?>;
-            var dismissed = window.localStorage.getItem(itemName);
+            let tCurrentChange = <?= $this->tstamp; ?>;
+            let tExpires = <?= $this->Template->expires; ?>;
+            let dismissed = window.localStorage.getItem(itemName);
 
             if( dismissed ) {
 
-                var tCurrent = Math.round(new Date().getTime()/1000);
-                var aSaved = dismissed.split(',');
-                var tLastChanged = aSaved[0];
-                var tShouldExpire = aSaved[1];
+                let tCurrent = Math.round(new Date().getTime()/1000);
+                let aSaved = dismissed.split(',');
+                let tLastChanged = aSaved[0];
+                let tShouldExpire = aSaved[1];
 
                 if( tCurrent > tShouldExpire || tCurrentChange != tLastChanged ) {
                     window.localStorage.removeItem(itemName);
@@ -33,7 +32,7 @@
                 }
             }
 
-            var handleDismiss = function() {
+            const handleDismiss = ()=>{
 
                 if( !dismissed ) {
                     window.localStorage.setItem(itemName, tCurrentChange+','+tExpires);
@@ -42,9 +41,9 @@
                 overlay.parentNode.removeChild(overlay);
             };
 
-            var ajaxViewed = function() {
+            const countView = ()=>{
 
-                var oReq = new XMLHttpRequest();
+                const oReq = new XMLHttpRequest();
 
                 oReq.withCredentials = true;
                 oReq.open("GET", "<?= $this->view; ?>");
@@ -52,18 +51,26 @@
                 oReq.send();
             }
 
+            const closeOverlay = e => {
+
+                if( e.target.tagName === 'CMS-BUTTON' || e.keyCode === 27 ) {
+                    handleDismiss();
+                }
+            };
+
             if( show ) {
 
-                overlay.className = overlay.className.replace(' hidden', '');
-                overlay.querySelector('a.close').addEventListener('click', handleDismiss);
-                ajaxViewed();
+                overlay.removeAttribute('style');
+                countView();
+
+                overlay.querySelector('cms-button').addEventListener('click', closeOverlay);
+                document.addEventListener('keydown', closeOverlay);
 
             } else {
                 handleDismiss();
             }
 
         } else {
-
             overlay.parentNode.removeChild(overlay);
         }
 

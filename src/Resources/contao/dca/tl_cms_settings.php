@@ -24,18 +24,24 @@ $GLOBALS['TL_DCA']['tl_cms_settings'] = [
     ,   'closed'                    => true
     ]
 ,   'palettes' => [
-        'default'                   => '{common_legend},send_anonymized_data,dnt_backend_users;{health_check_legend},health_check_ignore_older_than;{test_legend},testmode'
+        'default'                   => '{common_legend},send_anonymized_data,dnt_backend_users,hide_missing_features;{health_check_legend},health_check_ignore_older_than;{test_legend},testmode'
     ]
 ,   'fields' => [
         'send_anonymized_data' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_settings']['send_anonymized_data']
         ,   'inputType'        => 'checkbox'
-        ,   'eval'             => [ 'tl_class'=>'w50' ]
+        ,   'eval'             => ['tl_class'=>'w50']
         ]
     ,   'dnt_backend_users' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_settings']['dnt_backend_users']
         ,   'inputType'        => 'checkbox'
-        ,   'eval'             => [ 'tl_class'=>'w50' ]
+        ,   'eval'             => ['tl_class'=>'w50']
+        ]
+    ,   'hide_missing_features' => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_cms_settings']['hide_missing_features']
+        ,   'inputType'        => 'checkbox'
+        ,   'load_callback'    => [['numero2\MarketingSuite\DCAHelper\Settings', 'loadHideMissingFeatures']]
+        ,   'eval'             => ['tl_class'=>'w50']
         ]
     ,   'health_check_ignore_older_than' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_settings']['health_check_ignore_older_than']
@@ -45,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_cms_settings'] = [
     ,   'testmode' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_settings']['testmode']
         ,   'inputType'        => 'checkbox'
-        ,   'eval'             => [ 'tl_class'=>'w50' ]
+        ,   'eval'             => ['tl_class'=>'w50']
         ]
     ]
 ];

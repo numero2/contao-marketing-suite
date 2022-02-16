@@ -3,18 +3,19 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2021 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2021 numero2 - Agentur für digitales Marketing
  */
 
 
 namespace numero2\MarketingSuite\Hooks;
 
+use Contao\Backend;
 use Contao\CMSConfig;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
@@ -31,7 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 
-class Hooks extends \Backend {
+class Hooks extends Backend {
 
 
     /**
@@ -117,11 +118,11 @@ class Hooks extends \Backend {
 
         if( $strAction === 'updateElementPreview' ) {
 
-            $oElement = NULL;
+            $oElement = null;
             $oElement = new ElementStyle();
 
             $dc = (object) [
-                'table' => \Input::get('table')
+                'table' => Input::get('table')
             ,   'activeRecord' => (object) [
                     'id' => Input::post('id')
                 ,   'type' => Input::post('type')
@@ -131,7 +132,7 @@ class Hooks extends \Backend {
             $sMarkup = '';
             $sMarkup = $oElement->generatePreview( $dc, $_POST );
 
-            $oResponse = NULL;
+            $oResponse = null;
             $oResponse = new Response( Controller::replaceOldBePaths($sMarkup) );
 
             throw new ResponseException($oResponse);

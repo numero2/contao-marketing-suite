@@ -10,7 +10,7 @@
         <source>Modul-Konfiguration</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag_settings.style_legend">
-        <source>Styling Einstellungen</source>
+        <source>Styling-Einstellungen</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag_settings.template_legend">
         <source>Template-Einstellungen</source>
@@ -83,43 +83,19 @@
         <source>Standarddarstellung nutzen / anpassen</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_set_style.1">
-        <source>Sie können die Farben einzelner Elemente selbst festlegen. Wählen Sie diese Option ab falls Sie die Darstellung über ein eigenes Stylesheet festlegen möchten.</source>
+        <source>Sie können zwischen verschiedenen Layouts wählen. Diese Option deaktivieren falls die Darstellung über ein eigenes Stylesheet erfolgen soll.</source>
     </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_font_color.0">
-        <source>Schriftfarbe</source>
+    <trans-unit id="tl_cms_tag_settings.cms_layout_selector.0">
+        <source>Layout</source>
     </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_font_color.1">
-        <source>Hier können Sie eine hexadezimale Schriftfarbe (z.B. ff0000 für rot) eingeben.</source>
+    <trans-unit id="tl_cms_tag_settings.cms_layout_selector.1">
+        <source>Hier können Sie aus vordefinierten Layouts wählen.</source>
     </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_background_color.0">
-        <source>Hintergrundfarbe</source>
+    <trans-unit id="tl_cms_tag_settings.cms_layout_selector_options.light">
+        <source>Hell</source>
     </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_background_color.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_font.0">
-        <source>"Bestätigen" Button Schriftfarbe</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_font.1">
-        <source>Hier können Sie eine hexadezimale Schriftfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_background.0">
-        <source>"Bestätigen" Button Hintergrundfarbe</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_accept_background.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_font.0">
-        <source>"Ablehnen" Button Schriftfarbe</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_font.1">
-        <source>Hier können Sie eine hexadezimale Schriftfarbe (z.B. ff0000 für rot) eingeben.</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_background.0">
-        <source>"Ablehnen" Button Hintergrundfarbe</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_tag_settings.cms_tag_reject_background.1">
-        <source>Hier können Sie eine hexadezimale Hintergrundfarbe (z.B. ff0000 für rot) eingeben.</source>
+    <trans-unit id="tl_cms_tag_settings.cms_layout_selector_options.dark">
+        <source>Dunkel</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag_settings.cms_tag_customTpl.0">
         <source>Individuelles Template</source>

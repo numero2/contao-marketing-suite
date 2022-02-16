@@ -1,29 +1,14 @@
-<?php $this->extend('block_unsearchable'); ?>
-
-<?php $this->block('headline'); ?>
-<?php $this->endblock(); ?>
-
-<?php $this->block('content'); ?>
-
-    <div data-cms-unique="<?= $this->unique; ?>">
-
-        <a href="<?= $this->close; ?>" class="close" title="<?= $GLOBALS['TL_LANG']['MSC']['close_overlay']; ?>">
-            <span></span>
-            <span></span>
-        </a>
-
-        <div class="inside">
-
+<!-- indexer::stop -->
+<cms-modal-overlay data-cms-id="<?= $this->cmsID; ?>" role="dialog" aria-modal="true"<?=$this->layout?' data-layout="'.$this->layout.'"':''?> <?= !$this->isPreview?'style="display:none;"':''?>>
+    <cms-container>
+        <cms-button role="button" title="<?= $GLOBALS['TL_LANG']['MSC']['close_overlay']; ?>"></cms-button>
+        <cms-container>
             <?php if( $this->headline ): ?>
                 <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
             <?php endif; ?>
-
             <?= $this->text; ?>
-
-        </div>
-
-    </div>
-
-    <?= $this->script; ?>
-
-<?php $this->endblock(); ?>
+        </cms-container>
+    </cms-container>
+</cms-modal-overlay>
+<?= $this->script; ?>
+<!-- indexer::start -->

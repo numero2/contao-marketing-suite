@@ -22,39 +22,27 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-if( class_exists('\Contao\CoreBundle\Controller\AbstractController') ) {
+/**
+ * Handles the Contao back end routes.
+ *
+ * @Route(defaults={"_scope": "backend", "_token_check": true})
+ */
+class BackendController extends AbstractController {
+
 
     /**
-     * Handles the Contao back end routes.
+     * Renders the custom backend main route.
      *
-     * @Route(defaults={"_scope": "backend", "_token_check": true})
-     */
-    class BackendController extends AbstractController {
-
-        /**
-         * Renders the popup for the cms wizard screen.
-         *
-         * @return Response
-         *
-         * @Route("/contao/cms", name="contao_backend_cms_main")
-         */
-        public function cmsMain() {
-
-            $this->initializeContaoFramework();
-
-            $controller = new Main();
-
-            return $controller->run();
-        }
-    }
-
-} else {
-
-    /**
-     * Handles the Contao back end routes in Contao 4.4. This can be drop after Contao 4.4
+     * @return Response
      *
-     * @Route(defaults={"_scope" = "backend", "_token_check" = true})
+     * @Route("/contao/cms", name="contao_backend_cms_main")
      */
-     class BackendController extends Controller {
+    public function cmsMain() {
+
+        $this->initializeContaoFramework();
+
+        $controller = new Main();
+
+        return $controller->run();
     }
 }

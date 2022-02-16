@@ -1,0 +1,65 @@
+<script>
+
+    (()=>{
+
+        const container = document.querySelector('[data-cms-id="<?= $this->id; ?>"]');
+
+        container.removeAttribute('style');
+
+        if( !navigator.cookieEnabled ) {
+            container.remove();
+        }
+
+        const anchors = container.querySelectorAll('.disclaimer a');
+
+        if( anchors && anchors.length ) {
+
+            anchors.forEach((a)=>{
+
+                if( a && !a.tabIndex ) {
+                    a.tabIndex = 1;
+                }
+            });
+        }
+
+        const buttons = container.querySelectorAll('cms-button');
+
+        if( buttons ) {
+
+            const form = container.querySelector('form');
+
+            buttons.forEach((button)=>{
+
+                button.addEventListener('click', function(e){
+
+                    if( this.dataset.all ) {
+
+                        e.preventDefault();
+
+                        let checkboxes = container.querySelectorAll('input[type="checkbox"]');
+
+                        if( checkboxes ) {
+
+                            checkboxes.forEach((c)=>{
+                                c.checked = true;
+                            });
+                        }
+
+                        form.submit();
+                    }
+
+                    const hidden = document.createElement('INPUT');
+                    hidden.type = 'hidden';
+                    hidden.name = this.getAttribute('name');
+                    hidden.value = this.getAttribute('value');
+
+                    form.appendChild(hidden);
+
+                    form.submit();
+                });
+            });
+        }
+
+    })();
+
+</script>

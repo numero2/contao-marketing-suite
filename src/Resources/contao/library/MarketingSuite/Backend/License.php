@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite Administration
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -24,6 +24,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Exception\DriverException;
+use Exception;
 use numero2\MarketingSuite\Api\MarketingSuite as API;
 
 
@@ -103,7 +104,7 @@ class License {
                         $oAPI = new API();
                         $oAPI->checkLicense($oPage->cms_root_license, $oPage);
 
-                    } catch( \Exception $e ) {
+                    } catch( Exception $e ) {
                     }
                 }
             }
@@ -159,8 +160,6 @@ class License {
             // expected in install tool
         }
 
-        $aFeatures = [];
-
         if( $objPages ) {
 
             foreach( $objPages as $value ) {
@@ -187,15 +186,9 @@ class License {
                     continue;
                 }
 
-                $aFeatures += $data['features'];
-
-            }
-        }
-
-        if( $aFeatures && count($aFeatures) ) {
-
-            if( in_array($strAlias, $aFeatures) ) {
-                return true;
+                if( in_array($strAlias, $data['features']) ) {
+                    return true;
+                }
             }
         }
 
@@ -416,7 +409,7 @@ class License {
 
         if( CMS_VERSION && $latestVersion ) {
 
-            if( version_compare(CMS_VERSION, $latestVersion, '<') ) {
+            if( self::isInMajorVersion($latestVersion, CMS_VERSION) && version_compare(CMS_VERSION, $latestVersion, '<') ) {
                 return true;
             }
         }
@@ -493,7 +486,7 @@ class License {
                             $oAPI->getFeatures($value->cms_root_license, $value->current());
                         }
 
-                    } catch( \Exception $e ) {
+                    } catch( Exception $e ) {
                     }
 
                     $lastChecksUp[$value->cms_root_license] = time();
@@ -528,11 +521,27 @@ class License {
 
                 try {
                     $oAPI->sendUsageData();
-                } catch( \Exception $e ) {
+                } catch( Exception $e ) {
                 }
             }
 
             CMSConfig::persist('weekly_run', time());
         }
+    }
+
+
+    /**
+     * Check if the given version belongs to the same major version
+     *
+     * @param string $version
+     * @param string $major
+     *
+     * @return bool
+     */
+    private static function isInMajorVersion( string $version, string $major ): bool {
+
+        $major = intval($major);
+
+        return version_compare($major.'.0.0', $version, '<=') && version_compare(($major+1).'.0.0', $version, '>');
     }
 }

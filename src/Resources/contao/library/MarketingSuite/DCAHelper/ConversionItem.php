@@ -176,12 +176,7 @@ class ConversionItem extends CoreBackend {
         }
 
         if( !empty($classNames) ) {
-
-            if( version_compare(VERSION, '4.5', '<') ) {
-                $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('.main_headline').className += ' ".$classNames."';</script>";
-            } else {
-                $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('#main_headline').className += ' ".$classNames."';</script>";
-            }
+            $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('#main_headline').className += ' ".$classNames."';</script>";
         }
     }
 

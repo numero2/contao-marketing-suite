@@ -57,11 +57,6 @@ class Feedback extends CoreBackendModule {
         if( !empty($arrModules['marketing_suite']) && !empty($arrModules['marketing_suite']['modules']['cms_feedback']) ) {
 
             $arrModules['marketing_suite']['modules']['cms_feedback']['href'] = $this->redirectUri;
-
-            // only Contao 4.4 allows us to add a target attribute
-            if( version_compare(VERSION, '4.5', '<') ) {
-                $arrModules['marketing_suite']['modules']['cms_feedback']['href'] .= '" target="_blank';
-            }
         }
 
         return $arrModules;

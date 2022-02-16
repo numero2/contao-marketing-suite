@@ -25,6 +25,12 @@
     <trans-unit id="tl_cms_settings.dnt_backend_users.1">
         <source>Falls aktiviert zählen eingeloggte Backend-Nutzer nicht mit in die Statistiken für Conversion- oder Marketing-Elemente.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_settings.hide_missing_features.0">
+        <source>Nicht enthaltene Features ausblenden</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_settings.hide_missing_features.1">
+        <source>Falls aktiviert werden alle Features, die nicht in der aktuellen Lizenz enthalten sind, ausgeblendet.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_settings.health_check_ignore_older_than.0">
         <source>Ignoriere ältere Einträge</source>
     </trans-unit>

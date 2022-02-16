@@ -146,6 +146,42 @@ class CMSConfig {
         if( static::$blnHasLcf ) {
             include TL_ROOT . '/system/config/cmsconfig.php';
         }
+
+        \Controller::loadDataContainer('tl_cms_settings');
+        $oDCA = new \DC_CMSFile('tl_cms_settings');
+
+        foreach( $GLOBALS['TL_CMSCONFIG'] as $fieldKey => $fieldConfig ) {
+            if( empty($GLOBALS['TL_DCA']['tl_cms_settings']['fields'][$fieldKey]) ) {
+                continue;
+            }
+
+            $fieldValue = static::get('fieldKey');
+
+            $oDCA->strField = $fieldKey;
+            $oDCA->strInputName = $fieldKey;
+            $oDCA->varValue = static::get('fieldKey');
+
+            if( !empty($GLOBALS['TL_DCA']['tl_cms_settings']['fields'][$fieldKey]['load_callback']) ) {
+                if( is_array($GLOBALS['TL_DCA']['tl_cms_settings']['fields'][$fieldKey]['load_callback']) ) {
+
+                    $varValue = $fieldValue;
+
+                    foreach( $GLOBALS['TL_DCA']['tl_cms_settings']['fields'][$fieldKey]['load_callback'] as $callback ) {
+                        if( is_array($callback) ) {
+                            $class = \System::importStatic($callback[0]);
+                            $varValue = $class->{$callback[1]}($varValue, $oDCA);
+                        } else if( is_callable($callback) ) {
+                            $varValue = $callback($varValue, $oDCA);
+                        }
+                    }
+
+                    if( $fieldValue !== $varValue ) {
+                        static::set($fieldKey, $varValue);
+                        // static::persist($fieldKey, $varValue);
+                    }
+                }
+            }
+        }
     }
 
 

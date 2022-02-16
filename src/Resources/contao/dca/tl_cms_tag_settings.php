@@ -24,6 +24,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
     ,   'closed'                    => true
     ,   'onload_callback'           => [
             ['\numero2\MarketingSuite\DCAHelper\TagSettings', 'modifyPalettes']
+        ,   ['\numero2\MarketingSuite\DCAHelper\TagSettings', 'setLayoutSelectorOptions']
         ]
     ]
 ,   'palettes' => [
@@ -35,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
     ]
 ,   'subpalettes' => [
         'cms_tag_override_label' => 'cms_tag_accept_label,cms_tag_accept_all_label,cms_tag_text'
-    ,   'cms_tag_set_style' => 'cms_tag_font_color,cms_tag_background_color,cms_tag_accept_font,cms_tag_accept_background,cms_tag_reject_font,cms_tag_reject_background'
+    ,   'cms_tag_set_style' => 'cms_layout_selector'
     ]
 ,   'fields' => [
         'cms_tag_type' => [
@@ -97,41 +98,14 @@ $GLOBALS['TL_DCA']['tl_cms_tag_settings'] = [
         ,   'eval'             => [ 'tl_class'=>'clr', 'submitOnChange'=>true ]
         ,   'sql'              => "char(1) NOT NULL default '1'"
         ]
-    ,   'cms_tag_font_color' => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_font_color']
-        ,   'inputType'        => 'text'
-        ,   'eval'             => [ 'maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50' ]
-        ,   'sql'              => "varchar(64) NOT NULL default ''"
-        ]
-    ,   'cms_tag_background_color' => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_background_color']
-        ,   'inputType'        => 'text'
-        ,   'eval'             => [ 'maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50' ]
-        ,   'sql'              => "varchar(64) NOT NULL default ''"
-        ]
-    ,   'cms_tag_accept_font' => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_accept_font']
-        ,   'inputType'        => 'text'
-        ,   'eval'             => [ 'maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50' ]
-        ,   'sql'              => "varchar(64) NOT NULL default ''"
-        ]
-    ,   'cms_tag_accept_background' => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_accept_background']
-        ,   'inputType'        => 'text'
-        ,   'eval'             => [ 'maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50' ]
-        ,   'sql'              => "varchar(64) NOT NULL default ''"
-        ]
-    ,   'cms_tag_reject_font' => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_reject_font']
-        ,   'inputType'        => 'text'
-        ,   'eval'             => [ 'maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50' ]
-        ,   'sql'              => "varchar(64) NOT NULL default ''"
-        ]
-    ,   'cms_tag_reject_background' => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_tag_reject_background']
-        ,   'inputType'        => 'text'
-        ,   'eval'             => [ 'maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50' ]
-        ,   'sql'              => "varchar(64) NOT NULL default ''"
+    ,   'cms_layout_selector' => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_layout_selector']
+        ,   'inputType'        => 'cmsLayoutSelector'
+        ,   'options'          => []
+        ,   'reference'        => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_layout_selector_options']
+        ,   'explanation'      => 'layoutSelector'
+        ,   'eval'             => [ 'sprite'=>'', 'helpwizard'=>true, 'tl_class'=>'clr' ]
+        ,   'sql'              => "varchar(64) NOT NULL default 'light'"
         ]
     ,   'cms_exclude_pages' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_exclude_pages']

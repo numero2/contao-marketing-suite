@@ -1,5 +1,147 @@
-$color: #95a5a6;
+cms-button {
+    display: block;
+    --bg-color: #E5E5E5;
+    --text-color: #1F2937;
+    --hover-bg-color: #D4D4D4;
+    --hover-text-color: #1F2937;
+}
 
+cms-button a, cms-button cms-anchor {
+    display: inline-block;
+    padding: 1em;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: center;
+    line-height: 1.2;
+    text-decoration: none;
+    color: var(--text-color);
+    background: var(--bg-color);
+    border-radius: 0.25em;
+    cursor: pointer;
+}
+
+cms-button a:hover, cms-button cms-anchor:hover {
+    color: var(--hover-text-color) !important;
+    background: var(--hover-bg-color) !important;
+}
+
+cms-button[data-layout="dark"] {
+    --bg-color: #1F2937;
+    --text-color: #ffffff;
+    --hover-bg-color: #374151;
+    --hover-text-color: #ffffff;
+}
+
+cms-modal-overlay {
+    --main-bg-overlay-color: rgba(255, 255, 255, 0.5);
+    --main-bg-color: #ffffff;
+    --main-shadow-color: rgba(0, 0, 0, 0.5);
+    --main-text-color: inherit;
+    --main-border-color: #9CA3AF;
+    --main-close-btn-color: #9CA3AF;
+    --main-close-btn-color-hover: #6B7280;
+    --main-link-color-hover: #F97316;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: var(--main-bg-overlay-color);
+    color: var(--main-text-color);
+}
+
+cms-modal-overlay[data-layout="dark"] {
+    --main-bg-overlay-color: rgba(38, 38, 38, 0.5);
+    --main-bg-color: #1F2937;
+    --main-shadow-color: rgba(0, 0, 0, 0.5);
+    --main-text-color: #F1F5F9;
+    --main-border-color: #1F2937;
+    --main-close-btn-color: #9CA3AF;
+    --main-close-btn-color-hover: #F3F4F6;
+    --main-link-color-hover: #F97316;
+}
+
+cms-modal-overlay > cms-container {
+    position: relative;
+    display: block;
+    max-width: 750px;
+    max-height: 60vh;
+    padding: 2em;
+    overflow: auto;
+    margin: 2em;
+    font-family: Arial, Helvetica, Sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0px 0px 10px var(--main-shadow-color);
+    background: var(--main-bg-color);
+    border: 6px solid var(--main-border-color);
+}
+
+cms-modal-overlay > cms-container > cms-button {
+    font-size: 1.75em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.5em;
+    height: 1.5em;
+    position: absolute;
+    top: 0.3em;
+    right: 0.3em;
+    cursor: pointer;
+}
+
+cms-modal-overlay > cms-container > cms-button:before, cms-modal-overlay > cms-container > cms-button:after {
+    content: "";
+    background: var(--main-close-btn-color);
+    display: block;
+    width: 1em;
+    height: 0.15em;
+    position: absolute;
+    transition: background .2s;
+}
+
+cms-modal-overlay > cms-container > cms-button:before {
+    transform: rotate(45deg);
+}
+
+cms-modal-overlay > cms-container > cms-button:after {
+    transform: rotate(-45deg);
+}
+
+cms-modal-overlay > cms-container > cms-button:hover:before, cms-modal-overlay > cms-container > cms-button:hover:after {
+    background: var(--main-close-btn-color-hover);
+}
+
+cms-modal-overlay > cms-container a {
+    color: var(--main-text-color);
+    text-decoration: underline;
+}
+
+cms-modal-overlay > cms-container a:hover {
+    color: var(--main-link-color-hover);
+}
+
+body.cms-element-preview cms-modal-overlay {
+    position: relative;
+    height: auto;
+    top: initial;
+    right: initial;
+    left: initial;
+    bottom: initial;
+    animation: none;
+    transform: none;
+}
+
+body.cms-element-preview cms-modal-overlay > cms-container {
+    max-height: none;
+}
+
+/*
+$color: #95a5a6;
 .ce_cms_overlay {
 
     &.hidden {
@@ -220,3 +362,4 @@ body.cms-element-preview {
         }
     }
 }
+*/

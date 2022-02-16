@@ -1,42 +1,46 @@
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> data-cms-id="<?= $this->cmsID; ?>" role="dialog">
+<cms-cookie-bar class="<?= $this->class ?> block"<?= $this->cssID ?> data-cms-id="<?= $this->cmsID; ?>" role="dialog"<?=$this->layout?' data-layout="'.$this->layout.'"':''?> style="display:none;">
+    <cms-container>
 
-    <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
-        <div class="formbody">
+        <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="post">
+            <cms-container>
 
-            <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
-            <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />
+                <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
+                <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />
 
-            <div class="info">
-                <?= $this->content; ?>
-            </div>
+                <?php $this->block('beforeDisclaimer'); ?>
+                <?php $this->endblock(); ?>
 
-            <div class="widget widget-submit">
-                <button type="submit" name="choice" value="accept" class="submit" tabindex="2"><?= $this->acceptLabel ?></button>
-                <?php if( $this->rejectLabel ): ?>
-                    <button type="submit" name="choice" value="reject" class="submit" tabindex="3"><?= $this->rejectLabel ?></button>
-                <?php endif; ?>
-            </div>
+                <?php $this->block('disclaimer'); ?>
+                <cms-container class="disclaimer">
+                    <?= $this->content; ?>
+                </cms-container>
+                <?php $this->endblock(); ?>
 
-        </div>
-    </form>
+                <?php $this->block('afterDisclaimer'); ?>
+                <?php $this->endblock(); ?>
 
-    <script>
+                <cms-buttons>
+                    <?php if( $this->rejectLabel ): ?>
+                        <cms-button role="button" type="submit" name="choice" value="reject" tabindex="3">
+                            <span><?= $this->rejectLabel ?></span>
+                        </cms-button>
+                    <?php endif; ?>
+                    <cms-button role="button" type="submit" name="choice" value="accept" tabindex="2">
+                        <span><?= $this->acceptLabel ?></span>
+                    </cms-button>
+                    <?php $this->block('buttons'); ?>
+                    <?php $this->endblock(); ?>
+                </cms-buttons>
 
-        if( !navigator.cookieEnabled ) {
-            document.querySelector('[data-cms-id="<?= $this->cmsID; ?>"]').remove();
-        }
+            </cms-container>
+        </form>
 
-        var as = document.querySelectorAll('[data-cms-id="<?= $this->cmsID; ?>"] .info a');
+        <?= $this->insert('script_mod_cms_accept_tags', ['id'=>$this->cmsID]); ?>
 
-        [].forEach.call(as, function(a){
+        <?php $this->block('after'); ?>
+        <?php $this->endblock(); ?>
 
-            if( a && !a.tabIndex ) {
-                a.tabIndex = 1;
-            }
-        });
-
-    </script>
-
-</div>
+    </cms-container>
+</cms-cookie-bar>
 <!-- indexer::continue -->

@@ -107,6 +107,12 @@
     <trans-unit id="tl_cms_tag.tag_google_analytics.1">
         <source>Die Tracking-ID im Format „UA-000000-0”.</source>
     </trans-unit>
+    <trans-unit id="tl_cms_tag.tag_google_analytics4.0">
+        <source>Tracking-ID</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.tag_google_analytics4.1">
+        <source>Die Tracking-ID im Format „G-0000000000”.</source>
+    </trans-unit>
     <trans-unit id="tl_cms_tag.tag_google_tag_manager.0">
         <source>Container-ID</source>
     </trans-unit>
@@ -212,6 +218,9 @@
     </trans-unit>
     <trans-unit id="tl_cms_tag.types.google_analytics">
         <source>Google Analytics</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_tag.types.google_analytics4">
+        <source>Google Analytics (v4)</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.types.google_tag_manager">
         <source>Google Tag Manager</source>

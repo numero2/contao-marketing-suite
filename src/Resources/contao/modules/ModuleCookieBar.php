@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -24,8 +24,6 @@ use Contao\StringUtil;
 use Contao\System;
 use numero2\MarketingSuite\Backend\License as agoc;
 use numero2\MarketingSuite\Helper\Domain;
-use numero2\MarketingSuite\Helper\StyleSheet;
-use Patchwork\Utf8;
 
 
 class ModuleCookieBar extends ModuleEUConsent {
@@ -51,7 +49,7 @@ class ModuleCookieBar extends ModuleEUConsent {
 
             $objTemplate = new BackendTemplate('be_wildcard');
 
-            $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['cms_cookie_bar'][0]).' ###';
+            $objTemplate->wildcard = '### '.$GLOBALS['TL_LANG']['FMD']['cms_cookie_bar'][0].' ###';
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
@@ -92,12 +90,6 @@ class ModuleCookieBar extends ModuleEUConsent {
                 }
             }
 
-            // DEPRECATED as of 1.0.21
-            if( Input::post('submit') ) {
-                Input::setPost('choice', Input::post('submit'));
-                @trigger_error('The use of the field name "submit" in your '.$this->strTemplate.' template has been deprecated and will no longer work in Marketing Suite 2.0. Please create a new copy using the current version.', E_USER_DEPRECATED);
-            }
-
             // store decision in cookie
             if( in_array(Input::post('choice'), ['accept','reject']) ) {
 
@@ -128,7 +120,7 @@ class ModuleCookieBar extends ModuleEUConsent {
      *
      * @return boolean
      */
-    protected function shouldBeShown() {
+    protected function shouldBeShown(): bool {
 
         $show = parent::shouldBeShown();
 
@@ -177,76 +169,6 @@ class ModuleCookieBar extends ModuleEUConsent {
         $this->Template->content = $this->replaceInsertTags($this->Template->content);
         $this->Template->rejectLabel = $this->replaceInsertTags($this->Template->rejectLabel);
 
-        // generate default styling if enabled
-        if( $this->cms_tag_set_style ) {
-            $this->generateStyling();
-        }
-
         parent::compile();
-    }
-
-
-    /**
-     * Generates stylesheet for this module
-     */
-    protected function generateStyling() {
-
-        $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="bundles/marketingsuite/css/cookie-bar.css">';
-
-        $strStyle = "";
-
-        $strClass = "mod_".$this->type;
-
-        $oStyleSheet = null;
-        $oStyleSheet = new StyleSheet();
-
-        $mainStyle = [
-            'font' => '1'
-        ,   'fontcolor' => (string)$this->cms_tag_font_color
-        ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->cms_tag_background_color
-        ];
-
-        $main = $oStyleSheet->generateDefinition($mainStyle);
-
-        if( strlen($main) > 20 ) {
-            $strStyle .= "." . $strClass . ' ' . trim($main) . "\n";
-        }
-
-        $acceptStyle = [
-            'font' => '1'
-        ,   'fontcolor' => (string)$this->cms_tag_accept_font
-        ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->cms_tag_accept_background
-        ,   'bgimage' => strlen((string)$this->cms_tag_accept_background)?'none':''
-        ,   'border' => '1'
-        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ];
-
-        $accept = $oStyleSheet->generateDefinition($acceptStyle);
-
-        if( strlen($accept) > 20 ) {
-            $strStyle .= "." . $strClass . ' button[type="submit"][value="accept"] ' . trim($accept) . "\n";
-        }
-
-        $rejectStyle = [
-            'font' => '1'
-        ,   'fontcolor' => (string)$this->cms_tag_reject_font
-        ,   'background' => '1'
-        ,   'bgcolor' => (string)$this->cms_tag_reject_background
-        ,   'bgimage' => strlen((string)$this->cms_tag_reject_background)?'none':''
-        ,   'border' => '1'
-        ,   'borderwidth' => ['top'=>'0', 'right'=>'0', 'bottom'=>'0', 'left'=>'0', 'unit'=>'']
-        ];
-
-        $reject = $oStyleSheet->generateDefinition($rejectStyle);
-
-        if( strlen($reject) > 20 ) {
-            $strStyle .= "." . $strClass . ' button[type="submit"][value="reject"] ' . trim($reject) . "\n";
-        }
-
-        if( strlen($strStyle) ) {
-            $GLOBALS['TL_HEAD'][] = '<style>'.$strStyle.'</style>';
-        }
     }
 }

@@ -1,57 +1,157 @@
-.mod_cms_accept_tags,
-.mod_cms_cookie_bar {
+cms-cookie-bar,
+cms-accept-tags {
+    --main-bg-color: #ffffff;
+    --main-shadow-color: rgba(0, 0, 0, 0.5);
+    --main-text-color: inherit;
+    --btn-accept-text-color: #ffffff;
+    --btn-accept-bg-color: #84CC16;
+    --btn-reject-text-color: var(--btn-accept-text-color);
+    --btn-reject-bg-color: #A3A3A3;
+    position: fixed;
+    z-index: 1000;
+    display: block;
+    width: 100%;
+    color: var(--main-text-color);
+}
+
+cms-cookie-bar > cms-container,
+cms-accept-tags > cms-container {
+    display: block;
+    max-width: 750px;
+    max-height: 60vh;
+    padding: 2em;
+    overflow: auto;
     font-family: Arial, Helvetica, Sans-serif;
     font-size: 14px;
-    line-height: 1.33;
+    line-height: 1.4;
+    background: var(--main-bg-color);
 }
 
-.mod_cms_accept_tags button,
-.mod_cms_cookie_bar button {
-    color: #ffffff;
-    border: 0;
-    padding: 10px;
+cms-cookie-bar > cms-container cms-container.disclaimer > *:nth-child(1),
+cms-accept-tags > cms-container cms-container.disclaimer > *:nth-child(1) {
+    margin-top: 0;
 }
 
-.mod_cms_accept_tags button[value="accept"],
-.mod_cms_cookie_bar button[value="accept"] {
-    background-color: #27ae60;
+cms-cookie-bar > cms-container form,
+cms-accept-tags > cms-container form {
+    display: block;
 }
 
-.mod_cms_accept_tags button[value="reject"], .mod_cms_accept_tags button[value="accept"].first,
-.mod_cms_cookie_bar button[value="reject"],
-.mod_cms_cookie_bar button[value="accept"].first {
-    background-color: #7f8c8d;
+cms-cookie-bar > cms-container form > *,
+cms-accept-tags > cms-container form > * {
+    display: block;
+    width: 100%;
 }
 
-.mod_cms_cookie_bar {
-    position: fixed;
+cms-cookie-bar > cms-container form cms-buttons,
+cms-accept-tags > cms-container form cms-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    width: calc(100% + 1em);
+    margin-left: -0.5em;
+    margin-right: -0.5em;
+}
+
+cms-cookie-bar > cms-container form cms-buttons cms-button,
+cms-accept-tags > cms-container form cms-buttons cms-button {
+    position: relative;
+    margin: 0.5em;
+    cursor: pointer;
+    background: transparent;
+}
+
+cms-cookie-bar > cms-container form cms-buttons cms-button > span,
+cms-accept-tags > cms-container form cms-buttons cms-button > span {
+    position: relative;
+    z-index: 1;
+    display: block;
+    padding: 0.929em 1.5em;
+    text-align: center;
+    line-height: 1;
+    color: inherit;
+}
+
+cms-cookie-bar > cms-container form cms-buttons cms-button > span:before,
+cms-accept-tags > cms-container form cms-buttons cms-button > span:before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    transition: filter .2s;
+}
+
+cms-cookie-bar > cms-container form cms-buttons cms-button[value="reject"], cms-cookie-bar > cms-container form cms-buttons cms-button[value="accept"]:nth-of-type(1),
+cms-accept-tags > cms-container form cms-buttons cms-button[value="reject"],
+cms-accept-tags > cms-container form cms-buttons cms-button[value="accept"]:nth-of-type(1) {
+    color: var(--btn-reject-text-color);
+}
+
+cms-cookie-bar > cms-container form cms-buttons cms-button[value="reject"] > span:before, cms-cookie-bar > cms-container form cms-buttons cms-button[value="accept"]:nth-of-type(1) > span:before,
+cms-accept-tags > cms-container form cms-buttons cms-button[value="reject"] > span:before,
+cms-accept-tags > cms-container form cms-buttons cms-button[value="accept"]:nth-of-type(1) > span:before {
+    background: var(--btn-reject-bg-color);
+}
+
+cms-cookie-bar > cms-container form cms-buttons cms-button[value="accept"]:nth-last-of-type(1),
+cms-accept-tags > cms-container form cms-buttons cms-button[value="accept"]:nth-last-of-type(1) {
+    color: var(--btn-accept-text-color);
+}
+
+cms-cookie-bar > cms-container form cms-buttons cms-button[value="accept"]:nth-last-of-type(1) > span:before,
+cms-accept-tags > cms-container form cms-buttons cms-button[value="accept"]:nth-last-of-type(1) > span:before {
+    background: var(--btn-accept-bg-color);
+}
+
+cms-cookie-bar > cms-container form cms-buttons cms-button:hover > span:before,
+cms-accept-tags > cms-container form cms-buttons cms-button:hover > span:before {
+    filter: brightness(85%);
+}
+
+@media (max-width: 430px) {
+    cms-cookie-bar > cms-container form cms-buttons,
+    cms-accept-tags > cms-container form cms-buttons {
+        justify-content: center;
+    }
+    cms-cookie-bar > cms-container form cms-buttons cms-button,
+    cms-accept-tags > cms-container form cms-buttons cms-button {
+        flex-basis: 100%;
+    }
+}
+
+cms-cookie-bar[data-layout="dark"],
+cms-accept-tags[data-layout="dark"] {
+    --main-bg-color: #1F2937;
+    --main-shadow-color: rgba(0, 0, 0, 0.5);
+    --main-text-color: #F1F5F9;
+    --btn-accept-text-color: #F1F5F9;
+    --btn-accept-bg-color: #15803D;
+    --btn-reject-text-color: var(--btn-accept-text-color);
+    --btn-reject-bg-color: #374151;
+}
+
+cms-cookie-bar {
+    position: sticky;
     bottom: 0;
     left: 0;
-    z-index: 1000;
-    width: 100vw;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    background: #ffffff;
+    background: var(--main-bg-color);
+    box-shadow: 0px 0px 10px var(--main-shadow-color);
 }
 
-.mod_cms_cookie_bar form {
-    display: block;
-    max-width: 800px;
-    margin: 0 auto;
+cms-cookie-bar > cms-container {
+    margin: auto;
 }
 
-.mod_cms_cookie_bar form .formbody {
-    margin: 30px;
-}
-
-.mod_cms_cookie_bar form .formbody .info {
-    font-size: 12px;
-}
-
-.mod_cms_cookie_bar form .formbody .widget-submit {
-    text-align: right;
-}
-
-.mod_cms_accept_tags {
+cms-accept-tags {
+    --main-bg-overlay-color: rgba(255, 255, 255, 0.5);
+    --toggle-switch-bg-color: #ffffff;
+    --toggle-active-bg-color: var(--btn-accept-bg-color);
+    --toggle-inactive-bg-color: #D4D4D4;
     position: fixed;
     top: 0;
     left: 0;
@@ -59,87 +159,94 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
-    overflow: auto;
-    background: rgba(255, 255, 255, 0.5);
-    color: #222;
+    height: 100%;
+    background: var(--main-bg-overlay-color);
 }
 
-.mod_cms_accept_tags .formbody .widget-submit {
-    text-align: right;
+cms-accept-tags > cms-container {
+    margin: 2em;
+    box-shadow: 0px 0px 10px var(--main-shadow-color);
 }
 
-.mod_cms_accept_tags form {
-    display: block;
-    max-width: 800px;
-    max-height: 60vh;
-    overflow: auto;
-    margin: 30px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    background: #ffffff;
-}
-
-.mod_cms_accept_tags form > .formbody, .mod_cms_accept_tags form > .tags > div {
-    padding: 15px;
-}
-
-.mod_cms_accept_tags form > .tags {
+cms-accept-tags > cms-container form cms-taglist {
     display: flex;
     flex-wrap: wrap;
+    width: calc(100% + 2em);
+    margin-left: -1em;
+    margin-right: -1em;
+    margin-top: 1em;
 }
 
-.mod_cms_accept_tags form > .tags > div {
+cms-accept-tags > cms-container form cms-taglist cms-taggroup {
     flex-basis: 0;
     flex-grow: 1;
+    min-width: 160px;
+    padding: 1em;
 }
 
-.mod_cms_accept_tags form > .tags > div .head {
+cms-accept-tags > cms-container form cms-taglist cms-taggroup cms-taggroup-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 0.75em;
 }
 
-.mod_cms_accept_tags form > .tags > div .head input {
+cms-accept-tags > cms-container form cms-taglist cms-taggroup cms-taggroup-header input {
     display: none;
 }
 
-.mod_cms_accept_tags form > .tags > div .head label {
+cms-accept-tags > cms-container form cms-taglist cms-taggroup cms-taggroup-header label {
     display: inline-block;
     flex-shrink: 0;
-    position: relative;
-    background: #95a5a6;
-    width: 40px;
-    height: 16px;
-    border-radius: 13px;
-    cursor: pointer;
     margin-left: 10px;
-}
-
-.mod_cms_accept_tags form > .tags > div .head label:after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: -2px;
-    left: 0;
-    width: 20px;
-    height: 20px;
-    background: #798d8f;
-    border-radius: 50%;
+    position: relative;
+    width: 3.14286em;
+    height: 1.71429em;
+    cursor: pointer;
+    border-radius: 1em;
+    background: var(--toggle-inactive-bg-color);
     transition: all .3s;
 }
 
-.mod_cms_accept_tags form > .tags > div .head input:checked + label {
-    background: #7ee2a8;
+cms-accept-tags > cms-container form cms-taglist cms-taggroup cms-taggroup-header label:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: block;
+    width: 1.42857em;
+    height: 1.42857em;
+    background: var(--toggle-switch-bg-color);
+    border-radius: 50%;
+    transform: translateY(-50%) translateX(2px);
+    transition: all .3s;
 }
 
-.mod_cms_accept_tags form > .tags > div .head input:checked + label:after {
+cms-accept-tags > cms-container form cms-taglist cms-taggroup cms-taggroup-header input:checked + label {
+    background: var(--toggle-active-bg-color);
+}
+
+cms-accept-tags > cms-container form cms-taglist cms-taggroup cms-taggroup-header input:checked + label:after {
     left: 100%;
-    transform: translateX(-100%);
+    transform: translateY(-50%) translateX(-100%) translateX(-2px);
 }
 
-.mod_cms_accept_tags form > .tags > div p {
-    font-size: 12px;
+cms-accept-tags > cms-container form cms-taglist cms-taggroup cms-taggroup-description {
+    font-size: 0.85714em;
+}
+
+cms-accept-tags[data-layout="dark"] {
+    --main-bg-overlay-color: rgba(38, 38, 38, 0.5);
+    --toggle-active-bg-color: #15803D;
+    --toggle-inactive-bg-color: #374151;
+    /*
+                --main-bg-overlay-color: rgba(33, 38, 45, 0.5);
+                --main-bg-color: #1F2937;
+                --main-shadow-color: rgba(0, 0, 0, 0.5);
+                --main-text-color: #F1F5F9;
+                --main-border-color: #1F2937;
+                --main-close-btn-color: #9CA3AF;
+                --main-close-btn-color-hover: #F3F4F6;
+                 */
 }

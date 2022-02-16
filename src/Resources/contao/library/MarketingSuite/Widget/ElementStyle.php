@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -26,7 +26,7 @@ use Contao\Model;
 use Contao\StringUtil;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Helper\ContentElementStyleable;
-use numero2\MarketingSuite\Helper\styleable;
+use numero2\MarketingSuite\Helper\InterfaceStyleable;
 
 
 class ElementStyle extends CoreBackend {
@@ -42,8 +42,8 @@ class ElementStyle extends CoreBackend {
      */
     public function generatePreview( $dc, $aData=[] ) {
 
-        $sElementClass = NULL;
-        $oModel = NULL;
+        $sElementClass = null;
+        $oModel = null;
 
         // find the correct element class
         switch( $dc->table ) {
@@ -66,7 +66,7 @@ class ElementStyle extends CoreBackend {
             return;
         }
 
-        $oModel->preventSaving(false);
+        $oModel->preventSaving(true);
 
         // overwrite some fields in the model to update preview
         if( !empty($aData) ) {
@@ -85,50 +85,34 @@ class ElementStyle extends CoreBackend {
                 // prepare the value
                 $varValue = StringUtil::deserialize($aData[$name]);
 
-                // values related to styling are stored seperately
-                if( $arrData['eval']['isStylingRelated'] ) {
-
-                    $aStyle[$name] = $varValue;
-
-                } else {
-
-                    // some values need to be serialized
-                    if( $arrData['inputType'] == 'inputUnit' || $arrData['eval']['multiple'] ) {
-                        $varValue = serialize($varValue);
-                    }
-
-                    $oModel->$name = $varValue;
+                // some values need to be serialized
+                if( $arrData['inputType'] == 'inputUnit' || $arrData['eval']['multiple'] ) {
+                    $varValue = serialize($varValue);
                 }
-            }
 
-            // add styling
-            if( !empty($aStyle) ) {
-                $oModel->cms_style = serialize($aStyle);
+                $oModel->$name = $varValue;
             }
         }
 
         // initialize the element
-        $oElement = NULL;
+        $oElement = null;
         $oElement = new $sElementClass( $oModel );
 
         // check if element is styleable
-        if( !($oElement instanceof styleable) ) {
+        if( !($oElement instanceof InterfaceStyleable) ) {
 
             throw new \Exception(
-                sprintf("Class %s does not implement the interface styleable and therefore is not styleable ",$sElementClass)
+                sprintf("Class %s does not implement the interface InterfaceStyleable and therefore is not styleable ",$sElementClass)
             );
         }
 
         // enable style preview mode
-        $oElement->setStylePreview();
+        $oElement->isStylePreview = true;
 
         // render element
         $sMarkup = "";
         $sMarkup = $oElement->generate();
         $sMarkup = Controller::replaceInsertTags($sMarkup);
-
-        $style = implode('\n',$GLOBALS['TL_HEAD']);
-        unset($GLOBALS['TL_HEAD']);
 
         // generate template
         $aData = [];
@@ -137,51 +121,9 @@ class ElementStyle extends CoreBackend {
         $aData['element'] = $sMarkup;
         $aData['headline'] = $GLOBALS['TL_LANG']['tl_content']['cms_element_preview']['headline'];
         $aData['explanation'] = $GLOBALS['TL_LANG']['tl_content']['cms_element_preview']['explanation'];
-        $aData['style'] = $style;
+        $aData['stylesheet'] = $oElement::getStylesheetPath();
 
         return Backend::parseWithTemplate('backend/widgets/element_style_preview', $aData);
-    }
-
-
-    /**
-     * Generates a navigation where we can choose styling options from
-     * different categories
-     *
-     * @param \DataContainer $dc
-     *
-     * @return string
-     */
-    public function generateCategories( $dc ) {
-
-        $this->addStylingFields($dc);
-
-        $aGroups = [];
-
-        // get list of groups the fields are split up into
-        foreach( $GLOBALS['TL_DCA'][$dc->table]['fields'] as $name => $arrData ) {
-
-            if( empty($arrData['eval']['data-cms-style-group']) ) {
-                continue;
-            }
-
-            $groups = [];
-            $groups = explode(' ', $arrData['eval']['data-cms-style-group']);
-
-            $aGroups = array_merge($aGroups,$groups);
-        }
-
-        $aGroups = array_values( array_unique($aGroups) );
-
-        // make sure "start" and "custom" always appear first and last
-        usort($aGroups, function($a,$b) {
-            if( $a == 'start' ) { return -1; }
-            if( $a == 'custom' ) { return 1; }
-        });
-
-        $aData = [];
-        $aData['groups'] = $aGroups;
-
-        return Backend::parseWithTemplate('backend/widgets/element_style_categories', $aData);
     }
 
 
@@ -192,13 +134,47 @@ class ElementStyle extends CoreBackend {
      */
     public function addStylingFields( $dc ) {
 
+        Controller::loadDataContainer($dc->table);
+
+        // add palettes to current DCA
+        $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'][] = 'cms_element_style';
+        $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['cms_element_style'] =  'cms_element_preview,cms_layout_selector';
+
+        Controller::loadLanguageFile('tl_content');
+
+        // add fields and fields to current DCA
+        // (needs to be done here in order for the new fields to be added during migration)
+        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_element_style'] = [
+            'label'     => &$GLOBALS['TL_LANG']['tl_content']['cms_element_style']
+        ,   'inputType' => 'checkbox'
+        ,   'eval'      => ['submitOnChange'=>true]
+        ,   'sql'       => "char(1) NOT NULL default '1'"
+        ];
+
+        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_element_preview'] = [
+            'input_field_callback' => ['\numero2\MarketingSuite\Widget\ElementStyle', 'generatePreview']
+        ];
+
+        Controller::loadLanguageFile('tl_cms_tag_settings');
+
+        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_layout_selector'] = [
+            'label'            => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_layout_selector']
+        ,   'inputType'        => 'cmsLayoutSelector'
+        ,   'options'          => []
+        ,   'reference'        => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_layout_selector_options']
+        ,   'explanation'      => 'layoutSelector'
+        ,   'eval'             => [ 'sprite'=>'', 'helpwizard'=>true, 'tl_class'=>'clr' ]
+        ,   'sql'              => "varchar(64) NOT NULL default ''"
+        ];
+
+        // load current record
         if( !property_exists($dc,'activeRecord') || !$dc->activeRecord ) {
 
             if( Input::get('act') == 'edit' && Input::get('table') && Input::get('id') ) {
 
                 $strModel = Model::getClassFromTable(Input::get('table'));
 
-                $oRow = NULL;
+                $oRow = null;
                 $oRow = $strModel::findOneById(Input::get('id'));
 
                 if( $oRow ) {
@@ -207,213 +183,14 @@ class ElementStyle extends CoreBackend {
             }
         }
 
-        $aFields = [];
         $strClass = ContentElement::findClass($dc->activeRecord->type??null);
-        $isStylableClass = $strClass && in_array('numero2\MarketingSuite\Helper\styleable', class_implements($strClass));
+        $isStylableClass = $strClass && in_array('numero2\MarketingSuite\Helper\InterfaceStyleable', class_implements($strClass));
 
-        if( $isStylableClass ) {
-            $aFields = $strClass::getStyleFieldsConfig($dc);
+        if( !$isStylableClass ) {
+            return;
         }
 
-        // add palettes and fields to current dca
-        $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'][] = 'cms_element_style';
-        $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['cms_element_style'] =  '';
-
-        if( count($aFields) ) {
-            $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['cms_element_style'] = 'cms_element_preview,cms_element_style_categories,'.implode(',', array_keys($aFields));
-        }
-
-        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_element_style'] = [
-            'label'     => &$GLOBALS['TL_LANG']['tl_content']['cms_element_style']
-        ,   'inputType' => 'checkbox'
-        ,   'eval'      => ['submitOnChange'=>true]
-        ,   'sql'       => "char(1) NOT NULL default '1'"
-        ];
-
-        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_style'] = [
-            'sql' => "blob NULL"
-        ];
-
-        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_element_preview'] = [
-            'input_field_callback' => ['\numero2\MarketingSuite\Widget\ElementStyle', 'generatePreview']
-        ];
-
-        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_element_style_categories'] = [
-            'input_field_callback' => ['\numero2\MarketingSuite\Widget\ElementStyle', 'generateCategories']
-        ];
-
-        // load more needed fields from tl_style
-        if( $isStylableClass ) {
-
-            Controller::loadDataContainer('tl_style');
-            Controller::loadLanguageFile('tl_style');
-
-            $this->import('BackendUser', 'User');
-
-            foreach( $aFields as $field => $group ) {
-
-                $styleField = $field;
-                $hoverField = false;
-
-                if( strpos($field, "hover_") === 0 ) {
-
-                    $hoverField = true;
-                    $styleField = substr($field, 6);
-                }
-
-                // get field definitions from tl_style and overwrite some settings
-                if( !empty($GLOBALS['TL_DCA']['tl_style']['fields'][$styleField]) ) {
-
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$field] = $GLOBALS['TL_DCA']['tl_style']['fields'][$styleField];
-
-                    unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['sql']);
-
-                    // overwrite label if available
-                    if( !empty($GLOBALS['TL_LANG']['CMS_ELEMENT_STYLE']['fields'][$field]) ) {
-
-                        unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['label']);
-                        $GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['label'] = $GLOBALS['TL_LANG']['CMS_ELEMENT_STYLE']['fields'][$field];
-                    }
-
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['eval']['doNotSaveEmpty'] = true;
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['eval']['isStylingRelated'] = true;
-
-                    // handling the field data
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['save_callback'] = [['\numero2\MarketingSuite\Widget\ElementStyle', 'appendStyle']];
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['load_callback'] = [['\numero2\MarketingSuite\Widget\ElementStyle', 'loadStyle']];
-                }
-
-                $colorFields = ['bgcolor', 'bordercolor', 'fontcolor', 'hover_bgcolor', 'hover_bordercolor', 'hover_fontcolor'];
-
-                if( in_array($field, $colorFields) ) {
-
-                    unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['eval']['multiple']);
-                    unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['eval']['size']);
-                }
-
-                // set tab group
-                $GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['eval']['data-cms-style-group'] = $group;
-            }
-
-            // reduce the options
-            $unitFields = ['width', 'height', 'margin', 'padding', 'fontsize', 'borderwidth', 'borderradius', 'lineheight', 'letterspacing'];
-            $units = ["px", "%", "em", "rem", "vw", "vh"];
-
-            foreach( $unitFields as $value) {
-                $GLOBALS['TL_DCA'][$dc->table]['fields'][$value]['options'] = $units;
-            }
-
-            // add custom code field
-            if( $this->User->cms_pro_mode_enabled == 1 ) {
-
-                $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_element_style_custom'] = [
-                    'label'         => &$GLOBALS['TL_LANG']['CMS_ELEMENT_STYLE']['fields']['cms_element_style_custom']
-                ,   'inputType'     => 'textarea'
-                ,   'eval'          => [
-                        'preserveTags' => true
-                    ,   'decodeEntities' => true
-                    ,   'class' => 'monospace'
-                    ,   'rte' => 'ace|css'
-                    ,   'helpwizard' => true
-                    ,   'tl_class' => 'clr'
-                    ,   'doNotSaveEmpty' => true
-                    ,   'isStylingRelated' => true
-                    ,   'data-cms-style-group' => 'custom'
-                    ]
-                ,   'explanation'   => 'insertTags'
-                ,   'save_callback' => [['\numero2\MarketingSuite\Widget\ElementStyle', 'appendStyle']]
-                ,   'load_callback' => [['\numero2\MarketingSuite\Widget\ElementStyle', 'loadStyle']]
-                ];
-            }
-
-            // set default units
-            $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_style']['default'] = [
-                'width'         => ['unit' => 'px']
-            ,   'height'        => ['unit' => 'px']
-            ,   'margin'        => ['unit' => 'px']
-            ,   'padding'       => ['unit' => 'px']
-            ,   'borderwidth'   => ['unit' => 'px']
-            ,   'borderradius'  => ['unit' => 'px']
-            ,   'fontsize'      => ['unit' => 'px']
-            ,   'lineheight'    => ['unit' => 'px']
-            ,   'letterspacing' => ['unit' => 'px']
-            ];
-
-            $GLOBALS['TL_DCA'][$dc->table]['config']['onsubmit_callback'][] = ['\numero2\MarketingSuite\Widget\ElementStyle', 'saveStyling'];
-        }
-    }
-
-
-    /**
-     * Load styling for the given field from our overall style
-     *
-     * @param string $value
-     * @param \DataContainer $dc
-     *
-     * @return string
-     */
-    public function loadStyle( $value, DataContainer $dc ) {
-
-        $sStyle = '';
-        $sStyle = $dc->activeRecord->cms_style;
-
-        if( $sStyle ) {
-
-            $aStyle = [];
-            $aStyle = StringUtil::deserialize($sStyle);
-
-            if( is_array($aStyle) && array_key_exists($dc->field, $aStyle) && $aStyle[$dc->field] ) {
-
-                return $aStyle[$dc->field];
-
-            } else {
-
-                // return custom styling default
-                if( $dc->field == 'cms_element_style_custom' ) {
-
-                    $uid = ContentElementStyleable::getUniqueID( $dc->activeRecord );
-                    return '[data-cms-unique="'.$uid.'"] {'."\n\n".'}';
-                }
-            }
-        }
-
-        return '';
-    }
-
-
-    /**
-     * Appends the styling value of the given field to our overall style
-     *
-     * @param mixed $value
-     * @param \DataContainer $dc
-     *
-     * @return string
-     */
-    public function appendStyle( $value, DataContainer $dc ) {
-
-        $aStyle = [];
-
-        if( $dc->cms_style ) {
-            $aStyle = $dc->cms_style;
-        }
-
-        $aStyle[$dc->field] = StringUtil::deserialize($value);
-
-        $dc->cms_style = $aStyle;
-
-        return '';
-    }
-
-
-    /**
-     * Saves all the stylings into one field in the database
-     *
-     * @param \DataContainer $dc
-     */
-    public function saveStyling( DataContainer $dc ) {
-
-        if( !empty($dc->cms_style) ) {
-            Database::getInstance()->prepare("UPDATE " .$dc->table. " SET cms_style=? WHERE id=?")->execute(serialize($dc->cms_style), $dc->activeRecord->id);
-        }
+        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_layout_selector']['options'] = $strClass::getLayoutOptions();
+        $GLOBALS['TL_DCA'][$dc->table]['fields']['cms_layout_selector']['eval']['sprite'] = $strClass::getLayoutSprite($dc->activeRecord->type);
     }
 }

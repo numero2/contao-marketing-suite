@@ -16,6 +16,7 @@
 namespace numero2\MarketingSuite\DCAHelper;
 
 use Contao\Backend as CoreBackend;
+use Contao\Config;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Environment;
@@ -24,6 +25,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use numero2\MarketingSuite\Backend\License as safsewzk;
@@ -41,7 +43,7 @@ class LinkShortener extends CoreBackend {
      */
     public function getAvailableDomains( DataContainer $dc ) {
 
-        $objPages = \PageModel::findBy(['type=? AND useSSL=?'], ['root', '1']);
+        $objPages = PageModel::findBy(['type=? AND useSSL=?'], ['root', '1']);
         $aPages = [];
         $hasEmptyLicense = false;
 
@@ -73,8 +75,8 @@ class LinkShortener extends CoreBackend {
 
             // add current domain
             $domain = Environment::get('httpHost');
-            if( !in_array($domain, $aPages) ) {
 
+            if( !in_array($domain, $aPages) ) {
                 array_insert($aPages, 0, [$domain => $domain]);
             }
         }
@@ -116,10 +118,10 @@ class LinkShortener extends CoreBackend {
         if( preg_match("/{{link_url::([0-9]*)}}/", $row['target'], $id) ) {
 
             $objPage = PageModel::findOneById($id[1]);
-            $strTarget = $objPage->title . ' (' . $objPage->alias . \Config::get('urlSuffix') . ')';
+            $strTarget = $objPage->title . ' (' . $objPage->alias . Config::get('urlSuffix') . ')';
         }
 
-        if( $row['active'] ) {
+        if( $row['active'] && ($row['stop'] === '' || $row['stop'] > time()) ) {
 
             $strHtml .= $strTarget;
         } else {
@@ -135,7 +137,7 @@ class LinkShortener extends CoreBackend {
             if( preg_match("/{{link_url::([0-9]*)}}/", $row['fallback'], $id) ) {
 
                 $objPage = PageModel::findOneById($id[1]);
-                $strFallback = $objPage->title . ' (' . $objPage->alias . \Config::get('urlSuffix') . ')';
+                $strFallback = $objPage->title . ' (' . $objPage->alias . Config::get('urlSuffix') . ')';
             }
 
             $strHtml .= "<s>".$strTarget."</s> -> ". $strFallback;
@@ -289,10 +291,10 @@ class LinkShortener extends CoreBackend {
         $value = preg_replace("/\/+/", '/', $value);
         $value = preg_replace("/^\//", '', $value);
 
-        $suffix = \Config::get('urlSuffix');
+        $suffix = Config::get('urlSuffix');
 
         if( $value == "/" or preg_match('/.*\/index'.$suffix.'$/', $value) ) {
-            throw new \Exception($GLOBALS['TL_LANG']['ERR']['link_shortener_page_already_exist']);
+            throw new Exception($GLOBALS['TL_LANG']['ERR']['link_shortener_page_already_exist']);
         }
 
         if( empty($domain) || empty($value) ) {
@@ -307,7 +309,7 @@ class LinkShortener extends CoreBackend {
             ")->execute($domain, $value, $value, $dc->activeRecord->id);
 
         if( $objResult && $objResult->numRows ) {
-            throw new \Exception($GLOBALS['TL_LANG']['ERR']['link_shortener_alias_already_exist']);
+            throw new Exception($GLOBALS['TL_LANG']['ERR']['link_shortener_alias_already_exist']);
         }
 
         return $value;
@@ -349,13 +351,13 @@ class LinkShortener extends CoreBackend {
 
             $code = $oResponse->getStatusCode();
 
-        } catch( \Exception $e ) {
+        } catch( Exception $e ) {
 
             $code = $e->getCode();
         }
 
         if( (int)$code == 200 ) {
-            throw new \Exception($GLOBALS['TL_LANG']['ERR']['link_shortener_page_already_exist']);
+            throw new Exception($GLOBALS['TL_LANG']['ERR']['link_shortener_page_already_exist']);
         }
 
         return $value;

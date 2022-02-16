@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -20,7 +20,6 @@ use Contao\ContentElement;
 use Contao\ContentModel;
 use Contao\Controller;
 use numero2\MarketingSuite\Backend\License as lajema;
-use Patchwork\Utf8;
 
 
 class ContentConversionItem extends ContentElement {
@@ -48,14 +47,14 @@ class ContentConversionItem extends ContentElement {
 
             if( $oContent ) {
 
-                $objTemplate->wildcard = '### '. Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0] .' ('. $GLOBALS['TL_LANG']['CTE'][$oContent->type][0] .')').' ###';
+                $objTemplate->wildcard = '### '. $GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0] .' ('. $GLOBALS['TL_LANG']['CTE'][$oContent->type][0] .')'.' ###';
                 $objTemplate->id = $oContent->id;
                 $objTemplate->link = $oContent->cms_mi_label;
                 $objTemplate->href = 'contao/main.php?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $oContent->id;
 
             } else {
 
-                $objTemplate->wildcard = '### '. Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0]) .' ###';
+                $objTemplate->wildcard = '### '. $GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0] .' ###';
             }
 
             return $objTemplate->parse();

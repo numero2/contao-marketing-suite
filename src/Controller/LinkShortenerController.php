@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -29,8 +29,8 @@ class LinkShortenerController {
     /**
      * Will be called when a matching route was found and will redirect to the target
      *
-     * @param  LinkShortenerModel $_content
-     * @param  Request $request
+     * @param LinkShortenerModel $_content
+     * @param Request $request
      *
      * @return Response
      */
@@ -47,7 +47,7 @@ class LinkShortenerController {
 
             $oStats->tstamp = time();
             $oStats->pid = $_content->id;
-            $oStats->referer = $request->headers->get('referer');
+            $oStats->referer = $request->headers->get('referer')??'';
             $oStats->unique_id = md5($request->getClientIp().$oAgent->string);
             $oStats->user_agent = $oAgent->string;
             $oStats->os = $oAgent->os;

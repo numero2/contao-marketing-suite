@@ -1,0 +1,67 @@
+// main: backend.scss
+@import "colors";
+
+.widget > .cms_layout_selector {
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    font-size: 1rem;
+    margin-top: 0.5em;
+    margin-left: -0.5em;
+
+    > input {
+
+        display: none;
+
+        &:checked + label {
+
+            border-color: $col-orange;
+            box-shadow: 0 0 0 1px $col-orange;
+
+            > div .label {
+                color: $col-orange;
+            }
+        }
+    }
+
+    > label {
+
+        display: flex;
+        align-items: center;
+
+        margin: 0.5em;
+        padding: 0.25em;
+
+        border: 1px solid $col-gray-3;
+        border-radius: 5px;
+
+        cursor: pointer;
+
+        > div {
+
+            figure {
+                width: 300/3*1px;
+                height: 175/3*1px;
+                background-size: auto 100%;
+            }
+
+            .label {
+                color: $col-gray-4;
+                font-size: .75rem;
+                line-height: 1.5;
+            }
+        }
+
+        @for $i from 1 through 25 {
+            &:nth-of-type(#{$i}) > div > figure { background-position: #{($i - 1)*100%} 0; }
+        }
+    }
+
+    + p {
+        margin-top: 0.5em;
+    }
+}

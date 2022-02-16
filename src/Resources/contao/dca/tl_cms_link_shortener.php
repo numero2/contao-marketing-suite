@@ -33,12 +33,12 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
 ,   'list' => [
         'sorting' => [
             'mode'                  => 1
-        ,   'flag'                  => 1
+        ,   'flag'                  => 11
         ,   'fields'                => ['group_name']
         ,   'panelLayout'           => 'search,limit;filter'
         ]
     ,   'label' => [
-            'fields'                => ['target','prefix','alias']
+            'fields'                => ['target', 'prefix', 'alias']
         ,   'label_callback'        => ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'labelCallback']
         ]
     ,   'global_operations' => [
@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
     ]
 ,   'palettes' => [
         '__selector__'              => ['type']
-    ,   'default'                   => '{common_legend},target,group_name;{link_legend},domain,prefix,prefix_preview,alias,alias_preview;{description_legend},description;{publish_legend},active,fallback'
+    ,   'default'                   => '{common_legend},target,group_name;{link_legend},domain,prefix,prefix_preview,alias,alias_preview;{description_legend},description;{publish_legend},active,stop,fallback'
     ]
 ,   'fields' => [
         'id' => [
@@ -102,7 +102,7 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['group_name']
         ,   'inputType'             => 'text'
         ,   'filter'                => true
-        ,   'wizard'                => [ ['numero2\MarketingSuite\Widget\SuggestWizard', 'generate'] ]
+        ,   'wizard'                => [['numero2\MarketingSuite\Widget\SuggestWizard', 'generate']]
         ,   'eval'                  => ['maxlength'=>64, 'tl_class'=>'w50 suggest', 'autocomplete'=>'off']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
@@ -151,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
     ,   'description' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['description']
         ,   'inputType'             => 'textarea'
-        ,   'eval'                  => [ 'tl_class'=>'clr' ]
+        ,   'eval'                  => ['tl_class'=>'clr']
         ,   'sql'                   => "text NULL"
         ]
     ,   'active' => [
@@ -161,6 +161,12 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
         ,   'eval'                  => ['tl_class'=>'w50']
         ,   'sql'                   => "char(1) NOT NULL default ''"
         ]
+    ,   'stop' => [
+            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['stop']
+        ,   'inputType'             => 'text'
+        ,   'eval'                  => ['rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'clr w50 wizard']
+        ,   'sql'                   => "varchar(10) NOT NULL default ''"
+    ]
     ,   'fallback' => [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['fallback']
         ,   'inputType'             => 'text'

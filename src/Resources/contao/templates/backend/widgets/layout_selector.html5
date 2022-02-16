@@ -1,0 +1,15 @@
+<?php if( $this->options ): ?>
+<div class="cms_layout_selector">
+
+    <?php foreach( $this->options as $option ): ?>
+        <input type="radio" name="<?=$this->name?>" value="<?=$option['value']?>" id="<?=$this->id?>_layout_option_<?=$option['value']?>"<?php if($option['value'] == $this->selected):?> checked="checked"<?php endif; ?> />
+        <label for="<?=$this->id?>_layout_option_<?=$option['value']?>">
+            <div>
+                <figure<?php if($this->sprite):?> style="background-image: url('<?= $this->sprite; ?>');"<?php endif;?>></figure>
+                <span class="label"><?=$option['label']?></span>
+            </div>
+        </label>
+    <?php endforeach; ?>
+
+</div>
+<?php endif; ?>

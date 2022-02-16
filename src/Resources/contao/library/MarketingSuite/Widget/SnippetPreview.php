@@ -109,6 +109,11 @@ class SnippetPreview extends Controller {
                 $aData['noIndexExplanation'] = $GLOBALS['TL_LANG']['MSC']['snippet_noindex_explanation'];
             }
 
+            // render nothing if requireItem is activated
+            if( $dc && $dc->activeRecord && $dc->activeRecord->requireItem ) {
+                return '';
+            }
+
             return Backend::parseWithTemplate('backend/widgets/snippet_preview', $aData);
 
         } else {
