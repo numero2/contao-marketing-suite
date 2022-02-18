@@ -75,6 +75,11 @@ class SnippetPreview extends Controller {
 
         if( method_exists($this, 'buildData_'.$dc->table) ) {
 
+            // render nothing if requireItem is activated
+            if( $dc && $dc->activeRecord && $dc->activeRecord->requireItem ) {
+                return '';
+            }
+
             $this->{'buildData_'.$dc->table}($aData,$dc);
 
             if( strlen($aData['title']) > $aData['titleMaxLength'] ) {
@@ -107,11 +112,6 @@ class SnippetPreview extends Controller {
             // add explanation for noindex
             if( $dc && $dc->activeRecord && strpos($dc->activeRecord->robots,'noindex') !== FALSE ) {
                 $aData['noIndexExplanation'] = $GLOBALS['TL_LANG']['MSC']['snippet_noindex_explanation'];
-            }
-
-            // render nothing if requireItem is activated
-            if( $dc && $dc->activeRecord && $dc->activeRecord->requireItem ) {
-                return '';
             }
 
             return Backend::parseWithTemplate('backend/widgets/snippet_preview', $aData);
