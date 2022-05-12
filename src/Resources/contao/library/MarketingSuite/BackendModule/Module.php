@@ -336,10 +336,10 @@ class Module extends CoreBackendModule {
                         }
                     }
                 }
+            }
 
-                if( empty($GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
-                    unset($GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]);
-                }
+            if( empty($GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
+                unset($GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]);
             }
         }
     }
