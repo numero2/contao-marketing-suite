@@ -18,6 +18,11 @@ services:
         arguments:
             - '@contao.framework'
 
+    numero2\MarketingSuiteBundle\Migration\CMSStatisticMigration:
+        arguments:
+            - '@database_connection'
+            - '@contao.doctrine.schema_provider'
+
     numero2\MarketingSuiteBundle\Migration\CMSTestmodeMigration:
         arguments:
             - '@contao.framework'

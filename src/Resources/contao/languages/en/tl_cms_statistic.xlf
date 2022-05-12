@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="src/Resources/contao/languages/en/tl_cms_statistic.php" source-language="en">
+<body>
+    <!-- FIELDS -->
+    <trans-unit id="tl_cms_statistic.pid.0">
+        <source>Element</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_statistic.ptable.0">
+        <source>Tabelle</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_statistic.tstamp.0">
+        <source>Zeitpunkt</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_statistic.type.0">
+        <source>Typ</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_statistic.page.0">
+        <source>Seite</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_statistic.url.0">
+        <source>Ursprung</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_statistic.keywords.0">
+        <source>Suchbegriff</source>
+    </trans-unit>
+    <!-- OPTIONS -->
+    <trans-unit id="tl_cms_statistic.types.click">
+        <source>Klick</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_statistic.types.view">
+        <source>Impression</source>
+    </trans-unit>
+    <trans-unit id="tl_cms_statistic.types.search">
+        <source>Suche</source>
+    </trans-unit>
+</body>
+</file>
+</xliff>

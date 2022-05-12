@@ -228,6 +228,12 @@ class ClickAndViews {
             return true;
         }
 
+        // prevent tracking if x-cms-dnt header is set
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        if( $request->headers->has('X-CMS-DNT') ) {
+            return true;
+        }
+
         // prevent tracking of actively logged in backend users if configured in settings
         if( CMSConfig::get('dnt_backend_users') && Auth::isBackendUserLoggedIn() ) {
             return true;

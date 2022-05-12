@@ -1,5 +1,13 @@
 services:
 
+    marketing_suite.listener.data_container.statistic:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\StatisticListener
+
+    marketing_suite.listener.frontend.search:
+        class: numero2\MarketingSuiteBundle\EventListener\Frontend\SearchListener
+        arguments:
+            - '@request_stack'
+
     marketing_suite.listener.kernel_response.add_test_header:
         class: numero2\MarketingSuiteBundle\EventListener\KernelResponse\TestHeaderListener
         arguments:

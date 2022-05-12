@@ -70,6 +70,12 @@
     <trans-unit id="CMS.link_shortener.1">
         <source>Kurzlinks erzeugen, die auch getrackt werden.</source>
     </trans-unit>
+    <trans-unit id="CMS.search_statistic.0">
+        <source>Suchstatistik</source>
+    </trans-unit>
+    <trans-unit id="CMS.search_statistic.1">
+        <source>Statistik über die Contao eigene Suche.</source>
+    </trans-unit>
     <trans-unit id="CMS.avalex.0">
         <source>avalex</source>
     </trans-unit>

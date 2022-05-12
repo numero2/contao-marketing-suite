@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -23,10 +23,10 @@ use Contao\Environment;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
+use Exception;
 use numero2\MarketingSuite\Backend\License as wegilej;
 use numero2\MarketingSuite\Encryption;
+use Symfony\Component\HttpClient\HttpClient;
 
 
 class MarketingSuite {
@@ -58,7 +58,7 @@ class MarketingSuite {
 
         try {
 
-            $response = NULL;
+            $response = null;
             $response = $this->send('/version');
 
             if( $response->status && $response->status === 'ok' ) {
@@ -70,7 +70,7 @@ class MarketingSuite {
                 CMSConfig::persist('latest_version', $response->latest_version);
             }
 
-        } catch( \Exception $e ) {
+        } catch( Exception $e ) {
 
         }
 
@@ -105,14 +105,14 @@ class MarketingSuite {
             $aData['key'] = $oRootPage->cms_root_key;
         }
 
-        $response = NULL;
+        $response = null;
         $response = $this->send('/license', $aData);
 
         if( $response->status && $response->status === 'ok' ) {
 
             if( !empty($response->key) ) {
 
-                $oCrypto = NULL;
+                $oCrypto = null;
                 $oCrypto = new Crypto($response->key);
 
                 if( !empty($response->sign) && $oCrypto->verify($response->key, $response->sign) ) {
@@ -132,12 +132,11 @@ class MarketingSuite {
 
             if( $response->status === 'error' ) {
 
-                throw new \Exception(
+                throw new Exception(
                     $response->message
                 ,   $response->code
                 );
             }
-
         }
 
         return false;
@@ -166,14 +165,14 @@ class MarketingSuite {
         ,   'key' => $oRootPage->cms_root_key
         ];
 
-        $response = NULL;
+        $response = null;
         $response = $this->send('/features', $aData);
 
         if( $response->status && $response->status === 'ok' ) {
 
             if( !empty($response->data) && !empty($response->sign) ) {
 
-                $oCrypto = NULL;
+                $oCrypto = null;
                 $oCrypto = new Crypto($oRootPage->cms_root_key);
 
                 if( $oCrypto->verify($response->data, $response->sign) ) {
@@ -194,7 +193,7 @@ class MarketingSuite {
 
             if( $response->status === 'error' ) {
 
-                throw new \Exception(
+                throw new Exception(
                     $response->message
                 ,   $response->code
                 );
@@ -373,10 +372,10 @@ class MarketingSuite {
 
                 $result = $db->prepare("
                     SELECT
-                        ISNULL(cms_facebook_pages) AS has_no_pages,
+                        ISnull(cms_facebook_pages) AS has_no_pages,
                         count(1) AS count
                     FROM tl_news_archive
-                    GROUP BY ISNULL(cms_facebook_pages)
+                    GROUP BY ISnull(cms_facebook_pages)
                 ")->execute();
 
                 if( $result->numRows ) {
@@ -476,68 +475,67 @@ class MarketingSuite {
      *
      * @return string
      */
-    private function send( $uri=NULL, $aData=NULL ) {
+    private function send( $uri=null, $aData=null ) {
+
+        $client = null;
+        $client = HttpClient::create([
+            'headers' => [
+                'user-agent' => 'Contao Marketig Suite '.CMS_VERSION
+            ,   'accept' => 'application/json'
+            ]
+        ,   'timeout' => 5
+        ,   'max_duration' => 5
+        ]);
 
         $url = $this->baseUrl . $uri;
 
         try {
 
-            $request = new Client([
-                RequestOptions::TIMEOUT         => 5
-            ,   RequestOptions::CONNECT_TIMEOUT => 5
-            ,   RequestOptions::HTTP_ERRORS     => false
-            ,   'idn_conversion'                => false # see https://github.com/guzzle/guzzle/pull/2454
-            ]);
+            $response = null;
 
-            try {
+            if( $aData === null ) {
 
-                $response = null;
-
-                if( $aData === null ) {
-                    $response = $request->get($url);
-                } else {
-                    $response = $request->post($url, [RequestOptions::JSON => $aData]);
-                }
-
-            } catch( \Exception $e ) {
-
-                // if SSL connection fails retry using HTTP
-                if( stripos($e->getMessage(), 'ssl') !== false && stripos($this->baseUrl,'https://') !== false ) {
-
-                    System::log('SSL Exception while retrieving data from Marketing Suite Server, retrying with HTTP (' . $e->getMessage() . ')', __METHOD__, TL_ERROR);
-
-                    $this->baseUrl = str_replace('https://', 'http://', $this->baseUrl);
-                    return $this->send($uri,$aData);
-                }
-
-                throw new \Exception(
-                    $e->getMessage()
-                ,   1000
-                );
-            }
-
-            $jsonResponse = json_decode( $response->getBody()->getContents() );
-
-            if( json_last_error() === JSON_ERROR_NONE ) {
-
-                return $jsonResponse;
+                $response = $client->request('GET', $url);
 
             } else {
 
-                System::log('Received invalid data from Marketing Suite Server', __METHOD__, TL_ERROR);
-
-                throw new \Exception(
-                    'Received invalid data from Marketing Suite Server'
-                ,   1000
-                );
+                $response = $client->request('POST', $url, [
+                    'headers' => [
+                        'content-type' => 'application/json; charset=utf-8'
+                    ]
+                ,   'body' => json_encode($aData)
+                ]);
             }
 
-        } catch( \Exception $e ) {
+        } catch( Exception $e ) {
 
-            System::log('Exception while retrieving data from Marketing Suite Server (' . $e->getMessage() . ')', __METHOD__, TL_ERROR);
+            // if SSL connection fails retry using HTTP
+            if( stripos($e->getMessage(), 'ssl') !== false && stripos($this->baseUrl,'https://') !== false ) {
 
-            throw new \Exception(
+                System::log('SSL Exception while retrieving data from Marketing Suite Server, retrying with HTTP (' . $e->getMessage() . ')', __METHOD__, TL_ERROR);
+
+                $this->baseUrl = str_replace('https://', 'http://', $this->baseUrl);
+                return $this->send($uri,$aData);
+            }
+
+            throw new Exception(
                 $e->getMessage()
+            ,   1000
+            );
+        }
+
+        $jsonResponse = json_decode( $response->getContent() );
+
+        if( json_last_error() === JSON_ERROR_NONE ) {
+
+            return $jsonResponse;
+
+        } else {
+
+            System::log('Received invalid data from Marketing Suite Server', __METHOD__, TL_ERROR);
+
+            throw new Exception(
+                'Received invalid data from Marketing Suite Server'
             ,   1000
             );
         }

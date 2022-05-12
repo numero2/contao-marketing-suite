@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
             'eval'                  => ['doNotShow'=>true, 'doNotCopy'=>true]
         ,   'sql'                   => "blob NULL"
         ]
-    ,   'cms_mi_views' => [
+    ,   'cms_mi_views' => [ // Will be deprecated in favor of tl_statistics
             'sql'               => "int(10) unsigned NOT NULL default '0'"
         ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']
         ]

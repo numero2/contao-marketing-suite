@@ -298,9 +298,11 @@ class License {
 
         System::loadLanguageFile('cms_license');
 
+        $disableUpdateMessage = System::getContainer()->getParameter('marketing_suite.disable_update_message');
+
         $aMessages = [];
 
-        if( self::checkForUpdate() ) {
+        if( self::checkForUpdate() && $disableUpdateMessage !== true ) {
 
             $aMessages[] = '<p class="tl_info">'.sprintf($GLOBALS['TL_LANG']['cms_license']['new_version'], CMSConfig::get('latest_version')).'</p>';
         }
@@ -392,7 +394,7 @@ class License {
      * @return boolean
      */
     public static function checkForUpdate() {
-
+return true;
         $latestVersion = CMSConfig::get('latest_version');
         $lastCheck = CMSConfig::get('last_version_check');
 

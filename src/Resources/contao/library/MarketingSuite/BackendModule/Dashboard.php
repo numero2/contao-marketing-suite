@@ -23,6 +23,7 @@ use Contao\Image;
 use Contao\PageModel;
 use Contao\System;
 use numero2\MarketingSuite\Backend;
+use numero2\MarketingSuite\StatisticModel;
 use numero2\MarketingSuite\Backend\Help;
 use numero2\MarketingSuite\Backend\License as ekga;
 use numero2\MarketingSuite\Backend\LicenseMessage;
@@ -127,7 +128,19 @@ class Dashboard extends CoreBackendModule {
                         $arrRow['groups'] = [];
 
                         while( $oContentGroup->next() ) {
-                            $arrRow['groups'][] = $oContentGroup->row();
+                            $aGroup = $oContentGroup->row();
+
+                            // $aGroup['reset']
+                            // $aStatsClicks = StatisticModel::countBy(['pid=? AND ptable=? AND type=?'], [$oPages->id, PageModel::getTable(), 'click']);
+                            // if( !empty($aStatsClicks) ) {
+                            //     $aGroup['clicks'] = $aStatsClicks;
+                            // }
+                            // $aStatsViews = StatisticModel::countBy(['pid=? AND ptable=? AND type=?'], [$oPages->id, PageModel::getTable(), 'view']);
+                            // if( !empty($aStatsViews) ) {
+                            //     $aGroup['views'] = $aStatsViews;
+                            // }
+
+                            $arrRow['groups'][] = $aGroup;
                         }
                     }
 
@@ -150,6 +163,16 @@ class Dashboard extends CoreBackendModule {
 
                             // gather clicks on conversion items on this page
                             $oPages->cms_mi_clicks = 0;
+
+                            // $oPages->cms_mi_reset;
+                            // $aStatsClicks = StatisticModel::countBy(['pid=? AND ptable=? AND type=?'], [$oPages->id, PageModel::getTable(), 'click']);
+                            // if( !empty($aStatsClicks) ) {
+                            //     $oPages->cms_mi_clicks = $aStatsClicks;
+                            // }
+                            // $aStatsViews = StatisticModel::countBy(['pid=? AND ptable=? AND type=?'], [$oPages->id, PageModel::getTable(), 'view']);
+                            // if( !empty($aStatsViews) ) {
+                            //     $oPages->cms_mi_views = $aStatsViews;
+                            // }
 
                             $objCI = ConversionItemModel::findAllOn($oPages->current());
 

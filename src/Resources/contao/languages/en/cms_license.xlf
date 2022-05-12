@@ -3,7 +3,7 @@
 <file datatype="php" original="src/Resources/contao/languages/en/cms_license.php" source-language="en">
 <body>
     <trans-unit id="cms_license.new_version">
-        <source>Eine neue Version der Marketing Suite [%s] ist verfügbar, bitte updaten Sie jetzt.</source>
+        <source>Eine neue Version der Marketing Suite [%s] ist verfügbar.</source>
     </trans-unit>
     <trans-unit id="cms_license.no_data">
         <source>Der Domain-Schlüssel <![CDATA[<strong>%s</strong>]]> konnte nicht überprüft werden. Bitte aktualisieren Sie die Lizenz manuell über den Eintrag in der <![CDATA[<a href="%s" target="_top">Seitenstruktur</a>]]>.</source>

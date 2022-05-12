@@ -24,6 +24,7 @@ use numero2\MarketingSuite\BackendModule\Feedback;
 use numero2\MarketingSuite\BackendModule\HealthCheck;
 use numero2\MarketingSuite\BackendModule\Module;
 use numero2\MarketingSuite\BackendModule\NewsSchedule;
+use numero2\MarketingSuite\BackendModule\SearchStatistic;
 use numero2\MarketingSuite\ContentButton;
 use numero2\MarketingSuite\ContentConversionItem;
 use numero2\MarketingSuite\ContentGroupModel;
@@ -47,6 +48,7 @@ use numero2\MarketingSuite\ModuleAcceptTags;
 use numero2\MarketingSuite\ModuleConversionItem;
 use numero2\MarketingSuite\ModuleCookieBar;
 use numero2\MarketingSuite\ModuleMarketingItem;
+use numero2\MarketingSuite\StatisticModel;
 use numero2\MarketingSuite\TagModel;
 use numero2\MarketingSuite\Tracking\ClickAndViews;
 use numero2\MarketingSuite\Tracking\Session;
@@ -64,6 +66,7 @@ $GLOBALS['TL_MODELS'][LinkShortenerStatisticsModel::getTable()] = LinkShortenerS
 $GLOBALS['TL_MODELS'][ContentGroupModel::getTable()] = ContentGroupModel::class;
 $GLOBALS['TL_MODELS'][ConversionItemModel::getTable()] = ConversionItemModel::class;
 $GLOBALS['TL_MODELS'][MarketingItemModel::getTable()] = MarketingItemModel::class;
+$GLOBALS['TL_MODELS'][StatisticModel::getTable()] = StatisticModel::class;
 
 
 /**
@@ -112,6 +115,10 @@ $GLOBALS['CMS_MOD'] = [
             'tables'    => ['tl_cms_link_shortener', 'tl_cms_link_shortener_statistics']
         ,   'icon'      => 'bundles/marketingsuite/img/backend/icons/icon_link_shortener.svg'
         ,   'link_shortener_statistics' => [LinkShortenerStatistics::class, 'generate']
+        ]
+    ,   'search_statistic' => [
+            'tables'    => [StatisticModel::getTable()]
+        ,   'icon'      => 'bundles/marketingsuite/img/backend/icons/icon_search_statistic.svg'
         ]
     ]
 ,   'settings' => [

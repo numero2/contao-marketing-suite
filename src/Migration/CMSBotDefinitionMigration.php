@@ -26,7 +26,7 @@ class CMSBotDefinitionMigration extends AbstractMigration {
 
 
     /**
-     * @var ContaoFramework
+     * @var Contao\CoreBundle\Framework\ContaoFramework
      */
     private $framework;
 

@@ -82,10 +82,10 @@ $GLOBALS['TL_DCA']['tl_cms_content_group'] = [
     ,   'tstamp' => [
             'sql'         => "int(10) unsigned NOT NULL default '0'"
         ]
-    ,   'clicks' => [
+    ,   'clicks' => [ // Will be deprecated in favor of tl_statistics
             'sql'         => "int(10) unsigned NOT NULL default '0'"
         ]
-    ,   'views' => [
+    ,   'views' => [ // Will be deprecated in favor of tl_statistics
             'sql'         => "int(10) unsigned NOT NULL default '0'"
         ]
     ,   'reset' => [

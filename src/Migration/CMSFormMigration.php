@@ -25,9 +25,10 @@ class CMSFormMigration extends AbstractMigration {
 
 
     /**
-     * @var ContaoFramework
+    * @var Contao\CoreBundle\Framework\ContaoFramework;
      */
     private $framework;
+
 
     public function __construct( ContaoFramework $framework ) {
 

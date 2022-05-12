@@ -198,7 +198,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
         ,   'eval'              => ['mandatory'=>true, 'maxlength'=>255, 'doNotCopy'=>true, 'tl_class'=>'w50']
         ,   'sql'               => "varchar(255) NOT NULL default ''"
         ]
-    ,   'cms_mi_views' => [
+    ,   'cms_mi_views' => [ // Deprecated in favor of tl_statistics
             'sql'               => "int(10) unsigned NOT NULL default '0'"
         ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']
         ]
@@ -214,12 +214,12 @@ $GLOBALS['TL_DCA']['tl_content']['fields'] = array_merge(
         ,   'wizard'            => [['\numero2\MarketingSuite\DCAHelper\ConversionItem','conversionItemWizard']]
         ,   'sql'               => "int(10) unsigned NOT NULL default '0'"
         ]
-    ,   'cms_ci_clicks' => [
+    ,   'cms_ci_clicks' => [ // Will be deprecated in favor of tl_statistics
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_ci_clicks']
         ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']
         ,   'sql'               => "int(10) unsigned NOT NULL default '0'"
         ]
-    ,   'cms_ci_views' => [
+    ,   'cms_ci_views' => [ // Will be deprecated in favor of tl_statistics
             'label'             => &$GLOBALS['TL_LANG']['tl_content']['cms_ci_views']
         ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']
         ,   'sql'               => "int(10) unsigned NOT NULL default '0'"

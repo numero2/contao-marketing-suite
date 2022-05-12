@@ -152,13 +152,6 @@ class ContentMarketingItem extends ContentElement {
 
                         $objContent->typePrefix = 'ce_';
 
-                        if( $objContent->cta_link ) {
-                            $objContent->cta_link = Controller::addToUrl('&follow='.$value, false);
-                        }
-                        if( $objContent->url ) {
-                            $objContent->url = Controller::addToUrl('&follow='.$value, false);
-                        }
-
                         /** @var ContentElement $objElement */
                         $objElement = new $strClass($objContent, $this->strColumn);
 

@@ -136,6 +136,6 @@ abstract class ModuleEUConsent extends Module implements InterfaceStyleable {
      * {@inheritdoc}
      */
     public static function getStylesheetPath(): string {
-        return 'bundles/marketingsuite/css/cookie-bar.css';
+        return 'bundles/marketingsuite/css/modules.css';
     }
 }

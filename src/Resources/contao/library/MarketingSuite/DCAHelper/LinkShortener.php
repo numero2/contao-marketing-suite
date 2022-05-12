@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -26,9 +26,8 @@ use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
 use numero2\MarketingSuite\Backend\License as safsewzk;
+use Symfony\Component\HttpClient\HttpClient;
 
 
 class LinkShortener extends CoreBackend {
@@ -335,25 +334,28 @@ class LinkShortener extends CoreBackend {
             return $value;
         }
 
-        $oClient = NULL;
-        $oClient = new Client([
-            RequestOptions::TIMEOUT         => 5
-        ,   RequestOptions::CONNECT_TIMEOUT => 5
-        ,   RequestOptions::HTTP_ERRORS     => true
-        ,   RequestOptions::ALLOW_REDIRECTS => false
+        $client = null;
+        $client = HttpClient::create([
+            'headers' => [
+                'user-agent' => 'Contao Marketig Suite '.CMS_VERSION
+            ]
+        ,   'timeout' => 5
+        ,   'max_duration' => 5
+        ,   'max_redirects' => 0
+        ,   'verify_peer' => false
+        ,   'verify_host' => false
         ]);
 
         $code = 0;
+
         try {
 
-            $oResponse = NULL;
-            $oResponse = $oClient->head('https://'.$domain.'/'.$value);
+            $response = null;
+            $response = $client->request('HEAD', 'https://'.$domain.'/'.$value);
 
-            $code = $oResponse->getStatusCode();
+            $code = $response->getStatusCode();
 
         } catch( Exception $e ) {
-
-            $code = $e->getCode();
         }
 
         if( (int)$code == 200 ) {

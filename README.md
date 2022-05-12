@@ -18,6 +18,9 @@ Insert Tags
 
 For Developers
 --
+
+### Helper Functions for Cookie Consent
+
 For Developers the Marketing Suite provides some helper functions in order to integrate the cookie consent handling into your own extensions.
 
 These functions will check if the tag, given by its id, has been accepted by the visitor. The function also take care if the tag itself is actually set active or not.
@@ -30,6 +33,10 @@ These functions will check if the tag, given by its id, has been accepted by the
    	<!-- YOUR CONTENT IF NOT ACCEPTED -->
 <?php endif; ?>
 ```
+
+### Header to disable tracking
+
+Certain elements in the Marketing Suite can be tracked (like a click on a CTA or the view of an element). In case you want to prevent certain requests from actually tracking something the Suite provides a special HTTP header called `X-CMS-DNT`. If this header is present the tracking will be disabled for this request.
 
 System requirements
 --

@@ -18,6 +18,7 @@ namespace numero2\MarketingSuite\BackendModule;
 use Contao\ArticleModel;
 use Contao\BackendModule as CoreBackendModule;
 use Contao\CalendarEventsModel;
+use Contao\CalendarModel;
 use Contao\CMSConfig;
 use Contao\ContentModel;
 use Contao\Controller;
@@ -26,17 +27,20 @@ use Contao\Environment;
 use Contao\Image;
 use Contao\Message;
 use Contao\ModuleModel;
+use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
+use Exception;
 use numero2\MarketingSuite\Backend\Help;
 use numero2\MarketingSuite\Backend\License as varzegju;
 use numero2\MarketingSuite\Backend\LicenseMessage;
 use numero2\MarketingSuite\Encryption;
 use numero2\MarketingSuite\Widget\SnippetPreview;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 
 class HealthCheck extends CoreBackendModule {
@@ -92,10 +96,10 @@ class HealthCheck extends CoreBackendModule {
         }
 
         // get fieldset states
-        $objSessionBag = NULL;
+        $objSessionBag = null;
         $objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
-        $fs = NULL;
+        $fs = null;
         $fs = $objSessionBag->get('fieldset_states');
 
         if( !empty($fs['cms_health_check']) ) {
@@ -118,7 +122,7 @@ class HealthCheck extends CoreBackendModule {
         $aCategories = array_filter($aCategories);
 
         // initialize help
-        $objBEHelp = NULL;
+        $objBEHelp = null;
         $objBEHelp = new Help();
 
         $this->Template->be_help = $objBEHelp->generate();
@@ -169,8 +173,8 @@ class HealthCheck extends CoreBackendModule {
         // check for news archives to exclude these pages from the check
         if( class_exists('\Contao\News') ) {
 
-            $oArchives = NULL;
-            $oArchives = \NewsArchiveModel::findAll();
+            $oArchives = null;
+            $oArchives = NewsArchiveModel::findAll();
 
             if( $oArchives ) {
 
@@ -183,8 +187,8 @@ class HealthCheck extends CoreBackendModule {
         // check for calendars to exclude these pages from the check
         if( class_exists('\Contao\Calendar') ) {
 
-            $oCalendars = NULL;
-            $oCalendars = \CalendarModel::findAll();
+            $oCalendars = null;
+            $oCalendars = CalendarModel::findAll();
 
             if( $oCalendars ) {
 
@@ -195,7 +199,7 @@ class HealthCheck extends CoreBackendModule {
         }
 
         // find pages
-        $oPages = NULL;
+        $oPages = null;
         $oPages = PageModel::findAll([
             'column' => [
                 "type=?"
@@ -212,7 +216,7 @@ class HealthCheck extends CoreBackendModule {
                 // check if we find any h1 by statically looking at the content
                 if( !$this->checkForH1InContentElements($oPages->id) ) {
 
-                    $objPage = NULL;
+                    $objPage = null;
                     $objPage = $oPages->current()->loadDetails();
 
                     if( !varzegju::hasFeature('health_check_h1_missing', $objPage->trail[0]) ) {
@@ -260,7 +264,7 @@ class HealthCheck extends CoreBackendModule {
      */
     private function checkForH1InContentElements( $pageID ) {
 
-        $oArticles = NULL;
+        $oArticles = null;
         $oArticles = ArticleModel::findByPid( $pageID );
 
         if( $oArticles ) {
@@ -274,7 +278,7 @@ class HealthCheck extends CoreBackendModule {
                     continue;
                 }
 
-                $oContentElements = NULL;
+                $oContentElements = null;
                 $oContentElements = ContentModel::findByPid( $oArticles->id );
 
                 if( $oContentElements ) {
@@ -291,7 +295,7 @@ class HealthCheck extends CoreBackendModule {
                         // special handling for module elements
                         if( $oElement->type == 'module' ) {
 
-                            $oModule = NULL;
+                            $oModule = null;
                             $oModule = ModuleModel::findById( $oElement->module );
 
                             $oElement = $oModule;
@@ -354,7 +358,7 @@ class HealthCheck extends CoreBackendModule {
         ];
 
         // find pages
-        $oPages = NULL;
+        $oPages = null;
         $oPages = PageModel::findAll([
             'column' => ["type=?", "(createSitemap='')", "cms_exclude_health_check=0"]
         ,   'value' => ['root']
@@ -408,7 +412,7 @@ class HealthCheck extends CoreBackendModule {
         ];
 
         // find pages
-        $oPages = NULL;
+        $oPages = null;
         $oPages = PageModel::findAll([
             'column' => ["type=?", "cms_exclude_health_check=0"]
         ,   'value' => ['root']
@@ -423,7 +427,7 @@ class HealthCheck extends CoreBackendModule {
                 }
 
                 // get domain
-                $sDomain = NULL;
+                $sDomain = null;
                 $sDomain = $oPages->dns ? $oPages->dns : Environment::get('host');
 
                 // static check: domain matches current host and SSL already enabled
@@ -434,17 +438,25 @@ class HealthCheck extends CoreBackendModule {
                 // check the response when trying to make a request to HTTPS
                 } else {
 
-                    $oClient = NULL;
-                    $oClient = new Client([
-                        RequestOptions::TIMEOUT         => 5
-                    ,   RequestOptions::CONNECT_TIMEOUT => 5
-                    ,   RequestOptions::HTTP_ERRORS     => true
-                    ]);
-
                     try {
 
-                        $oRequest = NULL;
-                        $oRequest = $oClient->head('https://'.$sDomain);
+                        $client = null;
+                        $client = HttpClient::create([
+                            'headers' => [
+                                'user-agent' => 'Contao Marketig Suite '.CMS_VERSION
+                            ]
+                        ,   'timeout' => 5
+                        ,   'max_duration' => 5
+                        ,   'verify_peer' => true
+                        ,   'verify_host' => true
+                        ]);
+
+                        $response = null;
+                        $response = $client->request('HEAD', 'https://'.$sDomain);
+
+                        // respones are lazy.
+                        // make sure to call its destructor right within our try/catch
+                        unset($response);
 
                         varzegju::tuvwahhe();
 
@@ -453,8 +465,7 @@ class HealthCheck extends CoreBackendModule {
                             continue;
                         }
 
-                    } catch( \Exception $e ) {
-
+                    } catch( Exception | HttpExceptionInterface | TransportExceptionInterface $e ) {
                         // Exception indicates no successfull SSL connection
                     }
                 }
@@ -499,7 +510,7 @@ class HealthCheck extends CoreBackendModule {
         ];
 
         // find pages
-        $oPages = NULL;
+        $oPages = null;
         $oPages = PageModel::findAll([
             'column' => ["type=?", "cms_exclude_health_check=0"]
         ,   'value' => ['root']
@@ -514,15 +525,15 @@ class HealthCheck extends CoreBackendModule {
                 }
 
                 // get domain(s)
-                $sBaseDomain = NULL;
+                $sBaseDomain = null;
                 $sBaseDomain = $oPages->dns ? $oPages->dns : Environment::get('host');
                 $sBaseDomain = preg_replace('|^www\.(.+\.)|i', '$1', $sBaseDomain);
 
-                $sWWWDomain = NULL;
+                $sWWWDomain = null;
                 $sWWWDomain = 'www.' . $sBaseDomain;
 
-                $lastPageID = NULL;
-                $lastRedirectHost = NULL;
+                $lastPageID = null;
+                $lastRedirectHost = null;
 
                 varzegju::puwbeaf();
 
@@ -534,33 +545,32 @@ class HealthCheck extends CoreBackendModule {
                 // send requests to both domains (with and without www)
                 foreach( $aDomains as $i => $data ) {
 
-                    $oClient = NULL;
-                    $oClient = new Client([
-                        RequestOptions::TIMEOUT         => 5
-                    ,   RequestOptions::CONNECT_TIMEOUT => 5
-                    ,   RequestOptions::HTTP_ERRORS     => true
-                    ,   RequestOptions::ALLOW_REDIRECTS => [
-                            'track_redirects' => true
+                    $client = null;
+                    $client = HttpClient::create([
+                        'headers' => [
+                            'user-agent' => 'Contao Marketig Suite '.CMS_VERSION
+                        ,   'x-requested-with' => 'CMS-HealthCheck'
                         ]
-                    ,   RequestOptions::HEADERS => [
-                            'X-Requested-With' => 'CMS-HealthCheck'
-                        ]
+                    ,   'timeout' => 5
+                    ,   'max_duration' => 5
+                    ,   'verify_peer' => false
+                    ,   'verify_host' => false
                     ]);
 
                     try {
 
-                        $oResponse = NULL;
-                        $oResponse = $oClient->head('http://'.$data['host']);
+                        $response = null;
+                        $response = $client->request('HEAD', 'http://'.$data['host']);
 
-                        if( $oResponse->getStatusCode() === 200 ) {
+                        if( $response->getStatusCode() === 200 ) {
 
                             $aHeaders = [];
-                            $aHeaders = $oResponse->getHeaders();
+                            $aHeaders = $response->getHeaders();
 
                             // save redirected hostname
-                            if( array_key_exists('X-Guzzle-Redirect-History', $aHeaders) ) {
+                            if( $response->getInfo()['redirect_count'] > 0 ) {
 
-                                $currHost = array_pop($aHeaders['X-Guzzle-Redirect-History']);
+                                $currHost = $response->getInfo()['url'];
                                 $currHost = parse_url($currHost, PHP_URL_HOST);
 
                                 $aDomains[$i]['host'] = $currHost;
@@ -572,8 +582,10 @@ class HealthCheck extends CoreBackendModule {
                             }
                         }
 
+                        unset($response);
+
                     // may occur if subdomain does not exist at all - thats fine
-                    } catch( \Exception $e ) {
+                    } catch( Exception | HttpExceptionInterface | TransportExceptionInterface $e ) {
 
                         continue 2;
                     }
@@ -625,7 +637,7 @@ class HealthCheck extends CoreBackendModule {
         ];
 
         // find pages
-        $oPages = NULL;
+        $oPages = null;
         $oPages = PageModel::findAll([
             'column' => ["type=?", "(pageTitle='' OR description = '')", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
@@ -635,7 +647,7 @@ class HealthCheck extends CoreBackendModule {
 
             while( $oPages->next() ) {
 
-                $objPage = NULL;
+                $objPage = null;
                 $objPage = PageModel::findWithDetails( $oPages->id );
 
                 if( !varzegju::hasFeature('health_check_meta_missing', $objPage->trail[0]) ) {
@@ -667,7 +679,7 @@ class HealthCheck extends CoreBackendModule {
                 $value[] = CMSConfig::get('health_check_ignore_older_than');
             }
 
-            $oNews = NULL;
+            $oNews = null;
             $oNews = NewsModel::findAll([
                 'column' => $column
             ,   'value' => $value
@@ -703,7 +715,7 @@ class HealthCheck extends CoreBackendModule {
                 $value[] = CMSConfig::get('health_check_ignore_older_than');
             }
 
-            $oEvents = NULL;
+            $oEvents = null;
             $oEvents = CalendarEventsModel::findAll([
                 'column' => $column
             ,   'value' => $value
@@ -756,7 +768,7 @@ class HealthCheck extends CoreBackendModule {
         ];
 
         // find pages
-        $oPages = NULL;
+        $oPages = null;
         $oPages = PageModel::findAll([
             'column' => ["type=?", "(CHAR_LENGTH(pageTitle) < ".SnippetPreview::TITLE_MIN_LENGTH." OR CHAR_LENGTH(description) < ".SnippetPreview::DESCRIPTION_MIN_LENGTH.")", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
@@ -766,7 +778,7 @@ class HealthCheck extends CoreBackendModule {
 
             while( $oPages->next() ) {
 
-                $objPage = NULL;
+                $objPage = null;
                 $objPage = PageModel::findWithDetails( $oPages->id );
 
                 if( !varzegju::hasFeature('health_check_meta_too_short', $objPage->trail[0]) ) {
@@ -798,7 +810,7 @@ class HealthCheck extends CoreBackendModule {
                 $value[] = CMSConfig::get('health_check_ignore_older_than');
             }
 
-            $oNews = NULL;
+            $oNews = null;
             $oNews = NewsModel::findAll([
                 'column' => $column
             ,   'value' => $value
@@ -834,7 +846,7 @@ class HealthCheck extends CoreBackendModule {
                 $value[] = CMSConfig::get('health_check_ignore_older_than');
             }
 
-            $oEvents = NULL;
+            $oEvents = null;
             $oEvents = CalendarEventsModel::findAll([
                 'column' => $column
             ,   'value' => $value
@@ -887,7 +899,7 @@ class HealthCheck extends CoreBackendModule {
         ];
 
         // find pages
-        $oPages = NULL;
+        $oPages = null;
         $oPages = PageModel::findAll([
             'column' => ["type=?", "(CHAR_LENGTH(pageTitle) > ".SnippetPreview::TITLE_MAX_LENGTH." OR CHAR_LENGTH(description) > ".SnippetPreview::DESCRIPTION_MAX_LENGTH.")", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
@@ -897,7 +909,7 @@ class HealthCheck extends CoreBackendModule {
 
             while( $oPages->next() ) {
 
-                $objPage = NULL;
+                $objPage = null;
                 $objPage = PageModel::findWithDetails( $oPages->id );
 
                 if( !varzegju::hasFeature('health_check_meta_too_long', $objPage->trail[0]) ) {
@@ -929,7 +941,7 @@ class HealthCheck extends CoreBackendModule {
                 $value[] = CMSConfig::get('health_check_ignore_older_than');
             }
 
-            $oNews = NULL;
+            $oNews = null;
             $oNews = NewsModel::findAll([
                 'column' => $column
             ,   'value' => $value
@@ -965,7 +977,7 @@ class HealthCheck extends CoreBackendModule {
                 $value[] = CMSConfig::get('health_check_ignore_older_than');
             }
 
-            $oEvents = NULL;
+            $oEvents = null;
             $oEvents = CalendarEventsModel::findAll([
                 'column' => $column
             ,   'value' => $value
@@ -1016,7 +1028,7 @@ class HealthCheck extends CoreBackendModule {
         ];
 
         // find pages
-        $oPages = NULL;
+        $oPages = null;
         $oPages = PageModel::findAll([
             'column' => ["type=?", "(og_title='' OR og_image=NULL)", "cms_exclude_health_check=0"]
         ,   'value' => ['regular']
@@ -1026,7 +1038,7 @@ class HealthCheck extends CoreBackendModule {
 
             while( $oPages->next() ) {
 
-                $objPage = NULL;
+                $objPage = null;
                 $objPage = PageModel::findWithDetails( $oPages->id );
 
                 if( !varzegju::hasFeature('health_check_open_graph_missing', $objPage->trail[0]) ) {
@@ -1050,8 +1062,8 @@ class HealthCheck extends CoreBackendModule {
         // find news
         if( class_exists('\Contao\News') ) {
 
-            $oNews = NULL;
-            $oNews = \NewsModel::findAll([
+            $oNews = null;
+            $oNews = NewsModel::findAll([
                 'column' => ["(og_title='' OR og_image=NULL)"]
             ]);
 

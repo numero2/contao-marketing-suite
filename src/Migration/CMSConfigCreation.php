@@ -27,6 +27,7 @@ class CMSConfigCreation extends AbstractMigration {
      */
     private $projectDir;
 
+
     public function __construct( string $projectDir ) {
 
         $this->projectDir = $projectDir;
