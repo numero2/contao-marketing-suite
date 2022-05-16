@@ -524,7 +524,7 @@ class MarketingSuite {
             );
         }
 
-        $jsonResponse = json_decode( $response->getContent() );
+        $jsonResponse = json_decode( $response->getContent(false) );
 
         if( json_last_error() === JSON_ERROR_NONE ) {
 
