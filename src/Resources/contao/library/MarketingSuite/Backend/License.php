@@ -394,7 +394,7 @@ class License {
      * @return boolean
      */
     public static function checkForUpdate() {
-return true;
+
         $latestVersion = CMSConfig::get('latest_version');
         $lastCheck = CMSConfig::get('last_version_check');
 
