@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -23,7 +23,7 @@ array_insert($GLOBALS['TL_DCA']['tl_content']['list']['operations'], 3, [
     'reset_counter' => [
         'label'             => &$GLOBALS['TL_LANG']['tl_content']['reset_counter']
     ,   'icon'              => 'bundles/marketingsuite/img/backend/icons/icon_reset_counter.svg'
-    ,   'attributes'        => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['reset_warning'] . '\')) return false; Backend.getScrollOffset();"'
+    ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['reset_warning'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
     ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'resetCounter']
     ]
 ]);

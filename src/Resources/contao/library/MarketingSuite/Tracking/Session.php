@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -52,7 +52,7 @@ class Session {
 
         global $objPage;
 
-        if( TL_MODE != 'FE' || BE_USER_LOGGED_IN || !koqfklea::hasFeature('me_visited_pages', $objPage->trail[0]) ) {
+        if( TL_MODE != 'FE' || !koqfklea::hasFeature('me_visited_pages', $objPage->trail[0]) ) {
             return;
         }
 
@@ -127,7 +127,7 @@ class Session {
      */
     public function storeABTestSelected( $contentID, $selectedID ) {
 
-        if( TL_MODE != 'FE' || BE_USER_LOGGED_IN ) {
+        if( TL_MODE != 'FE' ) {
             return;
         }
 
@@ -169,7 +169,7 @@ class Session {
      */
     public function storeABTestPageSelected( $pageID, $selectedID ) {
 
-        if( TL_MODE != 'FE' || BE_USER_LOGGED_IN ) {
+        if( TL_MODE != 'FE' ) {
             return;
         }
 
@@ -212,7 +212,7 @@ class Session {
      */
     public function storeOverlayClosed( $contentID, $changed, $expires ) {
 
-        if( TL_MODE != 'FE' || BE_USER_LOGGED_IN ) {
+        if( TL_MODE != 'FE' ) {
             return;
         }
 

@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -76,7 +76,7 @@ class Module extends CoreBackendModule {
             $objSession->set('CURRENT_ID', $id);
         }
 
-        if( $id ) {
+        if( $id && !\defined('CURRENT_ID') ) {
             \define('CURRENT_ID', $id);
         }
 

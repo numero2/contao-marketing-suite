@@ -71,14 +71,14 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
         ,   'reset_counter' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['reset_counter']
             ,   'icon'              => 'bundles/marketingsuite/img/backend/icons/icon_reset_counter.svg'
-            ,   'attributes'        => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['reset_warning'] . '\')) return false; Backend.getScrollOffset();"'
+            ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['reset_warning'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
             ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'resetCounter']
             ]
         ,   'delete' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['delete']
             ,   'href'              => 'act=delete'
             ,   'icon'              => 'delete.svg'
-            ,   'attributes'        => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
+            ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
             ]
         ,   'toggle' =>[
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['toggle']
