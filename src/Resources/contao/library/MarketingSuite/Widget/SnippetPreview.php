@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -17,6 +17,7 @@ namespace numero2\MarketingSuite\Widget;
 
 use Contao\CalendarEventsModel;
 use Contao\Controller;
+use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\DataContainer;
 use Contao\Events;
 use Contao\InsertTags;
@@ -76,11 +77,9 @@ class SnippetPreview extends Controller {
         if( method_exists($this, 'buildData_'.$dc->table) ) {
 
             // render nothing if requireItem is activated
-            if( $dc && $dc->activeRecord && $dc->activeRecord->requireItem ) {
+            if( ($dc && $dc->activeRecord && $dc->activeRecord->requireItem) || $this->{'buildData_'.$dc->table}($aData,$dc) === false ) {
                 return '';
             }
-
-            $this->{'buildData_'.$dc->table}($aData,$dc);
 
             if( strlen($aData['title']) > $aData['titleMaxLength'] ) {
                 $aData['title'] = substr($aData['title'], 0, $aData['titleMaxLength']) . '...';
@@ -164,7 +163,7 @@ class SnippetPreview extends Controller {
      *
      * @return array
      */
-    private function buildData_tl_page( &$aData, DataContainer $dc ) {
+    private function buildData_tl_page( &$aData, DataContainer $dc ): bool {
 
         $oPage = NULL;
         $oPage = PageModel::findById($dc->activeRecord->id);
@@ -174,8 +173,12 @@ class SnippetPreview extends Controller {
         }
 
         $sURL = "";
-        $sURL = $oPage->getAbsoluteUrl();
-        $sURL = urldecode($sURL);
+        try {
+            $sURL = $oPage->getAbsoluteUrl();
+            $sURL = urldecode($sURL);
+        } catch( RouteParametersException $exception ) {
+            return false;
+        }
 
         list($baseUrl) = explode($oPage->alias ?: $oPage->id, $sURL);
 
@@ -194,6 +197,8 @@ class SnippetPreview extends Controller {
         ,   'titleTag' => $this->parseTitleTag($oPage)
         ,   'layoutId' => $oLayout?$oPage->getRelated('layout')->id:NULL
         ];
+
+        return true;
     }
 
 

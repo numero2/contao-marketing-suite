@@ -35,7 +35,7 @@ services:
         arguments:
             - '@router.request_context'
             - '@marketing_suite.routing.nested_matcher'
-            - '@marketing_suite.routing.route_generator'
+            - '@marketing_suite.routing.page_url_generator'
             - ''
             - '@event_dispatcher'
             - '@marketing_suite.routing.route_provider'
@@ -65,10 +65,11 @@ services:
         arguments:
             - "@contao.framework"
 
-    marketing_suite.routing.route_generator:
-        class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
+    marketing_suite.routing.page_url_generator:
+        class: numero2\MarketingSuiteBundle\Routing\PageUrlGenerator
         arguments:
             - '@marketing_suite.routing.route_provider'
-            - '@logger'
+            - '@?contao.routing.page_registry'
+            - '@?logger'
 
     numero2\MarketingSuiteBundle\Controller\BackendController: ~

@@ -42,34 +42,37 @@ class CMSFormMigration extends AbstractMigration {
         $oDB = NULL;
         $oDB = Database::getInstance();
 
-        $shouldRun = false;
-
         if( $oDB->tableExists('tl_content') ) {
 
             $oResult = $oDB->execute("SELECT COUNT(1) AS count FROM tl_content WHERE type='form' AND ptable='tl_cms_content_group'");
+            $oResult->fetchAllAssoc(); // fetch result to clear internal query buffer
 
             if( $oResult && $oResult->count ) {
-                $shouldRun = true;
+                return true;
             }
 
             if( $oDB->fieldExists('cms_mi_label', 'tl_content') ) {
+
                 $oResult = $oDB->execute("SELECT COUNT(1) AS count FROM tl_content WHERE type='form' AND cms_mi_label!=''");
+                $oResult->fetchAllAssoc(); // fetch result to clear internal query buffer
 
                 if( $oResult && $oResult->count ) {
-                    $shouldRun = true;
+                    return true;
                 }
             }
         }
 
         if( $oDB->tableExists('tl_cms_marketing_item') ) {
+
             $oResult = $oDB->execute("SELECT COUNT(1) AS count FROM tl_cms_marketing_item WHERE type='form'");
+            $oResult->fetchAllAssoc(); // fetch result to clear internal query buffer
 
             if( $oResult && $oResult->count ) {
-                $shouldRun = true;
+                return true;
             }
         }
 
-        return $shouldRun;
+        return false;
     }
 
 
