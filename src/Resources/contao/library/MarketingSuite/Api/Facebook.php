@@ -223,9 +223,11 @@ class Facebook {
      */
     public static function getOAuthRedirectUrl() {
 
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
         $url = Environment::get('url') . Environment::get('path');
         $url = str_replace('http:','https:',$url);
-        $url = $url . '/contao?do=' . Input::get('do') . '&mod=' . Input::get('mod') . '&table=' . Input::get('table');
+        $url = $url . $routePrefix . '?do=' . Input::get('do') . '&mod=' . Input::get('mod') . '&table=' . Input::get('table');
 
         return $url;
     }

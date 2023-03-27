@@ -58,7 +58,7 @@
         <source>Der Beitrag konnte nicht auf der Seite „%s” veröffentlicht werden</source>
     </trans-unit>
     <trans-unit id="tl_cms_facebook.msg.opengraph_missing">
-        <source>Tipp: Mit Open Graph Tags können Bilder und Texte die in sozialen Netzwerken geteilt werden, vorher genau für jeden Beitrag oder Seite festgelegt werden. <![CDATA[<a href="https://packagist.org/packages/numero2/contao-opengraph3" target="_blank">Bitte hier klicken]]> um Open Graph Tag Manager zu installieren und bessere Ergebnisse in sozialen Medien zu erzielen.</source>
+        <source>Tipp: Mit Open Graph Tags können Bilder und Texte die in sozialen Netzwerken geteilt werden, vorher genau für jeden Beitrag oder Seite festgelegt werden. <![CDATA[<a href="https://packagist.org/packages/numero2/contao-opengraph3" target="_blank">Bitte hier klicken</a>]]> um Open Graph Tag Manager zu installieren und bessere Ergebnisse in sozialen Medien zu erzielen.</source>
     </trans-unit>
     <!-- AUTHORIZATION -->
     <trans-unit id="tl_cms_facebook.authorization.initial.message">

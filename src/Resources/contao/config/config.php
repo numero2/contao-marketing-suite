@@ -229,7 +229,7 @@ if( Config::getInstance()->isComplete() ) {
     $GLOBALS['TL_HOOKS']['insertTagFlags'][] = [LinkShortener::class, 'replaceLinkShortenerInsertTagFlags'];
     $GLOBALS['TL_HOOKS']['loadDataContainer'][] = [ModuleHelper::class, 'addSQLDefinitionForTagSettings'];
 
-    if( version_compare(VERSION, '4.10', '<') || System::getContainer()->getParameter('contao.legacy_routing') ) {
+    if( System::getContainer()->getParameter('contao.legacy_routing') ) {
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = [ABTestPage::class, 'selectAorBPage'];
     }
 

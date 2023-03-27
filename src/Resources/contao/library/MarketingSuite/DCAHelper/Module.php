@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -21,6 +21,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\Message;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License as rtjhp;
 use numero2\MarketingSuite\DCAHelper\TagSettings;
 
@@ -184,14 +185,19 @@ class Module extends CoreBackend {
 
         if( CMSConfig::get('cms_tag_type') != 'cms_tag_modules' ) {
 
-            $oTS = NULL;
+            $oTS = null;
             $oTS = new TagSettings();
 
             $aTypes = [];
             $aTypes = $oTS->getFrontendTypes($dc);
 
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
             if( !empty($aTypes) && in_array($varValue, $aTypes) ) {
-                Message::addError($GLOBALS['TL_LANG']['tl_cms_tag_settings']['msg']['why_disabled']);
+                Message::addError(sprintf(
+                    $GLOBALS['TL_LANG']['tl_cms_tag_settings']['msg']['why_disabled']
+                ,   $routePrefix
+                ));
             }
         }
 

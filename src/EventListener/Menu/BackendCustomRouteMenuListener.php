@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 namespace numero2\MarketingSuiteBundle\EventListener\Menu;
@@ -65,7 +65,7 @@ class BackendCustomRouteMenuListener {
 
 
     /**
-     * add custom route if needed in submenu marketing_suite as given in global CMS_MOD
+     * Add custom route if needed in submenu marketing_suite as given in global CMS_MOD
      *
      * @param MenuEvent $event
      * @param BackendUser $user
@@ -75,6 +75,7 @@ class BackendCustomRouteMenuListener {
         if( array_key_exists('marketing_suite', $user->navigation()) ) {
 
             $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
             $tree = $event->getTree();
             $marketingMenu = $tree->getChild('marketing_suite');
@@ -84,8 +85,7 @@ class BackendCustomRouteMenuListener {
 
             foreach( $children as $key => $menuItem ) {
                 if( strpos($key, 'cms_') === 0 && array_key_exists(substr($key, 4), $GLOBALS['CMS_MOD']) ) {
-                    $menuItem->setUri(str_replace('/contao?', '/contao/cms?', $menuItem->getUri()));
-
+                    $menuItem->setUri(str_replace($routePrefix.'?', $routePrefix.'/cms?', $menuItem->getUri()));
                 }
             }
 

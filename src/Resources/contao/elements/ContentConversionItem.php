@@ -19,6 +19,7 @@ use Contao\BackendTemplate;
 use Contao\ContentElement;
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License as lajema;
 
 
@@ -50,7 +51,7 @@ class ContentConversionItem extends ContentElement {
                 $objTemplate->wildcard = '### '. $GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0] .' ('. $GLOBALS['TL_LANG']['CTE'][$oContent->type][0] .')'.' ###';
                 $objTemplate->id = $oContent->id;
                 $objTemplate->link = $oContent->cms_mi_label;
-                $objTemplate->href = 'contao/main.php?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $oContent->id;
+                $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend') . '?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $oContent->id;
 
             } else {
 

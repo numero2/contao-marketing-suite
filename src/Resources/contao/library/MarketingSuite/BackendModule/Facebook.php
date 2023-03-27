@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -29,6 +29,7 @@ use Contao\News;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\StringUtil;
+use Contao\System;
 use numero2\MarketingSuite\Api\Facebook as FacebookAPI;
 use numero2\MarketingSuite\Encryption;
 
@@ -173,8 +174,10 @@ class Facebook {
      */
     public function modifyPalette() {
 
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
         // change back button
-        $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('a.header_back').href = 'contao?do=cms_settings';</script>";
+        $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('a.header_back').href = $routePrefix . '?do=cms_settings';</script>";
 
         // hide authorization / pages if no app credentials given
         if( !CMSConfig::get('cms_fb_app_id') || !CMSConfig::get('cms_fb_app_secret') ) {

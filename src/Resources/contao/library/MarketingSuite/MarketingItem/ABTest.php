@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -373,10 +373,11 @@ class ABTest extends MarketingItem {
             if( !empty($objMarketingItem->init_step) ) {
 
                 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
-                $objMarketingItem->init_step = 'contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId;
+                $objMarketingItem->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId;
                 $objMarketingItem->save();
-                $this->redirect('contao?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+                $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
             }
         }
     }
@@ -395,7 +396,7 @@ class ABTest extends MarketingItem {
 
         $groups = null;
         $groups = ContentGroupModel::countByPid($dc->activeRecord->pid);
-        
+
         $objMI = null;
         $objMI = MarketingItemModel::findById($dc->activeRecord->pid);
 
@@ -427,12 +428,14 @@ class ABTest extends MarketingItem {
 
             if( $objMI->init_step ) {
 
-                $objMI->init_step = 'contao?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id;
+                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
+                $objMI->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id;
                 $objMI->save();
 
                 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
-                $this->redirect('contao?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+                $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
             }
         }
     }

@@ -150,6 +150,7 @@ document.addEventListener('tinyMCEInitialized', function (e) {
 
 document.addEventListener('DOMContentLoaded', function(){
 
+
     // schedule form interaction
     (function(){
 
@@ -255,12 +256,16 @@ document.addEventListener('DOMContentLoaded', function(){
                             var domain = document.querySelector('input[name="domain"]:checked');
 
                             if( domain ) {
-                                var link = 'https://' + domain.value + '/' + e.target.value;
+
+                                var link = domain.value + '/' + e.target.value;
+
                                 if( e.target.name == 'prefix' ) {
                                     link += "/abc123";
                                 }
 
                                 link = link.replace(/\/+/g, "/")
+                                link = 'https://' + link;
+
                                 anchor = e.target.refField;
                                 anchor.href = link;
                                 anchor.innerHTML = link;

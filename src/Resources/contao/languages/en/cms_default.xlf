@@ -3,16 +3,16 @@
 <file datatype="php" original="src/Resources/contao/languages/en/cms_default.php" source-language="en">
 <body>
     <trans-unit id="cms_tag_default.0.name">
-        <source>Standard</source>
+        <source>Notwendig</source>
     </trans-unit>
     <trans-unit id="cms_tag_default.0.description">
         <source><![CDATA[<p>]]>Tools, die wesentliche Services und Funktionen ermöglichen, einschließlich Identitätsprüfung, Servicekontinuität und Standortsicherheit. Diese Option kann nicht abgelehnt werden.<![CDATA[</p>]]></source>
     </trans-unit>
     <trans-unit id="cms_tag_default.1.name">
-        <source>Analytik</source>
+        <source>Statistik</source>
     </trans-unit>
     <trans-unit id="cms_tag_default.1.description">
-        <source><![CDATA[<p>]]>Tools, die anonyme Daten über Website-Nutzung und -Funktionalität sammeln. Wir nutzen die Erkenntnisse, um unsere Produkte, Dienstleistungen und das Benutzererlebnis zu verbessern.<![CDATA[</p>]]></source>
+        <source><![CDATA[<p>]]>Wir sammeln anonyme Daten über Nutzung und -Funktionalität unserer Seite. Wir nutzen diese Erkenntnisse, um unsere Produkte, Dienstleistungen und das Benutzererlebnis zu verbessern.<![CDATA[</p>]]></source>
     </trans-unit>
     <trans-unit id="cms_tag_default.2.name">
         <source>Werbung</source>
@@ -21,10 +21,10 @@
         <source><![CDATA[<p>]]>Anonyme Informationen, die wir sammeln, um Ihnen nützliche Produkte und Dienstleistungen empfehlen zu können.<![CDATA[</p>]]></source>
     </trans-unit>
     <trans-unit id="cms_tag_default.3.name">
-        <source>Support</source>
+        <source>Drittanbieter-Inhalte</source>
     </trans-unit>
     <trans-unit id="cms_tag_default.3.description">
-        <source><![CDATA[<p>]]>Tools, die interaktive Services wie Chat-Support und Kunden-Feedback-Tools unterstützen.<![CDATA[</p>]]></source>
+        <source><![CDATA[<p>]]>Inhalte von Dritten wie z.B. Videos von YouTube oder Karten von Google Maps.<![CDATA[</p>]]></source>
     </trans-unit>
     <trans-unit id="cms_tag_settings_default.accept_label">
         <source>Bestätigen</source>

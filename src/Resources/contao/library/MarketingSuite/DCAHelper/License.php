@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -24,6 +24,7 @@ use Contao\Date;
 use Contao\Input;
 use Contao\Message;
 use Contao\PageModel;
+use Contao\System;
 use numero2\MarketingSuite\Api\MarketingSuite as API;
 use numero2\MarketingSuite\Backend\License as Lic;
 
@@ -46,22 +47,22 @@ class License extends CoreBackend {
         // new license key, drop old data
         if( $value != $dc->activeRecord->cms_root_license ) {
 
-            $objResult = Database::getInstance()->prepare("UPDATE tl_page SET cms_root_data=NULL, cms_root_key=NULL, cms_root_sign=NULL where id=?")
+            $objResult = Database::getInstance()->prepare("UPDATE tl_page SET cms_root_data=null, cms_root_key=null, cms_root_sign=null where id=?")
                 ->execute($dc->activeRecord->id);
 
-            $dc->activeRecord->cms_root_data = NULL;
-            $dc->activeRecord->cms_root_key = NULL;
-            $dc->activeRecord->cms_root_sign = NULL;
+            $dc->activeRecord->cms_root_data = null;
+            $dc->activeRecord->cms_root_key = null;
+            $dc->activeRecord->cms_root_sign = null;
 
             // check license
             if( !empty($value) && (empty($dc->activeRecord->cms_root_data) || empty($dc->activeRecord->cms_root_key) || empty($dc->activeRecord->cms_root_sign) )  ) {
 
-                $objPage = NULL;
+                $objPage = null;
                 $objPage = PageModel::findOneById($dc->activeRecord->id);
 
                 if( $objPage ) {
 
-                    $oAPI = NULL;
+                    $oAPI = null;
                     $oAPI = new API();
 
                     try {
@@ -96,13 +97,15 @@ class License extends CoreBackend {
 
         if( $value && !Input::post('cms_root_license') ) {
 
-            $objPage = NULL;
+            $objPage = null;
             $objPage = PageModel::findOneById($dc->activeRecord->id);
 
             if( $objPage ) {
 
-                $oAPI = NULL;
+                $oAPI = null;
                 $oAPI = new API();
+
+                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
                 try {
 
@@ -119,7 +122,10 @@ class License extends CoreBackend {
 
                         // check if we're on a testdomain
                         if( Lic::isTestDomain($dc->activeRecord->id) && !CMSConfig::get('testmode') ) {
-                            Message::addInfo($GLOBALS['TL_LANG']['cms_api_messages']['is_testdomain']);
+                            Message::addInfo(sprintf(
+                                $GLOBALS['TL_LANG']['cms_api_messages']['is_testdomain']
+                            ,   $routePrefix
+                            ));
                         }
                     }
 
@@ -184,7 +190,7 @@ class License extends CoreBackend {
 
         if( Input::get('cms_license') && Input::get('cms_license') == 'refresh' ) {
 
-            $oAPI = NULL;
+            $oAPI = null;
             $oAPI = new API();
 
             try {

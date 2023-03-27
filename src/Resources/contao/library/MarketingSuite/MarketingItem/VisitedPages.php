@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -22,8 +22,8 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\Image;
 use Contao\Input;
 use Contao\PageModel;
-use Contao\System;
 use Contao\StringUtil;
+use Contao\System;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\Wizard;
 use numero2\MarketingSuite\ContentGroupModel;
@@ -93,10 +93,11 @@ class VisitedPages extends MarketingItem {
     public function alterContentHeader( $args, $dc, $objMarketingItem, $objContentParent ) {
 
         $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
         $GLOBALS['TL_MOOTOOLS'][] =
         "<script>
-        CMSBackend.override('.tl_content_right .edit', '<a href=\"contao?do=cms_marketing&amp;id=$objMarketingItem->id&amp;act=edit&amp;rt=".REQUEST_TOKEN."&amp;ref=$refererId\" class=\"edit\" title=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"><img src=\"system/themes/flexible/icons/header.svg\" width=\"16\" height=\"16\" alt=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"></a>');
+        CMSBackend.override('.tl_content_right .edit', '<a href=\"".$routePrefix."?do=cms_marketing&amp;id=$objMarketingItem->id&amp;act=edit&amp;rt=".REQUEST_TOKEN."&amp;ref=$refererId\" class=\"edit\" title=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"><img src=\"system/themes/flexible/icons/header.svg\" width=\"16\" height=\"16\" alt=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"></a>');
         </script>";
 
         if( $objMarketingItem && $objMarketingItem->type == 'visited_pages' && !empty($objMarketingItem->init_step) ) {
@@ -119,7 +120,6 @@ class VisitedPages extends MarketingItem {
             "<script>
                 CMSBackend.prepend('.tl_listing_container.parent_view', '".addslashes($beWizard->generateTopForListing($aWizardConfig))."');
             </script>";
-
 
             $GLOBALS['TL_MOOTOOLS'][] =
             "<script>
@@ -234,11 +234,12 @@ class VisitedPages extends MarketingItem {
             $group->save();
 
             $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
-            $objMarketingItem->init_step = 'contao?do=cms_marketing&amp;table=tl_content&amp;id='.$group->id;
+            $objMarketingItem->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$group->id;
             $objMarketingItem->save();
 
-            $this->redirect('contao?do=cms_marketing&amp;table=tl_content&amp;id='.$group->id.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+            $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$group->id.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
         }
     }
 

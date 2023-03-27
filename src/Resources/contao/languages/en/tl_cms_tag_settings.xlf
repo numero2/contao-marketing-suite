@@ -124,7 +124,7 @@
     </trans-unit>
     <!-- MESSAGES -->
     <trans-unit id="tl_cms_tag_settings.msg.why_disabled">
-        <source><![CDATA[Die „Cookie Bar” bzw. das „Tracking Opt-In” sind aufgrund der aktuellen <a href="contao?do=cms_settings&mod=tags&table=tl_cms_tag_settings" title="Anzeige-Einstellungen bearbeiten">Anzeige-Einstellungen</a> nicht als Frontend-Module verfügbar.]]></source>
+        <source><![CDATA[Die „Cookie Bar” bzw. das „Tracking Opt-In” sind aufgrund der aktuellen <a href="%s?do=cms_settings&mod=tags&table=tl_cms_tag_settings" title="Anzeige-Einstellungen bearbeiten">Anzeige-Einstellungen</a> nicht als Frontend-Module verfügbar.]]></source>
     </trans-unit>
 </body>
 </file>

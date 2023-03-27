@@ -1,5 +1,5 @@
 <span class="element <?= $this->class; ?><?php if( $this->facebook ): ?> facebook<?php endif; ?>">
-    <a href="contao?do=news&table=tl_content&id=<?= $this->id; ?>" title="<?= $this->title; ?>">
+    <a href="<?= $this->href; ?>" title="<?= $this->title; ?>">
         <?= $this->headline; ?>
     </a>
     <?php if( $this->facebook ): ?>

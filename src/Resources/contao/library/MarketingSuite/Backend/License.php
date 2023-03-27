@@ -302,18 +302,19 @@ class License {
 
         $aMessages = [];
 
-        if( self::checkForUpdate() && $disableUpdateMessage !== true ) {
-
-            $aMessages[] = '<p class="tl_info">'.sprintf($GLOBALS['TL_LANG']['cms_license']['new_version'], CMSConfig::get('latest_version')).'</p>';
+        if( $disableUpdateMessage === true ) {
+            $aMessages[] = '<p class="tl_error">Der Parameter <span style="font-family:monospace;">marketing_suite.disable_update_message</span> ist veraltet und wird in einer neuen Version entfernt. Bitte entferne den Eintrag aus der <span style="font-family:monospace;">config.yml</span></p>';
         }
 
         $expireDates = self::expires();
 
         if( count($expireDates) ) {
 
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
             foreach( $expireDates as $key => $value ) {
 
-                $pageEditUrl = 'contao?do=page&act=edit&id='.$value['page'].'&rt='.REQUEST_TOKEN.'#pal_cms_legend';
+                $pageEditUrl = $routePrefix . '?do=page&act=edit&id='.$value['page'].'&rt='.REQUEST_TOKEN.'#pal_cms_legend';
                 $packageCMSUrl = "https://contao-marketingsuite.com";
 
                 if( count($value) <= 1 ) {
@@ -385,38 +386,6 @@ class License {
         }
 
         return '';
-    }
-
-
-    /**
-     * Checks if there is a newer version of the bundle available
-     *
-     * @return boolean
-     */
-    public static function checkForUpdate() {
-
-        $latestVersion = CMSConfig::get('latest_version');
-        $lastCheck = CMSConfig::get('last_version_check');
-
-        if( $lastCheck > time() ) {
-            $lastCheck = 0;
-        }
-
-        if( !$latestVersion || !$lastCheck || $lastCheck < time()-86000 ) {
-
-            $oAPI = new API();
-            $oAPI->getLatestVersion();
-            $latestVersion = CMSConfig::get('latest_version');
-        }
-
-        if( CMS_VERSION && $latestVersion ) {
-
-            if( self::isInMajorVersion($latestVersion, CMS_VERSION) && version_compare(CMS_VERSION, $latestVersion, '<') ) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 
@@ -529,21 +498,5 @@ class License {
 
             CMSConfig::persist('weekly_run', time());
         }
-    }
-
-
-    /**
-     * Check if the given version belongs to the same major version
-     *
-     * @param string $version
-     * @param string $major
-     *
-     * @return bool
-     */
-    private static function isInMajorVersion( string $version, string $major ): bool {
-
-        $major = intval($major);
-
-        return version_compare($major.'.0.0', $version, '<=') && version_compare(($major+1).'.0.0', $version, '>');
     }
 }

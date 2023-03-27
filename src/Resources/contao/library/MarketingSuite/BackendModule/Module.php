@@ -227,7 +227,7 @@ class Module extends CoreBackendModule {
                 $attributes = null;
                 $attributes = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes;
 
-                $attributes->set('_cms_module_headline', implode((version_compare(VERSION.'.'.BUILD, '4.9.15', '<')?' › ':' '),$aHeadline));
+                $attributes->set('_cms_module_headline', implode(' ',$aHeadline));
             }
         }
 

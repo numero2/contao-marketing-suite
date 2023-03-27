@@ -84,9 +84,9 @@ class ABTestPage extends MarketingItem {
         if( !empty($objMI->init_step) ) {
 
             if( count($GLOBALS['TL_DCA'][$dc->table]['edit']['buttons_callback']) ) {
+                array_pop($GLOBALS['TL_DCA'][$dc->table]['edit']['buttons_callback']);
+                $GLOBALS['TL_DCA'][$dc->table]['edit']['buttons_callback'][] = ['\numero2\MarketingSuite\Backend\Wizard', 'addFinishButton'];
             }
-            array_pop($GLOBALS['TL_DCA'][$dc->table]['edit']['buttons_callback']);
-            $GLOBALS['TL_DCA'][$dc->table]['edit']['buttons_callback'][] = ['\numero2\MarketingSuite\Backend\Wizard', 'addFinishButton'];
         }
     }
 

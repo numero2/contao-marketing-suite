@@ -101,10 +101,11 @@ class SnippetPreview extends Controller {
             if( $aData['titleTag'] && $this->User->cms_pro_mode_enabled != 1 ) {
 
                 $ref = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
                 $aData['titleTagExplanation'] = sprintf(
                     $GLOBALS['TL_LANG']['MSC']['snippet_titletag_explanation']
-                ,   'contao?do=themes&amp;table=tl_layout&amp;id=' .$aData['layoutId']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref. '#ctrl_titleTag'
+                ,   $routePrefix . '?do=themes&amp;table=tl_layout&amp;id=' .$aData['layoutId']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref. '#ctrl_titleTag'
                 );
             }
 

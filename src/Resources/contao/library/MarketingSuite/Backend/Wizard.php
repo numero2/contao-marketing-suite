@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -19,6 +19,7 @@ use Contao\Controller;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\StringUtil;
+use Contao\System;
 
 
 class Wizard extends Controller {
@@ -228,7 +229,7 @@ class Wizard extends Controller {
         ,   'step' => $arrData['step']
         ];
 
-        if( \System::getContainer()->get('request_stack')->getCurrentRequest()->getMethod() == "GET" ) {
+        if( System::getContainer()->get('request_stack')->getCurrentRequest()->getMethod() == "GET" ) {
 
             $GLOBALS['TL_MOOTOOLS'][] = "<script>Backend.openModalIframe({'title':'$title','url':'" . $this->generatePopupUrl($strTemplate, $aQueryData). "'});</script>";
         }
@@ -245,6 +246,6 @@ class Wizard extends Controller {
      */
     public function generatePopupUrl( $strTemplate, $arrQueryData=[] ) {
 
-        return TL_PATH.'/contao/cms_wizard_popup?do='.urlencode($strTemplate).'&'.http_build_query($arrQueryData);
+        //return TL_PATH.'/contao/cms_wizard_popup?do='.urlencode($strTemplate).'&'.http_build_query($arrQueryData);
     }
 }

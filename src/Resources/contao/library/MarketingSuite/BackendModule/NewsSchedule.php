@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -22,6 +22,7 @@ use Contao\Database;
 use Contao\Date;
 use Contao\Input;
 use Contao\StringUtil;
+use Contao\System;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\License as mepdohi;
 
@@ -44,7 +45,7 @@ class NewsSchedule extends CoreBackendModule {
         $this->loadLanguageFile('tl_news');
         mepdohi::geoguzo();
 
-        $currArchive = Input::get('id') ?: NULL;
+        $currArchive = Input::get('id') ?: null;
 
         if( !mepdohi::hasFeature('news_schedule') ||
             !( (!$currArchive && mepdohi::hasFeature('news_schedule_multiple')) || ($currArchive && mepdohi::hasFeature('news_schedule_single')) ) ) {
@@ -113,7 +114,7 @@ class NewsSchedule extends CoreBackendModule {
         unset($rows[array_reverse(array_keys($rows))[0]]);
 
         // get news for the given period
-        $objResult = NULL;
+        $objResult = null;
         $objResult = Database::getInstance()->prepare("
             SELECT *
             FROM tl_news AS n
@@ -122,7 +123,9 @@ class NewsSchedule extends CoreBackendModule {
                     ((?<=n.start AND n.start<?) OR (?<=n.date AND n.date<? AND n.start='')) OR
                     (n.date >= ? AND n.date <= ?)
                 ) " . ($currArchive ? " AND n.pid = ?":"") ."
-        ")->execute( $firstDay, $lastDay, $firstDay, $lastDay, $firstDay, $lastDay, ($currArchive?$currArchive:NULL) );
+        ")->execute( $firstDay, $lastDay, $firstDay, $lastDay, $firstDay, $lastDay, ($currArchive?$currArchive:null) );
+
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
         while( $objResult->next() ) {
 
@@ -156,6 +159,8 @@ class NewsSchedule extends CoreBackendModule {
                 if( !mepdohi::hasFeature('news_schedule_show_'.$data['class']) ) {
                     continue;
                 }
+
+                $data['href'] = $routePrefix . '?do=news&table=tl_content&id='.$data['id'];
 
                 $rows[$week][$dayIndex]['elements'][] = Backend::parseWithTemplate('backend/modules/news_schedule_entry', $data);
             }

@@ -51,38 +51,6 @@ class MarketingSuite {
 
 
     /**
-     * Gets the latest verison of the marketing suite bundle via api and stores
-     * this and the current time in cmsconfig
-     */
-    public function getLatestVersion() {
-
-        try {
-
-            $response = null;
-            $response = $this->send('/version');
-
-            if( $response->status && $response->status === 'ok' ) {
-
-                // set temporarily
-                CMSConfig::set('latest_version', $response->latest_version);
-
-                // save permanently
-                CMSConfig::persist('latest_version', $response->latest_version);
-            }
-
-        } catch( Exception $e ) {
-
-        }
-
-        // set temporarily
-        CMSConfig::set('last_version_check', time());
-
-        // save permanently
-        CMSConfig::persist('last_version_check', time());
-    }
-
-
-    /**
      * Checks if the license of the given root page is valid and stores returned data
      *
      * @param string $key The license key

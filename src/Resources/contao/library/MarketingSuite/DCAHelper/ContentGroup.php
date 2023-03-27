@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -22,6 +22,7 @@ use Contao\Date;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
+use Contao\System;
 use numero2\MarketingSuite\Backend\Help;
 use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\MarketingItem\MarketingItem as AbstractMI;
@@ -42,12 +43,12 @@ class ContentGroup extends CoreBackend {
      */
     public function addHelp( $dc ) {
 
-        $objMI = NULL;
+        $objMI = null;
         $objMI = MarketingItemModel::findById($dc->id);
 
         if( $objMI ) {
 
-            $oHelp = NULL;
+            $oHelp = null;
             $oHelp = new Help();
 
             $oHelp->suffix = $objMI->type;
@@ -78,7 +79,7 @@ class ContentGroup extends CoreBackend {
 
         $class = 'limit_height';
 
-        $objMI = NULL;
+        $objMI = null;
         $objMI = MarketingItemModel::findById($arrRow['pid']);
 
         if( $objMI->ranking ) {
@@ -125,7 +126,7 @@ class ContentGroup extends CoreBackend {
 
         self::loadLanguageFile('tl_cms_marketing_item');
 
-        $objMI = NULL;
+        $objMI = null;
         $objMI = MarketingItemModel::findById($dc->id);
 
         // add status field for a_b_test
@@ -141,8 +142,10 @@ class ContentGroup extends CoreBackend {
             $args[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['child_header_label']['a_b_test_info'][0]] = $GLOBALS['TL_LANG']['tl_cms_marketing_item']['child_header_label']['a_b_test_info']['ranking'];
         }
 
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
         // override back button
-        $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('a.header_back') && (document.querySelector('a.header_back').href = 'contao?do=cms_marketing');</script>";
+        $GLOBALS['TL_MOOTOOLS'][] = "<script>document.querySelector('a.header_back') && (document.querySelector('a.header_back').href = '".$routePrefix."?do=cms_marketing');</script>";
 
         return $args;
     }

@@ -1,3 +1,3 @@
 <?php
 
-define('CMS_VERSION', '2.0.6');
+define('CMS_VERSION', '2.1.1');

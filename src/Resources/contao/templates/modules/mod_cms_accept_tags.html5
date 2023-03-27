@@ -5,8 +5,8 @@
         <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="post">
             <cms-container>
 
-                <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
-                <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />
+                <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 
                 <?php $this->block('beforeDisclaimer'); ?>
                 <?php $this->endblock(); ?>
@@ -45,7 +45,7 @@
                         <cms-taggroup-header>
                             <span id="group_head_<?= $tag['id']; ?>"><?= $tag['name']; ?></span>
                             <?php if( !$tag['required'] ): ?>
-                                <input id="cookie_<?= $tag['id']; ?>" type="checkbox" name="cookie_<?= $tag['id']; ?>" value="<?= $tag['id']; ?>" <?php if( $tag['accepted'] ): ?>checked<?php endif; ?> />
+                                <input id="cookie_<?= $tag['id']; ?>" type="checkbox" name="cookie_<?= $tag['id']; ?>" value="<?= $tag['id']; ?>" <?php if( $tag['accepted'] ): ?>checked<?php endif; ?>>
                                 <label for="cookie_<?= $tag['id']; ?>" tabindex="<?= $key+1; ?>" onKeyPress="var c = document.getElementById('cookie_<?= $tag['id']; ?>'); c.checked = !c.checked; this.setAttribute('aria-checked',c.checked); return false;" onClick="var c = document.getElementById('cookie_<?= $tag['id']; ?>'); this.setAttribute('aria-checked',!c.checked);">
                                     <span role="checkbox" aria-label="<?= $tag['name']; ?>" aria-checked="<?= ($tag['accepted']) ? 'true':'false'; ?>"></span>
                                 </label>

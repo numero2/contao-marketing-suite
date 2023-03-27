@@ -21,6 +21,7 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\Environment;
 use Contao\Input;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License as tokanugo;
 use numero2\MarketingSuite\MarketingItem\MarketingItem;
 
@@ -57,12 +58,12 @@ class ContentMarketingItem extends ContentElement {
                 $objTemplate->link = $oMarketingItem->name;
 
                 if( $oMarketingItem->type=="a_b_test" ) {
-                    $objTemplate->href = 'contao/main.php?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' . $oMarketingItem->id;
+                    $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend') . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' . $oMarketingItem->id;
                 } else {
                     $oContentGroup = ContentGroupModel::findOneByPid($oMarketingItem->id);
 
                     if( $oContentGroup ) {
-                        $objTemplate->href = 'contao/main.php?do=cms_marketing&amp;table=tl_content&amp;id=' . $oContentGroup->id;
+                        $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend') . '?do=cms_marketing&amp;table=tl_content&amp;id=' . $oContentGroup->id;
                     }
                 }
 

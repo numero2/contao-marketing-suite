@@ -28,6 +28,7 @@ use Contao\Model\Collection;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\License as dowcosko;
 use numero2\MarketingSuite\ContentGroupModel;
@@ -805,7 +806,7 @@ class MarketingItem extends CoreBackend {
             return '';
         }
 
-        return ' <a href="contao/main.php?do=cms_marketing&amp;table=tl_cms_marketing_item&amp;act=edit&amp;id=' . $dc->activeRecord->cms_mi_id . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->activeRecord->cms_mi_id) . '" onclick="Backend.openModalIframe({\'title\':\'' . \StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->activeRecord->cms_mi_id))) . '\',\'url\':this.href});return false">' . \Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
+        return ' <a href="'.System::getContainer()->get('router')->generate('contao_backend').'?do=cms_marketing&amp;table=tl_cms_marketing_item&amp;act=edit&amp;id=' . $dc->activeRecord->cms_mi_id . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->activeRecord->cms_mi_id) . '" onclick="Backend.openModalIframe({\'title\':\'' . \StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->activeRecord->cms_mi_id))) . '\',\'url\':this.href});return false">' . \Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
     }
 
 

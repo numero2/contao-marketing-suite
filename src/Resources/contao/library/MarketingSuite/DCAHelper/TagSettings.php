@@ -48,7 +48,7 @@ class TagSettings extends CoreBackend {
 
         foreach( $GLOBALS['TL_DCA'][$dc->table]['palettes'] as $k => $v ) {
 
-            if( $k == '__selector__' || substr($k,0,4) != 'cms_' ) {
+            if( $k == '__selector__' || (substr($k,0,4) != 'cms_' && $k !== 'default') ) {
                 continue;
             }
 

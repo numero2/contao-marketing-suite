@@ -49,7 +49,7 @@ class Messages {
      */
     public static function legacyRoutingCheck() {
 
-        if( version_compare(VERSION, '4.10', '>=') && !System::getContainer()->getParameter('contao.legacy_routing') ) {
+        if( !System::getContainer()->getParameter('contao.legacy_routing') ) {
 
             // check if a/b test in use
             if( MarketingItemModel::countByType('a_b_test_page') ) {

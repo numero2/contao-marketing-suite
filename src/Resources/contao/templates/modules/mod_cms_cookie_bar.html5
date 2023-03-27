@@ -5,8 +5,8 @@
         <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="post">
             <cms-container>
 
-                <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>" />
-                <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />
+                <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 
                 <?php $this->block('beforeDisclaimer'); ?>
                 <?php $this->endblock(); ?>

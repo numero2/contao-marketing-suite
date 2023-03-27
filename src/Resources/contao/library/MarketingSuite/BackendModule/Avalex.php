@@ -16,10 +16,6 @@
 namespace numero2\MarketingSuite\BackendModule;
 
 use Contao\BackendModule as CoreBackendModule;
-use Contao\ModuleModel;
-use Contao\System;
-use Contao\ThemeModel;
-use numero2\MarketingSuite\Backend\License as jev;
 
 
 class Avalex extends CoreBackendModule {
@@ -45,6 +41,6 @@ class Avalex extends CoreBackendModule {
      */
     public static function isAvailable() {
 
-        return !class_exists('\numero2\avalex\ModuleAvalexPrivacyPolicy');
+        return (!class_exists('\numero2\avalex\ModuleAvalexPrivacyPolicy') && !class_exists('\numero2\AvalexBundle\ModuleAvalexPrivacyPolicy'));
     }
 }

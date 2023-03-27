@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "contao/core-bundle": "^4.9.0",
+        "contao/core-bundle": "^4.13",
         "org_heigl/hyphenator": "^2.3",
         "jeremykendall/php-domain-parser": "^5.6 || ^3.0",
         "symfony/http-client": "^4.4 || ^5.0 || ^6.0"

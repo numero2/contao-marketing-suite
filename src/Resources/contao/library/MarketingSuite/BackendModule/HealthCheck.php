@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2022 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2022 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -109,7 +109,6 @@ class HealthCheck extends CoreBackendModule {
         // check the different health categories
         $aCategories = [
             $this->checkH1Missing()
-        ,   $this->checkSitemapDisabled()
         ,   $this->checkHTTPSEnabled()
         ,   $this->checkWWWContent()
         ,   $this->checkMetaMissing()
@@ -211,6 +210,8 @@ class HealthCheck extends CoreBackendModule {
 
         if( $oPages ) {
 
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
             while( $oPages->next() ) {
 
                 // check if we find any h1 by statically looking at the content
@@ -240,7 +241,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                     ,   'type'  => 'page'
                     ,   'name'  => $oPages->title
-                    ,   'href'  => 'contao?do=article&amp;pn='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID()
+                    ,   'href'  => $routePrefix . '?do=article&amp;pn='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID()
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                     ,   'attributes' => $aAttributes
                     ];
@@ -339,60 +340,6 @@ class HealthCheck extends CoreBackendModule {
 
 
     /**
-     * Checks for root pages with no sitemap enabled
-     *
-     * @return object|void
-     */
-    private function checkSitemapDisabled() {
-
-        if( !varzegju::hasFeature('health_check_sitemap_disabled') || version_compare(VERSION, '4.11', '>=') ) {
-            return null;
-        }
-
-        $oCategory = (object) [
-            'type' => 'sitemap_disabled'
-        ,   'collapsed' => empty($this->fsStates['sitemap_disabled_legend'])
-        ,   'legend' => $GLOBALS['TL_LANG']['cms_be_health_check']['sitemap_disabled'][0]
-        ,   'description' => $GLOBALS['TL_LANG']['cms_be_health_check']['sitemap_disabled'][1]
-        ,   'items' => []
-        ];
-
-        // find pages
-        $oPages = null;
-        $oPages = PageModel::findAll([
-            'column' => ["type=?", "(createSitemap='')", "cms_exclude_health_check=0"]
-        ,   'value' => ['root']
-        ]);
-
-        if( $oPages ) {
-
-            while( $oPages->next() ) {
-
-                if( !varzegju::hasFeature('health_check_sitemap_disabled', $oPages->id) ) {
-                    continue;
-                }
-
-                if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {
-                    break;
-                }
-
-                $oCategory->items[] = (object) [
-                    'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
-                ,   'type'  => 'page'
-                ,   'name'  => $oPages->title
-                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
-                ];
-            }
-        }
-
-        if( $oCategory->items ) {
-            return $oCategory;
-        }
-    }
-
-
-    /**
      * Checks for root pages with no HTTPS enabled
      *
      * @return object|void
@@ -419,6 +366,8 @@ class HealthCheck extends CoreBackendModule {
         ]);
 
         if( $oPages ) {
+
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
             while( $oPages->next() ) {
 
@@ -478,7 +427,7 @@ class HealthCheck extends CoreBackendModule {
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
-                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                 ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
@@ -517,6 +466,8 @@ class HealthCheck extends CoreBackendModule {
         ]);
 
         if( $oPages ) {
+
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
             while( $oPages->next() ) {
 
@@ -602,7 +553,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                     ,   'type'  => 'page'
                     ,   'name'  => $oPages->title
-                    ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                     ];
                 }
@@ -627,6 +578,7 @@ class HealthCheck extends CoreBackendModule {
         }
 
         $db = Database::getInstance();
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
         $oCategory = (object) [
             'type' => 'missing_meta'
@@ -662,7 +614,7 @@ class HealthCheck extends CoreBackendModule {
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
-                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                 ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
@@ -697,7 +649,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => 'bundles/contaonews/news.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oNews->headline
-                    ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'href'  => $routePrefix . '?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_news']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id) : sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'],$oNews->id)
                     ];
                 }
@@ -733,7 +685,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => 'bundles/contaocalendar/calendar.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oEvents->title
-                    ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'href'  => $routePrefix . '?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id) : sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'],$oEvents->id)
                     ];
                 }
@@ -758,6 +710,7 @@ class HealthCheck extends CoreBackendModule {
         }
 
         $db = Database::getInstance();
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
         $oCategory = (object) [
             'type' => 'short_meta'
@@ -793,7 +746,7 @@ class HealthCheck extends CoreBackendModule {
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
-                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                 ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
@@ -828,7 +781,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => 'bundles/contaonews/news.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oNews->headline
-                    ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'href'  => $routePrefix . '?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_news']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id) : sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'],$oNews->id)
                     ];
                 }
@@ -864,7 +817,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => 'bundles/contaocalendar/calendar.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oEvents->title
-                    ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'href'  => $routePrefix . '?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id) : sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'],$oEvents->id)
                     ];
                 }
@@ -889,6 +842,7 @@ class HealthCheck extends CoreBackendModule {
         }
 
         $db = Database::getInstance();
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
         $oCategory = (object) [
             'type' => 'long_meta'
@@ -924,7 +878,7 @@ class HealthCheck extends CoreBackendModule {
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
-                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                 ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
@@ -959,7 +913,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => 'bundles/contaonews/news.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oNews->headline
-                    ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'href'  => $routePrefix . '?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_news']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id) : sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'],$oNews->id)
                     ];
                 }
@@ -995,7 +949,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => 'bundles/contaocalendar/calendar.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oEvents->title
-                    ,   'href'  => 'contao?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                    ,   'href'  => $routePrefix . '?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'][1],$oEvents->id) : sprintf($GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'],$oEvents->id)
                     ];
                 }
@@ -1018,6 +972,8 @@ class HealthCheck extends CoreBackendModule {
         if( !varzegju::hasFeature('health_check_open_graph_missing') || !class_exists('\numero2\OpenGraph3\OpenGraph3') ) {
             return null;
         }
+
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
         $oCategory = (object) [
             'type' => 'missing_opengraph'
@@ -1053,7 +1009,7 @@ class HealthCheck extends CoreBackendModule {
                     'icon'  => Image::getPath( Controller::getPageStatusIcon($oPages) )
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
-                ,   'href'  => 'contao?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
+                ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
                 ,   'title' => is_array($GLOBALS['TL_LANG']['tl_page']['edit']) ? sprintf($GLOBALS['TL_LANG']['tl_page']['edit'][1],$oPages->id) : sprintf($GLOBALS['TL_LANG']['tl_page']['edit'],$oPages->id)
                 ];
             }
@@ -1081,7 +1037,7 @@ class HealthCheck extends CoreBackendModule {
                         'icon'  => 'bundles/contaonews/news.svg'
                     ,   'type'  => 'news'
                     ,   'name'  => $oNews->headline
-                    ,   'href'  => 'contao?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_opengraph_legend'
+                    ,   'href'  => $routePrefix . '?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.REQUEST_TOKEN.'&amp;ref='.$this->getRefererID().'#pal_opengraph_legend'
                     ,   'title' => is_array($GLOBALS['TL_LANG']['tl_news']['editmeta']) ? sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'][1],$oNews->id) : sprintf($GLOBALS['TL_LANG']['tl_news']['editmeta'],$oNews->id)
                     ];
                 }

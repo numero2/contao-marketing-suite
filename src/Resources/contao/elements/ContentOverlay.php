@@ -105,7 +105,7 @@ class ContentOverlay extends ContentElement implements InterfaceStyleable {
         if( TL_MODE == "FE" ) {
 
             $this->Template->close = Controller::addToUrl('&close='.$this->id, false);
-            $this->Template->close = version_compare(VERSION, '4.10', '<') ? ampersand($this->Template->close,false) : StringUtil::ampersand($this->Template->close,false);
+            $this->Template->close = StringUtil::ampersand($this->Template->close,false);
 
             if( Input::get('close') && Input::get('close') == $this->id ) {
 
@@ -116,7 +116,7 @@ class ContentOverlay extends ContentElement implements InterfaceStyleable {
             // "view" will be triggered via ajax since we store in localstorage if the overlay
             // was already shown or not
             $this->Template->view = StringUtil::decodeEntities(Controller::addToUrl('&view='.$this->id, false));
-            $this->Template->view = version_compare(VERSION, '4.10', '<') ? ampersand($this->Template->view,false) : StringUtil::ampersand($this->Template->view,false);
+            $this->Template->view = StringUtil::ampersand($this->Template->view,false);
 
             if( Input::get('view') && Input::get('view') == $this->id ) {
 

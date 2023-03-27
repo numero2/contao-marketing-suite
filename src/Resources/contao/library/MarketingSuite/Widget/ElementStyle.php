@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
+ * Copyright (c) 2005-2023 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright 2023 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -174,11 +174,14 @@ class ElementStyle extends CoreBackend {
 
                 $strModel = Model::getClassFromTable(Input::get('table'));
 
-                $oRow = null;
-                $oRow = $strModel::findOneById(Input::get('id'));
+                if( class_exists($strModel) ) {
 
-                if( $oRow ) {
-                    $dc->activeRecord = $oRow;
+                    $oRow = null;
+                    $oRow = $strModel::findOneById(Input::get('id'));
+
+                    if( $oRow ) {
+                        $dc->activeRecord = $oRow;
+                    }
                 }
             }
         }

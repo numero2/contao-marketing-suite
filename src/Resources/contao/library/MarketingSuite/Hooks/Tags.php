@@ -308,7 +308,7 @@ class Tags extends Hooks {
                 }
 
                 $cssID = '';
-                $cssID = $this->_addIdAttribute($strBuffer, $oElement);
+                $cssID = $this->_addIdAttribute($strBuffer, (!empty($oElement->id)?$oElement:$oRow));
 
                 if( !Tag::isAccepted($oRow->cms_tag) ) {
 
@@ -317,7 +317,11 @@ class Tags extends Hooks {
 
                     $oTemplate->headline = null;
                     $oTemplate->class = 'ce_optin_fallback '.$oRow->cms_tag_fallback_css_class;
-                    $oTemplate->cssID = ' id="'.$cssID.'"';
+
+                    if( $cssID ) {
+                        $oTemplate->cssID = ' id="'.$cssID.'"';
+                    }
+
                     $oTemplate->fallback_text = $oTag->fallback_text;
                     $oTemplate->origin = $oElement;
 
@@ -350,7 +354,6 @@ class Tags extends Hooks {
 
             $firstTag = $firstTag[0];
             $arrExistingID = [];
-
             if( preg_match('/id="(.*?)"/', $firstTag, $arrExistingID) ) {
 
                 $id = $arrExistingID[1];
