@@ -409,7 +409,7 @@ class Tags extends Hooks {
      *
      * @return string|false
      */
-    public function replaceTagInsertTags($tag, $blnCache, $strCached, $flags, &$tags, $arrCache, $_rit, $_cnt) {
+    public function replaceTagInsertTags($tag, $blnCache, $strCached, $flags, &$tags, $arrCache, &$_rit, $_cnt) {
 
         global $objPage;
 
@@ -434,33 +434,24 @@ class Tags extends Hooks {
                 }
 
                 if( !$show ) {
-                    $open = true;
-                    for( $i = $_rit; $i<$_cnt; $i+=2 ) {
 
-                        if( !array_key_exists($i+1, $tags) ) {
-                            break;
-                        }
-
-                        if( $open ) {
-                            $tags[$i+1] = ''; // also empty tag else nested would be replaced
-                            if( !array_key_exists($i+2, $tags) ) {
-                                break;
-                            }
-                            $tags[$i+2] = '';
-                        }
-
-                        if( !array_key_exists($i+3, $tags) ) {
-                            break;
-                        }
-
-                        if( substr($tags[$i+3], 0, 7) == 'ifoptin' || stripos($tags[$i+3] , 'ifoptin::') !== false ) {
-                            $open = false;
-
-                        }
-                        if( $tags[$i+3] == $tag ) {
-                            $open = true;
-                        }
+                    if( !array_key_exists($i+2, $tags) ) {
+                        break;
                     }
+
+                    $tags[$i+2] = '';
+
+                    if( !array_key_exists($i+3, $tags) ) {
+                        $_rit = $i;
+                        break;
+                    }
+
+                    // found closing tag
+                    if( strtolower(substr($tags[$i+3], 0, 7)) == 'ifoptin' ) {
+                        $_rit = $i;
+                        break;
+                    }
+
                 }
                 return'';
             break;
@@ -483,34 +474,24 @@ class Tags extends Hooks {
                 }
 
                 if( !$show ) {
-                    $open = true;
-                    for( $i = $_rit; $i<$_cnt; $i+=2 ) {
 
-                        if( !array_key_exists($i+1, $tags) ) {
-                            break;
-                        }
-
-                        if( $open ) {
-                            $tags[$i+1] = ''; // also empty tag else nested would be replaced
-
-                            if( !array_key_exists($i+2, $tags) ) {
-                                break;
-                            }
-                            $tags[$i+2] = '';
-                        }
-
-                        if( !array_key_exists($i+3, $tags) ) {
-                            break;
-                        }
-
-                        if( substr($tags[$i+3], 0, 8) == 'ifnoptin' || stripos($tags[$i+3] , 'ifnoptin::') !== false ) {
-                            $open = false;
-                        }
-
-                        if( $tags[$i+3] == $tag ) {
-                            $open = true;
-                        }
+                    if( !array_key_exists($i+2, $tags) ) {
+                        break;
                     }
+
+                    $tags[$i+2] = '';
+
+                    if( !array_key_exists($i+3, $tags) ) {
+                        $_rit = $i;
+                        break;
+                    }
+
+                    // found closing tag
+                    if( strtolower(substr($tags[$i+3], 0, 8)) == 'ifnoptin' ) {
+                        $_rit = $i;
+                        break;
+                    }
+
                 }
                 return'';
             break;

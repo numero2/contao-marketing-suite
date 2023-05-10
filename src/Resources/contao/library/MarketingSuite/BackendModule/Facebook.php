@@ -104,7 +104,9 @@ class Facebook {
             $oNews = NULL;
             $oNews = NewsModel::findById( $dc->id );
 
-            $hasPages = $this->getAvailablePagesOptionsForNews($oNews->pid) ? true : false;
+            if( $oNews ) {
+                $hasPages = $this->getAvailablePagesOptionsForNews($oNews->pid) ? true : false;
+            }
 
         // tl_news_archive
         } else {
