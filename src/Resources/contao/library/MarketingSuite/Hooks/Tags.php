@@ -435,23 +435,43 @@ class Tags extends Hooks {
 
                 if( !$show ) {
 
-                    if( !array_key_exists($i+2, $tags) ) {
-                        break;
+                    for( $i = $_rit; $i<$_cnt; $i+=2 ) {
+
+                        if( !array_key_exists($i+2, $tags) ) {
+                            break;
+                        }
+
+                        $tags[$i+2] = '';
+
+                        if( !array_key_exists($i+3, $tags) ) {
+                            $_rit = $i;
+                            break;
+                        }
+
+                        // found closing tag
+                        if( strtolower(substr($tags[$i+3], 0, 7)) == 'ifoptin' ) {
+                            $_rit = $i;
+
+                            // hidde more text with the same insert tag as our result will be cached
+                            // and we won't be called again for this insert tag
+                            $open = false;
+                            for( $i=$_rit+2; $i+2<$_cnt; $i+=2 ) {
+
+                                if( $tags[$i+1] === $tag ) {
+                                    $open = true;
+                                }
+
+                                if( $open ) {
+                                    $tags[$i+2] = '';
+                                }
+
+                                if( strtolower(substr($tags[$i+1], 0, 7)) == 'ifoptin' ) {
+                                    $open = false;
+                                }
+                            }
+                            break;
+                        }
                     }
-
-                    $tags[$i+2] = '';
-
-                    if( !array_key_exists($i+3, $tags) ) {
-                        $_rit = $i;
-                        break;
-                    }
-
-                    // found closing tag
-                    if( strtolower(substr($tags[$i+3], 0, 7)) == 'ifoptin' ) {
-                        $_rit = $i;
-                        break;
-                    }
-
                 }
                 return'';
             break;
@@ -475,23 +495,43 @@ class Tags extends Hooks {
 
                 if( !$show ) {
 
-                    if( !array_key_exists($i+2, $tags) ) {
-                        break;
+                    for( $i = $_rit; $i<$_cnt; $i+=2 ) {
+
+                        if( !array_key_exists($i+2, $tags) ) {
+                            break;
+                        }
+
+                        $tags[$i+2] = '';
+
+                        if( !array_key_exists($i+3, $tags) ) {
+                            $_rit = $i;
+                            break;
+                        }
+
+                        // found closing tag
+                        if( strtolower(substr($tags[$i+3], 0, 8)) == 'ifnoptin' ) {
+                            $_rit = $i;
+
+                            // hidde more text with the same insert tag as our result will be cached
+                            // and we won't be called again for this insert tag
+                            $open = false;
+                            for( $i=$_rit+2; $i+2<$_cnt; $i+=2 ) {
+
+                                if( $tags[$i+1] === $tag ) {
+                                    $open = true;
+                                }
+
+                                if( $open ) {
+                                    $tags[$i+2] = '';
+                                }
+
+                                if( strtolower(substr($tags[$i+1], 0, 8)) == 'ifnoptin' ) {
+                                    $open = false;
+                                }
+                            }
+                            break;
+                        }
                     }
-
-                    $tags[$i+2] = '';
-
-                    if( !array_key_exists($i+3, $tags) ) {
-                        $_rit = $i;
-                        break;
-                    }
-
-                    // found closing tag
-                    if( strtolower(substr($tags[$i+3], 0, 8)) == 'ifnoptin' ) {
-                        $_rit = $i;
-                        break;
-                    }
-
                 }
                 return'';
             break;
