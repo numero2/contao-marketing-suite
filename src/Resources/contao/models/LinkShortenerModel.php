@@ -41,11 +41,11 @@ class LinkShortenerModel extends Model {
      */
     public static function findOneByPath($path) {
 
-        $oRoot = PageModel::findOneBy(['type=? AND (dns=? OR dns=?)'], ['root', Environment::get('httpHost'), '']);
+        $oRoot = PageModel::findOneBy(['tl_page.type=? AND (tl_page.dns=? OR tl_page.dns=?)'], ['root', Environment::get('httpHost'), '']);
 
         if( lskgn::hasFeature('link_shortener', $oRoot->id) ) {
 
-            return self::findOneBy(['(prefix=? OR alias=?) AND domain=?'], [$path, $path, Environment::get('httpHost')]);
+            return self::findOneBy(['(tl_page.prefix=? OR tl_page.alias=?) AND tl_page.domain=?'], [$path, $path, Environment::get('httpHost')]);
         }
 
         return null;
