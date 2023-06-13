@@ -218,7 +218,7 @@ class ABTestPage extends MarketingItem {
         // NOTE: this won't be called when domain.tld/ is requested
 
         $objPage = null;
-        $objPages = PageModel::findBy(['alias=?'], $arrFragments[0]);
+        $objPages = PageModel::findBy(['tl_page.alias=?'], $arrFragments[0]);
 
         $rootPageId = Frontend::getRootPageFromUrl();
 
