@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
+ * Copyright (c) 2005-2023 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright 2023 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -78,6 +78,11 @@ abstract class ModuleEUConsent extends Module implements InterfaceStyleable {
 
         // check for page type
         if( in_array($objPage->type, ['error_401', 'error_403', 'error_404']) ) {
+            $show = false;
+        }
+
+        // never show on pages that should be cached
+        if( $objPage->includeCache ) {
             $show = false;
         }
 

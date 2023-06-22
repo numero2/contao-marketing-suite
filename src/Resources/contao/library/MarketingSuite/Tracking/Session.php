@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
+ * Copyright (c) 2005-2023 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright 2023 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -34,14 +34,25 @@ class Session {
      * Session data
      * @var \Session
      */
-    private $session = null;
+    private $_session = null;
 
 
     /**
      * Constructor
      */
     public function __construct() {
-        $this->session = CoreSession::getInstance();
+
+    }
+    
+
+    public function __get($name) {
+        
+        // we don't want to start a session unless we actually need it
+        if( $name == 'session' ) {
+
+            $this->_session = $this->_session??CoreSession::getInstance();
+            return $this->_session;
+        }
     }
 
 
