@@ -3,13 +3,13 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
+ * Copyright (c) 2005-2023 Leo Feyer
  *
  * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright 2023 numero2 - Agentur für digitales Marketing
  */
 
 
@@ -93,18 +93,18 @@ class ModuleCookieBar extends ModuleEUConsent {
             // store decision in cookie
             if( in_array(Input::post('choice'), ['accept','reject']) ) {
 
-                $sDomain = NULL;
+                $sDomain = null;
 
                 // set cookies for all subdomains
                 if( $this->cms_tag_accept_subdomains ) {
 
                     global $objPage;
 
-                    $objRootPage = NULL;
+                    $objRootPage = null;
                     $objRootPage = PageModel::findById($objPage->rootId);
 
-                    $sDomain = $oRootPage->dns?:Environment::get('host');
-                    $sDomain= Domain::getRegisterableDomain($sDomain);
+                    $sDomain = $objRootPage->dns?:Environment::get('host');
+                    $sDomain = Domain::getRegisterableDomain($sDomain);
                 }
 
                 $this->setCookie('cms_cookie', Input::post('choice'), $iCookieExpires, '', $sDomain);
