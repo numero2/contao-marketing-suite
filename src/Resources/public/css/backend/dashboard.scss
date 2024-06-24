@@ -109,3 +109,28 @@
         }
     }
 }
+
+html[data-color-scheme="dark"] {
+
+    .tl_dashboard fieldset > div > .item {
+
+        background: var(--content-border);
+
+        .inner {
+
+            background: var(--content-bg);
+
+            table {
+
+                th, td {
+                    border-color: var(--content-border);
+                }
+
+                tr th {
+                    background: var(--content-border);
+                    border-bottom-color: var(--content-bg);
+                }
+            }
+        }
+    }
+}

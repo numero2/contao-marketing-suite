@@ -1,4 +1,4 @@
-<?php if( count($this->pages) > 1 ): ?>
+<?php if( count($this->pages ?? []) > 1 ): ?>
 <div class="item <?=$this->type;?>">
     <div class="name">
         <span><?= $this->name; ?></span>

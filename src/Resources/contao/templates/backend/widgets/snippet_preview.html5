@@ -14,7 +14,7 @@
             <div class="description"><?= $this->description; ?></div>
         </div>
 
-        <?php if( \Config::get('showHelp') ): ?>
+        <?php if( Contao\Config::get('showHelp') ): ?>
         <p class="tl_help tl_tip"><?= $this->tip; ?></p>
         <?php endif; ?>
 

@@ -12,40 +12,40 @@
         <source>Anschließend werden Sie durch die Einrichtung geleitet.</source>
     </trans-unit>
         <trans-unit id="cms_be_wizard.a_b_test.step_1_top.0">
-        <source><![CDATA[<br /><strong>A/B Test - </strong>Namen für den A/B Test vergeben, danach trackbares Element für den A/B Test festlegen.]]></source>
+        <source><![CDATA[<strong>A/B Test - </strong>Namen für den A/B Test vergeben, danach trackbares Element für den A/B Test festlegen.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.a_b_test.step_2_top.0">
-        <source><![CDATA[<br /><strong>A/B Test - </strong>Vorlage für zu vergleichende Inhalte erstellen. Die Inhalte werden später separat für A-Version und B-Version angepasst.]]></source>
+        <source><![CDATA[<strong>A/B Test - </strong>Vorlage für zu vergleichende Inhalte erstellen. Die Inhalte werden später separat für A-Version und B-Version angepasst.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.a_b_test.step_3_top.0">
-        <source><![CDATA[<br /><strong>A/B Test - </strong> Weitere Inhalte der Vorlage hinzufügen. Die Anpassung für A-Version und B-Version erfolgt im nächsten Schritt.]]></source>
+        <source><![CDATA[<strong>A/B Test - </strong> Weitere Inhalte der Vorlage hinzufügen. Die Anpassung für A-Version und B-Version erfolgt im nächsten Schritt.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.a_b_test.step_4_top.0">
-        <source><![CDATA[<br /><strong>A/B Test - </strong> Namen für A-Version festlegen.]]></source>
+        <source><![CDATA[<strong>A/B Test - </strong> Namen für A-Version festlegen.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.a_b_test.step_5_top.0">
-        <source><![CDATA[<br /><strong>A/B Test - </strong> Namen für B-Version festlegen.]]></source>
+        <source><![CDATA[<strong>A/B Test - </strong> Namen für B-Version festlegen.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.a_b_test.step_6_top.0">
-        <source><![CDATA[<br /><strong>A/B Test - </strong> Bitte passen Sie nun die Inhalte für die einzelnen Fälle an.]]></source>
+        <source><![CDATA[<strong>A/B Test - </strong> Bitte passen Sie nun die Inhalte für die einzelnen Fälle an.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.a_b_test_page.step_1_top.0">
-        <source><![CDATA[<br /><strong>A/B Test Seite - </strong>Wählen Sie die beiden Seiten für den A/B Test.]]></source>
+        <source><![CDATA[<strong>A/B Test Seite - </strong>Wählen Sie die beiden Seiten für den A/B Test.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.current_page.step_1_top.0">
-        <source><![CDATA[<br /><strong>Inhalt auf festgelegten Seiten verwenden - </strong>Namen für das Element vergeben und Inhaltselement festlegen.]]></source>
+        <source><![CDATA[<strong>Inhalt auf festgelegten Seiten verwenden - </strong>Namen für das Element vergeben und Inhaltselement festlegen.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.current_page.step_2_top.0">
-        <source><![CDATA[<br /><strong>Inhalt auf festgelegten Seiten verwenden - </strong>Vorlage für Inhalte erstellen. Die Inhalte können später separat für jede ausgewählte Seite angepasst werden.]]></source>
+        <source><![CDATA[<strong>Inhalt auf festgelegten Seiten verwenden - </strong>Vorlage für Inhalte erstellen. Die Inhalte können später separat für jede ausgewählte Seite angepasst werden.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.current_page.step_3_top.0">
-        <source><![CDATA[<br /><strong>Inhalt auf festgelegten Seiten verwenden - </strong>Die Inhalte der erstellten Vorlage sind jetzt eingefügt worden. Durch Anpassung der Inhalte kann die Ausspielung für ausgewählte Seiten geändert werden.]]></source>
+        <source><![CDATA[<strong>Inhalt auf festgelegten Seiten verwenden - </strong>Die Inhalte der erstellten Vorlage sind jetzt eingefügt worden. Durch Anpassung der Inhalte kann die Ausspielung für ausgewählte Seiten geändert werden.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.visited_pages.step_1_top.0">
-        <source><![CDATA[<br /><strong>Inhalt dynamisch je nach besuchten Seiten verwenden - </strong>Namen für das Element vergeben.]]></source>
+        <source><![CDATA[<strong>Inhalt dynamisch je nach besuchten Seiten verwenden - </strong>Namen für das Element vergeben.]]></source>
     </trans-unit>
     <trans-unit id="cms_be_wizard.visited_pages.step_2_top.0">
-        <source><![CDATA[<br /><strong>Inhalt dynamisch je nach besuchten Seiten verwenden - </strong>Bitte Inhalte erstellen und Kriterium für Auslieferung festlegen.]]></source>
+        <source><![CDATA[<strong>Inhalt dynamisch je nach besuchten Seiten verwenden - </strong>Bitte Inhalte erstellen und Kriterium für Auslieferung festlegen.]]></source>
     </trans-unit>
 </body>
 </file>

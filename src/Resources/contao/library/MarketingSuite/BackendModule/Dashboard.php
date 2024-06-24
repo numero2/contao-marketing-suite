@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -17,22 +14,23 @@ namespace numero2\MarketingSuite\BackendModule;
 
 use Contao\BackendModule as CoreBackendModule;
 use Contao\BackendTemplate;
+use Contao\Config;
 use Contao\ContentModel;
 use Contao\Database;
 use Contao\Image;
 use Contao\PageModel;
 use Contao\System;
 use numero2\MarketingSuite\Backend;
-use numero2\MarketingSuite\StatisticModel;
 use numero2\MarketingSuite\Backend\Help;
 use numero2\MarketingSuite\Backend\License as ekga;
 use numero2\MarketingSuite\Backend\LicenseMessage;
 use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\ConversionItemModel;
-use numero2\MarketingSuite\DCAHelper\ConversionItem;
-use numero2\MarketingSuite\DCAHelper\MarketingItem;
 use numero2\MarketingSuite\LinkShortenerModel;
 use numero2\MarketingSuite\MarketingItemModel;
+use numero2\MarketingSuite\StatisticModel;
+use numero2\MarketingSuiteBundle\EventListener\DataContainer\ConversionItemListener;
+use numero2\MarketingSuiteBundle\EventListener\DataContainer\MarketingItemListener;
 
 
 class Dashboard extends CoreBackendModule {
@@ -54,8 +52,8 @@ class Dashboard extends CoreBackendModule {
         ekga::jakrut();
 
         // get fieldset states
-        $objSessionBag = null;
-        $objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+        $objSessionBag = NULL;
+        $objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
         $fs = null;
         $fs = $objSessionBag->get('fieldset_states');
@@ -69,6 +67,8 @@ class Dashboard extends CoreBackendModule {
         // add items to the dashboard
         $aItems = [];
         $aLegends = [];
+
+        $this->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
         $this->addMarketingItems( $aItems, $aLegends );
         $this->addConversionElements( $aItems, $aLegends );
@@ -108,6 +108,8 @@ class Dashboard extends CoreBackendModule {
 
         if( $oMarketingItems ) {
 
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
             while( $oMarketingItems->next() ) {
 
                 $objTemplate = null;
@@ -131,15 +133,17 @@ class Dashboard extends CoreBackendModule {
                         while( $oContentGroup->next() ) {
                             $aGroup = $oContentGroup->row();
 
-                            // $aGroup['reset']
-                            // $aStatsClicks = StatisticModel::countBy(['pid=? AND ptable=? AND type=?'], [$oPages->id, PageModel::getTable(), 'click']);
-                            // if( !empty($aStatsClicks) ) {
-                            //     $aGroup['clicks'] = $aStatsClicks;
-                            // }
-                            // $aStatsViews = StatisticModel::countBy(['pid=? AND ptable=? AND type=?'], [$oPages->id, PageModel::getTable(), 'view']);
-                            // if( !empty($aStatsViews) ) {
-                            //     $aGroup['views'] = $aStatsViews;
-                            // }
+                            $aGroup['clicks'] = 0;
+                            $statsClicks = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$oContentGroup->id, ContentGroupModel::getTable(), 'click', $aGroup['reset']]);
+                            if( !empty($statsClicks) ) {
+                                $aGroup['clicks'] = $statsClicks;
+                            }
+
+                            $aGroup['views'] = 0;
+                            $statsViews = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$oContentGroup->id, ContentGroupModel::getTable(), 'view', $aGroup['reset']]);
+                            if( !empty($statsViews) ) {
+                                $aGroup['views'] = $statsViews;
+                            }
 
                             $arrRow['groups'][] = $aGroup;
                         }
@@ -148,7 +152,7 @@ class Dashboard extends CoreBackendModule {
                     $arrRow['typeLabel'] = $GLOBALS['TL_LANG']['CTE'][$arrRow['content_type']][0];
 
                     if( ekga::hasFeature('me_'.$oMarketingItems->type) ) {
-                        $arrRow['href'] = $routePrefix . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                        $arrRow['href'] = $routePrefix.'?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' .$arrRow['id']. '&amp;rt=' .$this->requestToken. '&amp;ref=' .$ref;
                     }
 
                 } else if( $oMarketingItems->type == 'a_b_test_page' ) {
@@ -163,23 +167,23 @@ class Dashboard extends CoreBackendModule {
                         while( $oPages->next() ) {
 
                             // gather clicks on conversion items on this page
-                            $oPages->cms_mi_clicks = 0;
-
-                            // $oPages->cms_mi_reset;
-                            // $aStatsClicks = StatisticModel::countBy(['pid=? AND ptable=? AND type=?'], [$oPages->id, PageModel::getTable(), 'click']);
-                            // if( !empty($aStatsClicks) ) {
-                            //     $oPages->cms_mi_clicks = $aStatsClicks;
-                            // }
-                            // $aStatsViews = StatisticModel::countBy(['pid=? AND ptable=? AND type=?'], [$oPages->id, PageModel::getTable(), 'view']);
-                            // if( !empty($aStatsViews) ) {
-                            //     $oPages->cms_mi_views = $aStatsViews;
-                            // }
+                            $oPages->cms_mi_views = 0;
+                            $statsViews = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$oPages->id, PageModel::getTable(), 'view', $oPages->cms_mi_reset]);
+                            if( !empty($statsViews) ) {
+                                $oPages->cms_mi_views = $statsViews;
+                            }
 
                             $objCI = ConversionItemModel::findAllOn($oPages->current());
 
+                            $oPages->cms_mi_clicks = 0;
                             if( $objCI ) {
-                                $arrCI = $objCI->fetchAll();
-                                $oPages->cms_mi_clicks = array_sum(array_column($arrCI, 'cms_ci_clicks'));
+                                $arrCI = $objCI->fetchEach('id');
+
+                                $statsClicks = StatisticModel::countBy(
+                                    ['pid in ('.implode(',', $arrCI).') AND ptable=? AND type=? AND tstamp>?'],
+                                    [ContentModel::getTable(), 'click', $oPages->cms_mi_reset]
+                                );
+                                $oPages->cms_mi_clicks = $statsClicks;
                             }
 
                             $arrRow['pages'][] = $oPages->row();
@@ -187,7 +191,7 @@ class Dashboard extends CoreBackendModule {
                     }
 
                     if( ekga::hasFeature('me_'.$oMarketingItems->type) ) {
-                        $arrRow['href'] = $routePrefix . '?do=cms_marketing&amp;act=edit&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                        $arrRow['href'] = $routePrefix.'?do=cms_marketing&amp;act=edit&amp;id=' .$arrRow['id']. '&amp;rt=' .$this->requestToken. '&amp;ref=' .$ref;
                     }
 
                 } else {
@@ -195,7 +199,7 @@ class Dashboard extends CoreBackendModule {
                     continue;
                 }
 
-                $arrRow['used'] = MarketingItem::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBALS['TL_LANG']['tl_cms_marketing_item']['used']['0']));
+                $arrRow['used'] = MarketingItemListener::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBALS['TL_LANG']['tl_cms_marketing_item']['used']['0']));
 
                 $objTemplate->setData( $arrRow );
 
@@ -227,6 +231,8 @@ class Dashboard extends CoreBackendModule {
 
         if( $oConversionElements ) {
 
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
             $aLegends['conversion'] = $GLOBALS['TL_LANG']['CTE']['conversion_elements_dash'];
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
@@ -244,13 +250,25 @@ class Dashboard extends CoreBackendModule {
                 $arrRow = [];
                 $arrRow = $oConversionElements->row();
 
+                $arrRow['cms_ci_clicks'] = 0;
+                $statsClicks = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$arrRow['id'], ContentModel::getTable(), 'click', $arrRow['cms_ci_reset']]);
+                if( !empty($statsClicks) ) {
+                    $arrRow['cms_ci_clicks'] = $statsClicks;
+                }
+
+                $arrRow['cms_ci_views'] = 0;
+                $statsViews = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$arrRow['id'], ContentModel::getTable(), 'view', $arrRow['cms_ci_reset']]);
+                if( !empty($statsViews) ) {
+                    $arrRow['cms_ci_views'] = $statsViews;
+                }
+
                 $do = $this->getModuleNameForPTable( $arrRow['ptable'] );
                 $ref = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
                 if( ekga::hasFeature('ce_'.$oConversionElements->type) ) {
-                    $arrRow['href'] = $routePrefix . '?do='.$do.'&amp;table=tl_content&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+                    $arrRow['href'] = $routePrefix.'?do='.$do.'&amp;table=tl_content&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .$this->requestToken. '&amp;ref=' .$ref;
                 }
                 if( $do == 'cms_conversion' ) {
-                    $arrRow['used'] = ConversionItem::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBALS['TL_LANG']['tl_content']['cms_used']['0']));
+                    $arrRow['used'] = ConversionItemListener::generateUsedOverlay($arrRow, Image::getHtml('monitor', $GLOBALS['TL_LANG']['tl_content']['cms_used']['0']));
                 } else {
 
                     $aElements = [];
@@ -295,6 +313,8 @@ class Dashboard extends CoreBackendModule {
 
         if( $oLinkShortener ) {
 
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+
             $aLegends['link_shortener'] = $GLOBALS['TL_LANG']['CMS']['link_shortener'][0];
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
@@ -309,7 +329,9 @@ class Dashboard extends CoreBackendModule {
                 if( preg_match("/{{link_url::([0-9]*)}}/", $arrRow['target'], $id) ) {
 
                     $objPage = PageModel::findOneById($id[1]);
-                    $arrRow['target'] = $objPage->title . ' (' . $objPage->alias . \Config::get('urlSuffix') . ')';
+                    if( $objPage ) {
+                        $arrRow['target'] = $objPage->title . ' (' . $objPage->alias . Config::get('urlSuffix') . ')';
+                    }
                 }
 
                 $db = Database::getInstance();
@@ -344,8 +366,9 @@ class Dashboard extends CoreBackendModule {
 
                 if( ekga::hasFeature('link_shortener') ) {
                     $ref = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
-                    $arrRow['href'] = $routePrefix . '?do=cms_tools&amp;mod=link_shortener&amp;table=tl_cms_link_shortener&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
-                    $arrRow['hrefStats'] = $routePrefix . '?do=cms_tools&amp;mod=link_shortener&amp;table=tl_cms_link_shortener&amp;key=link_shortener_statistics&amp;id=' .$arrRow['id']. '&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref;
+
+                    $arrRow['href'] = $routePrefix.'?do=cms_tools&amp;mod=link_shortener&amp;table=tl_cms_link_shortener&amp;id=' .$arrRow['id']. '&amp;act=edit&amp;rt=' .$this->requestToken. '&amp;ref=' .$ref;
+                    $arrRow['hrefStats'] = $routePrefix.'?do=cms_tools&amp;mod=link_shortener&amp;table=tl_cms_link_shortener&amp;key=link_shortener_statistics&amp;id=' .$arrRow['id']. '&amp;rt=' .$this->requestToken. '&amp;ref=' .$ref;
                 }
 
                 $objTemplate->setData( $arrRow );

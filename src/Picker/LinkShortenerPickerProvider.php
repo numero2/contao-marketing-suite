@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2019 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -27,7 +24,7 @@ class LinkShortenerPickerProvider extends AbstractPickerProvider implements DcaP
     /**
      * {@inheritdoc}
      */
-    public function getName() {
+    public function getName(): string {
         return 'cmsLinkShortenerPicker';
     }
 
@@ -35,7 +32,7 @@ class LinkShortenerPickerProvider extends AbstractPickerProvider implements DcaP
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context) {
+    public function supportsContext( $context ): bool {
 
         if( !ksebgui::hasFeature('link_shortener') ) {
             return false;
@@ -48,7 +45,7 @@ class LinkShortenerPickerProvider extends AbstractPickerProvider implements DcaP
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(PickerConfig $config) {
+    public function supportsValue( PickerConfig $config ): bool {
         return strpos($config->getValue(), '{{cms_link_shortener::') !== false;
     }
 
@@ -56,7 +53,7 @@ class LinkShortenerPickerProvider extends AbstractPickerProvider implements DcaP
     /**
      * {@inheritdoc}
      */
-    public function getDcaTable() {
+    public function getDcaTable( ?PickerConfig $config = null ): string {
         return 'tl_cms_link_shortener';
     }
 
@@ -64,7 +61,7 @@ class LinkShortenerPickerProvider extends AbstractPickerProvider implements DcaP
     /**
      * {@inheritdoc}
      */
-    public function getDcaAttributes(PickerConfig $config) {
+    public function getDcaAttributes( PickerConfig $config ): array {
 
         $value = $config->getValue();
         $attributes = ['fieldType' => 'radio'];
@@ -91,7 +88,7 @@ class LinkShortenerPickerProvider extends AbstractPickerProvider implements DcaP
     /**
      * {@inheritdoc}
      */
-    public function convertDcaValue(PickerConfig $config, $value) {
+    public function convertDcaValue( PickerConfig $config, $value ): string|int {
         return '{{cms_link_shortener::'.$value.'}}';
     }
 
@@ -99,7 +96,7 @@ class LinkShortenerPickerProvider extends AbstractPickerProvider implements DcaP
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config = null) {
+    protected function getRouteParameters( ?PickerConfig $config = null ): array {
         $params = [];
         $params['do'] = 'cms_tools';
         $params['mod'] = 'link_shortener';

@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -30,8 +27,14 @@ class LayoutSelector extends Widget {
 
     public function generate(): string {
 
+        $value = StringUtil::specialchars($this->value);
+
+        if( !$value && $this->options ) {
+            $value = $this->options[0]['value'];
+        }
+
         $aData = [
-            'selected' => StringUtil::specialchars($this->value)
+            'selected' => $value
         ,   'options' => $this->options
         ,   'name' => $this->name
         ,   'id' => $this->id

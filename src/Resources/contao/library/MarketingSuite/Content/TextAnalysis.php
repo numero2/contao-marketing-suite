@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -100,12 +97,12 @@ class TextAnalysis {
         $sSyllables = $oHyphenator->hyphenate($this->strText);
 
         $syllables = [
-            1 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   2 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   3 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   4 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   5 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   6 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
+            1 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   2 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   3 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   4 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   5 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   6 => ['count' => 0, 'words' => [], 'percentage' => 0]
         ];
 
         // split text into single words and count the syllables
@@ -206,11 +203,11 @@ class TextAnalysis {
         }
 
         $stats = [
-             0 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   14 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   19 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   25 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
-        ,   31 => [ 'count' => 0, 'words' => [], 'percentage' => 0 ]
+             0 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   14 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   19 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   25 => ['count' => 0, 'words' => [], 'percentage' => 0]
+        ,   31 => ['count' => 0, 'words' => [], 'percentage' => 0]
         ];
 
         if( !empty($aSentences) ) {
@@ -230,7 +227,7 @@ class TextAnalysis {
 
                             // get first and last word of sentence
                             $firstWord = $matches[0][0][0];
-                            $lastWord = trim( substr( $sentence, $matches[0][$numWords-1][1] ) );
+                            $lastWord = trim(substr($sentence, $matches[0][$numWords-1][1]));
 
                             // get minimum length between first and last word
                             $numChars = 0;
@@ -238,7 +235,7 @@ class TextAnalysis {
                                 $numChars += strlen($m[0]);
                             }
 
-                            $stats[$length]['words'][] = [ $firstWord, $lastWord, $numChars ];
+                            $stats[$length]['words'][] = [$firstWord, $lastWord, $numChars];
 
                             break;
                         }

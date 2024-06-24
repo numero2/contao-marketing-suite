@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -28,7 +25,7 @@ abstract class MarketingItem extends Backend {
      *
      * @param string $type
      *
-     * @return CurrentPage|ABTest|VisitedPages|null
+     * @return CurrentPage|ABTest|ABTestPage|VisitedPages|null
      */
      public static function getChildInstance( $type ) {
 
@@ -53,6 +50,18 @@ abstract class MarketingItem extends Backend {
 
 
     /**
+     * Return a string describing the current status of this a_b_test.
+     *
+     * @param array $arrMI
+     *
+     * @return string
+     */
+    public function getStatus( $arrMI ) {
+        return '';
+    }
+
+
+    /**
      * Calculates a sorting value for the content element
      *
      * @param integer $id
@@ -68,15 +77,17 @@ abstract class MarketingItem extends Backend {
     /**
      * Generates the edit url to the given element
      *
-     * @param \Model $obj
+     * @param Contao\Model $obj
      *
      * @return string
      */
     protected static function switchToEdit( $obj ) {
 
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+        $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
         $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
-        return TL_SCRIPT . '?do='.Input::get('do').'&table='.$obj->getTable().'&id='.$obj->id.'&pid='.$obj->pid.'&mode=1&act=edit&rt='.REQUEST_TOKEN.'&ref='.$refererId;
+        return $routePrefix.'?do='.Input::get('do').'&table='.$obj->getTable().'&id='.$obj->id.'&pid='.$obj->pid.'&mode=1&act=edit&rt='.$requestToken.'&ref='.$refererId;
     }
 
 
@@ -97,7 +108,7 @@ abstract class MarketingItem extends Backend {
      * Alter header of tl_content
      *
      * @param array $args
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMI
      * @param object $objCP
      *
@@ -109,7 +120,7 @@ abstract class MarketingItem extends Backend {
     /**
      * Alter dca configuration of tl_content
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMI
      * @param object $objContent
      * @param object $objCP
@@ -120,7 +131,7 @@ abstract class MarketingItem extends Backend {
     /**
      * Handles what happens after a user submits the form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMI
      */
     abstract public function submitMarketingItem( $dc, $objMI );

@@ -1,22 +1,17 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
 namespace numero2\MarketingSuite;
 
-use Contao\DataContainer;
-use Contao\StringUtil;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
 use numero2\MarketingSuite\Helper\InterfaceStyleable;
 use numero2\MarketingSuite\Helper\TraitContentElementStyleable;

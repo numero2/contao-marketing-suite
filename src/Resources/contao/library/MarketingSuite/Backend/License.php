@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite Administration
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -17,6 +14,7 @@ namespace numero2\MarketingSuite\Backend;
 
 use Contao\CMSConfig;
 use Contao\Config;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Crypto;
 use Contao\Date;
 use Contao\Environment;
@@ -122,14 +120,14 @@ class License {
      */
     public static function hasFeature( $strAlias, $rootPageId=0 ) {
 
-        $objPages = [];
+        $aPages = [];
 
         try {
 
             // backend handling
             if( !$rootPageId ) {
 
-                $objPages = PageModel::findByType('root');
+                $aPages = self::findByTypeRoot();
 
                 if( CMSConfig::get('testmode') && !self::hasNoLicense() && Auth::isBackendUserLoggedIn() ) {
                     return true;
@@ -138,10 +136,10 @@ class License {
             // frontend handling
             } else {
 
-                $objPage = PageModel::findById($rootPageId);
+                $aPage = self::findById($rootPageId);
 
-                if( $objPage && $objPage->type == 'root' ) {
-                    $objPages[] = $objPage;
+                if( $aPage && in_array($aPage['type'], ['root', 'rootfallback']) ) {
+                    $aPages[] = $aPage;
                 }
 
                 if( !CMSConfig::get('testmode') && self::isTestDomain($rootPageId) ) {
@@ -160,22 +158,22 @@ class License {
             // expected in install tool
         }
 
-        if( $objPages ) {
+        if( $aPages ) {
 
-            foreach( $objPages as $value ) {
+            foreach( $aPages as $aPage ) {
 
-                if( empty($value->cms_root_license) || empty($value->cms_root_key) || empty($value->cms_root_data) || empty($value->cms_root_sign) ) {
+                if( empty($aPage['cms_root_license']) || empty($aPage['cms_root_key']) || empty($aPage['cms_root_data']) || empty($aPage['cms_root_sign']) ) {
                     continue;
                 }
 
                 $oCrypto = null;
-                $oCrypto = new Crypto($value->cms_root_key);
+                $oCrypto = new Crypto($aPage['cms_root_key']);
 
-                if( !$oCrypto->verify($value->cms_root_data, $value->cms_root_sign) ) {
+                if( !$oCrypto->verify($aPage['cms_root_data'], $aPage['cms_root_sign']) ) {
                     continue;
                 }
 
-                $data = $oCrypto->decryptPublic($value->cms_root_data);
+                $data = $oCrypto->decryptPublic($aPage['cms_root_data']);
                 $data = StringUtil::deserialize($data);
 
                 if( !is_array($data) || empty($data['features']) || empty($data['expires']) ) {
@@ -293,6 +291,8 @@ class License {
      * without data, licenses that will expire within 7 days or are already expired.
      *
      * @return string
+     *
+     * @Hook("getSystemMessages")
      */
     public function getSystemMessages() {
 
@@ -314,7 +314,10 @@ class License {
 
             foreach( $expireDates as $key => $value ) {
 
-                $pageEditUrl = $routePrefix . '?do=page&act=edit&id='.$value['page'].'&rt='.REQUEST_TOKEN.'#pal_cms_legend';
+                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+                $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+
+                $pageEditUrl = $routePrefix.'?do=page&act=edit&id='.$value['page'].'&rt='.$requestToken.'#pal_cms_legend';
                 $packageCMSUrl = "https://contao-marketingsuite.com";
 
                 if( count($value) <= 1 ) {
@@ -396,7 +399,7 @@ class License {
      */
     public static function hasNoLicense() {
 
-        $numLicense = PageModel::countBy(['cms_root_license!=?'], ['']);
+        $numLicense = self::countByLicense();
 
         if( !$numLicense ) {
             return true;
@@ -413,7 +416,7 @@ class License {
      */
     public static function hasLicense( $pageId ) {
 
-        $numLicense = PageModel::countBy(['cms_root_license!=? AND id=?'], ['', $pageId]);
+        $numLicense = self::countByLicenseAndId($pageId);
 
         if( $numLicense ) {
             return true;
@@ -425,6 +428,8 @@ class License {
 
     /**
      * Performs daily actions
+     *
+     * @Hook("generatePage")
      */
     public static function dailyCron() {
 
@@ -477,6 +482,8 @@ class License {
 
     /**
      * Performs weekly actions
+     *
+     * @Hook("generatePage")
      */
     public static function weeklyCron() {
 
@@ -498,5 +505,97 @@ class License {
 
             CMSConfig::persist('weekly_run', time());
         }
+    }
+
+
+    /**
+     * find all root pages
+     *
+     * @return array
+     */
+    private static function findByTypeRoot(): array {
+
+        $connection = System::getContainer()->get('database_connection');
+
+        $res = $connection
+            ->prepare("SELECT * FROM tl_page WHERE type=? OR type=?")
+            ->execute(['root', 'rootfallback']);
+
+        if( $res && $res->rowCount() ) {
+
+            $aRows = $res->fetchAll();
+
+            if( $aRows ) {
+                return $aRows;
+            }
+        }
+        return [];
+    }
+
+
+    /**
+     * find page by id
+     *
+     * @param string $id
+     *
+     * @return array
+     */
+    private static function findById( $id ): array {
+
+        $connection = System::getContainer()->get('database_connection');
+
+        $res = $connection
+            ->prepare("SELECT * FROM tl_page WHERE id=? LIMIT 1")
+            ->execute([$id]);
+
+        if( $res && $res->rowCount() ) {
+            return $res->fetch();
+        }
+
+        return [];
+    }
+
+
+    /**
+     * count all pages with a license
+     *
+     * @return int
+     */
+    private static function countByLicense(): int {
+
+        $connection = System::getContainer()->get('database_connection');
+
+        $res = $connection
+            ->prepare("SELECT count(1) AS count FROM tl_page WHERE cms_root_license!=?")
+            ->execute(['']);
+
+        if( $res && $res->rowCount() ) {
+            return $res->fetchOne();
+        }
+
+        return 0;
+    }
+
+
+    /**
+     * count all pages with license and id
+     *
+     * @param string $id
+     *
+     * @return int
+     */
+    private static function countByLicenseAndId( $id ): int {
+
+        $connection = System::getContainer()->get('database_connection');
+
+        $res = $connection
+            ->prepare("SELECT count(1) AS count FROM tl_page WHERE cms_root_license!=? AND id=?")
+            ->execute(['', $id]);
+
+        if( $res && $res->rowCount() ) {
+            return $res->fetchOne();
+        }
+
+        return 0;
     }
 }

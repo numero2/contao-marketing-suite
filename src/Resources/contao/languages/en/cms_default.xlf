@@ -32,6 +32,12 @@
     <trans-unit id="cms_tag_settings_default.text">
         <source><![CDATA[<p>]]>Durch die Nutzung dieser Webseite erklären Sie sich mit der Verwendung von Cookies einverstanden. Detaillierte Informationen über den Einsatz von Cookies auf dieser Webseite erhalten Sie in der Datenschutzerklärung.<![CDATA[</p>]]></source>
     </trans-unit>
+    <trans-unit id="cms_optin_fallback.info">
+        <source>Dieser Inhalt eines Drittanbieters wird aufgrund Ihrer fehlenden Zustimmung zu Drittanbieter-Inhalten nicht angezeigt.</source>
+    </trans-unit>
+    <trans-unit id="cms_optin_fallback.button_label">
+        <source>Einstellungen ändern</source>
+    </trans-unit>
 </body>
 </file>
 </xliff>

@@ -1,43 +1,39 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
+
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\Filesystem\Path;
+
 
 /**
  * Provide methods to edit the local configuration file.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DC_CMSFile extends DataContainer implements \editable
-{
+class DC_CMSFile extends DataContainer implements EditableDataContainerInterface {
+
     /**
      * Initialize the object
      *
      * @param string $strTable
      */
-    public function __construct($strTable)
-    {
+    public function __construct( $strTable ) {
+
         parent::__construct();
 
         $this->intId = Input::get('id');
 
         // Check whether the table is defined
-        if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
-        {
-            $this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
+        if( !$strTable || !isset($GLOBALS['TL_DCA'][$strTable]) ) {
+            System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
             trigger_error('Could not load data container configuration', E_USER_ERROR);
         }
 
@@ -45,17 +41,12 @@ class DC_CMSFile extends DataContainer implements \editable
         $this->strTable = $strTable;
 
         // Call onload_callback (e.g. to check permissions)
-        if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] ?? null))
-        {
-            foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] as $callback)
-            {
-                if (\is_array($callback))
-                {
+        if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] ?? null) ) {
+            foreach( $GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] as $callback ) {
+                if( \is_array($callback) ) {
                     $this->import($callback[0]);
                     $this->{$callback[0]}->{$callback[1]}($this);
-                }
-                elseif (\is_callable($callback))
-                {
+                } else if( \is_callable($callback) ) {
                     $callback($this);
                 }
             }
@@ -67,8 +58,7 @@ class DC_CMSFile extends DataContainer implements \editable
      *
      * @return string
      */
-    public function create()
-    {
+    public function create() {
         return $this->edit();
     }
 
@@ -77,8 +67,7 @@ class DC_CMSFile extends DataContainer implements \editable
      *
      * @return string
      */
-    public function cut()
-    {
+    public function cut() {
         return $this->edit();
     }
 
@@ -87,8 +76,7 @@ class DC_CMSFile extends DataContainer implements \editable
      *
      * @return string
      */
-    public function copy()
-    {
+    public function copy() {
         return $this->edit();
     }
 
@@ -97,8 +85,7 @@ class DC_CMSFile extends DataContainer implements \editable
      *
      * @return string
      */
-    public function move()
-    {
+    public function move() {
         return $this->edit();
     }
 
@@ -107,93 +94,88 @@ class DC_CMSFile extends DataContainer implements \editable
      *
      * @return string
      */
-    public function edit()
-    {
+    public function edit() {
+
         $return = '';
         $ajaxId = null;
 
-        if (Environment::get('isAjaxRequest'))
-        {
+        if( Environment::get('isAjaxRequest') ) {
             $ajaxId = func_get_arg(1);
         }
 
         // Build an array from boxes and rows
         $this->strPalette = $this->getPalette();
         $boxes = StringUtil::trimsplit(';', $this->strPalette);
-        $legends = array();
+        $legends = [];
 
-        if (!empty($boxes))
-        {
-            foreach ($boxes as $k=>$v)
-            {
+        if( !empty($boxes) ) {
+            foreach( $boxes as $k=>$v ) {
                 $boxes[$k] = StringUtil::trimsplit(',', $v);
 
-                foreach ($boxes[$k] as $kk=>$vv)
-                {
-                    if (preg_match('/^\[.*]$/', $vv))
-                    {
+                foreach( $boxes[$k] as $kk=>$vv ) {
+                    if( preg_match('/^\[.*]$/', $vv) ) {
                         continue;
                     }
 
-                    if (preg_match('/^{.*}$/', $vv))
-                    {
+                    if( preg_match('/^{.*}$/', $vv) ) {
                         $legends[$k] = substr($vv, 1, -1);
                         unset($boxes[$k][$kk]);
-                    }
-                    elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'] ?? null))
-                    {
+                    } else if( !\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null) ) {
                         unset($boxes[$k][$kk]);
                     }
                 }
 
                 // Unset a box if it does not contain any fields
-                if (empty($boxes[$k]))
-                {
+                if( empty($boxes[$k]) ) {
                     unset($boxes[$k]);
                 }
             }
 
-            /** @var AttributeBagInterface $objSessionBag */
-            $objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+            $objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
             // Render boxes
             $class = 'tl_tbox';
             $fs = $objSessionBag->get('fieldset_states');
 
-            foreach ($boxes as $k=>$v)
-            {
+            foreach( $boxes as $k=>$v ) {
+
                 $strAjax = '';
                 $blnAjax = false;
                 $key = '';
                 $cls = '';
                 $legend = '';
 
-                if (isset($legends[$k]))
-                {
-                    list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
+                if( isset($legends[$k]) ) {
 
-                    $legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this, \'' . $key . '\', \'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
+                    list($key, $cls) = explode(':', $legends[$k]) + [null, null];
+
+                    $legend = "\n" . '<legend data-action="click->contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
                 }
 
-                if (isset($fs[$this->strTable][$key]))
-                {
-                    $class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-                }
-                else
-                {
-                    $class .= (($cls && $legend) ? ' ' . $cls : '');
+                if( $legend ) {
+                    if( isset($fs[$this->strTable][$key]) ) {
+                        $class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
+                    } else if( $cls ) {
+                        // Convert the ":hide" suffix from the DCA
+                        if ($cls == 'hide')
+                        {
+                            $cls = 'collapsed';
+                        }
+
+                        $class .= ' ' . $cls;
+                    }
                 }
 
-                $return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+                $return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend;
 
                 // Build rows of the current box
-                foreach ($v as $vv)
-                {
-                    if ($vv == '[EOF]')
-                    {
-                        if ($blnAjax && Environment::get('isAjaxRequest'))
-                        {
-                            return $strAjax . '<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">';
+                foreach( $v as $vv ) {
+
+                    if( $vv == '[EOF]' ) {
+
+                        if( $blnAjax && Environment::get('isAjaxRequest') ) {
+
+                            return $strAjax;
                         }
 
                         $blnAjax = false;
@@ -202,10 +184,10 @@ class DC_CMSFile extends DataContainer implements \editable
                         continue;
                     }
 
-                    if (preg_match('/^\[.*]$/', $vv))
-                    {
+                    if( preg_match('/^\[.*]$/', $vv) ) {
+
                         $thisId = 'sub_' . substr($vv, 1, -1);
-                        $blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+                        $blnAjax = $ajaxId == $thisId && Environment::get('isAjaxRequest');
                         $return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
                         continue;
@@ -213,41 +195,26 @@ class DC_CMSFile extends DataContainer implements \editable
 
                     $this->strField = $vv;
                     $this->strInputName = $vv;
-                    $this->varValue = \CMSConfig::get($this->strField);
+                    $this->varValue = CMSConfig::get($this->strField);
+
+                    if( $this->varValue === null ) {
+                        $this->varValue = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']??$this->varValue;
+                    }
 
                     // Handle entities
-                    if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'text' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'textarea')
-                    {
-                        if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null)
-                        {
+                    if( ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'text' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'textarea' ) {
+                        if( $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null ) {
                             $this->varValue = StringUtil::deserialize($this->varValue);
-                        }
-
-                        if (!\is_array($this->varValue))
-                        {
-                            $this->varValue = htmlspecialchars($this->varValue);
-                        }
-                        else
-                        {
-                            foreach ($this->varValue as $key=>$val)
-                            {
-                                $this->varValue[$key] = htmlspecialchars($val);
-                            }
                         }
                     }
 
                     // Call load_callback
-                    if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null))
-                    {
-                        foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback)
-                        {
-                            if (\is_array($callback))
-                            {
-                                $this->import($callback[0]);
-                                $this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
-                            }
-                            elseif (\is_callable($callback))
-                            {
+                    if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null) ) {
+                        foreach( $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback ) {
+
+                            if( \is_array($callback) ) {
+                                $this->varValue = System::importStatic($callback[0])->{$callback[1]}($this->varValue, $this);
+                            } else if( \is_callable($callback) ) {
                                 $this->varValue = $callback($this->varValue, $this);
                             }
                         }
@@ -262,31 +229,25 @@ class DC_CMSFile extends DataContainer implements \editable
             }
         }
 
-        $this->import(Files::class, 'Files');
+        $configFile = Path::join(System::getContainer()->getParameter('kernel.project_dir'), 'system/config/cmsconfig.php');
 
         // Check whether the target file is writeable
-        if (!$this->Files->is_writeable('system/config/localconfig.php'))
-        {
-            Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/localconfig.php'));
+        if( file_exists($configFile) && !is_writable($configFile) ) {
+            Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/cmsconfig.php'));
         }
 
         // Submit buttons
-        $arrButtons = array();
+        $arrButtons = [];
         $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
         $arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
 
         // Call the buttons_callback (see #4691)
-        if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-        {
-            foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-            {
-                if (\is_array($callback))
-                {
+        if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null) ) {
+            foreach( $GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback ) {
+                if( \is_array($callback) ) {
                     $this->import($callback[0]);
                     $arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
-                }
-                elseif (\is_callable($callback))
-                {
+                } else if( \is_callable($callback) ) {
                     $arrButtons = $callback($arrButtons, $this);
                 }
             }
@@ -308,35 +269,27 @@ class DC_CMSFile extends DataContainer implements \editable
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="' . ampersand(\Environment::get('request'), true) . '" id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
+<form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
-<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">' . $return;
+<input type="hidden" name="REQUEST_TOKEN" value="' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '">' . $return;
 
         // Reload the page to prevent _POST variables from being sent twice
-        if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
-        {
+        if( !$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable ) {
             // Call onsubmit_callback
-            if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
-            {
-                foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
-                {
-                    if (\is_array($callback))
-                    {
+            if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null) ) {
+                foreach( $GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback ) {
+                    if( \is_array($callback) ) {
                         $this->import($callback[0]);
                         $this->{$callback[0]}->{$callback[1]}($this);
-                    }
-                    elseif (\is_callable($callback))
-                    {
+                    } else if( \is_callable($callback) ) {
                         $callback($this);
                     }
                 }
             }
 
             // Reload
-            if (isset($_POST['saveNclose']))
-            {
+            if( Input::post('saveNclose') !== null ) {
                 Message::reset();
                 $this->redirect($this->getReferer());
             }
@@ -345,8 +298,7 @@ class DC_CMSFile extends DataContainer implements \editable
         }
 
         // Set the focus if there is an error
-        if ($this->noReload)
-        {
+        if( $this->noReload ) {
             $return .= '
 <script>
   window.addEvent(\'domready\', function() {
@@ -354,6 +306,12 @@ class DC_CMSFile extends DataContainer implements \editable
   });
 </script>';
         }
+
+        $return = '
+<div data-controller="contao--jump-targets">
+    <div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
+    ' . $return . '
+</div>';
 
         return $return;
     }
@@ -363,73 +321,50 @@ class DC_CMSFile extends DataContainer implements \editable
      *
      * @param mixed $varValue
      */
-    protected function save($varValue)
-    {
-        if (Input::post('FORM_SUBMIT') != $this->strTable)
-        {
+    protected function save( $varValue ) {
+
+        if( Input::post('FORM_SUBMIT') != $this->strTable ) {
             return;
         }
 
-        $arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
+        $arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? [];
 
         // Make sure that checkbox values are boolean
-        if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null))
-        {
+        if( ($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) ) {
             $varValue = $varValue ? true : false;
         }
 
-        if ($varValue)
-        {
+        if( $varValue ) {
             // Convert binary UUIDs (see #6893)
-            if (($arrData['inputType'] ?? null) == 'fileTree')
-            {
+            if( ($arrData['inputType'] ?? null) == 'fileTree' ) {
                 $varValue = StringUtil::deserialize($varValue);
 
-                if (!\is_array($varValue))
-                {
+                if( !\is_array($varValue) ) {
                     $varValue = StringUtil::binToUuid($varValue);
-                }
-                else
-                {
-                    $varValue = serialize(array_map('StringUtil::binToUuid', $varValue));
+                } else {
+                    $varValue = serialize(array_map('\Contao\StringUtil::binToUuid', $varValue));
                 }
             }
 
             // Convert date formats into timestamps
-            if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'] ?? null, array('date', 'time', 'datim')))
-            {
+            if( $varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'] ?? null, ['date', 'time', 'datim']) ) {
                 $objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
                 $varValue = $objDate->tstamp;
             }
 
             // Handle entities
-            if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
-            {
+            if( ($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea' ) {
                 $varValue = StringUtil::deserialize($varValue);
-
-                if (!\is_array($varValue))
-                {
-                    $varValue = StringUtil::restoreBasicEntities($varValue);
-                }
-                else
-                {
-                    $varValue = serialize(array_map('StringUtil::restoreBasicEntities', $varValue));
-                }
             }
         }
 
         // Trigger the save_callback
-        if (\is_array($arrData['save_callback'] ?? null))
-        {
-            foreach ($arrData['save_callback'] as $callback)
-            {
-                if (\is_array($callback))
-                {
+        if( \is_array($arrData['save_callback'] ?? null) ) {
+            foreach( $arrData['save_callback'] as $callback ) {
+                if( \is_array($callback) ) {
                     $this->import($callback[0]);
                     $varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
-                }
-                elseif (\is_callable($callback))
-                {
+                } else if( \is_callable($callback) ) {
                     $varValue = $callback($varValue, $this);
                 }
             }
@@ -438,39 +373,37 @@ class DC_CMSFile extends DataContainer implements \editable
         $strCurrent = $this->varValue;
 
         // Handle arrays and strings
-        if (\is_array($strCurrent))
-        {
+        if( \is_array($strCurrent) ) {
             $strCurrent = serialize($strCurrent);
+        } else if( \is_string($strCurrent) ) {
+            $strCurrent = html_entity_decode($this->varValue, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
         }
-        elseif (\is_string($strCurrent))
-        {
-            $strCurrent = html_entity_decode($this->varValue, ENT_QUOTES, Config::get('characterSet'));
+
+        // custom changes
+        if( \is_array($varValue) ) {
+            $varValue = serialize($varValue);
         }
+        // end custom changes
 
         // Save the value if there was no error
-        if ($strCurrent != $varValue && (\strlen($varValue) || !($arrData['eval']['doNotSaveEmpty'] ?? null)))
-        {
-            \CMSConfig::persist($this->strField, $varValue);
+        if( $strCurrent != $varValue && (\strlen($varValue) || !($arrData['eval']['doNotSaveEmpty'] ?? null)) ) {
+            CMSConfig::persist($this->strField, $varValue);
 
             $deserialize = StringUtil::deserialize($varValue);
-            $prior = \is_bool(\CMSConfig::get($this->strField)) ? (\CMSConfig::get($this->strField) ? 'true' : 'false') : \CMSConfig::get($this->strField);
+            $prior = \is_bool(CMSConfig::get($this->strField)) ? (CMSConfig::get($this->strField) ? 'true' : 'false') : CMSConfig::get($this->strField);
 
             // Add a log entry
-            if (!\is_array($deserialize) && !\is_array(StringUtil::deserialize($prior)))
-            {
-                if (($arrData['inputType'] ?? null) == 'password' || ($arrData['inputType'] ?? null) == 'textStore')
-                {
-                    //$this->log('The global configuration variable "' . $this->strField . '" has been changed', __METHOD__, TL_CONFIGURATION);
-                }
-                else
-                {
-                    //$this->log('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"', __METHOD__, TL_CONFIGURATION);
+            if( !\is_array($deserialize) && !\is_array(StringUtil::deserialize($prior)) ) {
+                if( ($arrData['inputType'] ?? null) == 'password' ) {
+                    System::getContainer()->get('monolog.logger.contao.configuration')->info('The cms configuration variable "' . $this->strField . '" has been changed');
+                } else {
+                    System::getContainer()->get('monolog.logger.contao.configuration')->info('The cms configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"');
                 }
             }
 
             // Set the new value so the input field can show it
             $this->varValue = $deserialize;
-            \CMSConfig::set($this->strField, $deserialize);
+            CMSConfig::set($this->strField, $deserialize);
         }
     }
 
@@ -479,51 +412,41 @@ class DC_CMSFile extends DataContainer implements \editable
      *
      * @return string
      */
-    public function getPalette()
-    {
+    public function getPalette() {
+
         $strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'] ?? '';
 
         // Check whether there are selector fields
-        if (!empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
-        {
-            $sValues = array();
-            $subpalettes = array();
+        if( !empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) ) {
+            $sValues = [];
+            $subpalettes = [];
 
-            foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
-            {
-                $trigger = \CMSConfig::get($name);
+            foreach( $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name ) {
+                $trigger = CMSConfig::get($name);
 
                 // Overwrite the trigger if the page is not reloaded
-                if (Input::post('FORM_SUBMIT') == $this->strTable)
-                {
+                if( Input::post('FORM_SUBMIT') == $this->strTable ) {
                     $key = (Input::get('act') == 'editAll') ? $name . '_' . $this->intId : $name;
 
-                    if (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['submitOnChange'] ?? null))
-                    {
+                    if( !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['submitOnChange'] ?? null) ) {
                         $trigger = Input::post($key);
                     }
                 }
 
-                if ($trigger)
-                {
-                    if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
-                    {
+                if( $trigger ) {
+                    if( ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null) ) {
                         $sValues[] = $name;
 
                         // Look for a subpalette
-                        if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
-                        {
+                        if( isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]) ) {
                             $subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $sValues[] = $trigger;
                         $key = $name . '_' . $trigger;
 
                         // Look for a subpalette
-                        if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
-                        {
+                        if( isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]) ) {
                             $subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
                         }
                     }
@@ -531,33 +454,36 @@ class DC_CMSFile extends DataContainer implements \editable
             }
 
             // Build possible palette names from the selector values
-            if (empty($sValues))
-            {
-                $names = array('default');
-            }
-            elseif (\count($sValues) > 1)
-            {
+            if( empty($sValues) ) {
+                $names = ['default'];
+            } else if( \count($sValues) > 1 ) {
                 $names = $this->combiner($sValues);
-            }
-            else
-            {
-                $names = array($sValues[0]);
+            } else {
+                $names = [$sValues[0]];
             }
 
             // Get an existing palette
-            foreach ($names as $paletteName)
-            {
-                if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
-                {
+            foreach( $names as $paletteName ) {
+                if( isset($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]) ) {
                     $strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName];
                     break;
                 }
             }
 
             // Include subpalettes
-            foreach ($subpalettes as $k=>$v)
-            {
+            foreach( $subpalettes as $k=>$v ) {
                 $strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
+            }
+        }
+
+        // Call onpalette_callback
+        if( \is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null) ) {
+            foreach( $GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback ) {
+                if( \is_array($callback) ) {
+                    $strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
+                } else if( \is_callable($callback) ) {
+                    $strPalette = $callback($strPalette, $this);
+                }
             }
         }
 

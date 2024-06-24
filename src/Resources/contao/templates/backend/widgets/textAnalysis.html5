@@ -44,7 +44,7 @@
                 <?php foreach( ['sentences','words','chars'] as $value): ?>
                     <li>
                         <span><?= $this->labels['text_'.$value][0]; ?><?php if( !empty($this->labels['text_'.$value][1]) ): ?><br><em><?= $this->labels['text_'.$value][1]; ?></em><?php endif; ?></span>
-                        <span><?= $this->stats[$value]; ?></span>
+                        <span><?= $this->stats[$value] ?? 0; ?></span>
                     </li>
                 <?php endforeach; ?>
             </ul>

@@ -6,7 +6,7 @@
     <form action="<?= $this->action; ?>" class="tl_form" id="tl_filter" method="post">
         <div class="tl_formbody">
             <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken; ?>">
 
             <div class="tl_panel cf">
                 <div class="tl_submit_panel tl_subpanel">
@@ -20,7 +20,7 @@
 <?php endif; ?>
 
 <div id="tl_buttons">
-    <a href="<?= ampersand($this->backURL); ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']); ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT']; ?></a>
+    <a href="<?= \Contao\StringUtil::ampersand($this->backURL); ?>" class="header_back" title="<?= \Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']); ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT']; ?></a>
 </div>
 
 <div class="tl_cms_link_shortener_statistics">
@@ -73,13 +73,13 @@
 
                     <?php foreach( $this->tabs as $key => $value ): ?>
                         <?php if( empty($value) ) continue; ?>
-                        <input type="radio" name="ctrl_tabs" id="ctrl_tab_<?= \StringUtil::standardize($key);?>"<?php if ($first): ?> checked<?php endif; ?>/>
+                        <input type="radio" name="ctrl_tabs" id="ctrl_tab_<?= \Contao\StringUtil::standardize($key);?>"<?php if ($first): ?> checked<?php endif; ?>/>
                         <?php $first = false; ?>
                     <?php endforeach; ?>
                     <div class="tab-header">
                         <?php foreach( $this->tabs as $key => $value ): ?>
                             <?php if( empty($value) ) continue; ?>
-                            <label for="ctrl_tab_<?= \StringUtil::standardize($key);?>"><?= $key; ?></label>
+                            <label for="ctrl_tab_<?= \Contao\StringUtil::standardize($key);?>"><?= $key; ?></label>
                         <?php endforeach; ?>
                     </div>
                     <div class="tab-content">
@@ -87,9 +87,9 @@
                             <?php if( empty($tab) ) continue; ?>
                             <div class="inner">
                                 <div class="pie-chart">
-                                    <canvas id="chart_<?= \StringUtil::standardize($tabName);?>"></canvas>
+                                    <canvas id="chart_<?= \Contao\StringUtil::standardize($tabName);?>"></canvas>
                                     <script>
-                                        new Chart(document.getElementById("chart_<?= \StringUtil::standardize($tabName);?>"), {
+                                        new Chart(document.getElementById("chart_<?= \Contao\StringUtil::standardize($tabName);?>"), {
                                             "type": "pie",
                                             "data": {
                                                 "labels": ["<?= implode('", "', array_column($tab, 'label')); ?>"],

@@ -1,21 +1,18 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
 namespace numero2\MarketingSuiteBundle\Routing;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use numero2\MarketingSuite\LinkShortenerModel;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
@@ -29,12 +26,12 @@ class LinkShortenerRouteProvider implements RouteProviderInterface {
 
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var Contao\CoreBundle\Framework\ContaoFramework
      */
     private $framework;
 
 
-    public function __construct( ContaoFrameworkInterface $framework ) {
+    public function __construct( ContaoFramework $framework ) {
 
         $this->framework = $framework;
     }
@@ -43,7 +40,7 @@ class LinkShortenerRouteProvider implements RouteProviderInterface {
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollectionForRequest(Request $request) {
+    public function getRouteCollectionForRequest( Request $request ): RouteCollection {
 
         if( !$this->framework->isInitialized() ) {
             $this->framework->initialize(true);
@@ -84,7 +81,7 @@ class LinkShortenerRouteProvider implements RouteProviderInterface {
     /**
      * {@inheritdoc}
      */
-    public function getRouteByName($name) {
+    public function getRouteByName( $name ): Route {
 
         throw new RouteNotFoundException('This router does not support routes by name');
     }
@@ -93,7 +90,7 @@ class LinkShortenerRouteProvider implements RouteProviderInterface {
     /**
      * {@inheritdoc}
      */
-    public function getRoutesByNames($names) {
+    public function getRoutesByNames( ?array $names=null ): array {
 
         return [];
     }

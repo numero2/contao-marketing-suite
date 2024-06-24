@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
+
+
+use Contao\DC_Table;
 
 
 /**
@@ -19,7 +19,7 @@
 $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
 
     'config' => [
-        'dataContainer'             => 'Table'
+        'dataContainer'             => DC_Table::class
     ,   'ctable'                    => ['tl_cms_link_shortener_statistics']
     ,   'isAvailable'               => \numero2\MarketingSuite\Backend\License::hasFeature('link_shortener')
     ,   'sql' => [
@@ -39,7 +39,6 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
         ]
     ,   'label' => [
             'fields'                => ['target', 'prefix', 'alias']
-        ,   'label_callback'        => ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'labelCallback']
         ]
     ,   'global_operations' => [
             'all' => [
@@ -63,20 +62,18 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
         ,   'reset_counter' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['reset_counter']
             ,   'icon'              => 'bundles/marketingsuite/img/backend/icons/icon_reset_counter.svg'
-            ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['reset_warning'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
-            ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'resetCounter']
+            ,   'attributes'        => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['reset_warning'] ?? '') . '\'))return false"'
             ]
         ,   'delete' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['delete']
             ,   'href'              => 'act=delete'
             ,   'icon'              => 'delete.gif'
-            ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
+            ,   'attributes'        => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\'))return false"'
             ]
         ,   'toggle' =>[
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['toggle']
+            ,   'href'              => 'act=toggle&amp;field=active'
             ,   'icon'              => 'visible.svg'
-            ,   'attributes'        => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"'
-            ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'toggleIcon']
             ]
         ]
     ]
@@ -110,8 +107,6 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['domain']
         ,   'inputType'             => 'radio'
         ,   'filter'                => true
-        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'getAvailableDomains']
-        ,   'load_callback'         => [['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'lockIfNotEmpty']]
         ,   'eval'                  => ['mandatory'=>true, 'tl_class'=>'clr']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
@@ -119,12 +114,6 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['prefix']
         ,   'inputType'             => 'text'
         ,   'search'                => true
-        ,   'load_callback'         => [['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'lockIfNotEmpty']]
-        ,   'save_callback'         => [
-                ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'addRandomId']
-            ,   ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'checkUnique']
-            ,   ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'checkPageAlreadyExists']
-            ]
         ,   'eval'                  => ['maxlength'=>255, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
@@ -136,11 +125,6 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['alias']
         ,   'inputType'             => 'text'
         ,   'search'                => true
-        ,   'load_callback'         => [['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'lockIfNotEmpty']]
-        ,   'save_callback'         => [
-                ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'checkUnique']
-            ,   ['\numero2\MarketingSuite\DCAHelper\LinkShortener', 'checkPageAlreadyExists']
-            ]
         ,   'eval'                  => ['maxlength'=>255, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
@@ -158,6 +142,7 @@ $GLOBALS['TL_DCA']['tl_cms_link_shortener'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_link_shortener']['active']
         ,   'inputType'             => 'checkbox'
         ,   'filter'                => true
+        ,   'toggle'                => true
         ,   'eval'                  => ['tl_class'=>'w50']
         ,   'sql'                   => "char(1) NOT NULL default ''"
         ]

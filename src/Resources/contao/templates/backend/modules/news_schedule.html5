@@ -22,16 +22,16 @@
         <div class="title">
             <div role="heading">
                 <input type="checkbox" name="toggleQuickNav" id="toggleQuickNav">
-                <label for="toggleQuickNav" class="current"><?= \Date::parse('F Y', $this->firstDay); ?></label>
+                <label for="toggleQuickNav" class="current"><?= Contao\Date::parse('F Y', $this->firstDay); ?></label>
                 <div class="toggleQuickNav">
                     <input type="checkbox" name="toggleQuickNavYear" id="toggleQuickNavYear">
                     <form method="get">
-                        <input type="hidden" name="do" value="<?= \Input::get('do'); ?>">
-                        <input type="hidden" name="key" value="<?= \Input::get('key'); ?>">
-                        <input type="hidden" name="rt" value="<?= REQUEST_TOKEN; ?>">
-                        <input type="hidden" name="ref" value="<?= \Input::get('ref'); ?>">
-                        <?php if( \Input::get('id') ): ?>
-                            <input type="hidden" name="id" value="<?= \Input::get('id'); ?>">
+                        <input type="hidden" name="do" value="<?= Contao\Input::get('do'); ?>">
+                        <input type="hidden" name="key" value="<?= Contao\Input::get('key'); ?>">
+                        <input type="hidden" name="rt" value="<?= $this->requestToken; ?>">
+                        <input type="hidden" name="ref" value="<?= Contao\Input::get('ref'); ?>">
+                        <?php if( Contao\Input::get('id') ): ?>
+                            <input type="hidden" name="id" value="<?= Contao\Input::get('id'); ?>">
                         <?php endif; ?>
 
                         <div class="year">
@@ -81,7 +81,7 @@
                             <div class="inner">
                                 <span class="day">
                                     <?= $day['day']; ?>
-                                    <span><?= \Date::parse('D', $day['date']); ?></span>
+                                    <span><?= Contao\Date::parse('D', $day['date']); ?></span>
                                 </span>
 
                                 <?php if( !empty($day['elements']) && is_array($day['elements']) ): ?>

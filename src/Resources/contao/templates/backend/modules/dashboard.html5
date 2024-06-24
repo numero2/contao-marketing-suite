@@ -15,9 +15,9 @@
 
         <?php foreach( $this->items as $type => $items ): ?>
 
-            <fieldset id="pal_<?= $type; ?>_legend" class="tl_tbox<?= (array_key_exists($type.'_legend', $this->fsStates) && empty($this->fsStates[$type.'_legend']))?' collapsed':''; ?>">
+            <fieldset id="pal_<?= $type; ?>_legend" class="tl_tbox<?= (array_key_exists($type.'_legend', $this->fsStates) && empty($this->fsStates[$type.'_legend']))?' collapsed':''; ?>" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="<?= $type;?>_legend" data-contao--toggle-fieldset-table-value="cms_dashboard" data-contao--toggle-fieldset-collapsed-class="collapsed">
 
-                <legend onclick="AjaxRequest.toggleFieldset(this,'<?= $type; ?>_legend','cms_dashboard')">
+                <legend data-action="click->contao--toggle-fieldset#toggle">
                     <?= $this->legends[$type]; ?>
                 </legend>
 

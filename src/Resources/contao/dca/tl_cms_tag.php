@@ -1,16 +1,17 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
+
+
+use Contao\Config;
+use Contao\DC_Table;
 
 
 /**
@@ -20,51 +21,34 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
 
     'config' => [
         'label'                     => Config::get('websiteTitle')
-    ,   'dataContainer'             => 'Table'
+    ,   'dataContainer'             => DC_Table::class
     ,   'isAvailable'               => \numero2\MarketingSuite\Backend\License::hasFeature('tags')
-    ,   'onload_callback'           => [
-            ['\numero2\MarketingSuite\DCAHelper\Tag', 'setRootType']
-        ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'addDefault']
-        ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'setTagFieldLabel']
-        ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'cleanDatabase']
-        ,   ['\numero2\MarketingSuite\DCAHelper\Tag', 'changeIdWithRoot']
-       ]
     ,   'sql' => [
             'keys' => [
                 'id' => 'primary'
             ]
         ]
     ]
-,   'edit' => [
-        'buttons_callback' => [
-            ['\numero2\MarketingSuite\DCAHelper\Tag', 'alterSaveButtons']
-        ]
-    ]
 ,   'list' => [
         'sorting' => [
             'mode'                  => 5
         ,   'icon'                  => 'pagemounts.svg'
-        ,   'paste_button_callback' => ['\numero2\MarketingSuite\DCAHelper\Tag', 'pasteTag']
         ,   'panelLayout'           => 'search,limit;filter'
         ]
     ,   'label' => [
             'fields'                => ['name']
         ,   'format'                => '%s'
-        ,   'label_callback'        => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getLabel']
         ]
     ,   'global_operations' => [
-            'frontend' => [
+            'toggleNodes'
+        ,   'frontend' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_tag']['frontend']
             ,   'href'              => 'table=tl_cms_tag_settings'
             ,   'icon'              => 'modules.svg'
             ,   'class'             => ''
-            ,   'attributes'        => 'onclick="Backend.getScrollOffset()"'
+            ,   'attributes'        => 'data-action="contao--scroll-offset#store"'
             ]
-        ,   'all' => [
-                'href'              => 'act=select'
-            ,   'class'             => 'header_edit_all'
-            ,   'attributes'        => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-            ]
+        ,   'all'
         ]
     ,   'operations' => [
             'edit' => [
@@ -76,20 +60,18 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_tag']['cut']
             ,   'href'              => 'act=paste&amp;mode=cut'
             ,   'icon'              => 'cut.svg'
-            ,   'attributes'        => 'onclick="Backend.getScrollOffset()"'
-            ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\Tag', 'cutTag']
+            ,   'attributes'        => 'data-action="contao--scroll-offset#store"'
             ]
         ,   'delete' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_tag']['delete']
             ,   'href'              => 'act=delete'
             ,   'icon'              => 'delete.gif'
-            ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
+            ,   'attributes'        => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\'))return false"'
             ]
         ,   'toggle' =>[
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_tag']['toggle']
+            ,   'href'              => 'act=toggle&amp;field=active'
             ,   'icon'              => 'visible.svg'
-            ,   'attributes'        => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"'
-            ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\Tag', 'toggleIcon']
             ]
         ]
     ]
@@ -120,25 +102,20 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             'sql'         => "int(10) unsigned NOT NULL default '0'"
         ]
     ,   'type' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['type']
-        ,   'inputType'             => 'select'
+            'inputType'             => 'select'
         ,   'filter'                => true
-        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getTagTypes']
         ,   'reference'             => &$GLOBALS['TL_LANG']['tl_cms_tag']['types']
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>32, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(32) NOT NULL default ''"
         ]
     ,   'name' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['name']
-        ,   'inputType'             => 'text'
+            'inputType'             => 'text'
         ,   'search'                => true
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
     ,   'root' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['root']
-        ,   'inputType'             => 'select'
-        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getRootPagesForLanguage']
+            'inputType'             => 'select'
         ,   'eval'                  => ['submitOnChange'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "int(10) unsigned NOT NULL default '0'"
         ]
@@ -146,106 +123,86 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             'sql'                   => "int(10) unsigned NOT NULL default '0'"
         ]
     ,   'description' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['description']
-        ,   'inputType'             => 'textarea'
+            'inputType'             => 'textarea'
         ,   'eval'                  => ['rte'=>'tinyMarketing', 'doNotSaveEmpty'=>true, 'allowHtml'=>true]
         ,   'sql'                   => "text NULL"
         ]
     ,   'html' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['html']
-        ,   'inputType'             => 'textarea'
+            'inputType'             => 'textarea'
         ,   'eval'                  => ['mandatory'=>true, 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'tl_class'=>'clr']
         ,   'sql'                   => "text NULL"
         ]
     ,   'tag' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['tag']
-        ,   'inputType'             => 'text'
+            'inputType'             => 'text'
         ,   'search'                => true
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
     ,   'matomo_url' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['matomo_url']
-        ,   'inputType'             => 'text'
+            'inputType'             => 'text'
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'helpwizard'=>true]
         ,   'explanation'           => 'matomoFields'
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
     ,   'matomo_siteid' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['matomo_siteid']
-        ,   'inputType'             => 'text'
+            'inputType'             => 'text'
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'helpwizard'=>true]
         ,   'explanation'           => 'matomoFields'
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
     ,   'anonymize_ip' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['anonymize_ip']
-        ,   'inputType'             => 'checkbox'
+            'inputType'             => 'checkbox'
         ,   'eval'                  => ['tl_class'=>'w50']
         ,   'default'               => "1"
         ,   'sql'                   => "char(1) NOT NULL default '1'"
         ]
     ,   'alias' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['alias']
-        ,   'inputType'             => 'text'
+            'inputType'             => 'text'
         ,   'eval'                  => ['rgxp'=>'alnum', 'maxlength'=>32, 'tl_class'=>'w50']
-        ,   'save_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\Tag', 'generateAlias'] ]
         ,   'sql'                   => "varchar(32) NOT NULL default ''"
         ]
     ,   'fallbackTpl' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['fallbackTpl']
-        ,   'inputType'             => 'select'
-        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getFallbackTemplates']
+            'inputType'             => 'select'
         ,   'eval'                  => ['mandatory'=>false, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
     ,   'fallback_text' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['fallback_text']
-        ,   'inputType'             => 'textarea'
+            'inputType'             => 'textarea'
         ,   'explanation'           => 'optinFallback'
         ,   'eval'                  => ['mandatory'=>false, 'rte'=>'tinyMarketing', 'helpwizard'=>true, 'tl_class'=>'clr', 'allowHtml'=>true]
         ,   'sql'                   => "text NULL"
         ]
     ,   'customTpl' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['customTpl']
-        ,   'inputType'             => 'select'
-        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getModuleTemplates']
+            'inputType'             => 'select'
         ,   'eval'                  => ['includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
         ]
     ,   'pages_scope' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['pages_scope']
-        ,   'inputType'             => 'radio'
+            'inputType'             => 'radio'
         ,   'default'               => 'current_and_all_children'
-        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getPageScopes']
         ,   'eval'                  => ['tl_class'=>'clr w50 no-height']
         ,   'sql'                   => "varchar(64) NOT NULL default 'current_and_all_children'"
         ]
     ,   'pages' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['pages']
-        ,   'inputType'             => 'pageTree'
+            'inputType'             => 'pageTree'
         ,   'foreignKey'            => 'tl_page.title'
-        ,   'save_callback'         => [ ['\numero2\MarketingSuite\DCAHelper\Tag', 'sanityCheckPageScopeWithPages'] ]
         ,   'eval'                  => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'tl_class'=>'clr']
         ,   'relation'              => ['type'=>'hasMany', 'load'=>'lazy']
         ,   'sql'                   => "text NULL"
         ]
     ,   'pages_root' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['pages_root']
-        ,   'inputType'             => 'checkboxWizard'
-        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\Tag', 'getRootPages']
+            'inputType'             => 'checkboxWizard'
         ,   'eval'                  => ['multiple'=>true, 'tl_class'=>'w50 clr']
         ,   'sql'                   => "text NULL"
         ]
     ,   'active' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['active']
-        ,   'inputType'             => 'checkbox'
+            'inputType'             => 'checkbox'
+        ,   'toggle'                => true
         ,   'eval'                  => ['tl_class'=>'clr w50']
         ,   'sql'                   => "char(1) NOT NULL default ''"
         ]
     ,   'enable_on_cookie_accept' => [
-            'label'                 => &$GLOBALS['TL_LANG']['tl_cms_tag']['enable_on_cookie_accept']
-        ,   'inputType'             => 'checkbox'
+            'inputType'             => 'checkbox'
         ,   'eval'                  => ['tl_class'=>'w50']
         ,   'default'               => "1"
         ,   'sql'                   => "char(1) NOT NULL default '1'"

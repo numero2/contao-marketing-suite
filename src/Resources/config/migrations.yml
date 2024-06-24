@@ -5,6 +5,7 @@ services:
     numero2\MarketingSuiteBundle\Migration\CMSBotDefinitionMigration:
         arguments:
             - '@contao.framework'
+            - '%kernel.project_dir%'
 
     numero2\MarketingSuiteBundle\Migration\CMSConfigCreation:
         arguments:
@@ -18,10 +19,15 @@ services:
         arguments:
             - '@contao.framework'
 
+    numero2\MarketingSuiteBundle\Migration\CMSLinkShortenerStatisticMigration:
+        arguments:
+            - '@database_connection'
+            - '@contao.migration.command_compiler'
+
     numero2\MarketingSuiteBundle\Migration\CMSStatisticMigration:
         arguments:
             - '@database_connection'
-            - '@contao.doctrine.schema_provider'
+            - '@contao.migration.command_compiler'
 
     numero2\MarketingSuiteBundle\Migration\CMSTestmodeMigration:
         arguments:

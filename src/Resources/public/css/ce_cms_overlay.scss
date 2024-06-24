@@ -35,6 +35,7 @@ cms-modal-overlay {
 
     width: 100%;
     height: 100%;
+    margin: unset !important;
 
     background: var(--main-bg-overlay-color);
     color: var(--main-text-color);

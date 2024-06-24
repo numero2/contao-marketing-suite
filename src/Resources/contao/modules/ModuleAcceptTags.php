@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -44,9 +41,10 @@ class ModuleAcceptTags extends ModuleEUConsent {
      */
     public function generate() {
 
-        global $objPage;
+        $scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+        $requestStack = System::getContainer()->get('request_stack');
 
-        if( TL_MODE == 'BE' ) {
+        if( $scopeMatcher->isBackendRequest($requestStack->getCurrentRequest()) ) {
 
             $objTemplate = new BackendTemplate('be_wildcard');
 
@@ -68,7 +66,9 @@ class ModuleAcceptTags extends ModuleEUConsent {
      */
     protected function handleFormData() {
 
-        $action = Environment::get('request');
+        global $objPage;
+
+        $action = Environment::get('uri');
         $action = preg_replace('|_cmsscb=[0-9]+[&]?|', '', $action);
         $action = preg_replace('|_cmselid=[\w]+[&]?|', '', $action);
         $action = Input::get('_cmselid') ? $action.'#'.Input::get('_cmselid') : $action;
@@ -102,7 +102,7 @@ class ModuleAcceptTags extends ModuleEUConsent {
             $iCookieExpires = strtotime('+7 days');
 
             // get configured cookie lifetime
-            if( baguru::hasFeature('tags_cookie_lifetime') ) {
+            if( baguru::hasFeature('tags_cookie_lifetime', $objPage->trail[0]) ) {
 
                 $aCookieConfig = [];
                 $aCookieConfig = $this->cms_tag_cookie_lifetime;
@@ -270,8 +270,10 @@ class ModuleAcceptTags extends ModuleEUConsent {
             }
         }
 
-        $this->Template->acceptLabel = $this->replaceInsertTags($this->Template->acceptLabel);
-        $this->Template->content = $this->replaceInsertTags($this->Template->content);
+        $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+
+        $this->Template->acceptLabel = $insertTagParser->replace($this->Template->acceptLabel);
+        $this->Template->content = $insertTagParser->replace($this->Template->content);
 
         parent::compile();
     }

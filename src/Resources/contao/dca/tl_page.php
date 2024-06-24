@@ -1,50 +1,34 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
-/**
- * Modify config of tl_page
- */
-$GLOBALS['TL_DCA']['tl_page']['config']['onundo_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Page', 'refreshLicenseOnUndo'];
-$GLOBALS['TL_DCA']['tl_page']['config']['onrestore_version_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Page', 'refreshLicenseOnRestoreVersion'];
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 
 /**
  * Modify palettes of tl_page
  */
-$GLOBALS['TL_DCA']['tl_page']['palettes']['regular'] = str_replace(
-    ',description'
-,   ',description,snippet_preview;'
-,   $GLOBALS['TL_DCA']['tl_page']['palettes']['regular']
-);
-$GLOBALS['TL_DCA']['tl_page']['palettes']['regular'] = str_replace(
-    ',guests'
-,   ',guests,cms_exclude_health_check'
-,   $GLOBALS['TL_DCA']['tl_page']['palettes']['regular']
-);
-$GLOBALS['TL_DCA']['tl_page']['palettes']['root'] = str_replace(
-    ';{protected_legend'
-,   ';{cms_legend:hide},cms_root_license,cms_refresh_license;{protected_legend'
-,   $GLOBALS['TL_DCA']['tl_page']['palettes']['root']
-);
-if( !empty($GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback']) ) {
-    $GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback'] = str_replace(
-        ';{protected_legend'
-    ,   ';{cms_legend:hide},cms_root_license,cms_refresh_license;{protected_legend'
-    ,   $GLOBALS['TL_DCA']['tl_page']['palettes']['rootfallback']
-    );
-}
+PaletteManipulator::create()
+    ->addField(['snippet_preview'], 'description', PaletteManipulator::POSITION_AFTER)
+    ->addField(['cms_exclude_health_check'], 'expert_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('regular', 'tl_page');
+
+PaletteManipulator::create()
+    ->addLegend('cms_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE)
+    ->addField(['cms_root_license', 'cms_refresh_license'], 'cms_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('root', 'tl_page')
+    ->applyToPalette('rootfallback', 'tl_page');
+
+$GLOBALS['TL_DCA']['tl_page']['palettes']['ab_test'] = $GLOBALS['TL_DCA']['tl_page']['palettes']['regular'];
+
 
 
 /**
@@ -56,13 +40,10 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         'cms_root_license' => [
             'inputType'             => 'text'
         ,   'exclude'               => true
-        ,   'save_callback'         => [['\numero2\MarketingSuite\DCAHelper\License', 'save']]
-        ,   'load_callback'         => [['\numero2\MarketingSuite\DCAHelper\License', 'check']]
         ,   'eval'                  => ['maxlength'=>255, 'doNotCopy'=>true, 'tl_class'=>'w50 clr']
         ,   'sql'                   => "varchar(255) NOT NULL default ''"
         ]
     ,   'cms_refresh_license' => [
-            'input_field_callback'  => ['\numero2\MarketingSuite\DCAHelper\License', 'refresh']
         ]
     ,   'cms_exclude_health_check' => [
             'inputType'             => 'checkbox'
@@ -82,10 +63,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
             'eval'                  => ['doNotShow'=>true, 'doNotCopy'=>true]
         ,   'sql'                   => "blob NULL"
         ]
-    ,   'cms_mi_views' => [ // Will be deprecated in favor of tl_statistics
-            'sql'               => "int(10) unsigned NOT NULL default '0'"
-        ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']
-        ]
     ,   'cms_mi_reset' => [
             'sql'               => "int(10) unsigned NOT NULL default '0'"
         ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']
@@ -93,7 +70,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
     ]
 );
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['includeCache']['load_callback'][] = ['\numero2\MarketingSuite\DCAHelper\Page', 'addCacheInfo'];
 
 if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
 
@@ -105,8 +81,7 @@ if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') 
         )
     ,   [
             'snippet_preview' => [
-                'label' => &$GLOBALS['TL_LANG']['MSC']['snippet_preview']
-            ,   'input_field_callback'  => ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generate']
+                'input_field_callback'  => ['\numero2\MarketingSuite\Widget\SnippetPreview', 'generate']
             ]
         ]
     ,   array_slice(

@@ -22,19 +22,6 @@
     <trans-unit id="tl_news.cms_schedule_legends.pending">
         <source>geplanter Beitrag</source>
     </trans-unit>
-    <!-- FIELDS -->
-    <trans-unit id="tl_news.cms_publish_facebook.0">
-        <source>Auf Facebook veröffentlichen</source>
-    </trans-unit>
-    <trans-unit id="tl_news.cms_publish_facebook.1">
-        <source>Diesen Beitrag automatisch zum Veröffentlichszeitpunkt auf ausgewählten Seiten veröffentlichen.</source>
-    </trans-unit>
-    <trans-unit id="tl_news.cms_facebook_pages.0">
-        <source>Facebook-Seiten</source>
-    </trans-unit>
-    <trans-unit id="tl_news.cms_facebook_pages.1">
-        <source>Wählen Sie die Seiten auf denen News veröffentlicht werden soll.</source>
-    </trans-unit>
 </body>
 </file>
 </xliff>

@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
+
+
+use Contao\DC_Table;
 
 
 /**
@@ -19,9 +19,8 @@
 $GLOBALS['TL_DCA']['tl_cms_conversion_item'] = [
 
     'config' => [
-        'dataContainer'             => 'Table'
+        'dataContainer'             => DC_Table::class
     ,   'ctable'                    => ['tl_content']
-    ,   'onload_callback'           => [ ['\numero2\MarketingSuite\DCAHelper\ConversionItem', 'generateOneEntryAndRedirect'] ]
     ,   'switchToEdit'              => true
     ,   'sql' => [
             'keys' => [
@@ -58,7 +57,7 @@ $GLOBALS['TL_DCA']['tl_cms_conversion_item'] = [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_conversion_item']['delete']
             ,   'href'              => 'act=delete'
             ,   'icon'              => 'delete.gif'
-            ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
+            ,   'attributes'        => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\'))return false"'
             ]
         ]
     ]
@@ -74,8 +73,7 @@ $GLOBALS['TL_DCA']['tl_cms_conversion_item'] = [
             'sql'           => "int(10) unsigned NOT NULL default '0'"
         ]
     ,   'name' => [
-            'label'         => &$GLOBALS['TL_LANG']['tl_cms_conversion_item']['name']
-        ,   'inputType'     => 'text'
+            'inputType'     => 'text'
         ,   'search'        => true
         ,   'eval'          => ['mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50']
         ,   'sql'           => "varchar(64) NOT NULL default ''"

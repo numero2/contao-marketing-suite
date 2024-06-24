@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -27,8 +24,6 @@ use Contao\System;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\Wizard;
 use numero2\MarketingSuite\ContentGroupModel;
-use numero2\MarketingSuite\Tracking\ClickAndViews;
-use numero2\MarketingSuite\Tracking\Session;
 
 
 class VisitedPages extends MarketingItem {
@@ -46,7 +41,7 @@ class VisitedPages extends MarketingItem {
      */
     public function alterContentChildRecord( $arrRow, $buffer, $objMarketingItem, $objContentParent ) {
 
-        $buffer = explode('</div>', $buffer );
+        $buffer = explode('</div>', $buffer);
 
         $strType = $arrRow['cms_mi_pages_criteria'];
         if( !empty($GLOBALS['TL_LANG']['tl_content']['cms_mi_pages_criterias'][$strType]) ) {
@@ -76,7 +71,7 @@ class VisitedPages extends MarketingItem {
             $buffer[0] .= Backend::parseWithTemplate('backend/elements/overlay', $aOverlay );
         }
 
-        $buffer = implode('</div>', $buffer );
+        $buffer = implode('</div>', $buffer);
 
         return $buffer;
     }
@@ -86,18 +81,20 @@ class VisitedPages extends MarketingItem {
      * Alter header of tl_content
      *
      * @param array $args
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      * @param object $objContentParent
      */
     public function alterContentHeader( $args, $dc, $objMarketingItem, $objContentParent ) {
 
+        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+        $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
         $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
         $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
         $GLOBALS['TL_MOOTOOLS'][] =
         "<script>
-        CMSBackend.override('.tl_content_right .edit', '<a href=\"".$routePrefix."?do=cms_marketing&amp;id=$objMarketingItem->id&amp;act=edit&amp;rt=".REQUEST_TOKEN."&amp;ref=$refererId\" class=\"edit\" title=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"><img src=\"system/themes/flexible/icons/header.svg\" width=\"16\" height=\"16\" alt=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"></a>');
+        CMSBackend.override('.tl_content_right .edit', '<a href=\"".$routePrefix."?do=cms_marketing&amp;id=$objMarketingItem->id&amp;act=edit&amp;rt=".$requestToken."&amp;ref=$refererId\" class=\"edit\" title=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"><img src=\"system/themes/flexible/icons/header.svg\" width=\"16\" height=\"16\" alt=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"></a>');
         </script>";
 
         if( $objMarketingItem && $objMarketingItem->type == 'visited_pages' && !empty($objMarketingItem->init_step) ) {
@@ -138,7 +135,7 @@ class VisitedPages extends MarketingItem {
     /**
      * Alter dca configuration of tl_content
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      * @param object $objContent
      * @param object $objContentParent
@@ -177,7 +174,7 @@ class VisitedPages extends MarketingItem {
     /**
      * Handles what happens after a user submits the child edit form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function submitContent( $dc ) {
 
@@ -206,7 +203,7 @@ class VisitedPages extends MarketingItem {
     /**
      * Handles what happens after a user submits the child edit form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function loadContent( $dc ) {
 
@@ -218,7 +215,7 @@ class VisitedPages extends MarketingItem {
     /**
      * Handles what happens after a user submits the form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      */
     public function submitMarketingItem( $dc, $objMarketingItem ) {
@@ -233,13 +230,15 @@ class VisitedPages extends MarketingItem {
             $group->active = '1';
             $group->save();
 
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+            $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
             $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
             $objMarketingItem->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$group->id;
             $objMarketingItem->save();
 
-            $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$group->id.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+            $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$group->id.'&amp;rt='.$requestToken.'&ref='.$refererId);
         }
     }
 
@@ -262,8 +261,8 @@ class VisitedPages extends MarketingItem {
             return null;
         }
 
-        $tracking = new Session();
-        $views = new ClickAndViews();
+        $tracking = System::getContainer()->get('marketing_suite.tracking.session');
+        $views = System::getContainer()->get('marketing_suite.tracking.click_and_views');
 
         $aVisitedPages = $tracking->getVisitedPages();
 

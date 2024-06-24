@@ -2,8 +2,9 @@
 
 namespace Contao;
 
-if( $GLOBALS['TL_CONFIG']['useRTE'] ):
+use Contao\CoreBundle\ContaoCoreBundle;
 
+if( $GLOBALS['TL_CONFIG']['useRTE'] ):
 ?>
 
     <script>
@@ -23,52 +24,59 @@ if( $GLOBALS['TL_CONFIG']['useRTE'] ):
                     document_base_url: '<?= Environment::get('base') ?>',
                     entities: '160,nbsp,60,lt,62,gt,173,shy',
                     branding: false,
+                    promotion: false,
+                    skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-5-dark' : 'tinymce-5'),
                     setup: function(editor) {
                         editor.getElement().removeAttribute('required');
+                        document.querySelectorAll('[accesskey]').forEach(function(el) {
+                        editor.addShortcut('access+' + el.accessKey, el.id, () => el.click());
+                        });
                     },
                     init_instance_callback: function(editor) {
-
                         if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
-                            editor.editorManager.get(editor.id).focus();
+                        editor.editorManager.get(editor.id).focus();
                         }
-                        editor.on('focus', function() { Backend.getScrollOffset(); });
+                        editor.on('focus', () => window.dispatchEvent(new Event('store-scroll-offset')));
 
                         // trigger custom event for text analysis
-                        var tinyEvent = document.createEvent('Event');
+                        const tinyEvent = document.createEvent('Event');
                         tinyEvent.initEvent('tinyMCEInitialized', true, true);
                         document.dispatchEvent(tinyEvent);
                     },
 
                     <?php $this->block('picker'); ?>
-                    file_picker_callback: function (callback, value, meta) {
+                        file_picker_callback: function(callback, value, meta) {
                         Backend.openModalSelector({
                             'id': 'tl_listing',
                             'title': document.getElement('.tox-dialog__title').get('text'),
                             'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=<?= $this->source ?>&amp;value=' + value + '&amp;popup=1',
                             'callback': function(table, val) {
-                                callback(val.join(','));
+                            document.getElement('.tox-dialog input')?.focus();
+                            callback(val.join(','));
                             }
                         });
-                    },
-                    file_picker_types: <?= json_encode($this->fileBrowserTypes) ?>,
+                        },
+                        file_picker_types: '<?= $this->fileBrowserTypes ?>',
                     <?php $this->endblock(); ?>
 
-                    content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.min.css',
+                    <?php $this->block('content_css'); ?>
+                        content_css: document.documentElement.dataset.colorScheme === 'dark' ? '<?= $this->asset('tinymce-dark.css', 'system/themes/'.Backend::getTheme()) ?>' :  '<?= $this->asset('tinymce.css', 'system/themes/'.Backend::getTheme()) ?>',
+                    <?php $this->endblock(); ?>
 
                     <?php $this->block('plugins'); ?>
                     <?php if( $this->selector == 'ctrl_cms_tag_text' ): ?>
-                        plugins: 'autosave charmap code fullscreen link paste searchreplace stripnbsp tabfocus',
+                        plugins: 'autosave charmap code fullscreen link searchreplace stripnbsp',
                     <?php else: ?>
-                        plugins: 'autosave charmap code fullscreen image link lists paste searchreplace stripnbsp tabfocus visualblocks',
+                        plugins: 'autosave charmap code fullscreen image link lists searchreplace stripnbsp visualblocks',
                     <?php endif; ?>
                     <?php $this->endblock(); ?>
 
                     <?php $this->block('valid_elements'); ?>
-                    extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
+                        extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
                     <?php $this->endblock(); ?>
 
                     <?php $this->block('menubar'); ?>
-                    menubar: 'file edit insert view format',
+                        menubar: 'file edit insert view format table',
                     <?php $this->endblock(); ?>
 
                     <?php $this->block('toolbar'); ?>
@@ -79,13 +87,23 @@ if( $GLOBALS['TL_CONFIG']['useRTE'] ):
                     <?php endif; ?>
                     <?php $this->endblock(); ?>
 
+                    <?php $this->block('contextmenu'); ?>
+                        contextmenu: false,
+                    <?php $this->endblock(); ?>
+
+                    <?php $this->block('cache_suffix'); ?>
+                        cache_suffix: '?v=<?= $this->assetVersion('js/tinymce.min.js', 'contao-components/tinymce4') ?>',
+                    <?php $this->endblock(); ?>
+
                     <?php $this->block('custom'); ?>
                     <?php $this->endblock(); ?>
 
+                    <?php if ($this->readonly): ?>
+                        readonly: true,
+                    <?php endif; ?>
+
                     browser_spellcheck: true,
-                    tabfocus_elements: ':prev,:next',
-                    importcss_append: true,
-                    paste_as_text: true
+                    importcss_append: true
                 });
             };
 

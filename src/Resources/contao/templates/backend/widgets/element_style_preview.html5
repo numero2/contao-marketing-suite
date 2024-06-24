@@ -9,7 +9,7 @@
         const html = `
         <html>
             <head>
-                <base href="<?= \Environment::get('base'); ?>">
+                <base href="<?= \Contao\Environment::get('base'); ?>">
                 <style>
                     html, body, div, span, applet, object, iframe, _h1, _h2, _h3, _h4, _h5, _h6, _p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; }
                     body {
@@ -27,8 +27,14 @@
                 <script>
 
                     function reportContentHeight() {
-                        var data = { height: document.body.children[0].offsetHeight };
-                        window.parent.postMessage(data, '*');
+
+                        const body = document.body;
+                        const html = document.documentElement;
+
+                        const height = Math.max( body.scrollHeight, body.offsetHeight,
+                            html.clientHeight, html.scrollHeight, html.offsetHeight );
+
+                        window.parent.postMessage({ height: height }, '*');
                     }
 
                     // prevent following links
@@ -67,6 +73,7 @@
         function updatePreviewFrameHeight(e) {
 
             if( e.data.height ) {
+                console.log(e.data.height);
                 frame.height = e.data.height;
             }
         }

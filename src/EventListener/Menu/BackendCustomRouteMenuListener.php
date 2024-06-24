@@ -1,16 +1,14 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
+
 
 namespace numero2\MarketingSuiteBundle\EventListener\Menu;
 
@@ -19,7 +17,6 @@ use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
-use numero2\MarketingSuiteBundle\Controller\BackendController;
 use Symfony\Component\Security\Core\Security;
 
 
@@ -27,12 +24,12 @@ class BackendCustomRouteMenuListener {
 
 
     /**
-     * @var Security
+     * @var Symfony\Component\Security\Core\Security
      */
     private $security;
 
     /**
-     * @var ContaoFramework
+     * @var Contao\CoreBundle\Framework\ContaoFramework
      */
     private $framework;
 
@@ -52,7 +49,7 @@ class BackendCustomRouteMenuListener {
             return;
         }
 
-        if( !class_exists('\Contao\CoreBundle\Controller\AbstractController') ) {
+        if( !class_exists(AbstractController::class) ) {
             return;
         }
 
@@ -67,13 +64,14 @@ class BackendCustomRouteMenuListener {
     /**
      * Add custom route if needed in submenu marketing_suite as given in global CMS_MOD
      *
-     * @param MenuEvent $event
-     * @param BackendUser $user
+     * @param Contao\CoreBundle\Event\MenuEvent $event
+     * @param Contao\BackendUser $user
      */
     private function addCustomRouteIfNeeded( MenuEvent $event, BackendUser $user ): void {
 
         if( array_key_exists('marketing_suite', $user->navigation()) ) {
 
+            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
             $request = System::getContainer()->get('request_stack')->getCurrentRequest();
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 

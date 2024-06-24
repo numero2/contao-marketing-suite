@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -25,6 +22,7 @@ use Contao\NewsBundle\ContaoNewsBundle;
 use numero2\MarketingSuiteBundle\MarketingSuiteBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 
 class Plugin implements BundlePluginInterface, RoutingPluginInterface {
@@ -49,7 +47,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface {
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel) {
+    public function getRouteCollection( LoaderResolverInterface $resolver, KernelInterface $kernel ): ?RouteCollection {
 
         return $resolver
             ->resolve(__DIR__.'/../Resources/config/routing.yml')

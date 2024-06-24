@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -28,7 +25,6 @@ use Contao\System;
 use numero2\MarketingSuite\Backend\Wizard;
 use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\MarketingItemModel;
-use numero2\MarketingSuite\Tracking\ClickAndViews;
 
 
 class CurrentPage extends MarketingItem {
@@ -46,7 +42,7 @@ class CurrentPage extends MarketingItem {
      */
     public function alterContentChildRecord( $arrRow, $buffer, $objMarketingItem, $objContentParent ) {
 
-        $buffer = explode('</div>', $buffer );
+        $buffer = explode('</div>', $buffer);
 
         $pages = PageModel::findMultipleByIds(StringUtil::deserialize($arrRow['cms_mi_pages']));
 
@@ -62,7 +58,7 @@ class CurrentPage extends MarketingItem {
             }
         }
 
-        $buffer = implode('</div>', $buffer );
+        $buffer = implode('</div>', $buffer);
 
         return $buffer;
     }
@@ -72,7 +68,7 @@ class CurrentPage extends MarketingItem {
      * Alter header of tl_content
      *
      * @param array $args
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      * @param object $objContentParent
      *
@@ -83,12 +79,13 @@ class CurrentPage extends MarketingItem {
         // add content type
         $args[$GLOBALS['TL_LANG']['tl_cms_marketing_item']['content_type'][0]] = $GLOBALS['TL_LANG']['CTE'][$objMarketingItem->content_type][0];
 
+        $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
         $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
         $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
         $GLOBALS['TL_MOOTOOLS'][] =
         "<script>
-        CMSBackend.override('.tl_content_right .edit', '<a href=\"".$routePrefix."?do=cms_marketing&amp;id=$objMarketingItem->id&amp;act=edit&amp;rt=".REQUEST_TOKEN."&amp;ref=$refererId\" class=\"edit\" title=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"><img src=\"system/themes/flexible/icons/header.svg\" width=\"16\" height=\"16\" alt=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"></a>');
+        CMSBackend.override('.tl_content_right .edit', '<a href=\"".$routePrefix."?do=cms_marketing&amp;id=$objMarketingItem->id&amp;act=edit&amp;rt=".$requestToken."&amp;ref=$refererId\" class=\"edit\" title=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"><img src=\"system/themes/flexible/icons/header.svg\" width=\"16\" height=\"16\" alt=\"".$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit'][0]."\"></a>');
         </script>";
 
         if( $objMarketingItem && $objMarketingItem->type == 'current_page' && !empty($objMarketingItem->init_step) ) {
@@ -130,7 +127,7 @@ class CurrentPage extends MarketingItem {
     /**
      * Alter dca configuration of tl_content
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      * @param object $objContent
      * @param object $objContentParent
@@ -190,7 +187,7 @@ class CurrentPage extends MarketingItem {
     /**
      * Handles what happens after a user submits the form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      */
     public function submitMarketingItem( $dc, $objMarketingItem ) {
@@ -295,7 +292,7 @@ class CurrentPage extends MarketingItem {
     /**
      * Handles what happens after a user submits the child edit form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function submitContent( $dc ) {
 
@@ -332,13 +329,13 @@ class CurrentPage extends MarketingItem {
         if( !empty($objMarketingItem->init_step) ) {
 
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
-
-            $objMarketingItem->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid;
-            $objMarketingItem->save();
-
+            $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
             $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
-            $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+            $objMarketingItem->init_step = $routePrefix.'?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid;
+            $objMarketingItem->save();
+
+            $this->redirect($routePrefix.'?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.$requestToken.'&ref='.$refererId);
         }
     }
 
@@ -357,15 +354,17 @@ class CurrentPage extends MarketingItem {
 
         global $objPage;
 
-        $views = new ClickAndViews();
+        $views = System::getContainer()->get('marketing_suite.tracking.click_and_views');
 
-        foreach( $objContents as $key => $value) {
+        if( $objContents ) {
+            foreach( $objContents as $key => $value) {
 
-            $page = StringUtil::deserialize($value->cms_mi_pages)[0];
+                $page = StringUtil::deserialize($value->cms_mi_pages)[0];
 
-            if( $page == $objPage->id ) {
-                $views->increaseViewOnMarketingElement($value);
-                return $value->id;
+                if( $page == $objPage->id ) {
+                    $views->increaseViewOnMarketingElement($value);
+                    return $value->id;
+                }
             }
         }
 

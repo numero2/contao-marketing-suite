@@ -41,3 +41,10 @@ cms-button {
         --hover-text-color: #{$col-white};
     }
 }
+
+body.cms-element-preview {
+
+    > cms-button {
+        margin: 2rem;
+    }
+}

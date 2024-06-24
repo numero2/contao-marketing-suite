@@ -180,6 +180,7 @@
             }
 
             input[type="radio"] {
+
                 display: none;
                 appearance: none;
 
@@ -199,8 +200,8 @@
                                     display: block;
                                     position: absolute;
                                     top: -3px;
-                                    left: -1px;
-                                    right: -1px;
+                                    left: 0px;
+                                    right: 0px;
                                     height: 3px;
                                     background: #f47c00;
                                     z-index: 1;
@@ -293,6 +294,78 @@
 
                         &:nth-child(n+2) {
                             width: 75px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+html[data-color-scheme="dark"] {
+
+    .tl_cms_filter .filter.period {
+        background: var(--content-bg);
+    }
+
+    .tl_cms_link_shortener_statistics {
+
+        background: var(--content-bg);
+
+        .cms_overview {
+            background: var(--panel-bg);
+        }
+
+        .cms_details {
+
+            background: var(--content-bg);
+
+            .inner {
+
+                background: var(--content-bg);
+                border-color: var(--content-border);
+
+                .data {
+
+                    table {
+
+                        tr {
+                            &:nth-child(2n) {
+                                background: var(--content-border);
+                            }
+                        }
+                    }
+                }
+            }
+
+            .tabs {
+
+                .tab-header label {
+                    background: var(--content-border);
+                    border-color: var(--content-border);
+                    border-bottom-width: 0;
+                }
+
+
+                input[type="radio"] {
+                    display: none;
+                    appearance: none;
+
+                    &:checked {
+
+                        @for $i from 1 through 8 {
+                            &:nth-of-type(#{$i})  {
+
+                                ~ .tab-header > label:nth-of-type(#{$i}) {
+
+                                    background: var(--content-bg);
+                                    color: var(--text);
+
+                                    &:after {
+                                        border-color: var(--content-bg);
+                                    }
+                                }
+                            }
                         }
                     }
                 }

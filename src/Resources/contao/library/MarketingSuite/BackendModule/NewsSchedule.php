@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -93,7 +90,7 @@ class NewsSchedule extends CoreBackendModule {
             $day = Date::parse('j', $iDay);
             $monthIndex = Date::parse('n', $iDay);
 
-            $rows[$week][$dayIndex] = ['day' => $day, 'class' => [] ];
+            $rows[$week][$dayIndex] = ['day' => $day, 'class' => []];
 
             // add classes
             if( $monthIndex !== $currentMonth ) {
@@ -114,16 +111,20 @@ class NewsSchedule extends CoreBackendModule {
         unset($rows[array_reverse(array_keys($rows))[0]]);
 
         // get news for the given period
-        $objResult = null;
+        $aValues = [$firstDay, $lastDay, $firstDay, $lastDay, $firstDay, $lastDay];
+        if( $currArchive ) {
+            $aValues[] = $currArchive;
+        }
+
+        $objResult = NULL;
         $objResult = Database::getInstance()->prepare("
             SELECT *
             FROM tl_news AS n
-            WHERE
-                (
-                    ((?<=n.start AND n.start<?) OR (?<=n.date AND n.date<? AND n.start='')) OR
-                    (n.date >= ? AND n.date <= ?)
-                ) " . ($currArchive ? " AND n.pid = ?":"") ."
-        ")->execute( $firstDay, $lastDay, $firstDay, $lastDay, $firstDay, $lastDay, ($currArchive?$currArchive:null) );
+            WHERE (
+                ((?<=n.start AND n.start<?) OR (?<=n.date AND n.date<? AND n.start='')) OR
+                (n.date>=? AND n.date<=?)
+            ) " . ($currArchive ? " AND n.pid = ?":"") ."
+        ")->execute(...$aValues);
 
         $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
@@ -139,7 +140,6 @@ class NewsSchedule extends CoreBackendModule {
                 $data = $objResult->row();
 
                 $data['class'] = 'unpublished';
-                $data['facebook'] = false;
 
                 if( $data['published'] && (empty($data['start']) || $data['start'] <= time()) && (empty($data['stop']) || time() <= $data['stop']) ) {
                     $data['class'] = 'published';
@@ -148,13 +148,9 @@ class NewsSchedule extends CoreBackendModule {
                 if( $data['published'] && (!empty($data['start']) && $data['start'] > time()) && (empty($data['stop']) || time() <= $data['stop']) ) {
                     $data['class'] = 'pending';
                 }
-                if( $data['cms_publish_facebook'] ) {
-                    $data['facebook'] = true;
-                }
 
                 $editLabel = is_array($GLOBALS['TL_LANG']['tl_news']['edit'])?$GLOBALS['TL_LANG']['tl_news']['edit'][1]:$GLOBALS['TL_LANG']['tl_news']['edit'];
                 $data['title'] = sprintf($editLabel, $data['id']);
-                $data['facebookTitle'] = $GLOBALS['TL_LANG']['tl_news']['cms_publish_facebook'][1];
 
                 if( !mepdohi::hasFeature('news_schedule_show_'.$data['class']) ) {
                     continue;
@@ -173,6 +169,8 @@ class NewsSchedule extends CoreBackendModule {
         $this->Template->lastDay = $lastDay;
         $this->Template->headings = $headings;
         $this->Template->rows = $rows;
+
+        $this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
         $this->Template->legends = [
             'unpublished' => $GLOBALS['TL_LANG']['tl_news']['cms_schedule_legends']['unpublished']

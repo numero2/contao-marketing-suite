@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -17,15 +14,14 @@ namespace numero2\MarketingSuite\Api;
 
 use Contao\CMSConfig;
 use Contao\Controller;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\Crypto;
 use Contao\Database;
 use Contao\Environment;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Contao\System;
 use Exception;
 use numero2\MarketingSuite\Backend\License as wegilej;
-use numero2\MarketingSuite\Encryption;
 use Symfony\Component\HttpClient\HttpClient;
 
 
@@ -180,7 +176,7 @@ class MarketingSuite {
         ,   "tstamp" => time()
         ,   "testmode" => CMSConfig::get('testmode')
         ,   "cms_version" => CMS_VERSION
-        ,   "cto_version" => VERSION.'.'.BUILD
+        ,   "cto_version" => ContaoCoreBundle::getVersion()
         ];
 
         $db = Database::getInstance();
@@ -228,7 +224,7 @@ class MarketingSuite {
 
                 $aResult = $result->fetchAllAssoc();
 
-                $mi = System::importStatic('\numero2\MarketingSuite\DCAHelper\MarketingItem');
+                $mi = System::importStatic('marketing_suite.listener.data_container.marketing_item');
                 $types = $mi->getMarketingItemTypes();
 
                 foreach( $types as $key => $value ) {
@@ -254,7 +250,7 @@ class MarketingSuite {
         // tl_cms_conversion_item num ele and which and ptable
         if( wegilej::hasFeature('conversion_element') ) {
 
-            $mi = System::importStatic('\numero2\MarketingSuite\DCAHelper\ConversionItem');
+            $mi = System::importStatic('marketing_suite.listener.data_container.conversion_item');
             $types = $mi->getConversionElementTypes()['conversion_elements'];
 
             $result = $db->prepare("
@@ -328,65 +324,6 @@ class MarketingSuite {
         } else {
             $aData['data']['tag_settings'] = false;
         }
-
-        // tl_cms_facebook is setup
-        if( wegilej::hasFeature('news_publish_facebook') ) {
-
-            $pages = CMSConfig::get('cms_fb_pages_available') ? StringUtil::deserialize(Encryption::decrypt(CMSConfig::get('cms_fb_pages_available'))) : null;
-
-            if( is_array($pages) ) {
-
-                $aData['data']['fb_setup']['page_count'] = count($pages);
-
-                $result = $db->prepare("
-                    SELECT
-                        ISnull(cms_facebook_pages) AS has_no_pages,
-                        count(1) AS count
-                    FROM tl_news_archive
-                    GROUP BY ISnull(cms_facebook_pages)
-                ")->execute();
-
-                if( $result->numRows ) {
-
-                    $aResult = $result->fetchAllAssoc();
-
-                    foreach( $aResult as $value ) {
-
-                        $key = $value['has_no_pages']=='1'?'has_no_pages':'has_pages';
-
-                        $aData['data']['fb_setup']['tl_news_archiv'][$key] = $value['count'];
-                    }
-                }
-
-                $result = $db->prepare("
-                    SELECT
-                        cms_publish_facebook='' AS no_publish_facebook,
-                        count(1) AS count
-                    FROM tl_news
-                    GROUP BY cms_publish_facebook=''
-                ")->execute();
-
-                if( $result->numRows ) {
-
-                    $aResult = $result->fetchAllAssoc();
-
-                    foreach( $aResult as $value ) {
-
-                        $key = $value['no_publish_facebook']=='1'?'no_publish_facebook':'publish_facebook';
-
-                        $aData['data']['fb_setup']['tl_news'][$key] = $value['count'];
-                    }
-                }
-
-            } else {
-
-                $aData['data']['fb_setup']['page_count'] = 0;
-            }
-
-        } else {
-            $aData['data']['fb_setup'] = false;
-        }
-
 
         // link shortener
         if( wegilej::hasFeature('link_shortener') ) {

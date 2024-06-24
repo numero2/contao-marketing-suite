@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -17,11 +14,10 @@ namespace numero2\MarketingSuite;
 
 use Contao\ContentElement;
 use Contao\Controller;
-use Contao\Environment;
 use Contao\Input;
 use Contao\StringUtil;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License as rakfib;
-use numero2\MarketingSuite\Tracking\ClickAndViews;
 
 
 class ContentHyperlink extends ContentElement {
@@ -41,7 +37,8 @@ class ContentHyperlink extends ContentElement {
 
         global $objPage;
 
-        if( TL_MODE == 'FE' ) {
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) ) {
 
             if( !rakfib::hasFeature('ce_'.$this->type, $objPage->trail[0]) ) {
                 return '';
@@ -57,16 +54,17 @@ class ContentHyperlink extends ContentElement {
      */
     protected function compile() {
 
-        $tracking = new ClickAndViews();
+        $tracking = System::getContainer()->get('marketing_suite.tracking.click_and_views');
 
-        if( TL_MODE == "FE" ) {
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) ) {
             $tracking->increaseViewOnContentElement($this->objModel);
         }
 
         if( substr($this->url, 0, 7) == 'mailto:' ) {
             $this->url = StringUtil::encodeEmail($this->url);
         } else {
-            $this->url = ampersand($this->url);
+            $this->url = StringUtil::ampersand($this->url);
         }
 
         if( $this->linkTitle == '' ) {
@@ -85,12 +83,15 @@ class ContentHyperlink extends ContentElement {
             $this->Template->target = ' target="_blank"';
         }
 
-        if( TL_MODE == "FE" ) {
+
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) ) {
 
             if( Input::get('follow') && Input::get('follow') == $this->id ) {
 
                 $tracking->increaseClickOnContentElement($this->objModel);
-                $this->redirect(Controller::replaceInsertTags($this->url));
+
+                $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+                $this->redirect($insertTagParser->replace($this->url));
             }
 
             $this->Template->href = Controller::addToUrl('&follow='.$this->id, false);

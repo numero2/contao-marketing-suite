@@ -6,7 +6,7 @@
             <cms-container>
 
                 <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
-                <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+                <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken; ?>">
 
                 <?php $this->block('beforeDisclaimer'); ?>
                 <?php $this->endblock(); ?>
@@ -21,11 +21,11 @@
                 <?php $this->endblock(); ?>
 
                 <cms-buttons>
-                    <cms-button role="button" type="submit" name="choice" value="accept" tabindex="<?= count($this->tags)+1; ?>">
+                    <cms-button role="button" type="submit" name="choice" value="accept" tabindex="<?= count($this->tags)+1; ?>" aria-label="<?= $this->acceptLabel ?>">
                         <span><?= $this->acceptLabel ?></span>
                     </cms-button>
                     <?php if( $this->acceptAllLabel ): ?>
-                        <cms-button role="button" type="submit" name="choice" value="accept" data-all="true" tabindex="<?= count($this->tags)+2; ?>">
+                        <cms-button role="button" type="submit" name="choice" value="accept" data-all="true" tabindex="<?= count($this->tags)+2; ?>" aria-label="<?= $this->acceptAllLabel ?>">
                             <span><?= $this->acceptAllLabel ?></span>
                         </cms-button>
                     <?php endif; ?>

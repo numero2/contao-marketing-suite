@@ -1,66 +1,66 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
 namespace numero2\MarketingSuiteBundle\Migration;
 
-use Contao\CMSConfig;
-use Contao\InstallationBundle\Database\Installer;
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider; // Deprecated since Contao 4.11,
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
-use InvalidArgumentException;
-use numero2\MarketingSuite\Backend\License;
-use numero2\MarketingSuiteBundle\Util\DoctrineUtil;
 
 
+// Added with version 3.0.0
 class CMSStatisticMigration extends AbstractMigration {
 
 
     /**
-     * @var Doctrine\DBAL\Connection;
+     * @var Doctrine\DBAL\Connection
      */
     private $connection;
 
     /**
-    * @var Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-    */
-    private $schemaProvider;
+     * @var Contao\CoreBundle\Migration\CommandCompiler
+     */
+    private $commandCompiler;
 
 
-    // TODO drop DcaSchemaProvider for second argument with Contao 5
-    public function __construct( Connection $connection, $schemaProvider ) {
+    public function __construct( Connection $connection, CommandCompiler $commandCompiler ) {
 
         $this->connection = $connection;
-
-        if( !$schemaProvider instanceof SchemaProvider && !$schemaProvider instanceof DcaSchemaProvider ) {
-            throw new InvalidArgumentException("SchemaProvider must be of type SchemaProvider DcaSchemaProvider");
-
-        }
-
-        $this->schemaProvider = $schemaProvider;
+        $this->commandCompiler = $commandCompiler;
     }
 
 
     public function shouldRun(): bool {
 
-        return false;
-        $schemaManager = $this->connection->getSchemaManager();
+        if( $this->fieldHasValueInTable('clicks', 'tl_cms_content_group') ) {
+            return true;
+        }
+        if( $this->fieldHasValueInTable('views', 'tl_cms_content_group') ) {
+            return true;
+        }
 
-        if( !$schemaManager->tablesExist(['tl_cms_statistic']) ) {
+        if( $this->fieldHasValueInTable('cms_mi_views', 'tl_content') ) {
+            return true;
+        }
+
+        if( $this->fieldHasValueInTable('cms_ci_clicks', 'tl_content') ) {
+            return true;
+        }
+        if( $this->fieldHasValueInTable('cms_ci_views', 'tl_content') ) {
+            return true;
+        }
+
+        if( $this->fieldHasValueInTable('cms_mi_views', 'tl_page') ) {
             return true;
         }
 
@@ -70,21 +70,12 @@ class CMSStatisticMigration extends AbstractMigration {
 
     public function run(): MigrationResult {
 
-        $oInstaller = new Installer($this->connection, $this->schemaProvider);
+        // create tl_cms_statistic if not exist
+        $aCommands = $this->commandCompiler->compileCommands();
 
-        $aCommands = $oInstaller->getCommands(true);
-
-        if( !empty($aCommands['CREATE']) ) {
-
-            $commands = array_filter($aCommands['CREATE'], function( $command ) {
-                return strpos($command, 'tl_cms_statistic') !== false;
-            });
-
-            if( !empty($commands) ) {
-                foreach( $commands as $hash => $command ) {
-
-                    $oInstaller->execCommand($hash);
-                }
+        foreach( $aCommands as $command ) {
+            if( preg_match('/^CREATE TABLE tl_cms_statistic /', $command) ) {
+                $this->connection->executeQuery($command);
             }
         }
 
@@ -92,66 +83,131 @@ class CMSStatisticMigration extends AbstractMigration {
 
         // tl_cms_content_group -> clicks
         // tl_cms_content_group -> views
-        // tl_cms_content_group -> reset
         $aQueryTable[] = [
             'table' => 'tl_cms_content_group'
-        ,   'query' => "SELECT id, clicks, views, reset FROM tl_cms_content_group WHERE clicks>0 OR views>0"
+        ,   'query' => "SELECT id, clicks, views FROM tl_cms_content_group WHERE clicks>0 OR views>0"
+        ,   'drops' => ['clicks', 'views']
         ];
 
         // tl_content -> cms_mi_views
         $aQueryTable[] = [
             'table' => 'tl_content'
         ,   'query' => "SELECT id, cms_mi_views AS views FROM tl_content WHERE cms_mi_views>0"
+        ,   'drops' => ['cms_mi_views']
         ];
 
         // tl_content -> cms_ci_clicks
         // tl_content -> cms_ci_views
-        // tl_content -> cms_ci_reset
         $aQueryTable[] = [
             'table' => 'tl_content'
-        ,   'query' => "SELECT c.id, c.cms_ci_clicks AS clicks, c.cms_ci_views AS views, c.cms_ci_reset AS reset, IFNULL(a.pid,0) AS page
+        ,   'query' => "SELECT c.id, c.cms_ci_clicks AS clicks, c.cms_ci_views AS views, IFNULL(a.pid,0) AS page
                         FROM tl_content AS c
                             LEFT JOIN tl_article AS a ON (a.id=c.pid AND c.ptable='tl_article')
                         WHERE c.cms_ci_clicks>0 OR c.cms_ci_views>0"
+        ,   'drops' => ['cms_ci_clicks', 'cms_ci_views']
         ];
 
         // tl_page -> cms_mi_views
-        // tl_page -> cms_mi_reset
         $aQueryTable[] = [
             'table' => 'tl_page'
-        ,   'query' => "SELECT id, cms_mi_views AS views, cms_mi_reset AS reset FROM tl_page WHERE cms_mi_views"
+        ,   'query' => "SELECT id, cms_mi_views AS views, id AS page FROM tl_page WHERE cms_mi_views>0"
+        ,   'drops' => ['cms_mi_views']
         ];
 
 
         $stmtInsertStatistic = $this->connection->prepare(
-            "INSERT INTO tl_cms_statistic (pid, ptable, tstamp, clicks, views, start, page)
-            VALUES (:pid, :ptable, " . time() . ", :clicks, :views, :start, :page)
-        ");
+            "INSERT INTO tl_cms_statistic (pid, ptable, tstamp, type, page)
+            VALUES (:pid, :ptable, " . time() . ", :type, :page)"
+        );
+
+        $strDrop = "ALTER TABLE %s DROP %s";
 
         foreach( $aQueryTable as $queryTable ) {
-            $stmtRows = $this->connection->prepare($queryTable['query']);
-            $res = $stmtRows->execute();
 
-            if( $res && DoctrineUtil::rowCount($res, $stmtRows) ) {
+            $hasFieldToDrop = false;
+            foreach( $queryTable['drops'] as $field ) {
+                $hasFieldToDrop |= $this->fieldHasValueInTable($field, $queryTable['table']);
+            }
 
-                $aRows = DoctrineUtil::fetchAll($res, $stmtRows);
+            if( !$hasFieldToDrop ) {
+                continue;
+            }
+
+            $res = $this->connection
+                ->prepare($queryTable['query'])
+                ->execute();
+
+            if( $res && $res->rowCount() ) {
+
+                $aRows = $res->fetchAll();
 
                 foreach( $aRows as $aRow ) {
 
-                    $aStats = [
-                        'pid' => $aRow['id'],
-                        'ptable' => $queryTable['table'],
-                        'clicks' => $aRow['clicks'] ?? 0,
-                        'views' => $aRow['views'] ?? 0,
-                        'start' => $aRow['reset'] ?? 0,
-                        'page' => $aRow['page'] ?? 0,
-                    ];
+                    if( array_key_exists('views', $aRow) ) {
+                        for( $i=0; $i < intval($aRow['views']); $i++ ) {
+                            $aStats = [
+                                'pid' => $aRow['id'],
+                                'ptable' => $queryTable['table'],
+                                'type' => 'view',
+                                'page' => $aRow['page'] ?? 0,
+                            ];
+                            $stmtInsertStatistic->execute($aStats);
+                        }
+                    }
 
-                    $stmtInsertStatistic->execute($aStats);
+                    if( array_key_exists('clicks', $aRow) ) {
+                        for( $i=0; $i < intval($aRow['clicks']); $i++ ) {
+                            $aStats = [
+                                'pid' => $aRow['id'],
+                                'ptable' => $queryTable['table'],
+                                'type' => 'click',
+                                'page' => $aRow['page'] ?? 0,
+                            ];
+                            $stmtInsertStatistic->execute($aStats);
+                        }
+                    }
+                }
+
+                foreach( $queryTable['drops'] as $field ) {
+                    $this->connection->executeQuery(sprintf($strDrop, $queryTable['table'], $field));
                 }
             }
         }
 
         return $this->createResult(true);
+    }
+
+
+    /**
+     * check if the field exist in the table and if it has at least one entry bigger than 0
+     *
+     * @param string $field
+     * @param string $table
+     *
+     * @return bool
+     */
+    private function fieldHasValueInTable( string $field, string $table ): bool {
+
+        $schemaManager = $this->connection->getSchemaManager();
+
+        if( !$schemaManager->tablesExist([$table]) ) {
+            return false;
+        }
+
+        $columns = $schemaManager->listTableColumns($table);
+
+        if( !isset($columns[$field]) ) {
+            return false;
+        }
+
+        $res = $this->connection
+            ->prepare("SELECT $field FROM $table WHERE $field>0 LIMIT 1")
+            ->execute();
+
+        if( $res && $res->rowCount() ) {
+            return true;
+        }
+
+        return false;
     }
 }

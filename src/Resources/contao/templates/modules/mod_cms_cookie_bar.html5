@@ -6,7 +6,7 @@
             <cms-container>
 
                 <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
-                <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+                <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken; ?>">
 
                 <?php $this->block('beforeDisclaimer'); ?>
                 <?php $this->endblock(); ?>

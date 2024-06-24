@@ -10,6 +10,9 @@
         <source>Anzahl Aufrufe und Klicks bei der ID %s zurücksetzen</source>
     </trans-unit>
     <!-- LEGENDS -->
+    <trans-unit id="tl_content.cms_helper_top_legend">
+        <source>Hinweis</source>
+    </trans-unit>
     <trans-unit id="tl_content.cta_legend">
         <source>Call-To-Action (CTA)</source>
     </trans-unit>

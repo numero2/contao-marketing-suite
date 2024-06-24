@@ -1,8 +1,8 @@
 {
     "name": "numero2/contao-marketing-suite",
     "type": "contao-bundle",
-    "description": "Contao Marketing Suite - Get the most out of Contao",
-    "keywords": ["seo", "contao", "marketing", "dsgvo", "gdpr", "cookie"],
+    "description": "The package adds marketing functionalities to Contao. The Contao Marketing Suite enables dynamic playout of content to provide visitors with relevant information. Furthermore there is A/B test, SEO support, text creation tools, own tracking for links and forms. In addition, a button generator, a configurable cookie bar (already compliant with EU privacy) and many other marketing functions for professional marketing with Contao.",
+    "keywords": ["seo", "contao", "marketing", "dsgvo", "gdpr", "cookie", "cookiebar", "cookieconsent","consent", "opt-in"],
     "license": "proprietary",
     "homepage": "https://contao-marketingsuite.com/",
     "authors": [{
@@ -11,22 +11,21 @@
             "homepage": "https://www.numero2.de"
         }
     ],
-    "support": [{
-            "email": "support@contao-marketingsuite.com",
-            "source": "https://github.com/numero2/contao-marketing-suite",
-            "docs": "https://contao-marketingsuite.com/"
-        }
-    ],
+    "support": {
+        "email": "support@contao-marketingsuite.com",
+        "source": "https://github.com/numero2/contao-marketing-suite",
+        "docs": "https://contao-marketingsuite.com/"
+    },
     "require": {
-        "contao/core-bundle": "^4.13",
+        "contao/core-bundle": "^5.3",
         "org_heigl/hyphenator": "^2.3",
-        "jeremykendall/php-domain-parser": "^5.6 || ^3.0",
-        "symfony/http-client": "^4.4 || ^5.0 || ^6.0"
+        "jeremykendall/php-domain-parser": "^6.3",
+        "symfony/http-client": "^6.4",
+        "ua-parser/uap-php": "^3.9"
     },
     "suggest": {
         "numero2/contao-opengraph3": "For OpenGraph integration",
-        "avalexgmbh/contao": "For use of avalex privacy policy",
-        "facebook/graph-sdk": "Needed to automatically publish news articles to Facebook"
+        "avalexgmbh/contao": "For use of avalex privacy policy"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0"

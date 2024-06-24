@@ -68,3 +68,17 @@
         }
     }
 }
+
+
+html[data-color-scheme="dark"] {
+
+    .cms_modules {
+
+        .module {
+
+            a:not(:hover) {
+                background: var(--tree-header-border);
+            }
+        }
+    }
+}

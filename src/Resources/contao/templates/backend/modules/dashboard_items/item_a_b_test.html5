@@ -73,7 +73,13 @@
                         hoverBackgroundColor: [
                             'rgba(23,43,59,1)',
                             'rgba(23,43,59,1)',
-                        ]
+                        ],
+                        borderColor: [
+                            getComputedStyle(document.documentElement).getPropertyValue('--content-bg'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--content-bg'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--content-bg'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--content-bg'),
+                        ],
                     }
                 ,   {
                         _type: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?>',
@@ -90,9 +96,11 @@
                             'rgba(23,43,59,1)',
                             'rgba(23,43,59,1)',
                         ],
-                        hoverBorderColor: [
-                            'rgba(255,255,255,1)',
-                            'rgba(255,255,255,1)',
+                        borderColor: [
+                            getComputedStyle(document.documentElement).getPropertyValue('--content-bg'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--content-bg'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--content-bg'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--content-bg'),
                         ],
                     }
                 ],

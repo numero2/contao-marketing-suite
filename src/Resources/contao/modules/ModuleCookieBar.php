@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2023 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2023 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -43,9 +40,10 @@ class ModuleCookieBar extends ModuleEUConsent {
      */
     public function generate() {
 
-        global $objPage;
+        $scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+        $requestStack = System::getContainer()->get('request_stack');
 
-        if( TL_MODE == 'BE' ) {
+        if( $scopeMatcher->isBackendRequest($requestStack->getCurrentRequest()) ) {
 
             $objTemplate = new BackendTemplate('be_wildcard');
 
@@ -67,7 +65,9 @@ class ModuleCookieBar extends ModuleEUConsent {
      */
     protected function handleFormData() {
 
-        $action = Environment::get('request');
+        global $objPage;
+
+        $action = Environment::get('uri');
         $action = preg_replace('|_cmsscb=[0-9]+[&]?|', '', $action);
         $action = preg_replace('|_cmselid=[\w]+[&]?|', '', $action);
         $action = Input::get('_cmselid') ? $action.'#'.Input::get('_cmselid') : $action;
@@ -79,7 +79,7 @@ class ModuleCookieBar extends ModuleEUConsent {
             $iCookieExpires = strtotime('+7 days');
 
             // get configured cookie lifetime
-            if( agoc::hasFeature('tags_cookie_lifetime') ) {
+            if( agoc::hasFeature('tags_cookie_lifetime', $objPage->trail[0]) ) {
 
                 $aCookieConfig = [];
                 $aCookieConfig = $this->cms_tag_cookie_lifetime;
@@ -91,7 +91,7 @@ class ModuleCookieBar extends ModuleEUConsent {
             }
 
             // store decision in cookie
-            if( in_array(Input::post('choice'), ['accept','reject']) ) {
+            if( in_array(Input::post('choice'), ['accept', 'reject']) ) {
 
                 $sDomain = null;
 
@@ -127,7 +127,7 @@ class ModuleCookieBar extends ModuleEUConsent {
         // check if cookies not already set
         if( $show ) {
 
-            if( in_array(Input::cookie('cms_cookie'), ['accept','reject']) ) {
+            if( in_array(Input::cookie('cms_cookie'), ['accept', 'reject']) ) {
                 $show = false;
             }
         }
@@ -163,11 +163,13 @@ class ModuleCookieBar extends ModuleEUConsent {
             $this->Template->content = $this->cms_tag_text;
         }
 
-        $this->Template->rejectLabel = $this->cms_tag_reject_label;
+        $this->Template->rejectLabel = $this->cms_tag_reject_label ?? '';
 
-        $this->Template->acceptLabel = $this->replaceInsertTags($this->Template->acceptLabel);
-        $this->Template->content = $this->replaceInsertTags($this->Template->content);
-        $this->Template->rejectLabel = $this->replaceInsertTags($this->Template->rejectLabel);
+        $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+
+        $this->Template->acceptLabel = $insertTagParser->replace($this->Template->acceptLabel);
+        $this->Template->content = $insertTagParser->replace($this->Template->content);
+        $this->Template->rejectLabel = $insertTagParser->replace($this->Template->rejectLabel);
 
         parent::compile();
     }

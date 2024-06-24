@@ -45,12 +45,6 @@
     <trans-unit id="MOD.cms_tools.1">
         <source>Tools - Marketing Suite</source>
     </trans-unit>
-    <trans-unit id="MOD.cms_feedback.0">
-        <source>Feedback</source>
-    </trans-unit>
-    <trans-unit id="MOD.cms_feedback.1">
-        <source>Feedback - Ihre Meinung ist uns wichtig</source>
-    </trans-unit>
     <!-- BACKEND -->
     <trans-unit id="CMS.tags.0">
         <source>Cookie / Opt-In / EU-Privacy Einstellungen</source>
@@ -87,12 +81,6 @@
     </trans-unit>
     <trans-unit id="CMS.cookies.1">
         <source>Einstellungen für die Nutzung von Cookies (DSGVO / EU-Privacy) festlegen.</source>
-    </trans-unit>
-    <trans-unit id="CMS.facebook.0">
-        <source>Facebook</source>
-    </trans-unit>
-    <trans-unit id="CMS.facebook.1">
-        <source>Verknüpfung zu einem Facebook-Konto für News-Publishing konfigurieren.</source>
     </trans-unit>
     <!-- FRONTEND -->
     <trans-unit id="FMD.marketing_suite.0">

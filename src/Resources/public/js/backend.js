@@ -321,10 +321,10 @@ document.addEventListener('DOMContentLoaded', function(){
                 suggestEntries[i].addEventListener('click', function(e) {
                     var entry = e.target;
                     var list = entry.parentNode;
-                    var field = list.getAttribute('data-field')
+                    var field = list.getAttribute('data-field');
 
                     var input = document.querySelector('input[name="'+field+'"]');
-                    if( input ){
+                    if( input ) {
                         input.value = entry.innerHTML;
                     }
                 });
@@ -332,6 +332,21 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     })();
 
+
+    // snippet preview
+    (function(){
+
+        // prevent pasting of richt-text in title and description fields
+        document.addEventListener("paste", function (e) {
+
+            if( e.target.isContentEditable && e.target.closest('.snippet')) {
+                e.preventDefault();
+                var text = e.clipboardData.getData('text/plain')
+                document.execCommand('insertText', false, text)
+            }
+        });
+
+    })();
 });
 
 var CMSBackend = {
@@ -356,52 +371,6 @@ var CMSBackend = {
             element.innerHTML = html + element.innerHTML;
         }
     },
-
-    /*
-    // TODO: Remove after ensuring that this is not needed anymore
-    toggleField: function(el, id, table) {
-
-        el.blur();
-
-        var image = $(el).getFirst('img'),
-            active = (image.get('data-state') == 1),
-            div = el.getParent('div'),
-            next, icon, icond;
-        // Backwards compatibility
-        if( image.get('data-state') === null ) {
-            console.warn('Using a field toggle without a "data-state" attribute is deprecated.');
-        }
-        if( image.get('data-icon') === null || image.get('data-icon-disabled') === null ) {
-            console.warn('Using a field toggle without a "data-icon" or a "data-icon-disabled" attribute is deprecated.');
-        }
-
-        // Find the icon depending on the view (tree view, list view, parent view)
-        next = div.getNext('div');
-        if( next.hasClass('cte_type') ) {
-        }
-
-        icon = image.get('data-icon');
-        icond = image.get('data-icon-disabled');
-
-        var request = new Request.Contao({'url':window.location.href, 'followRedirects':false}).get({'tid':id, 'state':!active ? 1 : 0, 'rt':Contao.request_token});
-
-        request.xhr.addEventListener('load', function(e) {
-
-            if( request.status == 302 ) {
-                var path = (!active ? icon : icond);
-
-                if( path.indexOf('/') < 0 ) {
-                    path = CMSBackend.themePath + path;
-                }
-
-                image.src = path;
-                image.set('data-state', !active ? 1 : 0);
-            }
-        });
-
-        return false;
-    },
-    */
 
     toggleFieldReload: function(el, id, table) {
 
@@ -549,7 +518,7 @@ var CMSBackend = {
             });
 
             // force update of title on init
-            this.updatePreview('title')
+            this.updatePreview('title');
         }
 
 
@@ -614,7 +583,7 @@ var CMSBackend = {
 
                 if( !this.tips ) {
 
-                    this.tips = new Tips.Contao(
+                    this.tips = new Tips(
                         this,
                         {
                             offset: {x:9, y:42},

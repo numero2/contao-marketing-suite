@@ -9,11 +9,11 @@
     <trans-unit id="tl_cms_content_group.edit.1">
         <source>Inhaltsgruppe ID %s bearbeiten</source>
     </trans-unit>
-    <trans-unit id="tl_content.editheader.0">
-        <source>Inhaltsgruppe bearbeiten</source>
+    <trans-unit id="tl_cms_content_group.editheader.0">
+        <source>Kindelemente der Inhaltsgruppe bearbeiten</source>
     </trans-unit>
-    <trans-unit id="tl_content.editheader.1">
-        <source>Die Inhaltsgruppe-Einstellungen bearbeiten</source>
+    <trans-unit id="tl_cms_content_group.editheader.1">
+        <source>Die Kindelemente der Inhaltsgruppe ID %s bearbeiten</source>
     </trans-unit>
     <trans-unit id="tl_cms_content_group.delete.0">
         <source>Inhaltsgruppe löschen</source>
@@ -28,6 +28,9 @@
         <source>Fall "%s" wird immer ausgespielt. Erneut klicken um künftig wieder beide Fälle auszuspielen.</source>
     </trans-unit>
     <!-- LEGENDS -->
+    <trans-unit id="tl_cms_content_group.cms_helper_top_legend">
+        <source>Hinweis</source>
+    </trans-unit>
     <trans-unit id="tl_cms_content_group.common_legend">
         <source>Allgemein</source>
     </trans-unit>

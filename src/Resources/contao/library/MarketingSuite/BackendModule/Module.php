@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -18,8 +15,10 @@ namespace numero2\MarketingSuite\BackendModule;
 use Contao\Backend;
 use Contao\BackendModule as CoreBackendModule;
 use Contao\Controller;
+use Contao\EditableDataContainerInterface;
 use Contao\Input;
 use Contao\InvalidArgumentException;
+use Contao\ListableDataContainerInterface;
 use Contao\StringUtil;
 use Contao\System;
 use numero2\MarketingSuite\Backend\Help;
@@ -65,19 +64,6 @@ class Module extends CoreBackendModule {
                     break;
                 }
             }
-        }
-
-        /** @var Session $objSession */
-        $objSession = System::getContainer()->get('session');
-        $id = Input::get('id') ?: $objSession->get('CURRENT_ID');
-
-        // Store the current ID in the current session
-        if( $id != $objSession->get('CURRENT_ID') ) {
-            $objSession->set('CURRENT_ID', $id);
-        }
-
-        if( $id && !\defined('CURRENT_ID') ) {
-            \define('CURRENT_ID', $id);
         }
 
         // Open module
@@ -139,7 +125,7 @@ class Module extends CoreBackendModule {
                 'label'         => $GLOBALS['TL_LANG']['CMS'][$moduleName][0]
             ,   'description'   => $GLOBALS['TL_LANG']['CMS'][$moduleName][1]
             ,   'class'         => StringUtil::standardize($moduleName)
-            ,   'href'          => TL_SCRIPT . '?do=' . $moduleGroup . '&mod=' . $moduleName.'&ref='.$refererId
+            ,   'href'          => '?do=' . $moduleGroup . '&mod=' . $moduleName.'&ref='.$refererId
             ];
         }
 
@@ -227,7 +213,7 @@ class Module extends CoreBackendModule {
                 $attributes = null;
                 $attributes = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes;
 
-                $attributes->set('_cms_module_headline', implode(' ',$aHeadline));
+                $attributes->set('_cms_module_headline', implode(' ', $aHeadline));
             }
         }
 
@@ -240,7 +226,8 @@ class Module extends CoreBackendModule {
         // Custom action (if key is not defined in config.php the default action will be called)
         } elseif( Input::get('key') && isset($arrModule[Input::get('key')]) ) {
 
-            $objCallback = new $arrModule[Input::get('key')][0]();
+            // $objCallback = new $arrModule[Input::get('key')][0]();
+            $objCallback = System::importStatic($arrModule[Input::get('key')][0]);
             return $objCallback->{$arrModule[Input::get('key')][1]}($dc, $strTable, $arrModule);
 
         // Default action
@@ -249,7 +236,7 @@ class Module extends CoreBackendModule {
             $act = (string) Input::get('act');
 
             if( '' === $act || 'paste' === $act || 'select' === $act ) {
-                $act = ($dc instanceof \listable) ? 'showAll' : 'edit';
+                $act = ($dc instanceof ListableDataContainerInterface) ? 'showAll' : 'edit';
             }
 
             switch ($act) {
@@ -257,8 +244,8 @@ class Module extends CoreBackendModule {
                 case 'show':
                 case 'showAll':
                 case 'undo':
-                    if (!$dc instanceof \listable) {
-                        System::log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
+                    if (!$dc instanceof ListableDataContainerInterface) {
+                        System::getContainer()->get('monolog.logger.contao.error')->error('Data container ' . $strTable . ' is not listable');
                         trigger_error('The current data container is not listable', E_USER_ERROR);
                     }
                     break;
@@ -269,8 +256,8 @@ class Module extends CoreBackendModule {
                 case 'copyAll':
                 case 'move':
                 case 'edit':
-                    if (!$dc instanceof \editable) {
-                        System::log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
+                    if (!$dc instanceof EditableDataContainerInterface) {
+                        System::getContainer()->get('monolog.logger.contao.error')->error('Data container ' . $strTable . ' is not editable');
                         trigger_error('The current data container is not editable', E_USER_ERROR);
                     }
                     break;
@@ -278,7 +265,13 @@ class Module extends CoreBackendModule {
 
             // set automatic backlink in DCA
             if( empty($GLOBALS['TL_DCA'][$strTable]['config']['backlink']) && Input::get('do') ) {
-                $GLOBALS['TL_DCA'][$strTable]['config']['backlink'] = $this->getReferer(true);
+
+                $referer = $this->getReferer(true);
+                if( strpos('?', $referer) !== false ) {
+                    $GLOBALS['TL_DCA'][$strTable]['config']['backlink'] = explode('?', $referer, 2)[1];
+                } else {
+                    $GLOBALS['TL_DCA'][$strTable]['config']['backlink'] = $referer;
+                }
             }
 
             $strContent = "";
@@ -298,49 +291,5 @@ class Module extends CoreBackendModule {
         }
 
         return null;
-    }
-
-
-    /**
-     * Appends tables of all sub modules to the current backend module
-     */
-    public function initializeBackendModuleTables() {
-
-        foreach( $GLOBALS['CMS_MOD'] as $groupName => $cmsConfig ) {
-
-            $moduleGroup = 'cms_'.$groupName;
-
-            if( !array_key_exists($moduleGroup, $GLOBALS['BE_MOD']['marketing_suite']) ) {
-                continue;
-            }
-
-            foreach( $cmsConfig as $moduleName => $moduleConfig ) {
-
-                if( !array_key_exists('tables', $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]) ) {
-                    $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'] = [];
-                }
-
-                if( array_key_exists('tables', $moduleConfig) ) {
-
-                    foreach( $moduleConfig['tables'] as $moduleTable ) {
-
-                        if( !in_array($moduleTable, $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
-
-                            $this->loadDataContainer($moduleTable);
-
-                            if( !$GLOBALS['TL_DCA'][$moduleTable]['config']['isAvailable'] ) {
-                                continue;
-                            }
-
-                            $GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables'][] = $moduleTable;
-                        }
-                    }
-                }
-            }
-
-            if( empty($GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]['tables']) ) {
-                unset($GLOBALS['BE_MOD']['marketing_suite'][$moduleGroup]);
-            }
-        }
     }
 }

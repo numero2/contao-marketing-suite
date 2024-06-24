@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2023 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2023 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -19,13 +16,13 @@ use Contao\Backend as CoreBackend;
 use Contao\ContentElement;
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\Model;
 use Contao\StringUtil;
+use Contao\System;
+use Exception;
 use numero2\MarketingSuite\Backend;
-use numero2\MarketingSuite\Helper\ContentElementStyleable;
 use numero2\MarketingSuite\Helper\InterfaceStyleable;
 
 
@@ -35,7 +32,7 @@ class ElementStyle extends CoreBackend {
     /**
      * Renders a container for a live preview of the element
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param array $aData Array containing fields to be overwritten for the preview
      *
      * @return string
@@ -86,7 +83,7 @@ class ElementStyle extends CoreBackend {
                 $varValue = StringUtil::deserialize($aData[$name]);
 
                 // some values need to be serialized
-                if( $arrData['inputType'] == 'inputUnit' || $arrData['eval']['multiple'] ) {
+                if( $arrData['inputType'] == 'inputUnit' || ($arrData['eval']['multiple']??null) ) {
                     $varValue = serialize($varValue);
                 }
 
@@ -101,8 +98,8 @@ class ElementStyle extends CoreBackend {
         // check if element is styleable
         if( !($oElement instanceof InterfaceStyleable) ) {
 
-            throw new \Exception(
-                sprintf("Class %s does not implement the interface InterfaceStyleable and therefore is not styleable ",$sElementClass)
+            throw new Exception(
+                sprintf("Class %s does not implement the interface InterfaceStyleable and therefore is not styleable ", $sElementClass)
             );
         }
 
@@ -112,7 +109,7 @@ class ElementStyle extends CoreBackend {
         // render element
         $sMarkup = "";
         $sMarkup = $oElement->generate();
-        $sMarkup = Controller::replaceInsertTags($sMarkup);
+        $sMarkup = System::getContainer()->get('contao.insert_tag.parser')->replace($sMarkup);
 
         // generate template
         $aData = [];
@@ -130,7 +127,7 @@ class ElementStyle extends CoreBackend {
     /**
      * Add styling related fields to the given DataContainer
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function addStylingFields( $dc ) {
 
@@ -163,7 +160,7 @@ class ElementStyle extends CoreBackend {
         ,   'options'          => []
         ,   'reference'        => &$GLOBALS['TL_LANG']['tl_cms_tag_settings']['cms_layout_selector_options']
         ,   'explanation'      => 'layoutSelector'
-        ,   'eval'             => [ 'sprite'=>'', 'helpwizard'=>true, 'tl_class'=>'clr' ]
+        ,   'eval'             => ['sprite'=>'', 'helpwizard'=>true, 'tl_class'=>'clr']
         ,   'sql'              => "varchar(64) NOT NULL default ''"
         ];
 
@@ -186,8 +183,10 @@ class ElementStyle extends CoreBackend {
             }
         }
 
+        // TODO type: text_cms uses ContentText but does not exist anymore
         $strClass = ContentElement::findClass($dc->activeRecord->type??null);
-        $isStylableClass = $strClass && in_array('numero2\MarketingSuite\Helper\InterfaceStyleable', class_implements($strClass));
+
+        $isStylableClass = $strClass && class_exists($strClass) && in_array('numero2\MarketingSuite\Helper\InterfaceStyleable', class_implements($strClass));
 
         if( !$isStylableClass ) {
             return;

@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -19,7 +16,6 @@ use Contao\BackendTemplate;
 use Contao\ContentElement;
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\Environment;
 use Contao\Input;
 use Contao\System;
 use numero2\MarketingSuite\Backend\License as tokanugo;
@@ -43,7 +39,8 @@ class ContentMarketingItem extends ContentElement {
 
         global $objPage;
 
-        if( TL_MODE == 'BE' ) {
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request) ) {
 
             $objTemplate = new BackendTemplate('be_wildcard');
 
@@ -58,12 +55,12 @@ class ContentMarketingItem extends ContentElement {
                 $objTemplate->link = $oMarketingItem->name;
 
                 if( $oMarketingItem->type=="a_b_test" ) {
-                    $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend') . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' . $oMarketingItem->id;
+                    $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend').'?do=cms_marketing&amp;table=tl_cms_content_group&amp;id=' . $oMarketingItem->id;
                 } else {
                     $oContentGroup = ContentGroupModel::findOneByPid($oMarketingItem->id);
 
                     if( $oContentGroup ) {
-                        $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend') . '?do=cms_marketing&amp;table=tl_content&amp;id=' . $oContentGroup->id;
+                        $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend').'?do=cms_marketing&amp;table=tl_content&amp;id=' . $oContentGroup->id;
                     }
                 }
 
@@ -110,8 +107,9 @@ class ContentMarketingItem extends ContentElement {
 
                 if( $objContentGroup && $objContentGroup->pid === $objMI->id ) {
                     if( !$objContentGroup->always_use_this ) {
-                        $objContentGroup->clicks +=1;
-                        $objContentGroup->save();
+
+                        $tracking = System::getContainer()->get('marketing_suite.tracking.click_and_views');
+                        $tracking->increaseClickOnMarketingElement($objContentGroup);
                     }
                 }
             }
@@ -133,7 +131,7 @@ class ContentMarketingItem extends ContentElement {
             $selectedContent = $instance->selectContentId($oContents, $objMI, $objCP, $this);
         }
 
-        if( $selectedContent ){
+        if( $selectedContent ) {
 
             if( !is_array($selectedContent) ) {
 

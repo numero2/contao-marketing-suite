@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -20,12 +17,11 @@ use Contao\Controller;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\StringUtil;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License as jlkshgf;
 use numero2\MarketingSuite\Helper\ContentElementStyleable as Helper;
 use numero2\MarketingSuite\Helper\InterfaceStyleable;
 use numero2\MarketingSuite\Helper\TraitContentElementStyleable;
-use numero2\MarketingSuite\Tracking\ClickAndViews;
-use numero2\MarketingSuite\Tracking\Session;
 
 
 class ContentOverlay extends ContentElement implements InterfaceStyleable {
@@ -58,13 +54,14 @@ class ContentOverlay extends ContentElement implements InterfaceStyleable {
             $this->strTemplate .= '_'.$this->cms_layout_option;
         }
 
-        if( TL_MODE == 'FE' ) {
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) ) {
 
             if( !jlkshgf::hasFeature('ce_'.$this->type, $objPage->trail[0]) ) {
                 return '';
             }
 
-            $session = new Session();
+            $session = System::getContainer()->get('marketing_suite.tracking.session');
             if( $session->getOverlayClosed($this->id, $this->tstamp) ) {
                 return '';
             }
@@ -81,12 +78,13 @@ class ContentOverlay extends ContentElement implements InterfaceStyleable {
 
         global $objPage;
 
-        $tracking = new ClickAndViews();
-        $session = new Session();
+        $tracking = System::getContainer()->get('marketing_suite.tracking.click_and_views');
+        $session = System::getContainer()->get('marketing_suite.tracking.session');
 
-        // append choosen layout as class
-        if( $this->cms_layout_option ) {
-            $this->cssID = [ $this->cssID[0], $this->cssID[1] . ($this->cssID[1] ? ' ' : '') . $this->cms_layout_option . (TL_MODE=='FE'?' hidden':'')];
+        $isFE = false;
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request) ) {
+            $isFE = true;
         }
 
         $aLifetime = $this->cms_lifetime;
@@ -102,10 +100,10 @@ class ContentOverlay extends ContentElement implements InterfaceStyleable {
         $this->Template->layout = $this->cms_layout_selector;
         $this->Template->isPreview = $this->isStylePreview;
 
-        if( TL_MODE == "FE" ) {
+        if( $isFE ) {
 
             $this->Template->close = Controller::addToUrl('&close='.$this->id, false);
-            $this->Template->close = StringUtil::ampersand($this->Template->close,false);
+            $this->Template->close = StringUtil::ampersand($this->Template->close, false);
 
             if( Input::get('close') && Input::get('close') == $this->id ) {
 
@@ -116,7 +114,7 @@ class ContentOverlay extends ContentElement implements InterfaceStyleable {
             // "view" will be triggered via ajax since we store in localstorage if the overlay
             // was already shown or not
             $this->Template->view = StringUtil::decodeEntities(Controller::addToUrl('&view='.$this->id, false));
-            $this->Template->view = StringUtil::ampersand($this->Template->view,false);
+            $this->Template->view = StringUtil::ampersand($this->Template->view, false);
 
             if( Input::get('view') && Input::get('view') == $this->id ) {
 
@@ -133,11 +131,15 @@ class ContentOverlay extends ContentElement implements InterfaceStyleable {
 
             $this->injectStylesheet();
 
+            $this->Template->script = '';
             // render javascript
-            $oScript = new FrontendTemplate('scripts/script_ce_cms_overlay_'.$this->cms_layout_option);
-            $oScript->setData($this->Template->getData());
+            if( !empty($this->cms_layout_option) ) {
 
-            $this->Template->script = $oScript->parse();
+                $oScript = new FrontendTemplate('scripts/script_ce_cms_overlay_'.$this->cms_layout_option);
+                $oScript->setData($this->Template->getData());
+
+                $this->Template->script = $oScript->parse();
+            }
         }
     }
 }

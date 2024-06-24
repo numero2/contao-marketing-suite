@@ -1,24 +1,21 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
 namespace numero2\MarketingSuite;
 
-use Contao\Controller;
 use Contao\Environment;
 use Contao\Model;
 use Contao\PageModel;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License as lskgn;
 
 
@@ -72,11 +69,12 @@ class LinkShortenerModel extends Model {
             }
         }
 
-        $strTarget = Controller::replaceInsertTags($strTarget);
+        $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+        $strTarget = $insertTagParser->replace($strTarget);
 
         if( !parse_url($strTarget, PHP_URL_HOST) ) {
 
-            $strTarget = Environment::get('httpHost').'/'.$strTarget;
+            $strTarget = Environment::get('httpHost') . $strTarget;
         }
         if( !parse_url($strTarget, PHP_URL_SCHEME) ) {
 

@@ -38,15 +38,6 @@
     <trans-unit id="cms_be_help.cms_settings_tags.description">
         <source><![CDATA[<strong>Cookie Bar / Tracking - </strong> Auswahl ob Standard Cookie-Bar angezeigt werden soll oder die Opt-In Variante gem. EU-Privacy. Tags oder Skripte, welche z.B. Cookies nutzen, können hier zentral erfasst und verwaltet werden.<br /><br />Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwrE-IgSQP5rbrHKEcwZR1Qr" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]></source>
     </trans-unit>
-    <trans-unit id="cms_be_help.cms_settings_facebook.headline">
-        <source>Hilfe Facebook Seite verbinden</source>
-    </trans-unit>
-    <trans-unit id="cms_be_help.cms_settings_facebook.description">
-        <source><![CDATA[<strong>Ihre benötigte OAuth Redirect URL zur Verbindung mit Facebook:</strong><br /><br />]]>
-            <![CDATA[<code>##oauth_redirect_uri##<br /><br /></code>]]>
-            <![CDATA[Weitere Informationen? <a href="https://www.youtube.com/playlist?list=PLG0rvNxXnqwrE-IgSQP5rbrHKEcwZR1Qr" target="_blank">Zu den Hilfevideos und Tutorials.</a>]]>
-        </source>
-    </trans-unit>
     <trans-unit id="cms_be_help.cms_marketing_a_b_test.headline">
         <source>A/B Test Hilfe</source>
     </trans-unit>

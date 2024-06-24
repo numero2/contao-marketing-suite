@@ -38,3 +38,13 @@
         padding: 8px 6px;
     }
 }
+
+html[data-color-scheme="dark"] {
+
+    .link-preview {
+
+        a {
+            background: var(--panel-bg);
+        }
+    }
+}

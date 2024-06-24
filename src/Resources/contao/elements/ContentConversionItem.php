@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -40,7 +37,8 @@ class ContentConversionItem extends ContentElement {
 
         global $objPage;
 
-        if( TL_MODE == 'BE' ) {
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request) ) {
 
             $objTemplate = new BackendTemplate('be_wildcard');
 
@@ -51,7 +49,7 @@ class ContentConversionItem extends ContentElement {
                 $objTemplate->wildcard = '### '. $GLOBALS['TL_LANG']['CTE']['cms_conversion_item'][0] .' ('. $GLOBALS['TL_LANG']['CTE'][$oContent->type][0] .')'.' ###';
                 $objTemplate->id = $oContent->id;
                 $objTemplate->link = $oContent->cms_mi_label;
-                $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend') . '?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $oContent->id;
+                $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend').'?do=cms_conversion&amp;table=tl_content&amp;act=edit&amp;id=' . $oContent->id;
 
             } else {
 

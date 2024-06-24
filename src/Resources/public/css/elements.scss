@@ -1,2 +1,16 @@
+@import "backend/colors";
+
 @import "ce_cms_button";
 @import "ce_cms_overlay";
+@import "optin_fallback";
+
+body.cms-element-preview {
+
+    &:has([data-layout="dark"]) {
+        background: $gray-900;
+    }
+
+    p {
+        margin: unset;
+    }
+}

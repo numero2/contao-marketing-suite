@@ -14,9 +14,9 @@
 
         <?php foreach( $this->categories as $category ): ?>
 
-            <fieldset id="pal_<?= $category->type; ?>_legend" class="tl_tbox<?= $category->collapsed?' collapsed':''; ?>">
+            <fieldset id="pal_<?= $category->type; ?>_legend" class="tl_tbox<?= $category->collapsed?' collapsed':''; ?>" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="<?= $category->type; ?>_legend" data-contao--toggle-fieldset-table-value="cms_health_check" data-contao--toggle-fieldset-collapsed-class="collapsed">
 
-                <legend onclick="AjaxRequest.toggleFieldset(this,'<?= $category->type; ?>_legend','cms_health_check');">
+                <legend data-action="click->contao--toggle-fieldset#toggle">
                     <?= $category->legend; ?>
                     <span class="count"><?= count($category->items); ?></span>
                 </legend>

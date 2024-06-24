@@ -1,30 +1,28 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
 namespace numero2\MarketingSuite\Widget;
 
+use Contao\BackendUser;
 use Contao\CalendarEventsModel;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\DataContainer;
 use Contao\Events;
-use Contao\InsertTags;
 use Contao\News;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\System;
+use Exception;
 use numero2\MarketingSuite\Backend;
 use numero2\MarketingSuite\Backend\License as jebto;
 
@@ -45,8 +43,8 @@ class SnippetPreview extends Controller {
     /**
      * Displays a dynamic preview of the given meta data
      *
-     * @param \DataContainer $dc
-     * @throws \Exception If DCA is not compatible with preview
+     * @param Contao\DataContainer $dc
+     * @throws Exception If DCA is not compatible with preview
      *
      * @return string
      */
@@ -56,11 +54,11 @@ class SnippetPreview extends Controller {
             return '';
         }
 
-        $this->import('BackendUser', 'User');
+        $this->import(BackendUser::class, 'User');
 
         $aData = [
             'id' => (int) $dc->activeRecord->id
-        ,   'urlSuffix' => System::getContainer()->getParameter('contao.url_suffix')
+        ,   'urlSuffix' => $dc->activeRecord->urlSuffix??''
         ,   'fieldSuffix' => substr($dc->inputName, \strlen($dc->field))
         ,   'titleMinLength' => (int) self::TITLE_MIN_LENGTH
         ,   'titleMaxLength' => (int) self::TITLE_MAX_LENGTH
@@ -77,7 +75,7 @@ class SnippetPreview extends Controller {
         if( method_exists($this, 'buildData_'.$dc->table) ) {
 
             // render nothing if requireItem is activated
-            if( ($dc && $dc->activeRecord && $dc->activeRecord->requireItem) || $this->{'buildData_'.$dc->table}($aData,$dc) === false ) {
+            if( ($dc && $dc->activeRecord && ($dc->activeRecord->requireItem??null)) || $this->{'buildData_'.$dc->table}($aData,$dc) === false ) {
                 return '';
             }
 
@@ -91,26 +89,27 @@ class SnippetPreview extends Controller {
 
             if( strlen($aData['url']) ) {
 
-                $aData['url'] = str_replace('https://','',$aData['url']);
-                $aData['url'] = str_replace('http://','',$aData['url']);
-                $aData['url'] = str_replace('/',' › ',$aData['url']);
+                $aData['url'] = str_replace('https://', '', $aData['url']);
+                $aData['url'] = str_replace('http://', '', $aData['url']);
+                $aData['url'] = str_replace('/', ' › ', $aData['url']);
                 $aData['url'] = urldecode($aData['url']);
             }
 
             // add explanation for title tag settings
             if( $aData['titleTag'] && $this->User->cms_pro_mode_enabled != 1 ) {
 
-                $ref = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
                 $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+                $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+                $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
                 $aData['titleTagExplanation'] = sprintf(
                     $GLOBALS['TL_LANG']['MSC']['snippet_titletag_explanation']
-                ,   $routePrefix . '?do=themes&amp;table=tl_layout&amp;id=' .$aData['layoutId']. '&amp;act=edit&amp;rt=' .REQUEST_TOKEN. '&amp;ref=' .$ref. '#ctrl_titleTag'
+                ,   $routePrefix.'?do=themes&amp;table=tl_layout&amp;id=' .$aData['layoutId']. '&amp;act=edit&amp;rt=' .$requestToken. '&amp;ref=' .$refererId. '#ctrl_titleTag'
                 );
             }
 
             // add explanation for noindex
-            if( $dc && $dc->activeRecord && strpos($dc->activeRecord->robots,'noindex') !== FALSE ) {
+            if( $dc && $dc->activeRecord && strpos($dc->activeRecord->robots, 'noindex') !== FALSE ) {
                 $aData['noIndexExplanation'] = $GLOBALS['TL_LANG']['MSC']['snippet_noindex_explanation'];
             }
 
@@ -118,7 +117,7 @@ class SnippetPreview extends Controller {
 
         } else {
 
-            throw new \Exception("Table ".$dc->table." not supported in snippet preview");
+            throw new Exception("Table ".$dc->table." not supported in snippet preview");
         }
     }
 
@@ -134,10 +133,10 @@ class SnippetPreview extends Controller {
 
         global $objPage;
 
-        $oLayout = NULL;
+        $oLayout = null;
         $oLayout = $objRefPage->getRelated('layout');
 
-        $strTag = $oLayout?$oLayout->titleTag:NULL;
+        $strTag = $oLayout?$oLayout->titleTag:null;
         $strTag = $strTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}';
         $strTag = str_replace('{{page::pageTitle}}', '##TITLE##', $strTag);
 
@@ -146,13 +145,13 @@ class SnippetPreview extends Controller {
         $objPage = $objRefPage;
 
         // parse insert tags...
-        $oInsertTags = new InsertTags();
+        $oInsertTags = System::getContainer()->get('contao.insert_tag.parser');
         $strTag = $oInsertTags->replace($strTag);
 
         // ... and revert global $objpage
         $objPage = $objOrigPage;
 
-        return ($strTag!='##TITLE##') ? $strTag : NULL;
+        return ($strTag!='##TITLE##') ? $strTag : null;
     }
 
 
@@ -160,13 +159,13 @@ class SnippetPreview extends Controller {
      * Generate data for table tl_page
      *
      * @param array $aData
-     * @param DataContainer $dc
+     * @param Contao\DataContainer $dc
      *
      * @return array
      */
     private function buildData_tl_page( &$aData, DataContainer $dc ): bool {
 
-        $oPage = NULL;
+        $oPage = null;
         $oPage = PageModel::findById($dc->activeRecord->id);
 
         if( $oPage ) {
@@ -183,7 +182,7 @@ class SnippetPreview extends Controller {
 
         list($baseUrl) = explode($oPage->alias ?: $oPage->id, $sURL);
 
-        $oLayout = NULL;
+        $oLayout = null;
         $oLayout = $oPage->getRelated('layout');
 
         $aData += [
@@ -196,7 +195,7 @@ class SnippetPreview extends Controller {
         ,   'aliasField' => 'ctrl_alias'.$aData['fieldSuffix']
         ,   'descriptionField' => 'ctrl_description'.$aData['fieldSuffix']
         ,   'titleTag' => $this->parseTitleTag($oPage)
-        ,   'layoutId' => $oLayout?$oPage->getRelated('layout')->id:NULL
+        ,   'layoutId' => $oLayout?$oPage->getRelated('layout')->id:null
         ];
 
         return true;
@@ -207,16 +206,16 @@ class SnippetPreview extends Controller {
      * Generate data for table tl_news
      *
      * @param array $aData
-     * @param DataContainer $dc
+     * @param Contao\DataContainer $dc
      *
      * @return array
      */
     private function buildData_tl_news( &$aData, DataContainer $dc ) {
 
-        $oNews = NULL;
+        $oNews = null;
         $oNews = NewsModel::findById($dc->activeRecord->id);
 
-        $oPage = NULL;
+        $oPage = null;
         $oPage = $oNews->getRelated('pid')->getRelated('jumpTo');
 
         if( $oPage ) {
@@ -246,6 +245,7 @@ class SnippetPreview extends Controller {
             $aData += [
                 'titleTag' => $this->parseTitleTag($oPage)
             ,   'layoutId' => $oPage->getRelated('layout')->id
+            ,   'urlSuffix' => $oPage->urlSuffix??''
             ];
         }
     }
@@ -255,16 +255,16 @@ class SnippetPreview extends Controller {
      * Generate data for table tl_calendar_events
      *
      * @param array $aData
-     * @param DataContainer $dc
+     * @param Contao\DataContainer $dc
      *
      * @return array
      */
     private function buildData_tl_calendar_events( &$aData, DataContainer $dc ) {
 
-        $oEvent = NULL;
+        $oEvent = null;
         $oEvent = CalendarEventsModel::findById($dc->activeRecord->id);
 
-        $oPage = NULL;
+        $oPage = null;
         $oPage = $oEvent->getRelated('pid')->getRelated('jumpTo');
 
         if( $oPage ) {
@@ -294,6 +294,7 @@ class SnippetPreview extends Controller {
             $aData += [
                 'titleTag' => $this->parseTitleTag($oPage)
             ,   'layoutId' => $oPage->getRelated('layout')->id
+            ,   'urlSuffix' => $oPage->urlSuffix??''
             ];
         }
     }

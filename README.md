@@ -11,10 +11,10 @@ The package adds marketing functionalities to Contao. The Contao Marketing Suite
 Insert Tags
 --
 
-| Tag                 | Description                                                                                                                                                                                                                                                                                                                        |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `{{cms_optinlink}}` | Creates a link that redisplays the cookie consent dialog so that the user can agree to the use of the necessary group. After consent, the browser window will automatically scroll to the original element.                                                                                                                        |
-| `{{ifoptin::*}}`    | This tag is completely removed if the corresponding element was not approved. The parameter here is the ID of the tag (e.g. Google Analytics). This way, content in templates can be played depending on whether the user has agreed to the use of a certain tag. `{{ifoptin::1}}<h1>Has agreed</h1>{{ifoptin}}`                   |
+| Tag    | Description                                                                          |
+| ------ | ------------------------------------------------------------------------------------ |
+| `{{cms_optinlink}}` | Creates a link that redisplays the cookie consent dialog so that the user can agree to the use of the necessary group. After consent, the browser window will automatically scroll to the original element. |
+| `{{ifoptin::*}}`    | This tag is completely removed if the corresponding element was not approved. The parameter here is the ID of the tag (e.g. Google Analytics). This way, content in templates can be played depending on whether the user has agreed to the use of a certain tag. `{{ifoptin::1}}<h1>Has agreed</h1>{{ifoptin}}` |
 | `{{ifnoptin::*}}`   | This tag will be removed completely if the corresponding element has been approved. The parameter here is the ID of the tag (e.g. Google Analytics). This way, content in templates can be played depending on whether the user has not agreed to the use of a particular tag. `{{ifnoptin::1}}<h1>Did not agree</h1>{{ifnoptin}}` |
 
 For Developers
@@ -26,13 +26,25 @@ For Developers the Marketing Suite provides some helper functions in order to in
 
 These functions will check if the tag, given by its id, has been accepted by the visitor. The function also take care if the tag itself is actually set active or not.
 
+For example in a `html5` template you can use it like this:
 ```php
 <?php if( \numero2\MarketingSuite\Helper\Tag::isAccepted(6) ): ?>
     <!-- YOUR CONTENT IF ACCEPTED -->
 <?php endif; ?>
 <?php if( \numero2\MarketingSuite\Helper\Tag::isNotAccepted(6) ): ?>
-       <!-- YOUR CONTENT IF NOT ACCEPTED -->
+    <!-- YOUR CONTENT IF NOT ACCEPTED -->
 <?php endif; ?>
+```
+
+We also provide a twig function to be used inside `twig` templates like this:
+
+```twig
+{% if cms_tag_accepted(6) %}
+    <!-- YOUR CONTENT IF ACCEPTED -->
+{% endif %}
+{% if cms_tag_not_accepted(6) %}
+    <!-- YOUR CONTENT IF NOT ACCEPTED -->
+{% endif %}
 ```
 
 ### Header to disable tracking
@@ -42,7 +54,8 @@ Certain elements in the Marketing Suite can be tracked (like a click on a CTA or
 System requirements
 --
 
-* [Contao 4.13](https://github.com/contao/contao)
+* [Contao 5.3](https://github.com/contao/contao) (or newer)
+* [Contao 4.x](https://github.com/contao/contao) is only supported up to Marketing Suite version [2.1.5](https://github.com/numero2/contao-marketing-suite/releases/tag/2.1.5)
 
 Installation
 --

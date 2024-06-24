@@ -1,8 +1,8 @@
 <div class="cms_be_help">
 
-    <fieldset id="pal_cms_be_help_legend" class="tl_tbox<?= $this->collapsed?' collapsed':''; ?>">
+    <fieldset class="tl_tbox<?= $this->collapsed?' collapsed':''; ?>" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="cms_be_help_legend" data-contao--toggle-fieldset-table-value="<?= $this->table; ?>" data-contao--toggle-fieldset-collapsed-class="collapsed">
 
-        <legend onclick="AjaxRequest.toggleFieldset(this,'cms_be_help_legend','<?= $this->table; ?>')">
+        <legend data-action="click->contao--toggle-fieldset#toggle">
             <?= $this->headline; ?>
         </legend>
 

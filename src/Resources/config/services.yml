@@ -20,8 +20,7 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
-        calls:
-            - [setTokenStorage, ["@security.token_storage"]]
+            - '@translator'
         tags:
             - { name: contao.picker_provider, priority: 96 }
 
@@ -61,6 +60,21 @@ services:
         class: Symfony\Component\Routing\RouteCollection
 
     marketing_suite.routing.route_provider:
+        class: numero2\MarketingSuiteBundle\Routing\RouteProvider
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.page_candidates'
+            - '@contao.routing.page_registry'
+            - '@marketing_suite.routing.ab_test_page_provider'
+            - '@marketing_suite.routing.link_shortener_route_provider'
+
+    marketing_suite.routing.ab_test_page_provider:
+        class: numero2\MarketingSuiteBundle\Routing\ABTestPageRouteProvider
+        arguments:
+            - "@contao.framework"
+            - "@contao.routing.route_provider"
+
+    marketing_suite.routing.link_shortener_route_provider:
         class: numero2\MarketingSuiteBundle\Routing\LinkShortenerRouteProvider
         arguments:
             - "@contao.framework"
@@ -72,4 +86,35 @@ services:
             - '@?contao.routing.page_registry'
             - '@?logger'
 
+    marketing_suite.tracking.click_and_views:
+        class: numero2\MarketingSuiteBundle\Tracking\ClickAndViews
+        public: true
+        arguments:
+            - '@request_stack'
+
+    marketing_suite.tracking.session:
+        class: numero2\MarketingSuiteBundle\Tracking\Session
+        public: true
+        arguments:
+            - '@request_stack'
+            - '@contao.routing.scope_matcher'
+            - '@contao.security.token_checker'
+            - '@marketing_suite.util.cache_request'
+
+
+    marketing_suite.twig.extension:
+        class: numero2\MarketingSuiteBundle\Twig\Extension\MarketingSuiteExtension
+        public: true
+
+
+    marketing_suite.util.cache_request:
+        class: numero2\MarketingSuiteBundle\Util\CacheRequestUtil
+        public: true
+        arguments:
+            - '@request_stack'
+
     numero2\MarketingSuiteBundle\Controller\BackendController: ~
+
+    numero2\MarketingSuiteBundle\Controller\Page\ABTestPageController:
+        arguments:
+            - '@contao.framework'

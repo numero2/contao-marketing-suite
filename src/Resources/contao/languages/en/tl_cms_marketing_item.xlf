@@ -16,10 +16,10 @@
         <source>Marketing-Element ID %s bearbeiten</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.editheader.0">
-        <source>Marketing-Element bearbeiten</source>
+        <source>Kindelememte des Marketing-Elements bearbeiten</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.editheader.1">
-        <source>Die Marketing-Element-Einstellungen bearbeiten</source>
+        <source>Die Kindelememte des Marketing-Elements ID %s bearbeiten</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.delete.0">
         <source>Marketing-Element löschen</source>
@@ -43,6 +43,9 @@
         <source>Einrichtung fortsetzen</source>
     </trans-unit>
     <!-- LEGENDS -->
+    <trans-unit id="tl_cms_marketing_item.cms_helper_top_legend">
+        <source>Hinweis</source>
+    </trans-unit>
     <trans-unit id="tl_cms_marketing_item.common_legend">
         <source>Allgemein</source>
     </trans-unit>
@@ -90,13 +93,13 @@
         <source>Automatisch besseren Inhalt anzeigen</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.auto_winner_after.1">
-        <source>Zu einem festgelegtem Datum wird der besser Inhalt ausgewählt und zukünftig immer verwendet.</source>
+        <source>Zu einem festgelegtem Datum wird der bessere Inhalt ausgewählt und zukünftig immer verwendet.</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.stop_auto_winner.0">
         <source>Enddatum des Tests</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.stop_auto_winner.1">
-        <source>Bitte wählen Sie zu welchem Zeitpunk der besser Inhalt ermittelt werden soll.</source>
+        <source>Bitte wählen Sie zu welchem Zeitpunk der bessere Inhalt ermittelt werden soll.</source>
     </trans-unit>
     <trans-unit id="tl_cms_marketing_item.ranking.0">
         <source>Ranking</source>

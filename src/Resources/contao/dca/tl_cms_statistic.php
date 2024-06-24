@@ -1,18 +1,16 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
+use Contao\DC_Table;
 use numero2\MarketingSuite\Backend\License;
 
 
@@ -22,14 +20,15 @@ use numero2\MarketingSuite\Backend\License;
 $GLOBALS['TL_DCA']['tl_cms_statistic'] = [
 
     'config' => [
-        'dataContainer'             => 'Table'
-    ,   'ptable'                    => ''
+        'dataContainer'             => DC_Table::class
     ,   'dynamicPtable'             => true
     ,   'isAvailable'               => License::hasFeature('search_statistic')
     ,   'closed'                    => true
-    ,   'notDeletable'              => true
-    ,   'notSortable'               => true
+    ,   'notCopyable'               => true
     ,   'notCreatable'              => true
+    ,   'notDeletable'              => true
+    ,   'notEditable'               => true
+    ,   'notSortable'               => true
     ,   'sql' => [
             'keys' => [
                 'id' => 'primary'

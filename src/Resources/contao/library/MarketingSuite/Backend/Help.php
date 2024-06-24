@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2021 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2021 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -62,7 +59,7 @@ class Help extends BackendModule {
     */
     public function generate() {
 
-        $this->import('BackendUser', 'User');
+        $this->import('\Contao\BackendUser', 'User');
 
         if( $this->User->cms_pro_mode_enabled == 1 ) {
             return '';
@@ -138,12 +135,16 @@ class Help extends BackendModule {
 
         // get fieldset state
         $objSessionBag = NULL;
-        $objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+        $objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
         $fs = NULL;
         $fs = $objSessionBag->get('fieldset_states');
 
-        if( empty($fs[$this->strTable]) || !$fs[$this->strTable]['cms_be_help_legend'] ) {
+        if( $this->strTable === null ) {
+            $this->strTable = Input::get('do');
+        }
+
+        if( empty($fs[$this->strTable]) || empty($fs[$this->strTable]['cms_be_help_legend']) || !$fs[$this->strTable]['cms_be_help_legend'] ) {
             $this->Template->collapsed = true;
         }
 

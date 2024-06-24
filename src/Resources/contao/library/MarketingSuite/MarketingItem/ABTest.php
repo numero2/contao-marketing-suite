@@ -1,20 +1,18 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
 namespace numero2\MarketingSuite\MarketingItem;
 
+use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
@@ -27,7 +25,7 @@ use Contao\System;
 use numero2\MarketingSuite\Backend\Wizard;
 use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\MarketingItemModel;
-use numero2\MarketingSuite\Tracking\ClickAndViews;
+use numero2\MarketingSuite\StatisticModel;
 use numero2\MarketingSuite\Tracking\Session;
 
 
@@ -64,7 +62,7 @@ class ABTest extends MarketingItem {
      * Alter header of tl_content
      *
      * @param array $args
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      * @param object $objContentGroup
      *
@@ -79,7 +77,7 @@ class ABTest extends MarketingItem {
         System::loadLanguageFile('tl_cms_content_group');
 
         if( $objContentGroup->name ) {
-            array_insert($args, 0, [$GLOBALS['TL_LANG']['tl_cms_content_group']['name'][0] => $objContentGroup->name]);
+            ArrayUtil::arrayInsert($args, 0, [$GLOBALS['TL_LANG']['tl_cms_content_group']['name'][0] => $objContentGroup->name]);
         }
 
         // only display this button if we have one group
@@ -149,7 +147,7 @@ class ABTest extends MarketingItem {
     /**
      * Alter dca configuration of tl_content
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      * @param object $objContent
      * @param object $objContentGroup
@@ -193,13 +191,13 @@ class ABTest extends MarketingItem {
     /**
      * Handles what happens after a user submits the form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMI
      */
     public function submitMarketingItem( $dc, $objMarketingItem ) {
 
         $groups = null;
-        $groups = ContentGroupModel::findBy(['pid=?'],[$objMarketingItem->id]);
+        $groups = ContentGroupModel::findBy(['pid=?'], [$objMarketingItem->id]);
 
         // create default content group and redirect to edit
         if( !$groups ){
@@ -271,8 +269,12 @@ class ABTest extends MarketingItem {
             if( $objMI->auto_winner_after && $objMI->stop_auto_winner < time() ) {
 
                 // find winner
-                $aClicks = $objContentParent->fetchEach('clicks');
-                arsort($aClicks);
+                $aResets = $objContentParent->fetchEach('reset');
+                $aIds = array_keys($aResets);
+                $aClicks = [];
+
+                $aClicks[$aIds[0]] = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$aIds[0], ContentGroupModel::getTable(), 'click', $aResets[$aIds[0]]]);
+                $aClicks[$aIds[1]] = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$aIds[1], ContentGroupModel::getTable(), 'click', $aResets[$aIds[1]]]);
 
                 // if no real winner keep it running
                 if( array_values($aClicks)[0] != array_values($aClicks)[1] ) {
@@ -280,7 +282,7 @@ class ABTest extends MarketingItem {
                     // select winner and make always use this
                     $winnerId = array_keys($aClicks)[0];
 
-                    foreach( $objContentParent as $value) {
+                    foreach( $objContentParent as $value ) {
 
                         if( $value->id == $winnerId ) {
 
@@ -310,10 +312,15 @@ class ABTest extends MarketingItem {
 
             if( !$id ) {
 
-                $tracking = new Session();
-                $views = new ClickAndViews();
+                $tracking = System::getContainer()->get('marketing_suite.tracking.session');
+                $views = System::getContainer()->get('marketing_suite.tracking.click_and_views');
 
-                $aContentViews = $objContentParent->fetchEach('views');
+                $aResets = $objContentParent->fetchEach('reset');
+                $aIds = array_keys($aResets);
+                $aContentViews = [];
+
+                $aContentViews[$aIds[0]] = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$aIds[0], ContentGroupModel::getTable(), 'view', $aResets[$aIds[0]]]);
+                $aContentViews[$aIds[1]] = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$aIds[1], ContentGroupModel::getTable(), 'view', $aResets[$aIds[1]]]);
 
                 // if already selected in session tracking
                 $id = $tracking->getABTestSelected($objMI->id);
@@ -327,7 +334,7 @@ class ABTest extends MarketingItem {
                     $tracking->storeABTestSelected($objMI->id, $id);
 
                     // increase view counter
-                    foreach( $objContentParent as $key => $value) {
+                    foreach( $objContentParent as $key => $value ) {
                         if( $value->id == $id ) {
                             $views->increaseViewOnMarketingElement($value);
                             break;
@@ -354,7 +361,7 @@ class ABTest extends MarketingItem {
     /**
      * Handles what happens after a user submits the child edit form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function submitContent( $dc ) {
 
@@ -372,12 +379,15 @@ class ABTest extends MarketingItem {
 
             if( !empty($objMarketingItem->init_step) ) {
 
+                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+                $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
                 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
                 $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
-                $objMarketingItem->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId;
+                $objMarketingItem->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.$requestToken.'&ref='.$refererId;
                 $objMarketingItem->save();
-                $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+
+                $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_content&amp;id='.$dc->activeRecord->pid.'&amp;rt='.$requestToken.'&ref='.$refererId);
             }
         }
     }
@@ -386,7 +396,7 @@ class ABTest extends MarketingItem {
     /**
      * Handles what happens after a user submits the form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function submitContentGroup( $dc ) {
 
@@ -433,9 +443,10 @@ class ABTest extends MarketingItem {
                 $objMI->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id;
                 $objMI->save();
 
+                $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
                 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 
-                $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id.'&amp;rt='.REQUEST_TOKEN.'&ref='.$refererId);
+                $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id.'&amp;rt='.$requestToken.'&ref='.$refererId);
             }
         }
     }
@@ -444,7 +455,7 @@ class ABTest extends MarketingItem {
     /**
      * Change settings onload
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function loadContentGroup( $dc ) {
 

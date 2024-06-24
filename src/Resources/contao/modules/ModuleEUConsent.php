@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2023 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2023 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -18,6 +15,7 @@ namespace numero2\MarketingSuite;
 use Contao\CMSConfig;
 use Contao\Module;
 use Contao\StringUtil;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License as djeuvnxger;
 use numero2\MarketingSuite\Helper\InterfaceStyleable;
 
@@ -34,7 +32,10 @@ abstract class ModuleEUConsent extends Module implements InterfaceStyleable {
 
         global $objPage;
 
-        if( TL_MODE == 'FE' ) {
+        $scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+        $requestStack = System::getContainer()->get('request_stack');
+
+        if( $scopeMatcher->isFrontendRequest($requestStack->getCurrentRequest()) ) {
 
             // check license
             if( !djeuvnxger::hasFeature('tag_settings', $objPage->trail[0]) || !djeuvnxger::hasFeature('tag'.substr($this->type, 3), $objPage->trail[0]) ) {
@@ -118,6 +119,8 @@ abstract class ModuleEUConsent extends Module implements InterfaceStyleable {
         if( $this->cms_tag_set_style ) {
             $GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="'.self::getStylesheetPath().'">';
         }
+
+        $this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
     }
 
 
@@ -125,7 +128,7 @@ abstract class ModuleEUConsent extends Module implements InterfaceStyleable {
      * {@inheritdoc}
      */
     public static function getLayoutOptions(): array {
-        return ['light','dark'];
+        return ['light', 'dark'];
     }
 
 
@@ -133,7 +136,7 @@ abstract class ModuleEUConsent extends Module implements InterfaceStyleable {
      * {@inheritdoc}
      */
     public static function getLayoutSprite( string $type="" ): string {
-        return 'bundles/marketingsuite/img/backend/layouts/'.$type.'.svg';
+        return '/bundles/marketingsuite/img/backend/layouts/'.$type.'.svg';
     }
 
 
@@ -141,6 +144,6 @@ abstract class ModuleEUConsent extends Module implements InterfaceStyleable {
      * {@inheritdoc}
      */
     public static function getStylesheetPath(): string {
-        return 'bundles/marketingsuite/css/modules.css';
+        return '/bundles/marketingsuite/css/modules.css';
     }
 }

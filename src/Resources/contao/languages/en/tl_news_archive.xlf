@@ -13,13 +13,6 @@
     <trans-unit id="tl_news_archive.cms_schedule.1">
         <source>Kalenderansicht</source>
     </trans-unit>
-    <!-- FIELDS -->
-    <trans-unit id="tl_news_archive.cms_facebook_pages.0">
-        <source>Facebook-Seiten</source>
-    </trans-unit>
-    <trans-unit id="tl_news_archive.cms_facebook_pages.1">
-        <source>Wählen Sie die Seiten auf denen News veröffentlicht werden dürfen.</source>
-    </trans-unit>
 </body>
 </file>
 </xliff>

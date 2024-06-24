@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2022 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2022 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -17,10 +14,9 @@ namespace numero2\MarketingSuite;
 
 use Contao\ContentText;
 use Contao\Controller;
-use Contao\Environment;
 use Contao\Input;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License as sofdow;
-use numero2\MarketingSuite\Tracking\ClickAndViews;
 
 
 class ContentTextCMSCTA extends ContentText {
@@ -40,8 +36,9 @@ class ContentTextCMSCTA extends ContentText {
 
         global $objPage;
 
-        if( TL_MODE == 'FE' ) {
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) ) {
             if( !sofdow::hasFeature('ce_'.$this->type, $objPage->trail[0]) ) {
                 return '';
             }
@@ -56,8 +53,10 @@ class ContentTextCMSCTA extends ContentText {
      */
     protected function compile() {
 
-        if( TL_MODE == "FE" ) {
-            $tracking = new ClickAndViews();
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        $tracking = System::getContainer()->get('marketing_suite.tracking.click_and_views');
+
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) ) {
             $tracking->increaseViewOnContentElement($this->objModel);
         }
 
@@ -67,12 +66,12 @@ class ContentTextCMSCTA extends ContentText {
         $this->Template->ctaTitle = $this->cta_title;
         $this->Template->ctaLink = $this->cta_link;
 
-        if( TL_MODE == "FE" ) {
-
+        if( $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) ) {
             if( Input::get('follow') && Input::get('follow') == $this->id ) {
 
                 $tracking->increaseClickOnContentElement($this->objModel);
-                $this->redirect(Controller::replaceInsertTags($this->cta_link));
+                $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+                $this->redirect($insertTagParser->replace($this->cta_link));
             }
 
             $this->Template->ctaLink = Controller::addToUrl('&follow='.$this->id, false);

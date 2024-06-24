@@ -23,7 +23,7 @@
             </div>
             <div class="reset">
                 <?php if( $this->cms_ci_reset > 0 ): ?>
-                    <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Date::parse(\Config::get('datimFormat'), $this->cms_ci_reset) ); ?></p>
+                    <p><?= sprintf( $GLOBALS['TL_LANG']['LABEL']['reset_since'], \Contao\Date::parse(\Contao\Config::get('datimFormat'), $this->cms_ci_reset) ); ?></p>
                 <?php endif; ?>
             </div>
             <table>
@@ -61,7 +61,7 @@
                     data: [
                         <?= $this->cms_ci_clicks; ?>
                     ],
-                    backgroundColor: 'rgba(244,124,0,1)',
+                    backgroundColor: 'rgba(244,124,0,1)'
                 },
                 {
                     label: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?>',

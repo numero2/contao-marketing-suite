@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
+
+use Contao\DC_Table;
+use numero2\MarketingSuiteBundle\EventListener\DataContainer\MarketingItemListener;
 
 /**
  * Table tl_cms_marketing_item
@@ -19,11 +19,9 @@
 $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
 
     'config' => [
-        'dataContainer'             => 'Table'
-    ,   'closed'                    => \numero2\MarketingSuite\DCAHelper\MarketingItem::isClosed()
-    ,   'ctable'                    => ['tl_content','tl_cms_content_group']
-    ,   'onsubmit_callback'         => [['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'submitMarketingItem']]
-    ,   'onload_callback'           => [['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'loadMarketingItem']]
+        'dataContainer'             => DC_Table::class
+    ,   'closed'                    => MarketingItemListener::isClosed()
+    ,   'ctable'                    => ['tl_content', 'tl_cms_content_group']
     ,   'switchToEdit'              => true
     ,   'sql' => [
             'keys' => [
@@ -45,7 +43,6 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
     ,   'label' => [
             'fields'                => ['name', 'type', 'status', 'used']
         ,   'showColumns'           => true
-        ,   'label_callback'        => ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'getLabel']
         ]
     ,   'global_operations' => [
             'all' => [
@@ -58,38 +55,34 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
     ,   'operations' => [
             'edit' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['edit']
-            ,   'href'              => 'table=tl_cms_content_group'
+            ,   'href'              => 'act=edit'
             ,   'icon'              => 'edit.svg'
-            ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'editButton']
             ]
         ,   'editheader' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['editheader']
-            ,   'href'              => 'act=edit'
-            ,   'icon'              => 'header.svg'
-            ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'editHeaderButton']
+            ,   'href'              => 'table=tl_cms_content_group'
+            ,   'icon'              => 'children.svg'
             ]
         ,   'reset_counter' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['reset_counter']
             ,   'icon'              => 'bundles/marketingsuite/img/backend/icons/icon_reset_counter.svg'
-            ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['reset_warning'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
-            ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'resetCounter']
+            ,   'attributes'        => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['reset_warning'] ?? '') . '\'))return false"'
             ]
         ,   'delete' => [
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['delete']
             ,   'href'              => 'act=delete'
             ,   'icon'              => 'delete.svg'
-            ,   'attributes'        => 'onclick="if (!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\')) return false; Backend.getScrollOffset();"'
+            ,   'attributes'        => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\'))return false"'
             ]
         ,   'toggle' =>[
                 'label'             => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['toggle']
+            ,   'href'              => 'act=toggle&amp;field=active'
             ,   'icon'              => 'visible.svg'
-            ,   'attributes'        => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"'
-            ,   'button_callback'   => ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'toggleIcon']
             ]
         ]
     ]
 ,   'palettes' => [
-        '__selector__'              => ['type','auto_winner_after']
+        '__selector__'              => ['type', 'auto_winner_after']
     ,   'default'                   => '{common_legend},type'
     ,   'a_b_test'                  => '{common_legend},type,name;{a_b_test_legend},content_type,auto_winner_after;{publish_legend},active'
     ,   'a_b_test_page'             => '{common_legend},type,name;{a_b_test_legend},page_a,page_b,auto_winner_after;{publish_legend},active'
@@ -113,7 +106,6 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['type']
         ,   'inputType'             => 'select'
         ,   'filter'                => true
-        ,   'options_callback'      => [ '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'getMarketingItemTypes']
         ,   'eval'                  => ['mandatory'=>true, 'maxlength'=>32, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(32) NOT NULL default ''"
         ]
@@ -128,7 +120,6 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['content_type']
         ,   'inputType'             => 'select'
         ,   'search'                => true
-        ,   'options_callback'      => ['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'getContentElements']
         ,   'reference'             => &$GLOBALS['TL_LANG']['CTE']
         ,   'eval'                  => ['mandatory'=>true, 'chosen'=>true, 'tl_class'=>'w50']
         ,   'sql'                   => "varchar(64) NOT NULL default ''"
@@ -159,13 +150,6 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
         ,   'foreignKey'            => 'tl_page.title'
         ,   'eval'                  => ['mandatory'=>true, 'fieldType'=>'radio', 'tl_class'=>'clr page_a']
         ,   'relation'              => ['type'=>'hasOne', 'load'=>'lazy']
-        ,   'load_callback'         => [['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'addToggleAlwaysUseThis']]
-        ,   'save_callback'         => [
-                [ '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'checkForNonIndexPage' ]
-            ,   [ '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'checkUniquePageForABTestPage' ]
-            ,   [ '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'checkForSameRootPage' ]
-            ,   [ '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'checkForConversionOnPage' ]
-            ]
         ,   'sql'                   => "varchar(10) NOT NULL default ''"
         ]
     ,   'always_page_a' => [
@@ -177,12 +161,6 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
         ,   'foreignKey'            => 'tl_page.title'
         ,   'eval'                  => ['mandatory'=>true, 'fieldType'=>'radio', 'tl_class'=>'clr page_b']
         ,   'relation'              => ['type'=>'hasOne', 'load'=>'lazy']
-        ,   'load_callback'         => [['\numero2\MarketingSuite\DCAHelper\MarketingItem', 'addToggleAlwaysUseThis']]
-        ,   'save_callback'         => [
-                [ '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'checkUniquePageForABTestPage' ]
-            ,   [ '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'checkForSameRootPage' ]
-            ,   [ '\numero2\MarketingSuite\DCAHelper\MarketingItem', 'checkForConversionOnPage' ]
-            ]
         ,   'sql'                   => "varchar(10) NOT NULL default ''"
         ]
     ,   'always_page_b' => [
@@ -192,6 +170,7 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['active']
         ,   'inputType'             => 'checkbox'
         ,   'default'               => '1'
+        ,   'toggle'                => true
         ,   'eval'                  => ['tl_class'=>'w50']
         ,   'sql'                   => "char(1) NOT NULL default '1'"
         ]
@@ -202,10 +181,10 @@ $GLOBALS['TL_DCA']['tl_cms_marketing_item'] = [
             'label'                 => &$GLOBALS['TL_LANG']['tl_cms_marketing_item']['status']
         ]
     ,   'helper_top' => [
-            'input_field_callback'  => [ '\numero2\MarketingSuite\Backend\Wizard', 'generateTopForInputField' ]
+            'input_field_callback'  => ['\numero2\MarketingSuite\Backend\Wizard', 'generateTopForInputField']
         ]
     ,   'helper_bottom' => [
-            'input_field_callback'  => [ '\numero2\MarketingSuite\Backend\Wizard', 'generateBottomForInputField' ]
+            'input_field_callback'  => ['\numero2\MarketingSuite\Backend\Wizard', 'generateBottomForInputField']
         ]
     ]
 ];

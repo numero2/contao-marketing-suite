@@ -1,3 +1,4 @@
+// main: modules.scss
 @import "backend/colors";
 
 cms-cookie-bar,
@@ -19,9 +20,13 @@ cms-accept-tags {
     width: 100%;
     color: var(--main-text-color);
 
-    > cms-container {
+    cms-container {
 
         display: block;
+    }
+
+    > cms-container {
+
         max-width: 750px;
         max-height: 60vh;
 
@@ -116,8 +121,12 @@ cms-accept-tags {
                         }
                     }
 
-                    &:hover >span:before {
-                        filter: brightness(85%);
+                    &:focus,
+                    &:hover {
+
+                        > span:before {
+                            filter: brightness(85%);
+                        }
                     }
                 }
 
@@ -172,7 +181,7 @@ cms-accept-tags {
     left: 0;
     z-index: 1000;
 
-    display: flex;
+    display: flex !important;
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -275,20 +284,9 @@ cms-accept-tags {
 
     &[data-layout="dark"] {
 
-        --main-bg-overlay-color: #{rgba($trueGray-800,0.5)};
+        --main-bg-overlay-color: #{rgba($trueGray-700,0.5)};
 
         --toggle-active-bg-color: #{$green-700};
         --toggle-inactive-bg-color: #{$coolGray-700};
-
-
-                /*
-                --main-bg-overlay-color: #{rgba($col-dark,0.5)};
-                --main-bg-color: #{$coolGray-800};
-                --main-shadow-color: #{rgba($col-black,0.5)};
-                --main-text-color: #{$blueGray-100};
-                --main-border-color: #{$coolGray-800};
-                --main-close-btn-color: #{$coolGray-400};
-                --main-close-btn-color-hover: #{$coolGray-100};
-                 */
     }
 }

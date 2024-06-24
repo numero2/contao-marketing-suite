@@ -6,11 +6,10 @@
     iframe {
 
         display: block;
-        width: calc(100% - 15px);
+        width: 100%;
         min-width: 250px;
         overflow: hidden;
         border: 2px solid $col-gray;
-        padding: 8px;
     }
 
     .tl_help { margin-top: 4px; }
@@ -91,5 +90,12 @@
         .w50 {
             //height: auto;
         }
+    }
+}
+
+html[data-color-scheme="dark"] {
+
+    .widget.element-preview iframe {
+        border-color: var(--content-border);
     }
 }

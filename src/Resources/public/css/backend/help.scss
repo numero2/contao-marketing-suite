@@ -1,10 +1,17 @@
 // main: backend.scss
 @import "colors";
 
-#pal_cms_helper_top_legend, #pal_cms_helper_bottom_legend {
+fieldset[data-contao--toggle-fieldset-id-value="cms_helper_top_legend"],
+fieldset[data-contao--toggle-fieldset-id-value="cms_helper_bottom_legend"] {
 
+    padding-top: 8px;
+    margin-top: 0;
 
     legend { display: none; }
+
+    div.helper {
+        padding: 10px 5px;
+    }
 
     p {
         margin: 0;
@@ -20,7 +27,30 @@
     padding: 8px 16px;
 }
 
-.cms_helper_top_legend {
+.tl_header {
+
+    &.cms_helper_top_legend,
+    &.cms_helper_bottom_legend {
+
+        background: $col-yellow-light;
+        padding: 10px;
+
+        p {
+            margin-top: 0.3rem;
+            margin-bottom: 0;
+        }
+
+        .tl_panel {
+            background: unset;
+            border: unset;
+            padding: 10px;
+        }
+    }
+}
+
+
+/*
+[data-contao--toggle-fieldset-id-value="cms_helper_top_legend"] {
     padding: 0;
     background: $col-yellow-light;
     border: none;
@@ -29,7 +59,9 @@
 
     h2 + p { margin-top: 5px; }
 }
+*/
 
+/*
 #pal_cms_helper_bottom_legend, .cms_helper_bottom_legend {
 
     background: $col-yellow-light;
@@ -45,7 +77,9 @@
         border: none;
     }
 }
+    */
 
+/*
 .cms_helper_bottom_legend {
     display: flex;
     justify-content: space-between;
@@ -59,6 +93,7 @@
         }
     }
 }
+    */
 
 .cms_be_help {
 
@@ -70,6 +105,7 @@
     fieldset {
 
         padding-bottom: 0;
+        margin-top: unset;
 
         legend {
 
@@ -101,9 +137,14 @@
 
 .tl_panel {
 
+    &:has(.cms_be_help) {
+        padding-left: 0;
+        padding-right: 0;
+        border-top: 1px solid var(--content-border);
+    }
+
     .cms_be_help {
-        margin-top: -8px;
-        margin-right: -10px;
+        margin-top: -5px;
     }
 }
 
@@ -123,6 +164,42 @@
         mark {
             //background: $col-orange;
             //color: $col-white;
+        }
+    }
+}
+
+html[data-color-scheme="dark"] {
+
+    fieldset[data-contao--toggle-fieldset-id-value="cms_helper_top_legend"],
+    fieldset[data-contao--toggle-fieldset-id-value="cms_helper_bottom_legend"] {
+
+        background: #{rgba($col-yellow-light,0.2)};
+
+        div.helper {
+            //color: var(--white);
+        }
+    }
+
+    .tl_header {
+
+        &.cms_helper_top_legend,
+        &.cms_helper_bottom_legend {
+
+            background: #{rgba($col-yellow-light,0.2)};
+        }
+    }
+
+    .cms_be_help {
+
+        background: var(--content-bg);
+        border-bottom-color: var(--content-border);
+
+        fieldset {
+            margin-top: 0;
+        }
+
+        a:not(:hover) {
+            color: var(--blue);
         }
     }
 }

@@ -1,12 +1,22 @@
-<?php $this->extend('block_unsearchable'); ?>
+<!-- indexer::stop -->
+<cms-optin-fallback class="<?= $this->class ?> block"<?= $this->cssID ?> role="dialog" aria-modal="false">
+    <cms-container>
 
-<?php $this->block('content'); ?>
+    <?php $this->block('content'); ?>
 
-    <?php if( strlen($this->fallback_text) ): ?>
-        <?= $this->fallback_text; ?>
-    <?php else: ?>
-        <p>Dieser Inhalt eines Drittanbieters wird aufgrund Ihrer fehlenden Zustimmung zu Drittanbieter-Inhalten nicht angezeigt.</p>
-        <p><a href="{{cms_optinlink}}" style="font-weight:bold;" rel="nofollow">Klicken Sie hier um Ihre Einstellungen zu bearbeiten.</a></p>
-    <?php endif; ?>
+        <?php if( strlen($this->fallback_text) ): ?>
+            <?= $this->fallback_text; ?>
+        <?php else: ?>
 
-<?php $this->endblock(); ?>
+            <p><?= $this->trans('cms_optin_fallback.info'); ?></p>
+
+            <cms-button role="button" tabindex="0" aria-label="<?= $this->trans('cms_optin_fallback.button_label'); ?>" onclick="document.location.href='<?= $this->optinlink; ?>'">
+                <span><?= $this->trans('cms_optin_fallback.button_label'); ?></span>
+            </cms-button>
+
+        <?php endif; ?>
+    <?php $this->endblock(); ?>
+
+    </cms-container>
+</cms-optin-fallback>
+<!-- indexer::continue -->

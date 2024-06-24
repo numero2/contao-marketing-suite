@@ -1,0 +1,83 @@
+// main: elements.scss
+@import "backend/colors";
+
+cms-optin-fallback.default {
+
+    --text-color: inherit;
+    --bg-color: #{$trueGray-200};
+    --btn-settings-text-color: #{$col-white};
+    --btn-settings-bg-color: #{$lime-500};
+
+    @media( prefers-color-scheme: dark ) {
+        --text-color: #{$blueGray-100};
+        --bg-color: #{$coolGray-800};
+    }
+
+    display: block;
+    padding: 2.5em 2em;
+
+    background: var(--bg-color);
+
+    font-family: Arial, Helvetica, Sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--text-color);
+
+    cms-container {
+
+        display: block;
+        text-align: center;
+
+        p {
+            margin: 0;
+            margin-bottom: 1.4em;
+        }
+    }
+
+    cms-button {
+
+        position: relative;
+
+        display: inline-block;
+
+        cursor: pointer;
+        background: transparent;
+
+        > span {
+
+            position: relative;
+            z-index: 1;
+
+            display: block;
+            padding: 0.929em 1.5em;
+
+            text-align: center;
+            line-height: 1;
+            color: var(--btn-settings-text-color);
+
+            &:before {
+
+                content: "";
+                display: block;
+                width: 100%;
+                height: 100%;
+
+                position: absolute;
+                z-index: -1;
+                top: 0;
+                left: 0;
+
+                transition: filter .2s;
+                background: var(--btn-settings-bg-color);
+            }
+        }
+
+        &:focus,
+        &:hover {
+
+            > span:before {
+                filter: brightness(85%);
+            }
+        }
+    }
+}

@@ -1,30 +1,26 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
 namespace numero2\MarketingSuite\MarketingItem;
 
-use Contao\Cache;
 use Contao\Config;
+use Contao\ContentModel;
 use Contao\Date;
-use Contao\Frontend;
 use Contao\PageModel;
 use Contao\System;
 use numero2\MarketingSuite\Backend\License as dsgvfsop;
 use numero2\MarketingSuite\ConversionItemModel;
 use numero2\MarketingSuite\MarketingItemModel;
-use numero2\MarketingSuite\Tracking\ClickAndViews;
+use numero2\MarketingSuite\StatisticModel;
 use numero2\MarketingSuite\Tracking\Session;
 
 
@@ -50,7 +46,7 @@ class ABTestPage extends MarketingItem {
      * Alter header of tl_content
      *
      * @param array $args
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      * @param object $objContentGroup
      *
@@ -64,7 +60,7 @@ class ABTestPage extends MarketingItem {
     /**
      * Alter dca configuration of tl_content
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMarketingItem
      * @param object $objContent
      * @param object $objContentGroup
@@ -76,7 +72,7 @@ class ABTestPage extends MarketingItem {
     /**
      * Handles what happens when marketing item is loaded
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMI
      */
     public function loadMarketingItem( $dc, $objMI ) {
@@ -94,7 +90,7 @@ class ABTestPage extends MarketingItem {
     /**
      * Handles what happens after a user submits the form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      * @param object $objMI
      */
     public function submitMarketingItem( $dc, $objMarketingItem ) {
@@ -120,19 +116,23 @@ class ABTestPage extends MarketingItem {
     public function selectContentId( $objContents, $objMI, $objContentParent, $objContent ) {
 
         if( $objMI->auto_winner_after && $objMI->stop_auto_winner < time() ) {
-
             // find winner
             $aClicks = [];
             foreach( $objContent as $key => $oPage) {
                 $aClicks[$key] = 0;
 
-                // gather clicks on conversion items on this page
                 $objCI = ConversionItemModel::findAllOn($oPage);
 
                 if( $objCI ) {
-                    $arrCI = $objCI->fetchEach('cms_ci_clicks');
-                    $aClicks[$key] += array_sum($arrCI);
+                    $arrCI = $objCI->fetchEach('id');
+
+                    $statsClicks = StatisticModel::countBy(
+                        ['pid in ('.implode(',', $arrCI).') AND ptable=? AND type=? AND tstamp>?'],
+                        [ContentModel::getTable(), 'click', $oPage->cms_mi_reset]
+                    );
+                    $aClicks[$key] = $statsClicks;
                 }
+
             }
             arsort($aClicks);
 
@@ -163,15 +163,25 @@ class ABTestPage extends MarketingItem {
 
         if( $objMI && count($objContent) == 2 ) {
 
-            $tracking = new Session();
-            $views = new ClickAndViews();
+            $tracking = System::getContainer()->get('marketing_suite.tracking.session');
+            $views = System::getContainer()->get('marketing_suite.tracking.click_and_views');
+
+            $id = $tracking->getABTestPageSelected($objMI->id);
 
             // if already selected in session tracking
-            $id = $tracking->getABTestPageSelected($objMI->id);
             if( !in_array($id, [$objContent[0]->id, $objContent[1]->id]) ) {
 
                 // choose page with less views
-                if( $objContent[0]->cms_mi_views <= $objContent[1]->cms_mi_views ) {
+                $statsViewsA = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$objContent[0]->id, PageModel::getTable(), 'view', $objContent[0]->cms_mi_reset]);
+                if( empty($statsViewsA) ) {
+                    $statsViewsA = 0;
+                }
+                $statsViewsB = StatisticModel::countBy(['pid=? AND ptable=? AND type=? AND tstamp>?'], [$objContent[1]->id, PageModel::getTable(), 'view', $objContent[1]->cms_mi_reset]);
+                if( empty($statsViewsB) ) {
+                    $statsViewsB = 0;
+                }
+
+                if( $statsViewsA <= $statsViewsB ) {
                     $id = $objContent[0]->id;
                 } else {
                     $id = $objContent[1]->id;
@@ -194,7 +204,7 @@ class ABTestPage extends MarketingItem {
     /**
      * Handles what happens after a user submits the child edit form
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function submitContent( $dc ) {
     }
@@ -203,7 +213,7 @@ class ABTestPage extends MarketingItem {
     /**
      * Change settings onload
      *
-     * @param \DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function loadContentGroup( $dc ) {
     }
@@ -212,48 +222,22 @@ class ABTestPage extends MarketingItem {
     /**
      * Selects which page will be displayed for the A/B Test Pages
      *
-     * @param arr $arrFragments
+     * @param Contao\PageModel $objPage
+     *
+     * @return Contao\PageModel
      */
-    public function selectAorBPage( $arrFragments ) {
-        // NOTE: this won't be called when domain.tld/ is requested
+    public function selectAorBPage( PageModel $objPage ): PageModel {
 
-        $objPage = null;
-        $objPages = PageModel::findBy(['tl_page.alias=?'], $arrFragments[0]);
-
-        $rootPageId = Frontend::getRootPageFromUrl();
-
-        if( $rootPageId ) {
-            $rootPageId = $rootPageId->id;
-        }
-
-        if( !dsgvfsop::hasFeature('me_a_b_test_page', $rootPageId) ) {
-            return $arrFragments;
-        }
-
-        if( $objPages && $objPages->count() ) {
-            foreach( $objPages as $value) {
-
-                $value = $value->loadDetails();
-
-                // check for same root
-                if( $rootPageId == $value->trail[0] ) {
-
-                    $objPage = $value;
-                    break;
-                }
-            }
-        }
-
-        if( !$objPage ) {
-            return $arrFragments;
+        if( !dsgvfsop::hasFeature('me_a_b_test_page', $objPage->rootId) ) {
+            return $objPage;
         }
 
         // on health check do not change the current page
-        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        $request = System::getContainer()->get('request_stack')->getMainRequest();
         if( $request && $request->headers ) {
             $headers = $request->headers;
             if( $headers && $headers->has('X-Requested-With') == 'CMS-HealthCheck' ) {
-                return $arrFragments;
+                return $objPage;
             }
         }
 
@@ -262,18 +246,19 @@ class ABTestPage extends MarketingItem {
         if( $objMI ) {
 
             // save requested page
-            Cache::set('cms_page_id', $objPage->id);
+            $cache = System::getContainer()->get('marketing_suite.util.cache_request');
+            $cache->set('page_id', $objPage->id);
 
             $objPageB = PageModel::findOneById($objMI->page_b);
 
             $selected = $this->selectContentId(null, $objMI, null, [$objPage, $objPageB]);
 
             if( $selected == $objPageB->id ) {
-                $arrFragments[0] = $objPageB->alias;
+                return $objPageB;
             }
         }
 
-        return $arrFragments;
+        return $objPage;
     }
 
 

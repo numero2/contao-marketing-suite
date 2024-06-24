@@ -1,15 +1,12 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Marketing Suite Bundle for Contao Open Source CMS
  *
- * Copyright (c) 2005-2020 Leo Feyer
- *
- * @package   Contao Marketing Suite
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright 2020 numero2 - Agentur für digitales Marketing
+ * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -37,7 +34,7 @@ class Backend extends Controller {
 
         $objTemplate = new BackendTemplate($templateCls);
 
-        $objTemplate->setData( $arrValues );
+        $objTemplate->setData($arrValues);
 
         return $objTemplate->parse();
     }
@@ -77,7 +74,7 @@ class Backend extends Controller {
         Controller::loadDataContainer($currentTable);
 
         // find parent element
-        $parentTable = NULL;
+        $parentTable = null;
 
         if( !empty($GLOBALS['TL_DCA'][$currentTable]['config']['dynamicPtable']) && $GLOBALS['TL_DCA'][$currentTable]['config']['dynamicPtable'] ) {
 
@@ -92,17 +89,20 @@ class Backend extends Controller {
             }
         }
 
-        $parentTable = Model::getClassFromTable($parentTable);
-        if( $parentTable === "Model" ) {
-            $parentTable = NULL;
+
+        if( $parentTable !== null ) {
+            $parentTable = Model::getClassFromTable($parentTable);
+            if( $parentTable === "Model" ) {
+                $parentTable = null;
+            }
         }
 
-        $parent = NULL;
+        $parent = null;
         if( $parentTable && $obj->pid ) {
             $parent = $parentTable::findOneById($obj->pid);
         }
 
-        return (($parent!=NULL)?self::generateReferencePath($parent, $limit-1):'') . '<span>' . self::generateReferenceItem($obj) . '</span>';
+        return (($parent!=null)?self::generateReferencePath($parent, $limit-1):'') . '<span>' . self::generateReferenceItem($obj) . '</span>';
     }
 
 

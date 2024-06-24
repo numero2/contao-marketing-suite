@@ -54,83 +54,14 @@
         <source>Bot?</source>
     </trans-unit>
     <!-- OPTIONS -->
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.mac">
-        <source>Macintosh</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.win-ce">
-        <source>Windows Phone</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.win">
-        <source>Windows</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.ios">
-        <source>iOS</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.android">
-        <source>Android</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.blackberry">
-        <source>Blackberry</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.symbian">
-        <source>Symbian</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.webos">
-        <source>WebOS</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.unix">
-        <source>Linux</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.os_names.unknown">
+    <trans-unit id="tl_cms_link_shortener_statistics.os_names.Other">
         <source>Unbekannt</source>
     </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.ie">
-        <source>Internet Explorer</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.edge">
-        <source>Edge</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.firefox">
-        <source>Firefox</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.chrome">
-        <source>Chrome</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.omniweb">
-        <source>OmniWeb</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.silk">
-        <source>Silk</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.safari">
-        <source>Safari</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.opera-mini">
-        <source>Opera Mini</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.opera-mobile">
-        <source>Opera Mobi</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.opera">
-        <source>Opera</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.ie-mobile">
-        <source>IEMobile</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.camino">
-        <source>Camino</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.konqueror">
-        <source>Konqueror</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.other">
+    <trans-unit id="tl_cms_link_shortener_statistics.browser_names.Other">
         <source>Unbekannt</source>
     </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.devices.desktop">
-        <source>Desktop</source>
-    </trans-unit>
-    <trans-unit id="tl_cms_link_shortener_statistics.devices.mobile">
-        <source>Mobil</source>
+    <trans-unit id="tl_cms_link_shortener_statistics.devices.Other">
+        <source>Unbekannt</source>
     </trans-unit>
     <!-- LABELS -->
     <trans-unit id="tl_cms_link_shortener_statistics.no_data_found">

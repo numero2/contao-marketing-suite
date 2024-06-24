@@ -1,12 +1,108 @@
 services:
+    _defaults:
+        public: true
+
+
+    marketing_suite.library.backend.license:
+        class: numero2\MarketingSuite\Backend\License
+
+
+    marketing_suite.listener.data_container.button:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\ButtonListener
+
+    marketing_suite.listener.data_container.content:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\ContentListener
+
+    marketing_suite.listener.data_container.content_group:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\ContentGroupListener
+
+    marketing_suite.listener.data_container.conversion_item:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\ConversionItemListener
+
+    marketing_suite.listener.data_container.general:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\GeneralListener
+
+    marketing_suite.listener.data_container.license:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\LicenseListener
+
+    marketing_suite.listener.data_container.link_shortener:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\LinkShortenerListener
+        arguments:
+            - '@contao.insert_tag.parser'
+            - '@security.helper'
+
+    marketing_suite.listener.data_container.marketing_item:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\MarketingItemListener
+        arguments:
+            - '@contao.csrf.token_manager'
+            - '@security.helper'
+
+    marketing_suite.listener.data_container.module:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\ModuleListener
 
     marketing_suite.listener.data_container.statistic:
         class: numero2\MarketingSuiteBundle\EventListener\DataContainer\StatisticListener
 
-    marketing_suite.listener.frontend.search:
-        class: numero2\MarketingSuiteBundle\EventListener\Frontend\SearchListener
+    marketing_suite.listener.data_container.tag_settings:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\TagSettingsListener
+
+    marketing_suite.listener.data_container.page:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\PageListener
+
+    marketing_suite.listener.data_container.settings:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\SettingsListener
+
+    marketing_suite.listener.data_container.tag:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\TagListener
+        arguments:
+            - '@security.helper'
+
+    marketing_suite.listener.data_container.text_cms:
+        class: numero2\MarketingSuiteBundle\EventListener\DataContainer\TextCMSListener
+
+    marketing_suite.listener.hooks.conversion_item:
+        class: numero2\MarketingSuiteBundle\EventListener\Hooks\ConversionItemListener
+        arguments:
+            - '@contao.insert_tag.parser'
+
+    marketing_suite.listener.hooks.dca:
+        class: numero2\MarketingSuiteBundle\EventListener\Hooks\DCAListener
+
+    marketing_suite.listener.hooks.hooks:
+        class: numero2\MarketingSuiteBundle\EventListener\Hooks\HooksListener
+        arguments:
+            - '@contao.insert_tag.parser'
+
+    marketing_suite.listener.hooks.link_shortener:
+        class: numero2\MarketingSuiteBundle\EventListener\Hooks\LinkShortenerListener
+
+    marketing_suite.listener.hooks.message:
+        class: numero2\MarketingSuiteBundle\EventListener\Hooks\MessageListener
+
+    marketing_suite.listener.hooks.module:
+        class: numero2\MarketingSuiteBundle\EventListener\Hooks\ModuleListener
         arguments:
             - '@request_stack'
+            - '@contao.routing.scope_matcher'
+
+    marketing_suite.listener.hooks.tags:
+        class: numero2\MarketingSuiteBundle\EventListener\Hooks\TagListener
+        arguments:
+            - '@request_stack'
+            - '@contao.routing.scope_matcher'
+            - '@contao.insert_tag.parser'
+
+    marketing_suite.listener.hooks.search:
+        class: numero2\MarketingSuiteBundle\EventListener\Hooks\SearchListener
+        arguments:
+            - '@request_stack'
+
+    marketing_suite.listener.kernel_response.backend_assets:
+        class: numero2\MarketingSuiteBundle\EventListener\KernelResponse\BackendAssetsListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+        tags:
+            - kernel.event_subscriber
 
     marketing_suite.listener.kernel_response.add_test_header:
         class: numero2\MarketingSuiteBundle\EventListener\KernelResponse\TestHeaderListener
