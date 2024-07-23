@@ -101,7 +101,7 @@ class Module extends CoreBackend {
                     continue;
                 }
 
-                $strPalette = str_replace($aSettingsFields, $aCoreFields, $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'][$k]);
+                $strPalette = str_replace($aSettingsFields, $aCoreFields, $GLOBALS['TL_DCA']['tl_cms_tag_settings']['palettes'][$k]??'');
                 $GLOBALS['TL_DCA']['tl_module']['palettes'][$k] = str_replace('{title_legend},cms_tag_type', $GLOBALS['TL_DCA']['tl_module']['palettes'][$k], $strPalette);
             }
 

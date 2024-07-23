@@ -178,7 +178,7 @@ class Hooks extends Backend {
                 $strField = $dc->field = Input::post('name');
 
                 // Call the load_callback
-                if( \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']) ) {
+                if( \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null) ) {
 
                     foreach( $GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback ) {
 
@@ -239,7 +239,7 @@ class Hooks extends Backend {
                 }
 
                 // Call the load_callback
-                if( \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']) ) {
+                if( \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null) ) {
 
                     foreach( $GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback ) {
 
@@ -302,7 +302,7 @@ class Hooks extends Backend {
                 $this->import('BackendUser', 'User');
 
                 // Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
-                if( !\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')) ) {
+                if( !\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? []) || (($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude']??null) && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')) ) {
 
                     $this->log('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
                     throw new BadRequestHttpException('Bad request');
