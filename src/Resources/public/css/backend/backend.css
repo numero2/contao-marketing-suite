@@ -245,6 +245,16 @@ html[data-color-scheme="dark"] .hover-label:hover .hover-overlay {
   border-color: var(--content-border);
 }
 
+html[data-color-scheme="dark"] .tl_formbody_edit fieldset a.button {
+  background: var(--form-bg);
+  border-color: var(--form-border);
+}
+
+html[data-color-scheme="dark"] .tl_formbody_edit fieldset a.button:hover, html[data-color-scheme="dark"] .tl_formbody_edit fieldset a.button:focus {
+  background: var(--form-bg-hover);
+  color: inherit;
+}
+
 fieldset[data-contao--toggle-fieldset-id-value="cms_helper_top_legend"],
 fieldset[data-contao--toggle-fieldset-id-value="cms_helper_bottom_legend"] {
   padding-top: 8px;

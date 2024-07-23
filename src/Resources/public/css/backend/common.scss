@@ -166,6 +166,7 @@ input[type="radio"][readonly] + label {
 }
 
 .tl_formbody_edit fieldset a.button {
+
     cursor: pointer;
     display: inline-block;
     box-sizing: border-box;
@@ -261,5 +262,16 @@ html[data-color-scheme="dark"] {
         background: var(--content-bg);
         color: var(--text);
         border-color: var(--content-border);
+    }
+
+    .tl_formbody_edit fieldset a.button {
+
+        background: var(--form-bg);
+        border-color: var(--form-border);
+
+        &:hover, &:focus {
+            background: var(--form-bg-hover);
+            color: inherit;
+        }
     }
 }
