@@ -48,92 +48,91 @@
 
 <script>
 
-    const config_marketing_<?= $this->id; ?> = {
-        type: 'doughnut',
-        data: {
-            datasets: [
-                {
-                    _type: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['clicks']; ?>',
-                    data: [
-                        <?php foreach( $this->pages as $p ): ?>
-                        <?=$p['cms_mi_clicks'];?>,
-                        <?php endforeach; ?>
-                    ],
-                    backgroundColor: [
-                        'rgba(244,124,0,1)',
-                        'rgba(244,124,0,0.5)'
-                    ],
-                    hoverBackgroundColor: [
-                        'rgba(23,43,59,1)',
-                        'rgba(23,43,59,1)',
-                    ]
-                }
-            ,   {
-                    _type: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?>',
-                    data: [
-                        <?php foreach( $this->pages as $p ): ?>
-                        <?=$p['cms_mi_views'];?>,
-                        <?php endforeach; ?>
-                    ],
-                    backgroundColor: [
-                        'rgba(244,124,0,1)',
-                        'rgba(244,124,0,0.5)'
-                    ],
-                    hoverBackgroundColor: [
-                        'rgba(23,43,59,1)',
-                        'rgba(23,43,59,1)',
-                    ],
-                    hoverBorderColor: [
-                        'rgba(255,255,255,1)',
-                        'rgba(255,255,255,1)',
-                    ],
-                }
-            ],
-            labels: [
-                <?php foreach( $this->pages as $p ): ?>
-                '<?=$p['title'];?>',
-                <?php endforeach; ?>
-            ]
-        },
-        options: {
-            responsive: true,
-            legend: {
-                position: 'bottom',
-                onClick: function(e) {
-                    e.stopPropagation();
-                }
-            },
-            tooltips: {
-                displayColors: false,
-                callbacks: {
-                    label: function(item, data) {
-
-                        const dataset = data.datasets[item.datasetIndex];
-
-                        const total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
-                            return previousValue + currentValue;
-                        });
-
-                        const currentValue = dataset.data[item.index];
-                        const percentage = Math.floor(((currentValue/total) * 100)+0.5);
-
-                        const label = data.labels[item.index];
-                        const type = dataset._type;
-
-                        return `${label}: ${currentValue} ${type} / ${percentage}%`;
-                    }
-                }
-            },
-            animation: {
-                animateScale: true,
-                animateRotate: true
-            },
-            circumference: Math.PI,
-            rotation: -Math.PI,
-        }
-    };
-
     (function(){
+        const config_marketing_<?= $this->id; ?> = {
+            type: 'doughnut',
+            data: {
+                datasets: [
+                    {
+                        _type: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['clicks']; ?>',
+                        data: [
+                            <?php foreach( $this->pages as $p ): ?>
+                            <?=$p['cms_mi_clicks'];?>,
+                            <?php endforeach; ?>
+                        ],
+                        backgroundColor: [
+                            'rgba(244,124,0,1)',
+                            'rgba(244,124,0,0.5)'
+                        ],
+                        hoverBackgroundColor: [
+                            'rgba(23,43,59,1)',
+                            'rgba(23,43,59,1)',
+                        ]
+                    }
+                ,   {
+                        _type: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?>',
+                        data: [
+                            <?php foreach( $this->pages as $p ): ?>
+                            <?=$p['cms_mi_views'];?>,
+                            <?php endforeach; ?>
+                        ],
+                        backgroundColor: [
+                            'rgba(244,124,0,1)',
+                            'rgba(244,124,0,0.5)'
+                        ],
+                        hoverBackgroundColor: [
+                            'rgba(23,43,59,1)',
+                            'rgba(23,43,59,1)',
+                        ],
+                        hoverBorderColor: [
+                            'rgba(255,255,255,1)',
+                            'rgba(255,255,255,1)',
+                        ],
+                    }
+                ],
+                labels: [
+                    <?php foreach( $this->pages as $p ): ?>
+                    '<?=$p['title'];?>',
+                    <?php endforeach; ?>
+                ]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom',
+                    onClick: function(e) {
+                        e.stopPropagation();
+                    }
+                },
+                tooltips: {
+                    displayColors: false,
+                    callbacks: {
+                        label: function(item, data) {
+
+                            const dataset = data.datasets[item.datasetIndex];
+
+                            const total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                                return previousValue + currentValue;
+                            });
+
+                            const currentValue = dataset.data[item.index];
+                            const percentage = Math.floor(((currentValue/total) * 100)+0.5);
+
+                            const label = data.labels[item.index];
+                            const type = dataset._type;
+
+                            return `${label}: ${currentValue} ${type} / ${percentage}%`;
+                        }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                },
+                circumference: Math.PI,
+                rotation: -Math.PI,
+            }
+        };
 
         const context = document.getElementById('chart_marketing_<?= $this->id; ?>').getContext('2d');
         window.chart_marketing_<?= $this->id; ?> = new Chart(context, config_marketing_<?= $this->id; ?>);

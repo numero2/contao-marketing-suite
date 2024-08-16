@@ -119,7 +119,6 @@ class Dashboard extends CoreBackendModule {
                 $arrRow = $oMarketingItems->row();
 
                 $ref = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
-                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
                 if( $oMarketingItems->type == 'a_b_test' ) {
 
@@ -234,7 +233,6 @@ class Dashboard extends CoreBackendModule {
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
             $aLegends['conversion'] = $GLOBALS['TL_LANG']['CTE']['conversion_elements_dash'];
-            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
             while( $oConversionElements->next() ) {
 
@@ -316,7 +314,6 @@ class Dashboard extends CoreBackendModule {
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
             $aLegends['link_shortener'] = $GLOBALS['TL_LANG']['CMS']['link_shortener'][0];
-            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
             while( $oLinkShortener->next() ) {
 

@@ -21,7 +21,7 @@ if( !empty($GLOBALS['TL_DCA']['tl_calendar_events']) ) {
     ,   $GLOBALS['TL_DCA']['tl_calendar_events']['palettes']['default']
     );
 
-    if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
+    if( numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
 
         $GLOBALS['TL_DCA']['tl_calendar_events']['fields'] = array_merge(
             array_slice(

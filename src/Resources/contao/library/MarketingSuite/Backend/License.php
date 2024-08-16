@@ -311,11 +311,9 @@ class License {
         if( count($expireDates) ) {
 
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
+            $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
             foreach( $expireDates as $key => $value ) {
-
-                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
-                $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
                 $pageEditUrl = $routePrefix.'?do=page&act=edit&id='.$value['page'].'&rt='.$requestToken.'#pal_cms_legend';
                 $packageCMSUrl = "https://contao-marketingsuite.com";
@@ -519,11 +517,12 @@ class License {
 
         $res = $connection
             ->prepare("SELECT * FROM tl_page WHERE type=? OR type=?")
-            ->execute(['root', 'rootfallback']);
+            ->executeQuery(['root', 'rootfallback'])
+        ;
 
         if( $res && $res->rowCount() ) {
 
-            $aRows = $res->fetchAll();
+            $aRows = $res->fetchAllAssociative();
 
             if( $aRows ) {
                 return $aRows;
@@ -546,10 +545,11 @@ class License {
 
         $res = $connection
             ->prepare("SELECT * FROM tl_page WHERE id=? LIMIT 1")
-            ->execute([$id]);
+            ->executeQuery([$id])
+        ;
 
         if( $res && $res->rowCount() ) {
-            return $res->fetch();
+            return $res->fetchAssociative();
         }
 
         return [];
@@ -567,7 +567,8 @@ class License {
 
         $res = $connection
             ->prepare("SELECT count(1) AS count FROM tl_page WHERE cms_root_license!=?")
-            ->execute(['']);
+            ->executeQuery([''])
+        ;
 
         if( $res && $res->rowCount() ) {
             return $res->fetchOne();
@@ -590,7 +591,8 @@ class License {
 
         $res = $connection
             ->prepare("SELECT count(1) AS count FROM tl_page WHERE cms_root_license!=? AND id=?")
-            ->execute(['', $id]);
+            ->executeQuery(['', $id])
+        ;
 
         if( $res && $res->rowCount() ) {
             return $res->fetchOne();

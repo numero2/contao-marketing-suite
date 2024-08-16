@@ -22,6 +22,9 @@ use numero2\MarketingSuite\Backend\License as wpqrkl;
 class StatisticListener {
 
 
+    private $modules;
+
+
     /**
      * setup the dca to be used for the search statistic
      *

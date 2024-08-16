@@ -18,9 +18,22 @@
     },
     "require": {
         "contao/core-bundle": "^5.3",
-        "org_heigl/hyphenator": "^2.3",
+        "doctrine/dbal": "^3.6",
         "jeremykendall/php-domain-parser": "^6.3",
-        "symfony/http-client": "^6.4",
+        "org_heigl/hyphenator": "^2.3",
+        "psr/log": "^1.1 || 2.0 || ^3.0",
+        "symfony-cmf/routing": "^3.0",
+        "symfony/config": "^6.4 || ^7.0",
+        "symfony/dependency-injection": "^6.4 || ^7.0",
+        "symfony/event-dispatcher": "^6.4 || ^7.0",
+        "symfony/filesystem": "^6.4 || ^7.0",
+        "symfony/http-client-contracts": "^3.1",
+        "symfony/http-client": "^6.4 || ^7.0",
+        "symfony/http-foundation": "^6.4 || ^7.0",
+        "symfony/http-kernel": "^6.4 || ^7.0",
+        "symfony/routing": "^6.4 || ^7.0",
+        "symfony/security-bundle": "^6.4 || ^7.0",
+        "twig/twig": "^3.10",
         "ua-parser/uap-php": "^3.9"
     },
     "suggest": {
@@ -28,7 +41,8 @@
         "avalexgmbh/contao": "For use of avalex privacy policy"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0"
+        "contao/manager-plugin": "^2.0",
+        "shipmonk/composer-dependency-analyser": "^1.4"
     },
     "conflict": {
         "contao/core": "*",
@@ -50,5 +64,15 @@
             "src/Resources/contao/languages/",
             "src/Resources/contao/templates/"
         ]
+    },
+    "scripts": {
+        "depcheck": "@php vendor/bin/composer-dependency-analyser --config=depcheck.php"
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": false,
+            "php-http/discovery": false,
+            "contao/manager-plugin": false
+        }
     }
 }

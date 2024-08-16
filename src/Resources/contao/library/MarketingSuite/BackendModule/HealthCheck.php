@@ -583,7 +583,6 @@ class HealthCheck extends CoreBackendModule {
             return null;
         }
 
-        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
         $db = Database::getInstance();
         $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
@@ -716,7 +715,6 @@ class HealthCheck extends CoreBackendModule {
             return null;
         }
 
-        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
         $db = Database::getInstance();
         $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
@@ -849,7 +847,6 @@ class HealthCheck extends CoreBackendModule {
             return null;
         }
 
-        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
         $db = Database::getInstance();
         $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 

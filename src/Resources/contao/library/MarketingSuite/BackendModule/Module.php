@@ -17,10 +17,10 @@ use Contao\BackendModule as CoreBackendModule;
 use Contao\Controller;
 use Contao\EditableDataContainerInterface;
 use Contao\Input;
-use Contao\InvalidArgumentException;
 use Contao\ListableDataContainerInterface;
 use Contao\StringUtil;
 use Contao\System;
+use InvalidArgumentException;
 use numero2\MarketingSuite\Backend\Help;
 use numero2\MarketingSuite\Backend\License as tabizni;
 

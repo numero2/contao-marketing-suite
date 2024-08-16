@@ -75,3 +75,13 @@
         }
     }
 }
+
+html[data-color-scheme="dark"] {
+
+    .tl_health_check > fieldset#pal_missing_h1_legend {
+
+        tr[data-url] td:nth-child(1) .icon:before {
+            filter: invert(1);
+        }
+    }
+}

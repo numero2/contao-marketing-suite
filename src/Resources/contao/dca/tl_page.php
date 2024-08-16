@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
 );
 
 
-if( \numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
+if( numero2\MarketingSuite\Backend\License::hasFeature('page_snippet_preview') ) {
 
     $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         array_slice(

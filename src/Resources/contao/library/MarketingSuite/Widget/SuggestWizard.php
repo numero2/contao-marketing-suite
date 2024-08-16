@@ -49,8 +49,10 @@ class SuggestWizard {
      */
     public static function getSuggestions( DataContainer $dc ) {
 
-        $objResult = Database::getInstance()->prepare("SELECT DISTINCT $dc->field FROM $dc->table")
-                        ->execute();
+        $objResult = Database::getInstance()
+            ->prepare("SELECT DISTINCT $dc->field FROM $dc->table")
+            ->execute()
+        ;
 
         $aResult = [];
 

@@ -40,31 +40,30 @@
 <?php if( !empty($this->stats['requests']) && $this->stats['requests'] > 0 ): ?>
 <script>
 
-    const config_link_shortener_<?= $this->id; ?> = {
-        type: 'horizontalBar',
-        data: {
-            labels : ["<?= implode('", "',
-                array_map( function($key){
-                    return $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics'][$key];
-                }
-            ,   array_keys($this->stats))
-            ); ?>"],
-            datasets: [
-                {
-                    label: '<?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['requests']; ?>',
-                    data: [<?= implode(', ', array_values($this->stats)); ?> ],
-                    backgroundColor: ['rgba(244,124,0,1)', 'rgba(244,124,0,0.75)', 'rgba(244,124,0,0.5)']
-                }
-            ],
-        },
-        options: {
-            scales: { xAxes: [{ticks: { beginAtZero: true } }] },
-            responsive: true,
-            legend: {display: false},
-        }
-    };
-
     (function(){
+        const config_link_shortener_<?= $this->id; ?> = {
+            type: 'horizontalBar',
+            data: {
+                labels : ["<?= implode('", "',
+                    array_map( function($key){
+                        return $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics'][$key];
+                    }
+                ,   array_keys($this->stats))
+                ); ?>"],
+                datasets: [
+                    {
+                        label: '<?= $GLOBALS['TL_LANG']['tl_cms_link_shortener_statistics']['requests']; ?>',
+                        data: [<?= implode(', ', array_values($this->stats)); ?> ],
+                        backgroundColor: ['rgba(244,124,0,1)', 'rgba(244,124,0,0.75)', 'rgba(244,124,0,0.5)']
+                    }
+                ],
+            },
+            options: {
+                scales: { xAxes: [{ticks: { beginAtZero: true } }] },
+                responsive: true,
+                legend: {display: false},
+            }
+        };
 
         const context = document.getElementById('chart_link_shortener_<?= $this->id; ?>').getContext('2d');
         window.chart_link_shortener_<?= $this->id; ?> = new Chart(context, config_link_shortener_<?= $this->id; ?>);

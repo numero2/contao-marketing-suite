@@ -169,16 +169,22 @@ class ElementStyle extends CoreBackend {
 
             if( Input::get('act') == 'edit' && Input::get('table') && Input::get('id') ) {
 
-                $strModel = Model::getClassFromTable(Input::get('table'));
+                try {
 
-                if( class_exists($strModel) ) {
+                    $strModel = Model::getClassFromTable(Input::get('table'));
 
-                    $oRow = null;
-                    $oRow = $strModel::findOneById(Input::get('id'));
+                    if( class_exists($strModel) ) {
 
-                    if( $oRow ) {
-                        $dc->activeRecord = $oRow;
+                        $oRow = null;
+                        $oRow = $strModel::findOneById(Input::get('id'));
+
+                        if( $oRow ) {
+                            $dc->activeRecord = $oRow;
+                        }
                     }
+
+                } catch( \Exception $e ) {
+
                 }
             }
         }

@@ -84,11 +84,11 @@ class CMSLinkShortenerStatisticMigration extends AbstractMigration {
 
         $res = $this->connection
             ->prepare("SELECT DISTINCT user_agent FROM tl_cms_link_shortener_statistics WHERE os in ('mac', 'win-ce', 'win', 'ios', 'android', 'blackberry', 'symbian', 'webos', 'unix', 'unknown')")
-            ->execute();
+            ->executeQuery();
 
         if( $res && $res->rowCount() ) {
 
-            $rows = $res->fetchAll();
+            $rows = $res->fetchAllAssociative();
 
             $stmtUpdate = $this->connection->prepare("UPDATE tl_cms_link_shortener_statistics SET os=:os, browser=:browser, device=:device WHERE user_agent=:user_agent");
 
@@ -99,7 +99,7 @@ class CMSLinkShortenerStatisticMigration extends AbstractMigration {
                 $parser = Parser::create();
                 $oUserAgent = $parser->parse($userAgent);
 
-                $res = $stmtUpdate->execute([
+                $res = $stmtUpdate->executeStatement([
                     'os' => $oUserAgent->os->family,
                     'browser' => $oUserAgent->ua->family,
                     'device' => $oUserAgent->device->family,

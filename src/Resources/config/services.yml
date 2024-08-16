@@ -11,10 +11,6 @@ services:
             calls:
                 - [setContainer, ['@Psr\Container\ContainerInterface']]
 
-        Symfony\Component\DependencyInjection\ContainerAwareInterface:
-            calls:
-                - [setContainer, ['@service_container']]
-
     marketing_suite.picker.link_shortener_provider:
         class: numero2\MarketingSuiteBundle\Picker\LinkShortenerPickerProvider
         arguments:

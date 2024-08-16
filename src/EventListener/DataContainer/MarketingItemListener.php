@@ -36,7 +36,7 @@ use numero2\MarketingSuite\ContentGroupModel;
 use numero2\MarketingSuite\ConversionItemModel;
 use numero2\MarketingSuite\MarketingItem\MarketingItem as MarketingInstance;
 use numero2\MarketingSuite\MarketingItemModel;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 class MarketingItemListener {
@@ -48,7 +48,7 @@ class MarketingItemListener {
     private $csrfTokenManager;
 
     /**
-     * @var Symfony\Component\Security\Core\Security
+     * @var Symfony\Bundle\SecurityBundle\Security
      */
     private $security;
 

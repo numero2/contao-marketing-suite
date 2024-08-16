@@ -672,6 +672,10 @@ html[data-color-scheme="dark"] .tl_dashboard fieldset > div > .item .inner table
   line-height: 16px;
 }
 
+html[data-color-scheme="dark"] .tl_health_check > fieldset#pal_missing_h1_legend tr[data-url] td:nth-child(1) .icon:before {
+  filter: invert(1);
+}
+
 .cms_modules {
   display: flex;
   justify-content: space-between;

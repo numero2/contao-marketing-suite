@@ -59,7 +59,7 @@ class Tag {
 
         // accept_tags
         if( !$isAccepted ) {
-            $isAccepted = (Input::cookie('cms_cookies_saved') === "true" && in_array($oTag->pid, explode('-', Input::cookie('cms_cookies'))));
+            $isAccepted = (Input::cookie('cms_cookies_saved') === "true" && in_array($oTag->pid, explode('-', Input::cookie('cms_cookies') ?? '')));
         }
 
         return $isAccepted;

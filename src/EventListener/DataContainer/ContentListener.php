@@ -145,13 +145,13 @@ class ContentListener {
      * performs a sanity chack for the field cms_pages_scope and pages
      *
      * @param string $varValue
-     * @param Contao\Datacontainer $dc
+     * @param Contao\DataContainer $dc
      *
      * @return string
      *
      * @Callback(table="tl_content", target="fields.cms_pages.save")
      */
-    public function sanityCheckPageScopeWithPages( $varValue, Datacontainer $dc ) {
+    public function sanityCheckPageScopeWithPages( $varValue, DataContainer $dc ) {
 
         if( Input::post('cms_pages_scope') == "current_page" ) {
 
@@ -176,13 +176,13 @@ class ContentListener {
     /**
      * Return the layout_options for the given conversion type
      *
-     * @param Contao\Datacontainer $dc
+     * @param Contao\DataContainer $dc
      *
      * @return array
      *
      * @Callback(table="tl_content", target="fields.cms_layout_option.options")
      */
-    public function getLayoutOptions( Datacontainer $dc ) {
+    public function getLayoutOptions( DataContainer $dc ) {
 
         switch( $dc->activeRecord->type ) {
             case 'cms_overlay':

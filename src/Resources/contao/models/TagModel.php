@@ -34,7 +34,7 @@ class TagModel extends Model {
      *
      * @param int $pageId ID of the page
      *
-     * @return Model\Collection|null
+     * @return Contao\Model\Collection|null
      */
     public static function findAllActiveByPage( $pageId ) {
 
@@ -72,9 +72,9 @@ class TagModel extends Model {
      *
      * @param integer $root
      *
-     * @return static|Model\Collection|null A model, model collection or null if the result is empty
+     * @return static|Contao\Model\Collection|null A model, model collection or null if the result is empty
      */
-    public static function findGroupsWithRootInfo($root) {
+    public static function findGroupsWithRootInfo( $root ) {
 
         $objResult = NULL;
         $objResult = Database::getInstance()->prepare("

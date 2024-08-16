@@ -18,11 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-/**
- * Handles the Contao back end routes.
- *
- * @Route(defaults={"_scope": "backend", "_token_check": true})
- */
+#[Route(defaults: ['_scope' => 'backend', '_token_check' => true])]
 class BackendController extends AbstractController {
 
 
@@ -30,9 +26,8 @@ class BackendController extends AbstractController {
      * Renders the custom backend main route.
      *
      * @return Response
-     *
-     * @Route("%contao.backend.route_prefix%/cms", name="contao_backend_cms_main")
      */
+    #[Route('%contao.backend.route_prefix%/cms', name: 'contao_backend_cms_main')]
     public function cmsMain() {
 
         $this->initializeContaoFramework();

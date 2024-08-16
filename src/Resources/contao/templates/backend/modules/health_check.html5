@@ -63,73 +63,92 @@
 
         <script>
 
-            const checkMissingH1InRenderedPage = function( row, cb ) {
+            (()=>{
 
-                if( row ) {
+                const initHealthCheck = ()=>{
 
-                    const finish = function() {
+                    if( !document.querySelector('.tl_health_check') ) {
+                        return;
+                    }
 
-                        row.removeAttribute('data-url');
+                    const checkMissingH1InRenderedPage = function( row, cb ) {
 
-                        // update count
-                        const fieldset = document.querySelector('#pal_missing_h1_legend');
-                        const rows = fieldset.querySelectorAll('table tr');
-                        const count = fieldset.querySelector('legend > .count');
+                        if( row ) {
 
-                        count.innerHTML = rows.length;
+                            const finish = function() {
 
-                        if( typeof(cb) === "function" ) {
-                            cb();
+                                row.removeAttribute('data-url');
+
+                                // update count
+                                const fieldset = document.querySelector('#pal_missing_h1_legend');
+
+                                if( fieldset ) {
+
+                                    const rows = fieldset.querySelectorAll('table tr');
+                                    const count = fieldset.querySelector('legend > .count');
+
+                                    count.innerHTML = rows.length;
+                                }
+
+                                if( typeof(cb) === "function" ) {
+                                    cb();
+                                }
+                            };
+
+                            const xhr = new XMLHttpRequest();
+
+                            xhr.addEventListener("load", function(){
+
+                                if( xhr.status == 200 && xhr.responseText ) {
+
+                                    if( /<h1[^>]*>(.+)<\/h1>/gs.test(xhr.responseText) ) {
+                                        row.parentNode.removeChild(row);
+                                    }
+                                }
+
+                                finish();
+                            });
+
+                            xhr.addEventListener("error", finish);
+                            xhr.addEventListener("abort", finish);
+
+                            document.addEventListener('turbo:morph', xhr.abort, {once:true});
+
+                            xhr.open("GET", row.getAttribute('data-url'));
+                            xhr.setRequestHeader('X-Requested-With', 'CMS-HealthCheck');
+                            xhr.send();
+
                         }
                     };
 
-                    const xhr = new XMLHttpRequest();
+                    const rows = document.querySelectorAll('#pal_missing_h1_legend tr[data-url]');
+                    const pages = [];
 
-                    xhr.addEventListener("load", function(){
-
-                        if( xhr.status == 200 && xhr.responseText ) {
-
-                            if( /<h1[^>]*>(.+)<\/h1>/gs.test(xhr.responseText) ) {
-                                row.parentNode.removeChild(row);
-                            }
-                        }
-
-                        finish();
-                    });
-
-                    xhr.addEventListener("error", finish);
-                    xhr.addEventListener("abort", finish);
-
-                    xhr.open("GET", row.getAttribute('data-url'));
-                    xhr.setRequestHeader('X-Requested-With', 'CMS-HealthCheck');
-                    xhr.send();
-
-                }
-            };
-
-            document.addEventListener('DOMContentLoaded', function(){
-
-                const rows = document.querySelectorAll('#pal_missing_h1_legend tr[data-url]');
-                const pages = [];
-
-                for( let i=0; i<rows.length; i++ ) {
-                    pages.push(rows[i]);
-                }
-
-                pages.reverse();
-
-                const processPages = function() {
-
-                    let p = pages.pop();
-
-                    if( p ) {
-                        checkMissingH1InRenderedPage(p, processPages);
+                    for( let i=0; i<rows.length; i++ ) {
+                        pages.push(rows[i]);
                     }
+
+                    pages.reverse();
+
+                    const processPages = function() {
+
+                        let p = pages.pop();
+
+                        if( p ) {
+                            checkMissingH1InRenderedPage(p, processPages);
+                        }
+                    };
+
+                    processPages();
                 };
 
-                processPages();
+                if( typeof window.Turbo !== "undefined") {
+                    document.addEventListener('turbo:load', initHealthCheck, {once:true});
+                } else {
+                    document.addEventListener('DOMContentLoaded', initHealthCheck);
+                }
 
-            });
+            })();
 
         </script>
 

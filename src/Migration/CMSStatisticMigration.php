@@ -75,7 +75,7 @@ class CMSStatisticMigration extends AbstractMigration {
 
         foreach( $aCommands as $command ) {
             if( preg_match('/^CREATE TABLE tl_cms_statistic /', $command) ) {
-                $this->connection->executeQuery($command);
+                $this->connection->executeStatement($command);
             }
         }
 
@@ -135,11 +135,11 @@ class CMSStatisticMigration extends AbstractMigration {
 
             $res = $this->connection
                 ->prepare($queryTable['query'])
-                ->execute();
+                ->executeQuery();
 
             if( $res && $res->rowCount() ) {
 
-                $aRows = $res->fetchAll();
+                $aRows = $res->fetchAllAssociative();
 
                 foreach( $aRows as $aRow ) {
 
@@ -151,7 +151,7 @@ class CMSStatisticMigration extends AbstractMigration {
                                 'type' => 'view',
                                 'page' => $aRow['page'] ?? 0,
                             ];
-                            $stmtInsertStatistic->execute($aStats);
+                            $stmtInsertStatistic->executeStatement($aStats);
                         }
                     }
 
@@ -163,7 +163,7 @@ class CMSStatisticMigration extends AbstractMigration {
                                 'type' => 'click',
                                 'page' => $aRow['page'] ?? 0,
                             ];
-                            $stmtInsertStatistic->execute($aStats);
+                            $stmtInsertStatistic->executeStatement($aStats);
                         }
                     }
                 }
@@ -202,7 +202,7 @@ class CMSStatisticMigration extends AbstractMigration {
 
         $res = $this->connection
             ->prepare("SELECT $field FROM $table WHERE $field>0 LIMIT 1")
-            ->execute();
+            ->executeQuery();
 
         if( $res && $res->rowCount() ) {
             return true;

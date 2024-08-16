@@ -83,7 +83,7 @@ class SnippetPreview extends Controller {
                 $aData['title'] = substr($aData['title'], 0, $aData['titleMaxLength']) . '...';
             }
 
-            if( strlen($aData['description']) > $aData['descriptionMaxLength'] ) {
+            if( strlen($aData['description'] ?? '') > $aData['descriptionMaxLength'] ) {
                 $aData['description'] = substr($aData['description'], 0, $aData['descriptionMaxLength']) . '...';
             }
 

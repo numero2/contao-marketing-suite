@@ -379,7 +379,6 @@ class ABTest extends MarketingItem {
 
             if( !empty($objMarketingItem->init_step) ) {
 
-                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
                 $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
                 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
                 $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
@@ -438,13 +437,12 @@ class ABTest extends MarketingItem {
 
             if( $objMI->init_step ) {
 
-                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
-
                 $objMI->init_step = $routePrefix . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id;
                 $objMI->save();
 
                 $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
                 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+                $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 
                 $this->redirect($routePrefix . '?do=cms_marketing&amp;table=tl_cms_content_group&amp;id='.$objMI->id.'&amp;rt='.$requestToken.'&ref='.$refererId);
             }

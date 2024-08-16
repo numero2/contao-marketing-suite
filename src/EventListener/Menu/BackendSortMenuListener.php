@@ -17,19 +17,19 @@ use Contao\CMSConfig;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use numero2\MarketingSuite\Backend\License as dsyxdw;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 class BackendSortMenuListener {
 
 
     /**
-     * @var Security
+     * @var Symfony\Bundle\SecurityBundle\Security
      */
     private $security;
 
     /**
-     * @var ContaoFramework
+     * @var Contao\CoreBundle\Framework\ContaoFramework
      */
     private $framework;
 

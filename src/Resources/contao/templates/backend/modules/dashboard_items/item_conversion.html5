@@ -51,58 +51,57 @@
 <?php if( $this->cms_ci_views || $this->cms_ci_clicks ): ?>
 <script>
 
-    const config_conversion_<?= $this->id; ?> = {
-        type: 'horizontalBar',
-        data: {
-            datasets: [
-                {
-                    label: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['clicks']; ?>',
-                    stack: 'Stack 0',
-                    data: [
-                        <?= $this->cms_ci_clicks; ?>
-                    ],
-                    backgroundColor: 'rgba(244,124,0,1)'
-                },
-                {
-                    label: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?>',
-                    stack: 'Stack 0',
-                    data: [
-                        <?= $this->cms_ci_views; ?>
-                    ],
-                    backgroundColor:  'rgba(244,124,0,0.5)'
-                }
-            ],
-        },
-        options: {
-            responsive: true,
-            legend: {
-                position: 'bottom',
-            },
-
-            tooltips: {
-                displayColors: false,
-                callbacks: {
-                    label: function(item, data) {
-
-                        const dataset = data.datasets[item.datasetIndex];
-
-                        const total = data.datasets.reduce(function(previousValue, currentValue, currentIndex, array) {
-                            return previousValue.data[0] + currentValue.data[0];
-                        });
-
-                        const currentValue = dataset.data[item.index];
-                        const percentage = Math.floor(((currentValue/total) * 100)+0.5);
-
-                        const label = dataset.label;
-
-                        return `${currentValue} ${label} / ${percentage}%`;
-                    }
-                }
-            },
-        }
-    };
-
     (function(){
+        const config_conversion_<?= $this->id; ?> = {
+            type: 'horizontalBar',
+            data: {
+                datasets: [
+                    {
+                        label: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['clicks']; ?>',
+                        stack: 'Stack 0',
+                        data: [
+                            <?= $this->cms_ci_clicks; ?>
+                        ],
+                        backgroundColor: 'rgba(244,124,0,1)'
+                    },
+                    {
+                        label: '<?= $GLOBALS['TL_LANG']['cms_be_dashboard']['views']; ?>',
+                        stack: 'Stack 0',
+                        data: [
+                            <?= $this->cms_ci_views; ?>
+                        ],
+                        backgroundColor:  'rgba(244,124,0,0.5)'
+                    }
+                ],
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom',
+                },
+
+                tooltips: {
+                    displayColors: false,
+                    callbacks: {
+                        label: function(item, data) {
+
+                            const dataset = data.datasets[item.datasetIndex];
+
+                            const total = data.datasets.reduce(function(previousValue, currentValue, currentIndex, array) {
+                                return previousValue.data[0] + currentValue.data[0];
+                            });
+
+                            const currentValue = dataset.data[item.index];
+                            const percentage = Math.floor(((currentValue/total) * 100)+0.5);
+
+                            const label = dataset.label;
+
+                            return `${currentValue} ${label} / ${percentage}%`;
+                        }
+                    }
+                },
+            }
+        };
 
         const context = document.getElementById('chart_conversion_<?= $this->id; ?>').getContext('2d');
         window.chart_conversion_<?= $this->id; ?> = new Chart(context, config_conversion_<?= $this->id; ?>);

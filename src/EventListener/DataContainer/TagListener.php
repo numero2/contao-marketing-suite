@@ -26,14 +26,14 @@ use Contao\System;
 use Exception;
 use numero2\MarketingSuite\Backend\License as jopumir;
 use numero2\MarketingSuite\TagModel;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 class TagListener {
 
 
     /**
-     * @var Symfony\Component\Security\Core\Security
+     * @var Symfony\Bundle\SecurityBundle\Security
      */
     private $security;
 
@@ -156,9 +156,11 @@ class TagListener {
 
         } elseif( Input::get('mode') == 1 ) {
 
-            $objPage = Database::getInstance()->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-                                      ->limit(1)
-                                      ->execute(Input::get('pid'));
+            $objPage = Database::getInstance()
+                ->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+                ->limit(1)
+                ->execute(Input::get('pid'))
+            ;
 
             if( $objPage->pid == 0 ) {
                 $GLOBALS['TL_DCA']['tl_cms_tag']['fields']['type']['default'] = 'group';
@@ -199,9 +201,11 @@ class TagListener {
         // only support past in same level
         if( Input::get('mode') != 'create' ) {
 
-            $objTag = Database::getInstance()->prepare("SELECT * FROM " . $table . " WHERE id=?")
+            $objTag = Database::getInstance()
+                ->prepare("SELECT * FROM " . $table . " WHERE id=?")
                 ->limit(1)
-                ->execute(Input::get('id'));
+                ->execute(Input::get('id'))
+            ;
 
             if( $objTag->pid == '0' ) {
 
@@ -291,7 +295,10 @@ class TagListener {
             $value = 't'.bin2hex(random_bytes(4));
         }
 
-        $objResult = Database::getInstance()->prepare( "SELECT * FROM tl_cms_tag WHERE id=? OR alias=?" )->execute($dc->activeRecord->id, $value);
+        $objResult = Database::getInstance()
+            ->prepare( "SELECT * FROM tl_cms_tag WHERE id=? OR alias=?")
+            ->execute($dc->activeRecord->id, $value)
+        ;
 
         if( $objResult->numRows > 1 ) {
             throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $value));

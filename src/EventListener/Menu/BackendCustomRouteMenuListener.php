@@ -17,14 +17,14 @@ use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 class BackendCustomRouteMenuListener {
 
 
     /**
-     * @var Symfony\Component\Security\Core\Security
+     * @var Symfony\Bundle\SecurityBundle\Security
      */
     private $security;
 
@@ -71,7 +71,6 @@ class BackendCustomRouteMenuListener {
 
         if( array_key_exists('marketing_suite', $user->navigation()) ) {
 
-            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
             $request = System::getContainer()->get('request_stack')->getCurrentRequest();
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
 

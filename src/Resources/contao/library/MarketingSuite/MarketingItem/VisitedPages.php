@@ -87,7 +87,6 @@ class VisitedPages extends MarketingItem {
      */
     public function alterContentHeader( $args, $dc, $objMarketingItem, $objContentParent ) {
 
-        $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
         $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
         $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
         $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
@@ -230,7 +229,6 @@ class VisitedPages extends MarketingItem {
             $group->active = '1';
             $group->save();
 
-            $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');
             $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
             $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
             $routePrefix = System::getContainer()->getParameter('contao.backend.route_prefix');

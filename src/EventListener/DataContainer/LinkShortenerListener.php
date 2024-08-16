@@ -30,8 +30,8 @@ use Contao\StringUtil;
 use Contao\System;
 use Exception;
 use numero2\MarketingSuite\Backend\License as safsewzk;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\Security\Core\Security;
 
 
 class LinkShortenerListener {
@@ -43,7 +43,7 @@ class LinkShortenerListener {
     private $insertTagParser;
 
     /**
-     * @var Symfony\Component\Security\Core\Security
+     * @var Symfony\Bundle\SecurityBundle\Security
      */
     private $security;
 
