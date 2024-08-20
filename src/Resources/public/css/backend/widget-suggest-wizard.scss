@@ -6,15 +6,21 @@ fieldset .suggest.wizard .suggest_wizard:hover {
     display: block;
 }
 
-fieldset > div > .suggest_wizard {
+.widget:has(.suggest_wizard) {
+    position: relative;
+}
+
+fieldset .suggest_wizard {
 
     position: absolute;
     display: none;
-    width: calc(90% - 2px);
+    width: calc(100% - 24px);
     background: $col-white;
 
     ul {
 
+        margin: unset;
+        padding: unset;
         border: 1px solid $col-gray;
 
         li {
@@ -22,7 +28,7 @@ fieldset > div > .suggest_wizard {
             cursor: pointer;
 
             + li {
-                border-top: 2px solid $col-gray;
+                border-top: 1px solid $col-gray;
             }
 
             &:hover {
@@ -30,4 +36,29 @@ fieldset > div > .suggest_wizard {
             }
         }
     }
+}
+
+html[data-color-scheme="dark"] {
+
+    fieldset .suggest_wizard {
+
+        background: var(--content-bg);
+
+        ul {
+
+            border-color: var(--content-border);
+
+            li {
+
+                + li {
+                    border-color: var(--content-border);
+                }
+
+                &:hover {
+                    background: var(--nav-hover-bg);
+                }
+            }
+        }
+    }
+
 }

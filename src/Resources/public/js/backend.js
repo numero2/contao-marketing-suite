@@ -148,8 +148,7 @@ document.addEventListener('tinyMCEInitialized', function (e) {
 
 }, false);
 
-document.addEventListener('DOMContentLoaded', function(){
-
+const initCMSBackend = () => {
 
     // schedule form interaction
     (function(){
@@ -347,7 +346,14 @@ document.addEventListener('DOMContentLoaded', function(){
         });
 
     })();
-});
+};
+
+if( typeof window.Turbo !== "undefined") {
+    document.addEventListener('turbo:load', initCMSBackend, {once:true});
+} else {
+    document.addEventListener('DOMContentLoaded', initCMSBackend);
+}
+
 
 var CMSBackend = {
 
@@ -493,6 +499,12 @@ var CMSBackend = {
                         this.updateCounter(input);
                         this.updatePreview(field.type);
                     });
+                });
+
+                input.addEventListener('change',()=>{
+                    if( input.proxy ) {
+                        input.proxy.innerHTML = input.value;
+                    }
                 });
 
                 // force tiny to update everytime

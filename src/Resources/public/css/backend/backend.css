@@ -2102,6 +2102,15 @@ html[data-color-scheme="dark"] .widget.text-analysis > .group ul li + li {
   display: none;
 }
 
+.widget.snippet h3:has(label + button) {
+  display: flex;
+}
+
+.widget.snippet h3:has(label + button) label {
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
 html[data-color-scheme="dark"] .widget.snippet-preview > div {
   border-color: var(--content-border);
   background: #1f1f1f;
@@ -2161,28 +2170,50 @@ fieldset .suggest.wizard .suggest_wizard:hover {
   display: block;
 }
 
-fieldset > div > .suggest_wizard {
+.widget:has(.suggest_wizard) {
+  position: relative;
+}
+
+fieldset .suggest_wizard {
   position: absolute;
   display: none;
-  width: calc(90% - 2px);
+  width: calc(100% - 24px);
   background: #ffffff;
 }
 
-fieldset > div > .suggest_wizard ul {
+fieldset .suggest_wizard ul {
+  margin: unset;
+  padding: unset;
   border: 1px solid #e9e9e9;
 }
 
-fieldset > div > .suggest_wizard ul li {
+fieldset .suggest_wizard ul li {
   padding: 6px 5px;
   cursor: pointer;
 }
 
-fieldset > div > .suggest_wizard ul li + li {
-  border-top: 2px solid #e9e9e9;
+fieldset .suggest_wizard ul li + li {
+  border-top: 1px solid #e9e9e9;
 }
 
-fieldset > div > .suggest_wizard ul li:hover {
+fieldset .suggest_wizard ul li:hover {
   background: #e9e9e9;
+}
+
+html[data-color-scheme="dark"] fieldset .suggest_wizard {
+  background: var(--content-bg);
+}
+
+html[data-color-scheme="dark"] fieldset .suggest_wizard ul {
+  border-color: var(--content-border);
+}
+
+html[data-color-scheme="dark"] fieldset .suggest_wizard ul li + li {
+  border-color: var(--content-border);
+}
+
+html[data-color-scheme="dark"] fieldset .suggest_wizard ul li:hover {
+  background: var(--nav-hover-bg);
 }
 
 .widget.element-preview iframe {

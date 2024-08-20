@@ -150,6 +150,16 @@
 
         + img { display: none; }
     }
+
+    h3:has(label + button) {
+
+        display: flex;
+
+        label {
+            flex-grow: 1;
+            flex-basis: 0;
+        }
+    }
 }
 
 html[data-color-scheme="dark"] {

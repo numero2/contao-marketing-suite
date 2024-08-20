@@ -26,28 +26,38 @@
 
         <script>
 
-            document.addEventListener('DOMContentLoaded', function(){
+            (()=>{
 
-                new CMSBackend.SnippetPreview({
-                    id: <?= $this->id; ?>,
-                    baseUrl: '<?= $this->baseUrl; ?>',
-                    urlSuffix: '<?= $this->urlSuffix; ?>',
-                    titleTag: '<?= $this->titleTag; ?>',
-                    titleField: '<?= $this->titleField ?>',
-                    titleFieldFallback: '<?= $this->titleFieldFallback ?>',
-                    aliasField: '<?= $this->aliasField ?>',
-                    descriptionField: '<?= $this->descriptionField ?>',
-                    descriptionFieldFallback: '<?= $this->descriptionFieldFallback ?>',
-                    titleMinLength: <?= $this->titleMinLength; ?>,
-                    titleMaxLength: <?= $this->titleMaxLength; ?>,
-                    descriptionMinLength: <?= $this->descriptionMinLength; ?>,
-                    descriptionMaxLength: <?= $this->descriptionMaxLength; ?>,
-                    lengthLabel: '<?= $this->lengthLabel ?>',
-                    labelTooShort: '<?= $this->labelTooShort ?>',
-                    labelTooLong: '<?= $this->labelTooLong ?>',
-                    labelOptimal: '<?= $this->labelOptimal ?>'
-                });
-            });
+                const initSnippetPreview = () => {
+
+                    new CMSBackend.SnippetPreview({
+                        id: <?= $this->id; ?>,
+                        baseUrl: '<?= $this->baseUrl; ?>',
+                        urlSuffix: '<?= $this->urlSuffix; ?>',
+                        titleTag: '<?= $this->titleTag; ?>',
+                        titleField: '<?= $this->titleField ?>',
+                        titleFieldFallback: '<?= $this->titleFieldFallback ?>',
+                        aliasField: '<?= $this->aliasField ?>',
+                        descriptionField: '<?= $this->descriptionField ?>',
+                        descriptionFieldFallback: '<?= $this->descriptionFieldFallback ?>',
+                        titleMinLength: <?= $this->titleMinLength; ?>,
+                        titleMaxLength: <?= $this->titleMaxLength; ?>,
+                        descriptionMinLength: <?= $this->descriptionMinLength; ?>,
+                        descriptionMaxLength: <?= $this->descriptionMaxLength; ?>,
+                        lengthLabel: '<?= $this->lengthLabel ?>',
+                        labelTooShort: '<?= $this->labelTooShort ?>',
+                        labelTooLong: '<?= $this->labelTooLong ?>',
+                        labelOptimal: '<?= $this->labelOptimal ?>'
+                    });
+                };
+
+                if( typeof window.Turbo !== "undefined") {
+                    document.addEventListener('turbo:load', initSnippetPreview, {once:true});
+                } else {
+                    document.addEventListener('DOMContentLoaded', initSnippetPreview);
+                }
+
+            })();
 
         </script>
 
