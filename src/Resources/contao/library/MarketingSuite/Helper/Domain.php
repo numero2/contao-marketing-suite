@@ -47,7 +47,7 @@ class Domain {
         } else if( class_exists('\Pdp\Domain') ) {
 
             $oRules = NULL;
-            $oRules = Rules::createFromPath(TL_ROOT . '/vendor/numero2/contao-marketing-suite/src/Resources/vendor/publicsuffix/public_suffix_list.dat');
+            $oRules = Rules::fromPath(TL_ROOT . '/vendor/numero2/contao-marketing-suite/src/Resources/vendor/publicsuffix/public_suffix_list.dat');
 
             $oDomain = NULL;
             $oDomain = $oRules->resolve($sDomain);
