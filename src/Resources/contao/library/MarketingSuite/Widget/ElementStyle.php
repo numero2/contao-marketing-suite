@@ -179,7 +179,7 @@ class ElementStyle extends CoreBackend {
                         $oRow = $strModel::findOneById(Input::get('id'));
 
                         if( $oRow ) {
-                            $dc->activeRecord = $oRow;
+                            $dc->activeRecord = (object)$oRow->row();
                         }
                     }
 

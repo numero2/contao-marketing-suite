@@ -98,6 +98,29 @@ class ContentListener {
 
 
     /**
+     * Various fixes for issues during minor updates
+     *
+     * @param Contao\DataContainer $dc
+     *
+     * @Callback(table="tl_content", target="config.onload", priority=128)
+     */
+    public function fixContaoCoreCompatibility( $dc ) {
+
+        if( $dc->parentTable !== 'tl_cms_conversion_item' ) {
+            return;
+        }
+
+        // fix missing $dc->currentPid since 5.3.16 / 5.4.7
+        $dc->currentPid = 1;
+
+        // rewrite button href
+        if( !empty($GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']['href']) ) {
+            $GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']['href'] = 'act=copy';
+        }
+    }
+
+
+    /**
      * Gather all tags with a certain type
      *
      * @param Contao\DataContainer $dc

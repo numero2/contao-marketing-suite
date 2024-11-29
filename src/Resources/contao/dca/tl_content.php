@@ -57,7 +57,16 @@ if( Input::get('do') == 'cms_conversion' ) {
         unset($GLOBALS['TL_DCA']['tl_content']['list']['operations'][$cutIndex]);
     }
 
-    $GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']['href'] = 'act=copy';
+    $reset = $GLOBALS['TL_DCA']['tl_content']['list']['operations']['reset_counter'];
+    unset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['reset_counter']);
+    $GLOBALS['TL_DCA']['tl_content']['list']['operations'][] = 'edit';
+    if( !($GLOBALS['TL_DCA']['tl_content']['config']['closed'] ?? false) ) {
+        $GLOBALS['TL_DCA']['tl_content']['list']['operations'][] = 'copy';
+    }
+    $GLOBALS['TL_DCA']['tl_content']['list']['operations']['reset_counter'] = $reset;
+    $GLOBALS['TL_DCA']['tl_content']['list']['operations'][] = 'delete';
+    $GLOBALS['TL_DCA']['tl_content']['list']['operations'][] = 'toggle';
+    $GLOBALS['TL_DCA']['tl_content']['list']['operations'][] = 'show';
 
     // change view to table
     $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = [
