@@ -27,10 +27,15 @@
         if( buttons ) {
 
             const form = container.querySelector('form');
+            let formSubmitted = false;
 
             buttons.forEach((button)=>{
 
                 button.addEventListener('click', function(e){
+
+                    if( formSubmitted ) {
+                        return;
+                    }
 
                     if( this.dataset.all ) {
 
@@ -45,6 +50,7 @@
                             });
                         }
 
+                        formSubmitted = true;
                         form.submit();
                     }
 
@@ -55,6 +61,7 @@
 
                     form.appendChild(hidden);
 
+                    formSubmitted = true;
                     form.submit();
                 });
 

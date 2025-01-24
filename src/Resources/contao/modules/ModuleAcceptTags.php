@@ -6,13 +6,14 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
+ * @copyright Copyright (c) 2025, numero2 - Agentur für digitales Marketing GbR
  */
 
 
 namespace numero2\MarketingSuite;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Database;
 use Contao\Environment;
 use Contao\Input;
@@ -22,6 +23,8 @@ use Contao\System;
 use Contao\Validator;
 use numero2\MarketingSuite\Backend\License as baguru;
 use numero2\MarketingSuite\Helper\Domain;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 class ModuleAcceptTags extends ModuleEUConsent {
@@ -127,10 +130,35 @@ class ModuleAcceptTags extends ModuleEUConsent {
                 $sDomain= Domain::getRegisterableDomain($sDomain);
             }
 
-            // store decision in cookie
-            $this->setCookie('cms_cookies', implode('-', $accepted), $iCookieExpires, '', $sDomain);
-            $this->setCookie('cms_cookies_saved', "true", $iCookieExpires, '', $sDomain);
-            $this->redirect($action);
+
+            $response = new RedirectResponse($action);
+
+            // store decision in cookie with secure flag and SameSite=Lax
+            $response->headers->setCookie(new Cookie(
+                'cms_cookies',
+                implode('-', $accepted),
+                $iCookieExpires,
+                '/',
+                $sDomain,
+                true, // secure
+                true, // httpOnly
+                false, // raw
+                'lax' // sameSite
+            ));
+
+            $response->headers->setCookie(new Cookie(
+                'cms_cookies_saved',
+                "true",
+                $iCookieExpires,
+                '/',
+                $sDomain,
+                true, // secure
+                true, // httpOnly
+                false, // raw
+                'lax' // sameSite
+            ));
+
+            throw new ResponseException($response);
         }
     }
 
