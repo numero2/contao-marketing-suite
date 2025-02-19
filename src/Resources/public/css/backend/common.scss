@@ -18,7 +18,7 @@ body:not(.lw) {
 
 .cms_seperator {
     display: block;
-    margin-left: -1px;
+    margin-inline: -1px;
     width: calc(100% + 2px);
     height: 10px;
     background: $col-gray-2;

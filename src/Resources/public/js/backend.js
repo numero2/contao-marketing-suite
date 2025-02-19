@@ -348,8 +348,8 @@ const initCMSBackend = () => {
     })();
 };
 
-if( typeof window.Turbo !== "undefined") {
-    document.addEventListener('turbo:load', initCMSBackend, {once:true});
+if( typeof window.Turbo !== "undefined" ) {
+    document.addEventListener('turbo:load', initCMSBackend);
 } else {
     document.addEventListener('DOMContentLoaded', initCMSBackend);
 }

@@ -14,6 +14,7 @@ namespace numero2\MarketingSuiteBundle\EventListener\DataContainer;
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\Database;
@@ -199,12 +200,12 @@ class TagListener {
         }
 
         // only support past in same level
-        if( Input::get('mode') != 'create' ) {
+        if( $arrClipboard['mode'] != 'create' ) {
 
             $objTag = Database::getInstance()
                 ->prepare("SELECT * FROM " . $table . " WHERE id=?")
                 ->limit(1)
-                ->execute(Input::get('id'))
+                ->execute($arrClipboard['id'])
             ;
 
             if( $objTag->pid == '0' ) {
@@ -245,11 +246,16 @@ class TagListener {
         $imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id']));
         $imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id']));
 
-        if( !empty($row['id']) && $row['id'] > 0 ) {
-            $return = $disableAfter ? Image::getHtml('pasteafter_.svg').' ' : '<a href="'.Backend::addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])).'" data-action="contao--scroll-offset#store">'.$imagePasteAfter.'</a> ';
+        $disableSuffix = '_';
+        if( version_compare(ContaoCoreBundle::getVersion(),'5.4.0', '>=') ) {
+            $disableSuffix = '--disabled';
         }
 
-        return $return.($disableInto ? Image::getHtml('pasteinto_.svg').' ' : '<a href="'.Backend::addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id'])).'" data-action="contao--scroll-offset#store">'.$imagePasteInto.'</a> ');
+        if( !empty($row['id']) && $row['id'] > 0 ) {
+            $return = $disableAfter ? Image::getHtml('pasteafter'.$disableSuffix.'.svg').' ' : '<a href="'.Backend::addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])).'" data-action="contao--scroll-offset#store">'.$imagePasteAfter.'</a> ';
+        }
+
+        return $return.($disableInto ? Image::getHtml('pasteinto'.$disableSuffix.'.svg').' ' : '<a href="'.Backend::addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id'])).'" data-action="contao--scroll-offset#store">'.$imagePasteInto.'</a> ');
     }
 
 

@@ -25,13 +25,13 @@
         <source>Einfügen nach</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.pasteafter.1">
-        <source>Nach der Tag ID %s einfügen</source>
+        <source>Nach dem Tag ID %s einfügen</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.pasteinto.0">
         <source>Einfügen in</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.pasteinto.1">
-        <source>In die Tag ID %s einfügen</source>
+        <source>In den Tag ID %s einfügen</source>
     </trans-unit>
     <trans-unit id="tl_cms_tag.delete.0">
         <source>Tag löschen</source>

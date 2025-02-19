@@ -11,6 +11,7 @@
             > .tl_listing_container {
                 margin: 0;
                 margin-top: 15px;
+                padding-inline: 5px;
             }
         }
 
@@ -68,8 +69,8 @@
             position: absolute;
             right: 15px;
 
-            padding: 0px 4.5px;
-            border-radius: 8px;
+            padding: 2px 7px;
+            border-radius: 12px;
             height: 16px;
             line-height: 16px;
         }
@@ -83,5 +84,9 @@ html[data-color-scheme="dark"] {
         tr[data-url] td:nth-child(1) .icon:before {
             filter: invert(1);
         }
+    }
+
+    .tl_health_check fieldset > legend > .count {
+        background: var(--blue);
     }
 }

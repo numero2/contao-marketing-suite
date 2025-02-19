@@ -12,6 +12,7 @@
 
 use Contao\Config;
 use Contao\DC_Table;
+use Contao\DataContainer;
 
 
 /**
@@ -31,7 +32,8 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
     ]
 ,   'list' => [
         'sorting' => [
-            'mode'                  => 5
+            'mode'                  => DataContainer::MODE_TREE
+        ,   'rootPaste'             => false
         ,   'icon'                  => 'pagemounts.svg'
         ,   'panelLayout'           => 'search,limit;filter'
         ]

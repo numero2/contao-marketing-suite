@@ -138,13 +138,15 @@ fieldset[data-contao--toggle-fieldset-id-value="cms_helper_bottom_legend"] {
 .tl_panel {
 
     &:has(.cms_be_help) {
-        padding-left: 0;
-        padding-right: 0;
-        border-top: 1px solid var(--content-border);
+
+        padding-inline: 0;
+        padding-block: 0;
+        gap: unset;
     }
 
     .cms_be_help {
-        margin-top: -5px;
+        //margin-top: -5px;
+        width: 100%;
     }
 }
 

@@ -6,7 +6,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
+ * @copyright Copyright (c) 2025, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -306,7 +306,11 @@ class HealthCheck extends CoreBackendModule {
                             $oModule = ModuleModel::findById( $oElement->module );
 
                             $oElement = $oModule;
-                            $sElementPalette = $GLOBALS['TL_DCA']['tl_module']['palettes'][ $oElement->type ];
+                            $sElementPalette = $GLOBALS['TL_DCA']['tl_module']['palettes'][ $oElement->type ] ?? null;
+
+                            if( $sElementPalette === null ) {
+                                continue;
+                            }
                         }
 
                         // check headline element
