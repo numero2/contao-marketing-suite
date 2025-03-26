@@ -179,7 +179,7 @@ class TagListener {
         $request = System::getContainer()->get('request_stack')->getMainRequest();
         $pageModel = $request->get('pageModel');
 
-        if( !aczolku::hasFeature('tags', $pageModel->trail[0]) ) {
+        if( !($pageModel instanceof PageModel) || !aczolku::hasFeature('tags', $pageModel->trail[0]) ) {
             return;
         }
 
