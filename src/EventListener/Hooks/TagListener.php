@@ -437,7 +437,7 @@ class TagListener {
             $href = substr($href,0,strpos($href, '?'));
         }
 
-        $href = $href . '?_cmsscb=1';
+        $href = '/' . $href . '?_cmsscb=1';
 
         if( !empty($strElementId) ) {
             $href .= '&amp;_cmselid='.$strElementId;

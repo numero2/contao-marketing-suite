@@ -73,12 +73,11 @@
         function updatePreviewFrameHeight(e) {
 
             if( e.data.height ) {
-                console.log(e.data.height);
                 frame.height = e.data.height;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        const initCMSStylePreview = function() {
 
             const updatePreview = function() {
 
@@ -137,7 +136,13 @@
                     });
                 });
             }
-        });
+        };
+
+        if( typeof window.Turbo !== "undefined") {
+            document.addEventListener('turbo:load', initCMSStylePreview, {once:true});
+        } else {
+            document.addEventListener('DOMContentLoaded', initCMSStylePreview);
+        }
 
     </script>
 

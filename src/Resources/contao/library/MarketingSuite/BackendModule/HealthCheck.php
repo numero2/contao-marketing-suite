@@ -243,12 +243,14 @@ class HealthCheck extends CoreBackendModule {
                         break;
                     }
 
+                    $editLabel = is_array($GLOBALS['TL_LANG']['DCA']['edit']) ? $GLOBALS['TL_LANG']['DCA']['edit'][1] : $GLOBALS['TL_LANG']['DCA']['edit'];
+
                     $oCategory->items[] = (object) [
                         'icon'  => Controller::addStaticUrlTo(Image::getPath(Controller::getPageStatusIcon($oPages)))
                     ,   'type'  => 'page'
                     ,   'name'  => $oPages->title
                     ,   'href'  => $routePrefix . '?do=article&amp;pn='.$oPages->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID()
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['edit'], $oPages->id)
+                    ,   'title' => sprintf($editLabel, $oPages->id)
                     ,   'attributes' => $aAttributes
                     ];
                 }
@@ -293,9 +295,9 @@ class HealthCheck extends CoreBackendModule {
                     while( $oContentElements->next() ) {
 
                         $oElement = $oContentElements;
-                        $sElementPalette = $GLOBALS['TL_DCA']['tl_content']['palettes'][ $oElement->type ];
+                        $sElementPalette = $GLOBALS['TL_DCA']['tl_content']['palettes'][ $oElement->type ]??null;
 
-                        if( $oElement->invisible ) {
+                        if( $oElement->invisible || $sElementPalette === null ) {
                             continue;
                         }
 
@@ -559,12 +561,14 @@ class HealthCheck extends CoreBackendModule {
                         break;
                     }
 
+                    $editLabel = is_array($GLOBALS['TL_LANG']['DCA']['edit']) ? $GLOBALS['TL_LANG']['DCA']['edit'][1] : $GLOBALS['TL_LANG']['DCA']['edit'];
+
                     $oCategory->items[] = (object) [
                         'icon'  => Controller::addStaticUrlTo(Image::getPath(Controller::getPageStatusIcon($oPages)))
                     ,   'type'  => 'page'
                     ,   'name'  => $oPages->title
                     ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['edit'], $oPages->id)
+                    ,   'title' => sprintf($editLabel, $oPages->id)
                     ];
                 }
             }
@@ -620,12 +624,14 @@ class HealthCheck extends CoreBackendModule {
                     break;
                 }
 
+                $editLabel = is_array($GLOBALS['TL_LANG']['DCA']['edit']) ? $GLOBALS['TL_LANG']['DCA']['edit'][1] : $GLOBALS['TL_LANG']['DCA']['edit'];
+
                 $oCategory->items[] = (object) [
                     'icon'  => Controller::addStaticUrlTo(Image::getPath(Controller::getPageStatusIcon($oPages)))
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['edit'], $oPages->id)
+                ,   'title' => sprintf($editLabel, $oPages->id)
                 ];
             }
         }
@@ -655,12 +661,14 @@ class HealthCheck extends CoreBackendModule {
                         break;
                     }
 
+                    $childrenLabel = is_array($GLOBALS['TL_LANG']['DCA']['children']) ? $GLOBALS['TL_LANG']['DCA']['children'][1] : $GLOBALS['TL_LANG']['DCA']['children'];
+
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaonews/news.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oNews->headline
                     ,   'href'  => $routePrefix . '?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['children'], $oNews->id)
+                    ,   'title' => sprintf($childrenLabel, $oNews->id)
                     ];
                 }
             }
@@ -691,12 +699,14 @@ class HealthCheck extends CoreBackendModule {
                         break;
                     }
 
+                    $childrenLabel = is_array($GLOBALS['TL_LANG']['DCA']['children']) ? $GLOBALS['TL_LANG']['DCA']['children'][1] : $GLOBALS['TL_LANG']['DCA']['children'];
+
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaocalendar/calendar.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oEvents->title
                     ,   'href'  => $routePrefix . '?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['children'], $oEvents->id)
+                    ,   'title' => sprintf($childrenLabel, $oEvents->id)
                     ];
                 }
             }
@@ -752,12 +762,14 @@ class HealthCheck extends CoreBackendModule {
                     break;
                 }
 
+                $editLabel = is_array($GLOBALS['TL_LANG']['DCA']['edit']) ? $GLOBALS['TL_LANG']['DCA']['edit'][1] : $GLOBALS['TL_LANG']['DCA']['edit'];
+
                 $oCategory->items[] = (object) [
                     'icon'  => Controller::addStaticUrlTo(Image::getPath(Controller::getPageStatusIcon($oPages)))
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['edit'], $oPages->id)
+                ,   'title' => sprintf($editLabel, $oPages->id)
                 ];
             }
         }
@@ -787,12 +799,14 @@ class HealthCheck extends CoreBackendModule {
                         break;
                     }
 
+                    $childrenLabel = is_array($GLOBALS['TL_LANG']['DCA']['children']) ? $GLOBALS['TL_LANG']['DCA']['children'][1] : $GLOBALS['TL_LANG']['DCA']['children'];
+
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaonews/news.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oNews->headline
                     ,   'href'  => $routePrefix . '?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['children'], $oNews->id)
+                    ,   'title' => sprintf($childrenLabel, $oNews->id)
                     ];
                 }
             }
@@ -823,12 +837,14 @@ class HealthCheck extends CoreBackendModule {
                         break;
                     }
 
+                    $childrenLabel = is_array($GLOBALS['TL_LANG']['DCA']['children']) ? $GLOBALS['TL_LANG']['DCA']['children'][1] : $GLOBALS['TL_LANG']['DCA']['children'];
+
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaocalendar/calendar.svg'
                     ,   'type'  => 'page'
                     ,   'name'  => $oEvents->title
                     ,   'href'  => $routePrefix . '?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id='.$oEvents->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['children'], $oEvents->id)
+                    ,   'title' => sprintf($childrenLabel, $oEvents->id)
                     ];
                 }
             }
@@ -1015,12 +1031,14 @@ class HealthCheck extends CoreBackendModule {
                     break;
                 }
 
+                $editLabel = is_array($GLOBALS['TL_LANG']['DCA']['edit']) ? $GLOBALS['TL_LANG']['DCA']['edit'][1] : $GLOBALS['TL_LANG']['DCA']['edit'];
+
                 $oCategory->items[] = (object) [
                     'icon'  => Controller::addStaticUrlTo(Image::getPath(Controller::getPageStatusIcon($oPages)))
                 ,   'type'  => 'page'
                 ,   'name'  => $oPages->title
                 ,   'href'  => $routePrefix . '?do=page&amp;act=edit&amp;id='.$oPages->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_meta_legend'
-                ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['edit'], $oPages->id)
+                ,   'title' => sprintf($editLabel, $oPages->id)
                 ];
             }
         }
@@ -1043,12 +1061,14 @@ class HealthCheck extends CoreBackendModule {
                         break;
                     }
 
+                    $childrenLabel = is_array($GLOBALS['TL_LANG']['DCA']['children']) ? $GLOBALS['TL_LANG']['DCA']['children'][1] : $GLOBALS['TL_LANG']['DCA']['children'];
+
                     $oCategory->items[] = (object) [
                         'icon'  => 'bundles/contaonews/news.svg'
                     ,   'type'  => 'news'
                     ,   'name'  => $oNews->headline
                     ,   'href'  => $routePrefix . '?do=news&amp;table=tl_news&amp;act=edit&amp;id='.$oNews->id.'&amp;rt='.$this->getRequestToken().'&amp;ref='.$this->getRefererID().'#pal_opengraph_legend'
-                    ,   'title' => sprintf($GLOBALS['TL_LANG']['DCA']['children'], $oNews->id)
+                    ,   'title' => sprintf($childrenLabel, $oNews->id)
                     ];
                 }
             }

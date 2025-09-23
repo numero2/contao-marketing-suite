@@ -6,7 +6,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
+ * @copyright Copyright (c) 2025, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -43,16 +43,16 @@ class CMSLinkShortenerStatisticMigration extends AbstractMigration {
 
     public function shouldRun(): bool {
 
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if( !$schemaManager->tablesExist(['tl_cms_link_shortener_statistics']) ) {
             return false;
         }
 
         // check for 'os' values used prior to Contao 5
-        $res = $this->connection
-            ->prepare("SELECT count(1) AS count FROM tl_cms_link_shortener_statistics WHERE BINARY os in ('mac', 'win-ce', 'win', 'ios', 'android', 'blackberry', 'symbian', 'webos', 'unix', 'unknown')")
-            ->execute();
+        $res = $this->connection->executeQuery(
+            "SELECT count(1) AS count FROM tl_cms_link_shortener_statistics WHERE BINARY os in ('mac', 'win-ce', 'win', 'ios', 'android', 'blackberry', 'symbian', 'webos', 'unix', 'unknown')"
+        );
 
         if( $res && $res->rowCount() ) {
             $count = $res->fetchOne();
@@ -68,7 +68,7 @@ class CMSLinkShortenerStatisticMigration extends AbstractMigration {
     public function run(): MigrationResult {
 
         // update table to contain needed field device
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
         $columns = $schemaManager->listTableColumns('tl_cms_link_shortener_statistics');
 
         if( !isset($columns['device']) ) {

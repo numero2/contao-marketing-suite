@@ -47,7 +47,7 @@
                                     </td>
                                     <td class="tl_file_list tl_right_nowrap">
                                         <a href="<?= $item->href; ?>" title="<?= $item->title; ?>" class="edit">
-                                            <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $GLOBALS['TL_LANG']['tl_page']['edit'][0] ;?>">
+                                            <img src="system/themes/flexible/icons/edit.svg" width="16" height="16" alt="<?= $item->title; ?>">
                                         </a>
                                     </td>
                                 </tr>

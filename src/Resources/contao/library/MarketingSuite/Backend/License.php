@@ -6,7 +6,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
+ * @copyright Copyright (c) 2025, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -516,8 +516,7 @@ class License {
         $connection = System::getContainer()->get('database_connection');
 
         $res = $connection
-            ->prepare("SELECT * FROM tl_page WHERE type=? OR type=?")
-            ->executeQuery(['root', 'rootfallback'])
+            ->executeQuery("SELECT * FROM tl_page WHERE type=? OR type=?",['root', 'rootfallback'])
         ;
 
         if( $res && $res->rowCount() ) {
@@ -544,8 +543,7 @@ class License {
         $connection = System::getContainer()->get('database_connection');
 
         $res = $connection
-            ->prepare("SELECT * FROM tl_page WHERE id=? LIMIT 1")
-            ->executeQuery([$id])
+            ->executeQuery("SELECT * FROM tl_page WHERE id=? LIMIT 1",[$id])
         ;
 
         if( $res && $res->rowCount() ) {
@@ -566,8 +564,7 @@ class License {
         $connection = System::getContainer()->get('database_connection');
 
         $res = $connection
-            ->prepare("SELECT count(1) AS count FROM tl_page WHERE cms_root_license!=?")
-            ->executeQuery([''])
+            ->executeQuery("SELECT count(1) AS count FROM tl_page WHERE cms_root_license!=?",[''])
         ;
 
         if( $res && $res->rowCount() ) {
@@ -590,8 +587,7 @@ class License {
         $connection = System::getContainer()->get('database_connection');
 
         $res = $connection
-            ->prepare("SELECT count(1) AS count FROM tl_page WHERE cms_root_license!=? AND id=?")
-            ->executeQuery(['', $id])
+            ->executeQuery("SELECT count(1) AS count FROM tl_page WHERE cms_root_license!=? AND id=?",['', $id])
         ;
 
         if( $res && $res->rowCount() ) {

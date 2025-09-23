@@ -44,23 +44,30 @@ body:not(.lw) {
 
     display: none;
 
-    ul > li {
+    ul {
 
-        display: block;
-        padding: 0;
-        margin-top: 2px;
+        margin: unset;
+        padding: unset;
 
-        > span:not(.tree):not(.list) {
+        > li {
+
             display: block;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
+            padding: 0;
+            margin-top: 2px;
 
-        &:not(:nth-child(1)) > span:not(.tree):not(.list) {
-            margin-top: 10px;
+            > span:not(.tree):not(.list) {
+                display: block;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+
+            &:not(:nth-child(1)) > span:not(.tree):not(.list) {
+                margin-top: 10px;
+            }
         }
     }
 }
+
 .hover-label {
 
     position: relative;
@@ -117,10 +124,12 @@ select[readonly].tl_chosen ~ .tl_chosen,
     pointer-events: none;
 }
 
+/*
 .widget.readonly .tl_help,
 .widget.disabled .tl_help,
 input[readonly] ~ .tl_help { visibility: hidden; }
 select[readonly] ~ .tl_help { visibility: hidden; }
+*/
 
 input[type="radio"][readonly],
 input[type="radio"][readonly] + label {

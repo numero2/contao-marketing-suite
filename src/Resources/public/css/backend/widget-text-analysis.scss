@@ -111,6 +111,22 @@
     }
 }
 
+.widget-group {
+
+    @media screen and ( min-width: 1200px ) {
+
+        .widget.text-cms {
+            --widget-cols: 7;
+            float: unset !important;
+            width: unset !important;
+        }
+
+        .widget.text-analysis {
+            --widget-cols: 5;
+        }
+    }
+}
+
 html[data-color-scheme="dark"] {
 
     .widget.text-analysis {
