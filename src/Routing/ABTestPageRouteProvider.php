@@ -82,6 +82,11 @@ class ABTestPageRouteProvider implements RouteProviderInterface {
         $oMI = new ABTestPage();
         $pageSelected = $oMI->selectAorBPage($page);
 
+        // never perform A/B test on any pages that require items
+        if( $pageSelected->requireItem ) {
+            return $collection;
+        }
+
         $path = $route->getPath();
 
         if( $pageSelected->id === $page->id ) {
