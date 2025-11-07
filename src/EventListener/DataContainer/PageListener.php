@@ -53,7 +53,7 @@ class PageListener {
      * @Callback(table="tl_page", target="config.onundo")
      */
     public function refreshLicenseOnUndo( string $table, array $aRow, DataContainer $dc ): void {
-        $this->refreshLicenseOnRestoreVersion( $table, 0, 0, $aRow );
+        $this->refreshLicenseOnRestore( $table, 0, 0, $aRow );
     }
 
 

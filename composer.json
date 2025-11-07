@@ -18,7 +18,7 @@
     },
     "require": {
         "contao/core-bundle": "^5.3",
-        "doctrine/dbal": "^3.6",
+        "doctrine/dbal": "^3.6 || ^4.3",
         "jeremykendall/php-domain-parser": "^6.3",
         "org_heigl/hyphenator": "^2.3",
         "psr/log": "^1.1 || 2.0 || ^3.0",
