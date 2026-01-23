@@ -195,13 +195,18 @@ input[type=radio][readonly] + label {
   text-decoration: underline;
 }
 
-#tl_messages .tl_error.cms_testmode {
-  background: #006494;
+.tl_error.cms_testmode, .tl_error.cms_twig_layout {
   color: #ffffff;
-  padding: 10px;
+  padding: 10px !important;
 }
-#tl_messages .tl_error.cms_testmode a {
+.tl_error.cms_testmode a, .tl_error.cms_twig_layout a {
   color: inherit;
+}
+.tl_error.cms_testmode {
+  background: #006494 !important;
+}
+.tl_error.cms_twig_layout {
+  background: #e74c3c !important;
 }
 
 html[data-color-scheme=dark] .cms_seperator {

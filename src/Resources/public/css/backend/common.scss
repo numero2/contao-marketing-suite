@@ -227,18 +227,31 @@ input[type="radio"][readonly] + label {
 }
 
 .widget p.tl_help a,
-.widget p.tl_tip a{
+.widget p.tl_tip a {
     text-decoration: underline;
 }
 
-#tl_messages .tl_error.cms_testmode {
+#tl_messages {
 
-    background: $col-blue;
-    color: $col-white;
-    padding: 10px;
+}
+.tl_error {
 
-    a {
-        color: inherit;
+    &.cms_testmode, &.cms_twig_layout {
+
+        color: $col-white;
+        padding: 10px !important;
+
+        a {
+            color: inherit;
+        }
+    }
+
+    &.cms_testmode {
+        background: $col-blue !important;
+    }
+
+    &.cms_twig_layout {
+        background: $col-red !important;
     }
 }
 

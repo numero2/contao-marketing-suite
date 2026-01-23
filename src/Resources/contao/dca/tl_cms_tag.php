@@ -6,7 +6,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
+ * @copyright Copyright (c) 2026, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -189,7 +189,7 @@ $GLOBALS['TL_DCA']['tl_cms_tag'] = [
             'inputType'             => 'pageTree'
         ,   'foreignKey'            => 'tl_page.title'
         ,   'eval'                  => ['mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'tl_class'=>'clr']
-        ,   'relation'              => ['type'=>'hasMany', 'load'=>'lazy']
+        ,   'relation'              => ['table'=>'tl_page', 'type'=>'hasMany', 'load'=>'lazy']
         ,   'sql'                   => "text NULL"
         ]
     ,   'pages_root' => [

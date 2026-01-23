@@ -107,6 +107,9 @@
     <trans-unit id="MSC.testmode_enabled">
         <source><![CDATA[Der Testmodus der Contao Marketing Suite ist aktiv. Bei aktiviertem Testmodus können alle Funktionen uneingeschränkt getestet werden. <!--<a href="%s" target="_blank">Mehr erfahren</a>-->]]></source>
     </trans-unit>
+    <trans-unit id="MSC.twig_layout_detected">
+        <source><![CDATA[Die Installation verwendet ein Seitenlayout vom Typ „Twig-Layout mit Slots“. Die Contao Marketing Suite ist nur mit Standardlayouts kompatibel.]]></source>
+    </trans-unit>
     <trans-unit id="MSC.cms_disabled">
         <source>deaktiviert</source>
     </trans-unit>

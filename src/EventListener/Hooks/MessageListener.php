@@ -6,7 +6,7 @@
  * @author    Benny Born <benny.born@numero2.de>
  * @author    Michael Bösherz <michael.boesherz@numero2.de>
  * @license   Commercial
- * @copyright Copyright (c) 2024, numero2 - Agentur für digitales Marketing GbR
+ * @copyright Copyright (c) 2026, numero2 - Agentur für digitales Marketing GbR
  */
 
 
@@ -14,6 +14,7 @@ namespace numero2\MarketingSuiteBundle\EventListener\Hooks;
 
 use Contao\CMSConfig;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\LayoutModel;
 use numero2\MarketingSuite\Backend\License;
 
 
@@ -34,6 +35,24 @@ class MessageListener {
                 $GLOBALS['TL_LANG']['MSC']['testmode_enabled']
             ,   'https://contao-marketingsuite.com/sy5xkh'
             ) . '</p>';
+        }
+
+        return '';
+    }
+
+    /**
+     * Check for potential twig layouts
+     *
+     * @return string
+     *
+     * @Hook("getSystemMessages")
+     */
+    public function twigLayoutCheck(): string {
+
+        $layout = LayoutModel::findByType('modern');
+
+        if( $layout?->count() > 0 ) {
+            return '<p class="tl_error cms_twig_layout">' . $GLOBALS['TL_LANG']['MSC']['twig_layout_detected'] . '</p>';
         }
 
         return '';

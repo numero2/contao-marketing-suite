@@ -3,6 +3,10 @@ Contao Marketing Suite
 
 [![](https://img.shields.io/packagist/v/numero2/contao-marketing-suite.svg?style=flat-square)](https://packagist.org/packages/numero2/contao-marketing-suite) ![](https://img.shields.io/badge/license-commercial-blue.svg?style=flat-square)
 
+> [!WARNING]
+> For technical reasons, the Contao Marketing Suite does not support Twig-based layouts (e.g. Twig layouts with slots).
+> Please use standard page layouts to ensure compatibility.
+
 About
 --
 
@@ -11,10 +15,10 @@ The package adds marketing functionalities to Contao. The Contao Marketing Suite
 Insert Tags
 --
 
-| Tag    | Description                                                                          |
-| ------ | ------------------------------------------------------------------------------------ |
-| `{{cms_optinlink}}` | Creates a link that redisplays the cookie consent dialog so that the user can agree to the use of the necessary group. After consent, the browser window will automatically scroll to the original element. |
-| `{{ifoptin::*}}`    | This tag is completely removed if the corresponding element was not approved. The parameter here is the ID of the tag (e.g. Google Analytics). This way, content in templates can be played depending on whether the user has agreed to the use of a certain tag. `{{ifoptin::1}}<h1>Has agreed</h1>{{ifoptin}}` |
+| Tag                 | Description                                                                                                                                                                                                                                                                                                                        |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `{{cms_optinlink}}` | Creates a link that redisplays the cookie consent dialog so that the user can agree to the use of the necessary group. After consent, the browser window will automatically scroll to the original element.                                                                                                                        |
+| `{{ifoptin::*}}`    | This tag is completely removed if the corresponding element was not approved. The parameter here is the ID of the tag (e.g. Google Analytics). This way, content in templates can be played depending on whether the user has agreed to the use of a certain tag. `{{ifoptin::1}}<h1>Has agreed</h1>{{ifoptin}}`                   |
 | `{{ifnoptin::*}}`   | This tag will be removed completely if the corresponding element has been approved. The parameter here is the ID of the tag (e.g. Google Analytics). This way, content in templates can be played depending on whether the user has not agreed to the use of a particular tag. `{{ifnoptin::1}}<h1>Did not agree</h1>{{ifnoptin}}` |
 
 For Developers
