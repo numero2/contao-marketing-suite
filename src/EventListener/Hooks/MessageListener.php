@@ -15,6 +15,7 @@ namespace numero2\MarketingSuiteBundle\EventListener\Hooks;
 use Contao\CMSConfig;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\LayoutModel;
+use Contao\System;
 use numero2\MarketingSuite\Backend\License;
 
 
@@ -40,8 +41,9 @@ class MessageListener {
         return '';
     }
 
+
     /**
-     * Check for potential twig layouts
+     * Check for potential use of Twig layouts
      *
      * @return string
      *
@@ -49,10 +51,16 @@ class MessageListener {
      */
     public function twigLayoutCheck(): string {
 
-        $layout = LayoutModel::findByType('modern');
+        $schemaManager = System::getContainer()->get('database_connection')->createSchemaManager();
+        $tableColumns = $schemaManager->listTableColumns( LayoutModel::getTable() );
 
-        if( $layout?->count() > 0 ) {
-            return '<p class="tl_error cms_twig_layout">' . $GLOBALS['TL_LANG']['MSC']['twig_layout_detected'] . '</p>';
+        if( array_key_exists('type',$tableColumns) ) {
+
+            $layout = LayoutModel::findByType('modern');
+
+            if( $layout?->count() > 0 ) {
+                return '<p class="tl_error cms_twig_layout">' . $GLOBALS['TL_LANG']['MSC']['twig_layout_detected'] . '</p>';
+            }
         }
 
         return '';
