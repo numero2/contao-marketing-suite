@@ -50,9 +50,11 @@ class PageListener {
      * @param array $aRow
      * @param Contao\DataContainer $dc
      *
-     * @Callback(table="tl_page", target="config.onundo")
+     * @Callback(table="tl_page", target="config.__onundo")
      */
     public function refreshLicenseOnUndo( string $table, array $aRow, DataContainer $dc ): void {
+        return;
+
         $this->refreshLicenseOnRestore( $table, 0, 0, $aRow );
     }
 
@@ -65,9 +67,10 @@ class PageListener {
      * @param int $iVersion
      * @param array $aRow
      *
-     * @Callback(table="tl_page", target="config.onrestore")
+     * @Callback(table="tl_page", target="config.__onrestore")
      */
     public function refreshLicenseOnRestore( string $table, int $pid, int $iVersion, array $aRow ): void {
+        return;
 
         if( $table !== 'tl_page' ) {
             return;
@@ -99,5 +102,4 @@ class PageListener {
             }
         }
     }
-
 }

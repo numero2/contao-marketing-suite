@@ -30,6 +30,7 @@ class MessageListener {
      * @Hook("getSystemMessages")
      */
     public function testModeCheck(): string {
+        return '';
 
         if( CMSConfig::get('testmode') && !License::hasNoLicense() ) {
             return '<p class="tl_error cms_testmode">' . sprintf(

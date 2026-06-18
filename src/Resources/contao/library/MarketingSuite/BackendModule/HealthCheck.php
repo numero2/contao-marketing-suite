@@ -236,7 +236,11 @@ class HealthCheck extends CoreBackendModule {
                     // if it's a published page add the absolute url so
                     // we can perform some analysis on the frontend side
                     if( $oPages->published ) {
-                        $aAttributes['url'] = $objPage->getAbsoluteUrl();
+                        try {
+                            // maybe page not routable
+                            $aAttributes['url'] = $objPage->getAbsoluteUrl();
+                        } catch( Exception $e ) {
+                        }
                     }
 
                     if( CMSConfig::get('testmode') && count($oCategory->items) == 1 ) {

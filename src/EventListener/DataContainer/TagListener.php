@@ -565,7 +565,7 @@ class TagListener {
         $aRoots[''] = $GLOBALS['TL_LANG']['tl_cms_tag']['roots']['default'];
 
         $oPages = NULL;
-        $oPages = PageModel::findBy(['type=? AND cms_root_license!=?'], ['root', ''], ['order'=>'sorting ASC']);
+        $oPages = PageModel::findBy(['type=?'], ['root'], ['order'=>'sorting ASC']);
 
         if( $oPages ) {
 
@@ -606,7 +606,7 @@ class TagListener {
         $aRoots = [];
 
         $oPages = NULL;
-        $oPages = PageModel::findBy(['type=? AND cms_root_license!=?'], ['root', ''], ['order'=>'sorting ASC']);
+        $oPages = PageModel::findBy(['type=?'], ['root'], ['order'=>'sorting ASC']);
 
         if( $oPages ) {
             foreach( $oPages as $oRoot ) {

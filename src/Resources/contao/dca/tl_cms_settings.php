@@ -29,7 +29,7 @@ $GLOBALS['TL_DCA']['tl_cms_settings'] = [
 ,   'fields' => [
         'send_anonymized_data' => [
             'inputType'        => 'checkbox'
-        ,   'eval'             => ['tl_class'=>'w50']
+        ,   'eval'             => ['tl_class'=>'w50', 'disabled'=>'disabled']
         ]
     ,   'dnt_backend_users' => [
             'inputType'        => 'checkbox'
@@ -37,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_cms_settings'] = [
         ]
     ,   'hide_missing_features' => [
             'inputType'        => 'checkbox'
-        ,   'eval'             => ['tl_class'=>'w50']
+        ,   'eval'             => ['tl_class'=>'w50', 'disabled'=>'disabled']
         ]
     ,   'health_check_ignore_older_than' => [
             'inputType'        => 'text'

@@ -39,6 +39,7 @@ if( Input::get('do') == 'cms_marketing' ) {
 
     // change infos of header field and child record
     $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['header_callback'] = ['marketing_suite.listener.data_container.marketing_item', 'addHeader'];
+    $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] ??= [];
     array_unshift($GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'], 'marketing_suite.listener.data_container.marketing_item', 'addType');
 }
 if( Input::get('do') == 'cms_conversion' ) {

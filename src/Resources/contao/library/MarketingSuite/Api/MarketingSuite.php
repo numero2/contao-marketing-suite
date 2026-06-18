@@ -55,6 +55,7 @@ class MarketingSuite {
      * @return boolean
      */
     public function checkLicense( string $key, PageModel $oRootPage ) {
+        return true;
 
         if( !$key || !$oRootPage || $oRootPage->type !== "root" ) {
             return false;
@@ -114,6 +115,7 @@ class MarketingSuite {
      * @param \PageModel $oRootPage
      */
     public function getFeatures( string $key, PageModel $oRootPage ) {
+        return;
 
         if( !$key || !$oRootPage || $oRootPage->type !== "root" ) {
             return;
@@ -170,6 +172,7 @@ class MarketingSuite {
      * Send usage data to the Marketing Suite Server
      */
     public function sendUsageData() {
+        return;
 
         $aData = [
             "fingerprint" => $this->generateFingerprint()
@@ -381,6 +384,7 @@ class MarketingSuite {
      * @return string
      */
     private function send( $uri=null, $aData=null ) {
+        return null;
 
         $client = null;
         $client = HttpClient::create([

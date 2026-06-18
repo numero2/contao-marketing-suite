@@ -21,12 +21,13 @@ PaletteManipulator::create()
     ->addField(['cms_exclude_health_check'], 'expert_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('regular', 'tl_page');
 
+/*
 PaletteManipulator::create()
     ->addLegend('cms_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE)
     ->addField(['cms_root_license', 'cms_refresh_license'], 'cms_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('root', 'tl_page')
     ->applyToPalette('rootfallback', 'tl_page');
-
+*/
 $GLOBALS['TL_DCA']['tl_page']['palettes']['ab_test'] = $GLOBALS['TL_DCA']['tl_page']['palettes']['regular'];
 
 
@@ -37,7 +38,7 @@ $GLOBALS['TL_DCA']['tl_page']['palettes']['ab_test'] = $GLOBALS['TL_DCA']['tl_pa
 $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
     $GLOBALS['TL_DCA']['tl_page']['fields']
 ,   [
-        'cms_root_license' => [
+    /*  'cms_root_license' => [
             'inputType'             => 'text'
         ,   'exclude'               => true
         ,   'eval'                  => ['maxlength'=>255, 'doNotCopy'=>true, 'tl_class'=>'w50 clr']
@@ -45,13 +46,13 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
         ]
     ,   'cms_refresh_license' => [
         ]
-    ,   'cms_exclude_health_check' => [
+    ,*/ 'cms_exclude_health_check' => [
             'inputType'             => 'checkbox'
         ,   'default'               => '0'
         ,   'eval'                  => ['tl_class'=>'w50']
         ,   'sql'                   => "char(1) NOT NULL default '0'"
         ]
-    ,   'cms_root_key' => [
+    /*, 'cms_root_key' => [
             'eval'                  => ['doNotShow'=>true, 'doNotCopy'=>true]
         ,   'sql'                   => "blob NULL"
         ]
@@ -62,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields'] = array_merge(
     ,   'cms_root_sign' => [
             'eval'                  => ['doNotShow'=>true, 'doNotCopy'=>true]
         ,   'sql'                   => "blob NULL"
-        ]
+        ]*/
     ,   'cms_mi_reset' => [
             'sql'               => "int(10) unsigned NOT NULL default '0'"
         ,   'eval'              => ['doNotCopy'=>true, 'readonly'=>'readonly', 'tl_class'=>'w50']

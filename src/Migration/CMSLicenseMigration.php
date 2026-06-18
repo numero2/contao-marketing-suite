@@ -40,6 +40,9 @@ class CMSLicenseMigration extends AbstractMigration {
 
     public function shouldRun(): bool {
 
+        // disabled as fields in tl_page are removed
+        return false;
+
         $oDB = Database::getInstance();
 
         if( $oDB->tableExists('tl_page') ) {

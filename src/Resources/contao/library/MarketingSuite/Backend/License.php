@@ -47,6 +47,7 @@ class License {
      * Checks if the license data is valid
      */
     public static function checkRootData() {
+        return;
 
         $objPages = null;
 
@@ -119,6 +120,7 @@ class License {
      * @return boolean
      */
     public static function hasFeature( $strAlias, $rootPageId=0 ) {
+        return true;
 
         $aPages = [];
 
@@ -203,6 +205,7 @@ class License {
      * @return boolean
      */
     public static function isTestDomain( $rootPageId ) {
+        return false;
 
         $objPage = null;
         $objPage = PageModel::findById($rootPageId);
@@ -240,6 +243,7 @@ class License {
      * @return array
      */
     public static function expires() {
+        return [];
 
         $objPages = null;
         $objPages = PageModel::findByType('root');
@@ -295,6 +299,7 @@ class License {
      * @Hook("getSystemMessages")
      */
     public function getSystemMessages() {
+        return '';
 
         System::loadLanguageFile('cms_license');
 
@@ -396,6 +401,7 @@ class License {
      * @return boolean
      */
     public static function hasNoLicense() {
+        return false;
 
         $numLicense = self::countByLicense();
 
@@ -413,6 +419,7 @@ class License {
      * @return boolean
      */
     public static function hasLicense( $pageId ) {
+        return true;
 
         $numLicense = self::countByLicenseAndId($pageId);
 
@@ -430,6 +437,7 @@ class License {
      * @Hook("generatePage")
      */
     public static function dailyCron() {
+        return;
 
         $objPages = PageModel::findByType('root');
         $lastChecks = StringUtil::deserialize(CMSConfig::get('last_checks'));
@@ -484,6 +492,7 @@ class License {
      * @Hook("generatePage")
      */
     public static function weeklyCron() {
+        return;
 
         $lastRun = CMSConfig::get('weekly_run');
 
@@ -560,6 +569,7 @@ class License {
      * @return int
      */
     private static function countByLicense(): int {
+        return 1;
 
         $connection = System::getContainer()->get('database_connection');
 
@@ -583,6 +593,7 @@ class License {
      * @return int
      */
     private static function countByLicenseAndId( $id ): int {
+        return 1;
 
         $connection = System::getContainer()->get('database_connection');
 

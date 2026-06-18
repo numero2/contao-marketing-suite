@@ -42,9 +42,10 @@ class LicenseListener {
      *
      * @throws Exception
      *
-     * @Callback(table="tl_page", target="fields.cms_root_license.save")
+     * @Callback(table="tl_page", target="fields.cms_root_license.__save")
      */
     public function save( $value, DataContainer $dc ) {
+        return $value;
 
         // new license key, drop old data
         if( $value != $dc->activeRecord->cms_root_license ) {
@@ -93,9 +94,10 @@ class LicenseListener {
      *
      * @return string
      *
-     * @Callback(table="tl_page", target="fields.cms_root_license.load")
+     * @Callback(table="tl_page", target="fields.cms_root_license.__load")
      */
     public function check( $value, DataContainer $dc ) {
+        return $value;
 
         Lic::sepcop();
 
@@ -153,6 +155,7 @@ class LicenseListener {
      * @throws Exception
      */
     private function handleLicenseCheckException( Exception $e, $throw=false ) {
+        return;
 
         switch( $e->getCode() ) {
 
@@ -187,6 +190,7 @@ class LicenseListener {
      * @Callback(table="tl_page", target="fields.cms_refresh_license.input_field")
      */
     public function refresh( DataContainer $dc ) {
+        return '';
 
         $label = $GLOBALS['TL_DCA']['tl_page']['fields']['cms_refresh_license']['label'];
         $objPage = PageModel::findOneById($dc->activeRecord->id);

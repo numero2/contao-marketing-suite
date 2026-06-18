@@ -3,6 +3,9 @@ Contao Marketing Suite
 
 [![](https://img.shields.io/packagist/v/numero2/contao-marketing-suite.svg?style=flat-square)](https://packagist.org/packages/numero2/contao-marketing-suite) ![](https://img.shields.io/badge/license-commercial-blue.svg?style=flat-square)
 
+> [!NOTE]
+> Note on development status: We have completed the development of the Contao Marketing Suite. The Contao Marketing Suite is now available free of charge and without a user account – simply install and use it.
+
 > [!WARNING]
 > For technical reasons, the Contao Marketing Suite does not support Twig-based layouts (e.g. Twig layouts with slots).
 > Please use standard page layouts to ensure compatibility.
