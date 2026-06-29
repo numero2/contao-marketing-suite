@@ -329,9 +329,10 @@ class TagListener {
         System::loadLanguageFile('cms_default');
 
         $request = $this->requestStack->getCurrentRequest();
-        $pageModel = $request->get('pageModel');
 
         if( $request && $this->scopeMatcher->isFrontendRequest($request) ) {
+
+            $pageModel = $request->get('pageModel');
 
             // we may have a frontend module referenced by a content element
             // in this case make sure to check the settings of the module itself
